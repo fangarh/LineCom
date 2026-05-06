@@ -2,9 +2,27 @@
 
 ## Назначение
 
-Этот документ фиксирует контракт публичного read-only API каталога LineCom перед реализацией модуля `Catalog`.
+Этот документ фиксирует реализованный контракт публичного read-only API каталога LineCom.
 
 API предназначен для публичных страниц категорий, карточек товаров, листинга, фильтров, SEO/GEO-страниц и будущего сравнения товаров. Контракт строится поверх PostgreSQL, Npgsql и Dapper. Публичные цены не возвращаются.
+
+## Статус реализации
+
+Этап `Public Catalog read API` реализован и проверен 2026-05-06.
+
+Реализованные endpoints:
+
+- `GET /api/public/catalog/categories`;
+- `GET /api/public/catalog/categories/{slug}`;
+- `GET /api/public/catalog/categories/{slug}/filters`;
+- `GET /api/public/catalog/products`;
+- `GET /api/public/catalog/products/{slug}`.
+
+Проверка этапа:
+
+- `dotnet restore LineCom.sln`;
+- `dotnet build LineCom.sln --no-restore`;
+- `dotnet test LineCom.sln --no-build --no-restore`: 177 тестов, 0 ошибок.
 
 ## Общие правила
 
