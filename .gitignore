@@ -23,6 +23,7 @@ appsettings.Local.json
 
 # Testing and temporary artifacts
 temp/
+.worktrees/
 .playwright-mcp/
 .codex-tmp/
 artifacts-*
