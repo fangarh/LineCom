@@ -15,7 +15,7 @@
 
 Use Context7 MCP to fetch current documentation whenever the user asks about a library, framework, SDK, API, CLI tool, or cloud service, even well-known ones like React, Next.js, Prisma, Express, Tailwind, Django, or Spring Boot. This includes API syntax, configuration, version migration, library-specific debugging, setup instructions, and CLI tool usage. Use it even when you think you know the answer, because training data may not reflect recent changes. Prefer Context7 over web search for library docs.
 
-Do not use Context7 for refactoring, writing scripts from scratch, debugging business logic, code review, or general programming concepts.
+Use Context7 for refactoring, writing scripts from scratch, debugging business logic, code review, or general programming concepts.
 
 ## Steps
 

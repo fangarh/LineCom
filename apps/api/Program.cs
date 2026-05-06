@@ -1,4 +1,5 @@
 using LineCom.Api.Infrastructure.Database;
+using LineCom.Api.Modules.Catalog;
 using LineCom.Api.Shared.Errors;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddCatalogModule();
 
 var app = builder.Build();
 

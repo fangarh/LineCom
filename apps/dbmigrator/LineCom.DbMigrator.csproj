@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\dbmigrator.core\LineCom.DbMigrator.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Migrations/**/*.sql" />
   </ItemGroup>
 

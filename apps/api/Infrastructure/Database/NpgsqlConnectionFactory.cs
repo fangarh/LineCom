@@ -11,8 +11,8 @@ public sealed class NpgsqlConnectionFactory : IDbConnectionFactory
         _dataSource = dataSource;
     }
 
-    public async ValueTask<NpgsqlConnection> OpenConnectionAsync(CancellationToken cancellationToken = default)
+    public ValueTask<NpgsqlConnection> OpenConnectionAsync(CancellationToken cancellationToken = default)
     {
-        return await _dataSource.OpenConnectionAsync(cancellationToken);
+        return _dataSource.OpenConnectionAsync(cancellationToken);
     }
 }
