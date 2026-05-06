@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+
+# Frontend build output
+.next/
+out/
+dist/
+build/
+
+# .NET build output
+bin/
+obj/
+TestResults/
+*.coverage
+*.coveragexml
+coverage/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+appsettings.Local.json
+
+# Testing and temporary artifacts
+temp/
+.playwright-mcp/
+.codex-tmp/
+artifacts-*
+*.metaproj
+*.metaproj.tmp
+
+# IDE/editor
+.vs/
+.vscode/
+*.user
+*.suo
+*.rsuser
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
