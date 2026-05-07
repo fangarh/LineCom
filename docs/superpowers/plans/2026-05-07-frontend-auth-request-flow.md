@@ -98,7 +98,7 @@ Do not add a global state library in this plan. Start with React context, reduce
 - Modify: `apps/front/next.config.ts`
 - Create: `apps/front/.env.example`
 
-- [ ] **Step 1: Install test dependencies**
+- [x] **Step 1: Install test dependencies**
 
 Run from `apps/front`:
 
@@ -108,7 +108,7 @@ npm.cmd install -D vitest jsdom @testing-library/react @testing-library/jest-dom
 
 Expected: `package.json` and `package-lock.json` update.
 
-- [ ] **Step 2: Add scripts to `apps/front/package.json`**
+- [x] **Step 2: Add scripts to `apps/front/package.json`**
 
 Set scripts to:
 
@@ -127,7 +127,7 @@ Set scripts to:
 
 Keep existing dependencies, devDependencies, and `overrides.postcss`.
 
-- [ ] **Step 3: Create Vitest config**
+- [x] **Step 3: Create Vitest config**
 
 Create `apps/front/vitest.config.ts`:
 
@@ -146,7 +146,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 4: Create test setup**
+- [x] **Step 4: Create test setup**
 
 Create `apps/front/src/test/setup.ts`:
 
@@ -154,7 +154,7 @@ Create `apps/front/src/test/setup.ts`:
 import "@testing-library/jest-dom/vitest";
 ```
 
-- [ ] **Step 5: Configure backend rewrite**
+- [x] **Step 5: Configure backend rewrite**
 
 Modify `apps/front/next.config.ts`:
 
@@ -177,7 +177,7 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
-- [ ] **Step 6: Document environment**
+- [x] **Step 6: Document environment**
 
 Create `apps/front/.env.example`:
 
@@ -185,7 +185,7 @@ Create `apps/front/.env.example`:
 LINECOM_API_ORIGIN=http://127.0.0.1:8080
 ```
 
-- [ ] **Step 7: Verify tooling**
+- [x] **Step 7: Verify tooling**
 
 Run from `apps/front`:
 
@@ -199,7 +199,7 @@ Expected:
 - lint passes;
 - tests pass with no tests found because the script uses `--passWithNoTests`.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```powershell
 git add apps/front/package.json apps/front/package-lock.json apps/front/vitest.config.ts apps/front/src/test/setup.ts apps/front/next.config.ts apps/front/.env.example
