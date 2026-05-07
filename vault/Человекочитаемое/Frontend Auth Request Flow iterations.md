@@ -186,7 +186,7 @@ product card, product detail и кнопка `Добавить в заявку`.
 
 ## Итерация 7: Auth и профиль клиента
 
-Статус: запланирована.
+Статус: выполнена 2026-05-07.
 
 Реализовать вход, регистрацию, профиль и организацию на существующем backend API.
 
@@ -207,6 +207,12 @@ product card, product detail и кнопка `Добавить в заявку`.
 - protected profile page отправляет пользователя на login при `auth.unauthorized`;
 - изменяющие account requests используют `X-CSRF-Token`;
 - backend validation errors показываются контролируемо.
+
+Изменена: добавлены страницы `/auth/login`, `/auth/register`, `/account/profile`, формы входа, регистрации,
+профиля и организации. Login/register сохраняют `user` и `csrfToken` в runtime auth state и возвращают пользователя
+к `returnTo`; регистрация не создает организацию. Профиль загружает `GET /api/auth/me` и `GET /api/account/profile`,
+при `auth.unauthorized` ведет на login, а controlled backend errors показывает в UI. Проверки `npm.cmd run lint`,
+`npm.cmd test`, `npm.cmd run build` прошли. Browser Use открыл auth/profile страницы и подтвердил отсутствие blank pages.
 
 ## Итерация 8: Отправка заявки
 
@@ -295,7 +301,7 @@ product card, product detail и кнопка `Добавить в заявку`.
 
 ## Текущая точка продолжения
 
-Следующий шаг: перейти к `Итерация 7: Auth и профиль клиента`.
+Следующий шаг: перейти к `Итерация 8: Отправка заявки`.
 
 Отдельный QA-блокер остается для полного happy-path каталога с реальной БД: локальному backend нужен настроенный
 `ConnectionStrings__Default`, потому что пароль development-песочницы не хранится в файлах проекта.
