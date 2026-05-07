@@ -220,7 +220,7 @@ git commit -m "test: add frontend test tooling and api proxy"
 - Create: `apps/front/src/lib/routes.ts`
 - Create: `apps/front/src/lib/format.ts`
 
-- [ ] **Step 1: Write failing error parsing tests**
+- [x] **Step 1: Write failing error parsing tests**
 
 Create `apps/front/src/lib/api/errors.test.ts`:
 
@@ -244,7 +244,7 @@ describe("api errors", () => {
 });
 ```
 
-- [ ] **Step 2: Run failing test**
+- [x] **Step 2: Run failing test**
 
 Run from `apps/front`:
 
@@ -254,7 +254,7 @@ npm.cmd test -- src/lib/api/errors.test.ts
 
 Expected: fail because `errors.ts` does not exist.
 
-- [ ] **Step 3: Implement `errors.ts`**
+- [x] **Step 3: Implement `errors.ts`**
 
 Create `apps/front/src/lib/api/errors.ts`:
 
@@ -301,7 +301,7 @@ export function normalizeApiError(error: unknown): ApiErrorResponse {
 }
 ```
 
-- [ ] **Step 4: Implement fetch wrapper**
+- [x] **Step 4: Implement fetch wrapper**
 
 Create `apps/front/src/lib/api/http.ts`:
 
@@ -355,7 +355,7 @@ export async function apiJson<T>(path: string, options: JsonRequestOptions = {})
 }
 ```
 
-- [ ] **Step 5: Implement shared route builders**
+- [x] **Step 5: Implement shared route builders**
 
 Create `apps/front/src/lib/routes.ts`:
 
@@ -374,7 +374,7 @@ export const routes = {
 };
 ```
 
-- [ ] **Step 6: Implement display helpers**
+- [x] **Step 6: Implement display helpers**
 
 Create `apps/front/src/lib/format.ts`:
 
@@ -391,7 +391,7 @@ export function formatSku(sku: string | null): string {
 }
 ```
 
-- [ ] **Step 7: Implement typed catalog client**
+- [x] **Step 7: Implement typed catalog client**
 
 Create `apps/front/src/lib/api/catalog.ts` with TypeScript types matching `Public Catalog API.md`:
 
@@ -537,7 +537,7 @@ export function getProduct(slug: string) {
 }
 ```
 
-- [ ] **Step 8: Implement typed auth/account/request clients**
+- [x] **Step 8: Implement typed auth/account/request clients**
 
 Create `apps/front/src/lib/api/auth.ts`, `account.ts`, and `requests.ts` using the DTO names from `Auth Request Core API.md`. Include these exported functions:
 
@@ -615,7 +615,7 @@ Add corresponding functions:
 
 Use `cache: "no-store"` for auth/account/request reads.
 
-- [ ] **Step 9: Run tests**
+- [x] **Step 9: Run tests**
 
 ```powershell
 npm.cmd test -- src/lib/api/errors.test.ts
@@ -624,7 +624,7 @@ npm.cmd run lint
 
 Expected: tests and lint pass.
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 ```powershell
 git add apps/front/src/lib apps/front/src/lib/api apps/front/src/lib/routes.ts apps/front/src/lib/format.ts
