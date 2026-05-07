@@ -1234,7 +1234,7 @@ git commit -m "feat: add public catalog frontend"
 - Create: `apps/front/src/components/request/request-draft-view.test.tsx`
 - Modify: `apps/front/src/app/request/page.tsx`
 
-- [ ] **Step 1: Write request draft view tests**
+- [x] **Step 1: Write request draft view tests**
 
 Create `request-draft-view.test.tsx` to verify:
 
@@ -1243,7 +1243,7 @@ Create `request-draft-view.test.tsx` to verify:
 - remove button removes an item;
 - visible text uses `Отправить заявку`, not `Оформить заказ`.
 
-- [ ] **Step 2: Run failing component test**
+- [x] **Step 2: Run failing component test**
 
 ```powershell
 npm.cmd test -- src/components/request/request-draft-view.test.tsx
@@ -1251,7 +1251,7 @@ npm.cmd test -- src/components/request/request-draft-view.test.tsx
 
 Expected: fail because component does not exist.
 
-- [ ] **Step 3: Implement request draft view**
+- [x] **Step 3: Implement request draft view**
 
 Create `request-draft-view.tsx`:
 
@@ -1265,11 +1265,11 @@ Create `request-draft-view.tsx`:
 
 Keep submission side effect out of this presentational component until Task 8.
 
-- [ ] **Step 4: Implement `/request` page**
+- [x] **Step 4: Implement `/request` page**
 
 Create or modify `apps/front/src/app/request/page.tsx` to render `RequestDraftView` with an `onSubmit` handler that routes the user to `routes.login(routes.request())`. Task 8 replaces this handler with real authenticated submission, but the visible behavior is already coherent: a user who wants to send a request is asked to sign in first.
 
-- [ ] **Step 5: Run tests and lint**
+- [x] **Step 5: Run tests and lint**
 
 ```powershell
 npm.cmd test -- src/components/request/request-draft-view.test.tsx
@@ -1278,7 +1278,11 @@ npm.cmd run lint
 
 Expected: pass.
 
-- [ ] **Step 6: Commit**
+Progress note 2026-05-07: `npm.cmd test -- src/components/request/request-draft-view.test.tsx`, `npm.cmd test`,
+`npm.cmd run lint`, and `npm.cmd run build` passed. Browser Use opened `/request` and verified the empty state,
+`Отправить заявку`, and absence of `Купить` / `Оформить заказ`.
+
+- [x] **Step 6: Commit**
 
 ```powershell
 git add apps/front/src/components/request apps/front/src/app/request
