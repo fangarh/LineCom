@@ -1,0 +1,27 @@
+{
+  "source": "Assets/tktdf_image_sources_sample.json",
+  "sourceSite": "tktdf.ru",
+  "outputDir": "Assets/product-images/tktdf_sample",
+  "totalItemsAttempted": 1,
+  "downloadedPng": 1,
+  "failed": 0,
+  "items": [
+    {
+      "assetKey": "tktdf-netko-utp-cat5e-51108",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51108/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/9f1/i4w8sumyvbnxsp70rvwmsv4wjyt30049.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf_sample/tktdf-netko-utp-cat5e-51108.png",
+      "width": 650,
+      "height": 650,
+      "checksum": "c27da2cb8a27308eccbadf462197779f2c08eaecee1db5084216e523cecdc722",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    }
+  ]
+}

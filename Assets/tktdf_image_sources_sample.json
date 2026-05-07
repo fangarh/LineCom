@@ -1,0 +1,16 @@
+{
+  "batch": {
+    "sourceSite": "tktdf.ru",
+    "createdAt": "2026-05-07",
+    "notes": "Sample trusted-source product image import input. LineCom frontend design stays unchanged."
+  },
+  "items": [
+    {
+      "assetKey": "tktdf-netko-utp-cat5e-51108",
+      "sourceRows": [],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51108/",
+      "isMain": true,
+      "rightsStatus": "requires-permission"
+    }
+  ]
+}
