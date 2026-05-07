@@ -1,5 +1,8 @@
 using LineCom.Api.Infrastructure.Database;
+using LineCom.Api.Modules.Account;
+using LineCom.Api.Modules.Auth;
 using LineCom.Api.Modules.Catalog;
+using LineCom.Api.Modules.Requests;
 using LineCom.Api.Shared.Errors;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +11,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddAuthModule(builder.Environment);
+builder.Services.AddAccountModule();
 builder.Services.AddCatalogModule();
+builder.Services.AddRequestModule();
 
 var app = builder.Build();
 
@@ -22,6 +28,7 @@ app.UseMiddleware<ApiExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
