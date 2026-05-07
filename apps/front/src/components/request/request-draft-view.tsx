@@ -8,10 +8,11 @@ import { getDraftItemsCount, isDraftEmpty } from "@/lib/request-draft/selectors"
 import { useRequestDraft } from "./request-draft-provider";
 
 type RequestDraftViewProps = {
+  errorMessage?: string | null;
   onSubmit: () => Promise<void> | void;
 };
 
-export function RequestDraftView({ onSubmit }: RequestDraftViewProps) {
+export function RequestDraftView({ errorMessage, onSubmit }: RequestDraftViewProps) {
   const { state, dispatch } = useRequestDraft();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const empty = isDraftEmpty(state);
@@ -138,6 +139,11 @@ export function RequestDraftView({ onSubmit }: RequestDraftViewProps) {
                 }
               />
             </label>
+            {errorMessage ? (
+              <p className="form-alert" role="alert">
+                {errorMessage}
+              </p>
+            ) : null}
             <button className="button button--primary request-submit" type="submit" disabled={empty || isSubmitting}>
               Отправить заявку
             </button>

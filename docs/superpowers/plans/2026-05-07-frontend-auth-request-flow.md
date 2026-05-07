@@ -1400,7 +1400,7 @@ git commit -m "feat: add auth and profile frontend"
 - Modify: `apps/front/src/lib/api/requests.ts`
 - Modify: `apps/front/src/components/auth/auth-provider.tsx` if `getMe` bootstrap is needed.
 
-- [ ] **Step 1: Add submission behavior to request page**
+- [x] **Step 1: Add submission behavior to request page**
 
 Behavior:
 
@@ -1425,7 +1425,7 @@ Behavior:
 - on `request.product_not_available`, keep draft and show backend message;
 - on `auth.forbidden`, call `getMe`, refresh csrf, retry once.
 
-- [ ] **Step 2: Ensure submit is explicit after login**
+- [x] **Step 2: Ensure submit is explicit after login**
 
 After login/register redirects back to `/request`, do not auto-submit. User must press `Отправить заявку`.
 
@@ -1441,7 +1441,7 @@ With backend running and at least one published product:
 - submit;
 - verify created request number is shown via redirect.
 
-- [ ] **Step 4: Run checks**
+- [x] **Step 4: Run checks**
 
 ```powershell
 npm.cmd run lint
@@ -1450,6 +1450,11 @@ dotnet test LineCom.sln -m:1
 ```
 
 Expected: all pass.
+
+Progress note 2026-05-07: `npm.cmd test -- src/app/request/page.test.tsx`, `npm.cmd test`,
+`npm.cmd run lint`, `npm.cmd run build`, and `dotnet test LineCom.sln -m:1` passed. Browser Use reloaded `/request`
+and confirmed the page is not blank. Full manual happy path with a real published product and backend-created request
+still needs the local backend database connection secret, which is not stored in the repository.
 
 - [ ] **Step 5: Commit**
 
