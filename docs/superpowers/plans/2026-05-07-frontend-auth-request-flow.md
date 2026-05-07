@@ -642,7 +642,7 @@ git commit -m "feat: add frontend api clients"
 - Create: `apps/front/src/lib/request-draft/reducer.test.ts`
 - Create: `apps/front/src/lib/request-draft/storage.test.ts`
 
-- [ ] **Step 1: Write reducer tests**
+- [x] **Step 1: Write reducer tests**
 
 Create `apps/front/src/lib/request-draft/reducer.test.ts`:
 
@@ -694,7 +694,7 @@ describe("requestDraftReducer", () => {
 });
 ```
 
-- [ ] **Step 2: Run failing reducer tests**
+- [x] **Step 2: Run failing reducer tests**
 
 ```powershell
 npm.cmd test -- src/lib/request-draft/reducer.test.ts
@@ -702,7 +702,7 @@ npm.cmd test -- src/lib/request-draft/reducer.test.ts
 
 Expected: fail because reducer files do not exist.
 
-- [ ] **Step 3: Implement draft types**
+- [x] **Step 3: Implement draft types**
 
 Create `apps/front/src/lib/request-draft/types.ts`:
 
@@ -743,7 +743,7 @@ export const emptyRequestDraft: RequestDraftState = {
 };
 ```
 
-- [ ] **Step 4: Implement reducer**
+- [x] **Step 4: Implement reducer**
 
 Create `apps/front/src/lib/request-draft/reducer.ts`:
 
@@ -812,7 +812,7 @@ export function requestDraftReducer(
 }
 ```
 
-- [ ] **Step 5: Write storage tests**
+- [x] **Step 5: Write storage tests**
 
 Create `apps/front/src/lib/request-draft/storage.test.ts`:
 
@@ -853,7 +853,7 @@ describe("request draft storage", () => {
 });
 ```
 
-- [ ] **Step 6: Implement storage**
+- [x] **Step 6: Implement storage**
 
 Create `apps/front/src/lib/request-draft/storage.ts`:
 
@@ -896,7 +896,7 @@ export function saveRequestDraft(state: RequestDraftState): void {
 }
 ```
 
-- [ ] **Step 7: Implement selectors**
+- [x] **Step 7: Implement selectors**
 
 Create `apps/front/src/lib/request-draft/selectors.ts`:
 
@@ -912,7 +912,7 @@ export function isDraftEmpty(state: RequestDraftState): boolean {
 }
 ```
 
-- [ ] **Step 8: Run tests**
+- [x] **Step 8: Run tests**
 
 ```powershell
 npm.cmd test -- src/lib/request-draft
@@ -940,7 +940,7 @@ git commit -m "feat: add request draft state"
 - Create: `apps/front/src/components/auth/auth-provider.tsx`
 - Create: `apps/front/src/components/request/request-draft-provider.tsx`
 
-- [ ] **Step 1: Implement AuthProvider**
+- [x] **Step 1: Implement AuthProvider**
 
 Create `apps/front/src/components/auth/auth-provider.tsx`:
 
@@ -991,7 +991,7 @@ export function useAuth() {
 }
 ```
 
-- [ ] **Step 2: Implement RequestDraftProvider**
+- [x] **Step 2: Implement RequestDraftProvider**
 
 Create `apps/front/src/components/request/request-draft-provider.tsx`:
 
@@ -1035,7 +1035,7 @@ export function useRequestDraft() {
 }
 ```
 
-- [ ] **Step 3: Implement shell components**
+- [x] **Step 3: Implement shell components**
 
 Create `site-shell.tsx` and `site-header.tsx`. Header must link to:
 
@@ -1047,7 +1047,7 @@ Create `site-shell.tsx` and `site-header.tsx`. Header must link to:
 
 Use `routes` from `src/lib/routes.ts`. Keep text Russian and commercial language request-oriented.
 
-- [ ] **Step 4: Update root layout**
+- [x] **Step 4: Update root layout**
 
 Modify `apps/front/src/app/layout.tsx`:
 
@@ -1082,7 +1082,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 }
 ```
 
-- [ ] **Step 5: Replace starter global styles**
+- [x] **Step 5: Replace starter global styles**
 
 Modify `globals.css` to establish a restrained B2B catalog style:
 
@@ -1095,7 +1095,7 @@ Modify `globals.css` to establish a restrained B2B catalog style:
 
 Keep all colors varied enough that the UI does not read as a one-hue palette.
 
-- [ ] **Step 6: Verify shell**
+- [x] **Step 6: Verify shell**
 
 ```powershell
 npm.cmd run lint
@@ -1125,7 +1125,7 @@ git commit -m "feat: add frontend app shell"
 - Create: `apps/front/src/components/catalog/product-detail.tsx`
 - Create: `apps/front/src/components/request/add-to-request-button.tsx`
 
-- [ ] **Step 1: Implement `AddToRequestButton`**
+- [x] **Step 1: Implement `AddToRequestButton`**
 
 Create `apps/front/src/components/request/add-to-request-button.tsx` as a client component that accepts product draft fields and dispatches `addProduct`.
 
@@ -1133,7 +1133,7 @@ Button text: `Добавить в заявку`.
 
 Do not use `Купить`, `Оформить заказ`, or prices.
 
-- [ ] **Step 2: Implement product card**
+- [x] **Step 2: Implement product card**
 
 Create `apps/front/src/components/catalog/product-card.tsx`:
 
@@ -1142,7 +1142,7 @@ Create `apps/front/src/components/catalog/product-card.tsx`:
 - link to product detail;
 - include `AddToRequestButton`.
 
-- [ ] **Step 3: Implement product detail**
+- [x] **Step 3: Implement product detail**
 
 Create `apps/front/src/components/catalog/product-detail.tsx`:
 
@@ -1156,7 +1156,7 @@ Create `apps/front/src/components/catalog/product-detail.tsx`:
 - `Цена по запросу`;
 - `AddToRequestButton`.
 
-- [ ] **Step 4: Implement category nav**
+- [x] **Step 4: Implement category nav**
 
 Create `apps/front/src/components/catalog/category-nav.tsx`:
 
@@ -1164,7 +1164,7 @@ Create `apps/front/src/components/catalog/category-nav.tsx`:
 - show only returned categories;
 - use slug links through `routes.category`.
 
-- [ ] **Step 5: Implement home page**
+- [x] **Step 5: Implement home page**
 
 Modify `apps/front/src/app/page.tsx`:
 
@@ -1173,14 +1173,14 @@ Modify `apps/front/src/app/page.tsx`:
 - no starter Next.js content;
 - no marketing-only hero.
 
-- [ ] **Step 6: Implement catalog overview**
+- [x] **Step 6: Implement catalog overview**
 
 Create `apps/front/src/app/catalog/page.tsx`:
 
 - fetch category tree and product list;
 - render categories and products.
 
-- [ ] **Step 7: Implement category page with metadata**
+- [x] **Step 7: Implement category page with metadata**
 
 Create `apps/front/src/app/catalog/[categorySlug]/page.tsx`:
 
@@ -1189,7 +1189,7 @@ Create `apps/front/src/app/catalog/[categorySlug]/page.tsx`:
 - page fetches category, filters if used, and products for `categorySlug`;
 - render product list and empty state.
 
-- [ ] **Step 8: Implement product page with metadata**
+- [x] **Step 8: Implement product page with metadata**
 
 Create `apps/front/src/app/products/[slug]/page.tsx`:
 
@@ -1214,6 +1214,10 @@ Then use browser QA:
 - open at least one product URL from visible links;
 - verify visible text says `Цена по запросу`;
 - verify no visible text says `Купить` or `Оформить заказ`.
+
+Progress note 2026-05-07: frontend implementation, lint, tests, and build passed. Browser QA verified `/catalog`,
+`/catalog/test-category`, and `/products/test-product` fallback states without blank pages. Full happy-path category/product
+QA is blocked because local backend `GET /api/public/catalog/categories` returns `500 internal_error`.
 
 - [ ] **Step 10: Commit**
 

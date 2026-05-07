@@ -20,7 +20,7 @@ export async function apiJson<T>(path: string, options: JsonRequestOptions = {})
     headers.set("X-CSRF-Token", options.csrfToken);
   }
 
-  const response = await fetch(path, {
+  const response = await fetch(resolveApiPath(path), {
     method: options.method ?? "GET",
     headers,
     body: options.body === undefined ? undefined : JSON.stringify(options.body),
@@ -44,4 +44,17 @@ export async function apiJson<T>(path: string, options: JsonRequestOptions = {})
   }
 
   return payload as T;
+}
+
+function resolveApiPath(path: string): string {
+  if (/^https?:\/\//.test(path) || typeof window !== "undefined") {
+    return path;
+  }
+
+  if (path.startsWith("/api/")) {
+    const apiOrigin = process.env.LINECOM_API_ORIGIN ?? "http://127.0.0.1:8080";
+    return `${apiOrigin}${path}`;
+  }
+
+  return path;
 }

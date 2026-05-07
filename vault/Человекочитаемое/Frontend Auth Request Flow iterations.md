@@ -74,7 +74,7 @@
 
 ## Итерация 3: Черновик заявки
 
-Статус: запланирована.
+Статус: выполнена 2026-05-07.
 
 Реализовать клиентскую модель черновика заявки.
 
@@ -94,9 +94,11 @@
 - черновик восстанавливается после перезагрузки;
 - frontend snapshot не считается источником истины для backend.
 
+Изменена: добавлена клиентская модель черновика заявки с reducer, selectors, localStorage persistence и тестами reducer/storage.
+
 ## Итерация 4: App shell и базовая визуальная система
 
-Статус: запланирована.
+Статус: выполнена 2026-05-07.
 
 Заменить стартовый Next.js-шаблон рабочим каркасом LineCom.
 
@@ -118,9 +120,11 @@
 - UI не использует декоративные gradient/orb решения;
 - `npm.cmd run lint`, `npm.cmd test`, `npm.cmd run build` проходят.
 
+Изменена: стартовый Next.js-шаблон заменен на русский LineCom shell с AuthProvider, RequestDraftProvider, общей навигацией и restrained B2B styling.
+
 ## Итерация 5: Публичный каталог на frontend
 
-Статус: запланирована.
+Статус: в работе, реализация frontend выполнена 2026-05-07; полный browser QA заблокирован backend `500 internal_error`.
 
 Показать публичные категории, товары и карточку товара на существующем public catalog API.
 
@@ -143,6 +147,11 @@
 - карточка товара показывает характеристики, наличие, единицу продажи и количество в единице;
 - в UI нет `Купить` и `Оформить заказ`;
 - `npm.cmd run lint` и `npm.cmd run build` проходят.
+
+Изменена: добавлены `/`, `/catalog`, `/catalog/[categorySlug]`, `/products/[slug]`, category navigation,
+product card, product detail и кнопка `Добавить в заявку`. `npm.cmd run lint`, `npm.cmd test`,
+`npm.cmd run build` проходят. Browser QA fallback-состояний пройден; happy path с реальными категориями
+и товарами требует исправить локальный backend API, который сейчас возвращает `500 internal_error`.
 
 ## Итерация 6: Страница черновика заявки
 
@@ -280,4 +289,5 @@
 
 ## Текущая точка продолжения
 
-Следующий шаг: `Итерация 1: Frontend tooling и API proxy`.
+Следующий шаг: снять блокер локального backend API `GET /api/public/catalog/categories -> 500 internal_error`,
+затем допройти happy-path browser QA итерации 5 и перейти к `Итерация 6: Страница черновика заявки`.
