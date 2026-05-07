@@ -26,6 +26,7 @@ temp/
 .worktrees/
 .playwright-mcp/
 .codex-tmp/
+.superpowers/
 artifacts-*
 *.metaproj
 *.metaproj.tmp
