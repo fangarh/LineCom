@@ -38,6 +38,107 @@ Do not modify the LineCom frontend visual design in this plan.
 - Modify: `vault/Человекочитаемое/Catalog Image Import iterations.md`
   - Record the source switch, unchanged UI design, output paths, and verification results.
 
+## Iteration Breakdown
+
+Run these iterations one at a time. After each iteration, stop, review the result, and only then start the next one. If context is cleared, reopen this plan and start from the first iteration whose status is not recorded as complete in `vault/Человекочитаемое/Catalog Image Import iterations.md`.
+
+### Iteration 1: Database Compatibility Only
+
+Goal: make the catalog schema compatible with shared image files.
+
+Do:
+
+- Task 1 only.
+
+Expected result:
+
+- migration `005_product_image_shared_files.sql` exists;
+- migration tests prove the old `stored_file_id` uniqueness is removed;
+- `(product_id, stored_file_id)` is unique;
+- the single-main-image rule remains.
+
+Stop after:
+
+```powershell
+dotnet test LineCom.sln -m:1 --filter ProductImageSharedFilesMigrationTests
+dotnet build LineCom.sln -m:1
+```
+
+Review focus:
+
+- no frontend files changed;
+- no importer behavior changed yet;
+- migration is small and reversible by normal DbUp forward migration discipline.
+
+### Iteration 2: TKTDF Downloader Sample
+
+Goal: add the trusted-source downloader and prove it can produce a sample PNG manifest from `tktdf.ru`.
+
+Do:
+
+- Task 2 only.
+
+Expected result:
+
+- `tools/download_tktdf_product_images.py` exists;
+- tests cover trusted source behavior, technical failure, and no token-match rejection;
+- sample source and sample manifest exist;
+- live one-item sample run downloads a PNG when network access is available.
+
+Stop after:
+
+```powershell
+python -m unittest tests.tools.test_download_tktdf_product_images
+python tools\download_tktdf_product_images.py --help
+python tools\download_tktdf_product_images.py --source Assets\tktdf_image_sources_sample.json --output-dir Assets\product-images\tktdf_sample --manifest Assets\product-images\tktdf_sample_manifest.json --limit 1 --delay 0
+```
+
+Review focus:
+
+- downloaded images are from `tktdf.ru`;
+- manifest has `trusted_source_tktdf`;
+- no prices, cart text, or external site UI data are imported;
+- LineCom frontend design is untouched.
+
+### Iteration 3: Documentation And Full Regression
+
+Goal: document the new source and run full project verification.
+
+Do:
+
+- Task 3 only.
+
+Expected result:
+
+- `vault/Человекочитаемое/Catalog Image Import iterations.md` records the completed pass;
+- .NET build/tests pass;
+- Python tests pass;
+- scope search does not reveal accidental forbidden commerce copy in implementation files.
+
+Stop after:
+
+```powershell
+dotnet build LineCom.sln -m:1
+dotnet test LineCom.sln -m:1
+python -m unittest tests.tools.test_download_tktdf_product_images
+python tools\download_tktdf_product_images.py --help
+```
+
+Review focus:
+
+- exact commands and results are recorded in the vault note;
+- remaining technical failures, if any, are concrete and not hidden;
+- no intentional technical debt markers remain in changed implementation files.
+
+## Resume Instructions After Context Cleanup
+
+1. Read `AGENTS.md`.
+2. Read `docs/superpowers/specs/2026-05-07-tktdf-catalog-image-import-design.md`.
+3. Read this plan.
+4. Read `vault/Человекочитаемое/Catalog Image Import iterations.md`.
+5. Continue from the first incomplete iteration in the `Iteration Breakdown` section.
+6. Do not start a later iteration until the user has reviewed the previous iteration result.
+
 ## Task 1: Database Compatibility For Shared Image Files
 
 **Files:**
