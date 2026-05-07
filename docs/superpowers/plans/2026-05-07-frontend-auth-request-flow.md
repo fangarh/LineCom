@@ -1105,7 +1105,7 @@ npm.cmd run build
 
 Expected: all pass.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```powershell
 git add apps/front/src/app apps/front/src/components apps/front/src/lib
@@ -1302,7 +1302,7 @@ git commit -m "feat: add request draft page"
 - Create: `apps/front/src/components/account/organization-form.tsx`
 - Create: `apps/front/src/app/account/profile/page.tsx`
 
-- [ ] **Step 1: Write login form tests**
+- [x] **Step 1: Write login form tests**
 
 Test:
 
@@ -1310,7 +1310,7 @@ Test:
 - backend error message is shown;
 - submit button text is `Войти`.
 
-- [ ] **Step 2: Implement login/register forms**
+- [x] **Step 2: Implement login/register forms**
 
 Components accept injected submit handlers:
 
@@ -1330,7 +1330,7 @@ Register form fields:
 
 Do not ask for organization during registration.
 
-- [ ] **Step 3: Implement login/register pages**
+- [x] **Step 3: Implement login/register pages**
 
 Pages:
 
@@ -1339,7 +1339,7 @@ Pages:
 - call `useAuth().setSession`;
 - navigate to `returnTo ?? routes.request()` after success.
 
-- [ ] **Step 4: Implement profile and organization forms**
+- [x] **Step 4: Implement profile and organization forms**
 
 Profile form:
 
@@ -1358,7 +1358,7 @@ Organization form:
 
 Both use `csrfToken` from `useAuth`.
 
-- [ ] **Step 5: Implement account profile page**
+- [x] **Step 5: Implement account profile page**
 
 On client mount:
 
@@ -1368,7 +1368,7 @@ On client mount:
 - render profile and organization forms;
 - on `auth.unauthorized`, route to login with `returnTo=/account/profile`.
 
-- [ ] **Step 6: Run tests and lint**
+- [x] **Step 6: Run tests and lint**
 
 ```powershell
 npm.cmd test -- src/components/auth/login-form.test.tsx
@@ -1377,6 +1377,12 @@ npm.cmd run build
 ```
 
 Expected: all pass.
+
+Progress note 2026-05-07: added login/register/profile/organization form tests; `npm.cmd test`,
+`npm.cmd run lint`, and `npm.cmd run build` passed. Browser Use verified `/auth/login`,
+`/auth/register`, and `/account/profile` render without blank pages. `/account/profile` shows a controlled
+backend error when the local backend is unavailable or returns `internal_error`; `auth.unauthorized` handling
+is implemented to redirect to login with `returnTo=/account/profile`.
 
 - [ ] **Step 7: Commit**
 
