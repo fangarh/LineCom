@@ -24,7 +24,7 @@ public static class CatalogImportDatabaseSql
         DELETE FROM categories;
         DELETE FROM stored_files
         WHERE purpose = 'product_image'
-          AND storage_key LIKE 'catalog-import/products/%';
+          AND storage_key LIKE 'storage/products/catalog-import/%';
         """;
 
     public const string UpsertCategory = """
@@ -108,22 +108,24 @@ public static class CatalogImportDatabaseSql
         RETURNING id;
         """;
 
+    public const string LockProductForImageImport = """
+        SELECT
+            product.id AS "ProductId",
+            product.name AS "ProductName"
+        FROM products product
+        WHERE product.external_id = @ExternalId
+        FOR UPDATE;
+        """;
+
+    public const string ClearProductMainImage = """
+        UPDATE product_images
+        SET is_main = FALSE,
+            updated_at = now()
+        WHERE product_id = @ProductId
+          AND is_main;
+        """;
+
     public const string UpsertProductImage = """
-        WITH product_row AS (
-            SELECT product.id, product.name
-            FROM products product
-            WHERE product.external_id = @ExternalId
-        ),
-        clear_existing_main AS (
-            UPDATE product_images
-            SET is_main = FALSE,
-                updated_at = now()
-            FROM product_row product
-            WHERE product_images.product_id = product.id
-              AND product_images.stored_file_id <> @StoredFileId
-              AND product_images.is_main
-            RETURNING product_images.id
-        )
         INSERT INTO product_images (
             product_id,
             stored_file_id,
@@ -131,25 +133,34 @@ public static class CatalogImportDatabaseSql
             title,
             sort_order,
             is_main)
-        SELECT
-            product.id,
+        VALUES (
+            @ProductId,
             @StoredFileId,
-            product.name,
-            product.name,
+            @Alt,
+            @Title,
             0,
-            TRUE
-        FROM product_row product
+            @IsMain)
         ON CONFLICT (product_id, stored_file_id) DO UPDATE
         SET alt = EXCLUDED.alt,
             title = EXCLUDED.title,
             sort_order = EXCLUDED.sort_order,
-            is_main = EXCLUDED.is_main;
+            is_main = CASE
+                WHEN @ReplaceExistingMainImages THEN EXCLUDED.is_main
+                ELSE product_images.is_main
+            END;
         """;
+}
+
+public static class CatalogImportDatabaseStorage
+{
+    public const string ProductImageStorageKeyPrefix = "storage/products/catalog-import/";
 }
 
 public sealed record CatalogImportApplyOptions(
     bool ResetCatalog,
-    bool AllowResetInCurrentEnvironment);
+    bool AllowResetInCurrentEnvironment,
+    bool ReplaceExistingMainImages = false,
+    string? StorageRootPath = null);
 
 public sealed record CatalogImportApplyResult(
     int CategoriesProcessed,
@@ -158,7 +169,8 @@ public sealed record CatalogImportApplyResult(
 
 public sealed class CatalogImportDatabase
 {
-    private const string ProductImageStoragePrefix = "catalog-import/products/";
+    private const string StorageRequestPathPrefix = "storage/";
+    private const string ProductImageContentType = "image/png";
 
     private readonly string _connectionString;
 
@@ -181,6 +193,7 @@ public sealed class CatalogImportDatabase
         ArgumentNullException.ThrowIfNull(options);
 
         ValidateResetOptions(options);
+        var imageImportsByExternalId = PrepareImageImports(plan.Products, options.StorageRootPath);
 
         await using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
@@ -214,23 +227,24 @@ public sealed class CatalogImportDatabase
                     $"Product '{product.ExternalId}' was not imported because category '{product.CategorySlug}' was not found.");
             }
 
-            if (product.Image is null)
+            if (!imageImportsByExternalId.TryGetValue(product.ExternalId, out var imageImport))
             {
                 continue;
             }
 
-            var storedFile = CreateStoredFileParameters(product.Image);
             var storedFileId = await connection.ExecuteScalarAsync<Guid>(new CommandDefinition(
                 CatalogImportDatabaseSql.UpsertStoredFile,
-                parameters: storedFile,
+                parameters: imageImport.StoredFile,
                 transaction: transaction,
                 cancellationToken: cancellationToken));
 
-            await connection.ExecuteAsync(new CommandDefinition(
-                CatalogImportDatabaseSql.UpsertProductImage,
-                parameters: new { product.ExternalId, StoredFileId = storedFileId },
-                transaction: transaction,
-                cancellationToken: cancellationToken));
+            await UpsertProductImageAsync(
+                connection,
+                transaction,
+                imageImport,
+                storedFileId,
+                options.ResetCatalog || options.ReplaceExistingMainImages,
+                cancellationToken);
 
             imagesProcessed++;
         }
@@ -250,6 +264,26 @@ public sealed class CatalogImportDatabase
             throw new InvalidOperationException(
                 "Catalog reset is allowed only for explicitly approved dev/QA environments.");
         }
+    }
+
+    private static IReadOnlyDictionary<string, CatalogImportProductImageImport> PrepareImageImports(
+        IReadOnlyList<CatalogProductImportRow> products,
+        string? storageRootPath)
+    {
+        var imports = new Dictionary<string, CatalogImportProductImageImport>(StringComparer.Ordinal);
+        foreach (var product in products)
+        {
+            if (product.Image is null)
+            {
+                continue;
+            }
+
+            var storedFile = CreateStoredFileParameters(product.Image);
+            CopyToStorageRoot(product.Image.File, storedFile.StorageKey, storageRootPath);
+            imports[product.ExternalId] = new CatalogImportProductImageImport(product.ExternalId, storedFile);
+        }
+
+        return imports;
     }
 
     private static async Task ResetCatalogAsync(
@@ -274,6 +308,50 @@ public sealed class CatalogImportDatabase
             cancellationToken: cancellationToken));
     }
 
+    private static async Task UpsertProductImageAsync(
+        NpgsqlConnection connection,
+        NpgsqlTransaction transaction,
+        CatalogImportProductImageImport imageImport,
+        Guid storedFileId,
+        bool replaceExistingMainImages,
+        CancellationToken cancellationToken)
+    {
+        var product = await connection.QuerySingleOrDefaultAsync<ProductImageProductRow>(new CommandDefinition(
+            CatalogImportDatabaseSql.LockProductForImageImport,
+            parameters: new { imageImport.ExternalId },
+            transaction: transaction,
+            cancellationToken: cancellationToken));
+
+        if (product is null)
+        {
+            throw new InvalidOperationException(
+                $"Product '{imageImport.ExternalId}' was not found while importing its image.");
+        }
+
+        if (replaceExistingMainImages)
+        {
+            await connection.ExecuteAsync(new CommandDefinition(
+                CatalogImportDatabaseSql.ClearProductMainImage,
+                parameters: new { product.ProductId },
+                transaction: transaction,
+                cancellationToken: cancellationToken));
+        }
+
+        await connection.ExecuteAsync(new CommandDefinition(
+            CatalogImportDatabaseSql.UpsertProductImage,
+            parameters: new
+            {
+                product.ProductId,
+                StoredFileId = storedFileId,
+                Alt = product.ProductName,
+                Title = product.ProductName,
+                IsMain = replaceExistingMainImages,
+                ReplaceExistingMainImages = replaceExistingMainImages
+            },
+            transaction: transaction,
+            cancellationToken: cancellationToken));
+    }
+
     private static CatalogImportStoredFileParameters CreateStoredFileParameters(CatalogProductImageImportRow image)
     {
         if (string.IsNullOrWhiteSpace(image.File))
@@ -288,16 +366,42 @@ public sealed class CatalogImportDatabase
 
         var file = new FileInfo(image.File);
         var extension = Path.GetExtension(file.Name);
-        var storageName = string.IsNullOrWhiteSpace(extension)
-            ? NormalizeStorageName(image.AssetKey)
-            : $"{NormalizeStorageName(image.AssetKey)}{extension.ToLowerInvariant()}";
+        if (!string.Equals(extension, ".png", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException($"Product image file must be a PNG: {image.File}");
+        }
+
+        var storageName = $"{NormalizeStorageName(image.AssetKey)}.png";
 
         return new CatalogImportStoredFileParameters(
-            StorageKey: $"{ProductImageStoragePrefix}{storageName}",
+            StorageKey: $"{CatalogImportDatabaseStorage.ProductImageStorageKeyPrefix}{storageName}",
             OriginalFileName: file.Name,
             ContentType: GetContentType(extension),
             SizeBytes: file.Length,
             Checksum: ComputeSha256(image.File));
+    }
+
+    private static void CopyToStorageRoot(string sourcePath, string storageKey, string? storageRootPath)
+    {
+        if (string.IsNullOrWhiteSpace(storageRootPath))
+        {
+            return;
+        }
+
+        var relativeStoragePath = storageKey.StartsWith(StorageRequestPathPrefix, StringComparison.Ordinal)
+            ? storageKey[StorageRequestPathPrefix.Length..]
+            : storageKey;
+        var destinationPath = Path.Combine(
+            storageRootPath,
+            relativeStoragePath.Replace('/', Path.DirectorySeparatorChar));
+        var destinationDirectory = Path.GetDirectoryName(destinationPath)
+            ?? throw new InvalidOperationException($"Storage destination path is invalid: {destinationPath}");
+
+        Directory.CreateDirectory(destinationDirectory);
+        if (!string.Equals(Path.GetFullPath(sourcePath), Path.GetFullPath(destinationPath), StringComparison.OrdinalIgnoreCase))
+        {
+            File.Copy(sourcePath, destinationPath, overwrite: true);
+        }
     }
 
     private static string NormalizeStorageName(string value)
@@ -318,7 +422,7 @@ public sealed class CatalogImportDatabase
     private static string GetContentType(string extension)
     {
         return string.Equals(extension, ".png", StringComparison.OrdinalIgnoreCase)
-            ? "image/png"
+            ? ProductImageContentType
             : "application/octet-stream";
     }
 
@@ -334,4 +438,15 @@ public sealed class CatalogImportDatabase
         string ContentType,
         long SizeBytes,
         string Checksum);
+
+    private sealed record CatalogImportProductImageImport(
+        string ExternalId,
+        CatalogImportStoredFileParameters StoredFile);
+
+    private sealed class ProductImageProductRow
+    {
+        public Guid ProductId { get; init; }
+
+        public string ProductName { get; init; } = string.Empty;
+    }
 }

@@ -33,12 +33,45 @@ public sealed class CatalogImportDatabaseSqlTests
         Assert.Contains("ON CONFLICT (storage_key) DO UPDATE", CatalogImportDatabaseSql.UpsertStoredFile);
         Assert.Contains("RETURNING id", CatalogImportDatabaseSql.UpsertStoredFile);
 
-        Assert.Contains("UPDATE product_images", CatalogImportDatabaseSql.UpsertProductImage);
-        Assert.Contains("SET is_main = FALSE", CatalogImportDatabaseSql.UpsertProductImage);
+        Assert.Contains("UPDATE product_images", CatalogImportDatabaseSql.ClearProductMainImage);
+        Assert.Contains("SET is_main = FALSE", CatalogImportDatabaseSql.ClearProductMainImage);
         Assert.Contains("INSERT INTO product_images", CatalogImportDatabaseSql.UpsertProductImage);
-        Assert.Contains("WHERE product.external_id = @ExternalId", CatalogImportDatabaseSql.UpsertProductImage);
+        Assert.Contains("WHERE product.external_id = @ExternalId", CatalogImportDatabaseSql.LockProductForImageImport);
         Assert.Contains("ON CONFLICT (product_id, stored_file_id) DO UPDATE", CatalogImportDatabaseSql.UpsertProductImage);
-        Assert.Contains("is_main = EXCLUDED.is_main", CatalogImportDatabaseSql.UpsertProductImage);
+        Assert.Contains("WHEN @ReplaceExistingMainImages THEN EXCLUDED.is_main", CatalogImportDatabaseSql.UpsertProductImage);
+        Assert.Contains("ELSE product_images.is_main", CatalogImportDatabaseSql.UpsertProductImage);
+    }
+
+    [Fact]
+    public void ProductImageReplacementSql_UsesExplicitOrderedCommandsWithoutDataModifyingCte()
+    {
+        Assert.Contains("FOR UPDATE", CatalogImportDatabaseSql.LockProductForImageImport);
+        Assert.Contains("WHERE product.external_id = @ExternalId", CatalogImportDatabaseSql.LockProductForImageImport);
+
+        Assert.StartsWith("UPDATE product_images", CatalogImportDatabaseSql.ClearProductMainImage.TrimStart());
+        Assert.Contains("WHERE product_id = @ProductId", CatalogImportDatabaseSql.ClearProductMainImage);
+        Assert.Contains("AND is_main", CatalogImportDatabaseSql.ClearProductMainImage);
+
+        Assert.StartsWith("INSERT INTO product_images", CatalogImportDatabaseSql.UpsertProductImage.TrimStart());
+        Assert.DoesNotContain("WITH", CatalogImportDatabaseSql.UpsertProductImage, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("UPDATE product_images", CatalogImportDatabaseSql.UpsertProductImage, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("@IsMain", CatalogImportDatabaseSql.UpsertProductImage);
+    }
+
+    [Fact]
+    public void ProductImageReplacementPolicy_DefaultsToNotReplacingExistingMainImages()
+    {
+        var options = new CatalogImportApplyOptions(ResetCatalog: false, AllowResetInCurrentEnvironment: false);
+
+        Assert.False(options.ReplaceExistingMainImages);
+    }
+
+    [Fact]
+    public void StorageKeyPrefix_UsesLocalStoragePublicUrlContract()
+    {
+        Assert.Equal("storage/products/catalog-import/", CatalogImportDatabaseStorage.ProductImageStorageKeyPrefix);
+        Assert.Contains("storage_key LIKE 'storage/products/catalog-import/%'", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.DoesNotContain("catalog-import/products/%", CatalogImportDatabaseSql.ResetCatalog);
     }
 
     [Fact]
@@ -55,7 +88,7 @@ public sealed class CatalogImportDatabaseSqlTests
         Assert.Contains("DELETE FROM products", CatalogImportDatabaseSql.ResetCatalog);
         Assert.Contains("DELETE FROM categories", CatalogImportDatabaseSql.ResetCatalog);
         Assert.Contains("purpose = 'product_image'", CatalogImportDatabaseSql.ResetCatalog);
-        Assert.Contains("storage_key LIKE 'catalog-import/products/%'", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.Contains("storage_key LIKE 'storage/products/catalog-import/%'", CatalogImportDatabaseSql.ResetCatalog);
         Assert.DoesNotContain("DELETE FROM request_items", CatalogImportDatabaseSql.ResetCatalog, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("DELETE FROM requests", CatalogImportDatabaseSql.ResetCatalog, StringComparison.OrdinalIgnoreCase);
     }
