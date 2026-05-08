@@ -1,4 +1,5 @@
 using LineCom.Api.Infrastructure.Database;
+using LineCom.Api.Infrastructure.Hosting;
 using LineCom.Api.Modules.Account;
 using LineCom.Api.Modules.Auth;
 using LineCom.Api.Modules.Catalog;
@@ -6,6 +7,15 @@ using LineCom.Api.Modules.Requests;
 using LineCom.Api.Shared.Errors;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+
+if (DevelopmentLoggingPolicy.ShouldUseDevelopmentConsoleLogging(builder.Environment))
+{
+    builder.Logging.ClearProviders();
+    builder.Logging.AddConsole();
+    builder.Logging.AddDebug();
+}
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -26,7 +36,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ApiExceptionMiddleware>();
 
-app.UseHttpsRedirection();
+if (HttpsRedirectionPolicy.ShouldUseHttpsRedirection(app.Environment))
+{
+    app.UseHttpsRedirection();
+}
+
+app.UseLocalStorageStaticFiles(builder.Configuration);
 
 app.UseAuthentication();
 app.UseAuthorization();

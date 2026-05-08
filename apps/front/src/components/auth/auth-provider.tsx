@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type { AuthSession, CurrentUser } from "@/lib/api/auth";
 
 type AuthContextValue = {
@@ -15,21 +15,23 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
+  const setSession = useCallback((session: AuthSession) => {
+    setUser(session.user);
+    setCsrfToken(session.csrfToken);
+  }, []);
+  const clearSession = useCallback(() => {
+    setUser(null);
+    setCsrfToken(null);
+  }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       csrfToken,
-      setSession: (session) => {
-        setUser(session.user);
-        setCsrfToken(session.csrfToken);
-      },
-      clearSession: () => {
-        setUser(null);
-        setCsrfToken(null);
-      },
+      setSession,
+      clearSession,
     }),
-    [csrfToken, user],
+    [clearSession, csrfToken, setSession, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

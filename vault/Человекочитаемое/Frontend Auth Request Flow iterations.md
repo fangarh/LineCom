@@ -244,7 +244,7 @@ product card, product detail и кнопка `Добавить в заявку`.
 
 ## Итерация 9: Заявки в личном кабинете
 
-Статус: запланирована.
+Статус: выполнена 2026-05-07.
 
 Показать пользователю список и карточку своих заявок.
 
@@ -266,9 +266,17 @@ product card, product detail и кнопка `Добавить в заявку`.
 - публичные цены не отображаются;
 - даты форматируются для `ru-RU`.
 
+Изменена: добавлены `/account/requests`, `/account/requests/[number]`, список заявок, фильтр статуса,
+карточка заявки со снимками клиента, организации, позиций и историей. Protected pages загружают `GET /api/auth/me`
+и request endpoints, при `auth.unauthorized` ведут на login с `returnTo`, а `request.not_found` показывают
+контролируемо. Проверки `npm.cmd test -- src/components/account/request-list.test.tsx src/components/account/request-detail.test.tsx src/app/account/requests/requests-page-client.test.tsx src/app/account/requests/[number]/request-detail-page-client.test.tsx`,
+`npm.cmd run lint`, `npm.cmd run build` прошли. Полный `npm.cmd test` в текущем окружении был прерван из-за OOM
+Vitest workers после прохождения 13 из 14 test files; новые тесты итерации проверены отдельно. Browser Use открыл
+`/account/requests` и `/account/requests/ЗК26-0001`: 404 нет, при недоступном backend показывается контролируемая ошибка.
+
 ## Итерация 10: Browser QA и закрытие этапа
 
-Статус: запланирована.
+Статус: QA выполнена 2026-05-07; полный happy path создания заявки заблокирован схемой подключенной БД.
 
 Проверить весь путь в браузере и закрыть frontend-срез без намеренного технического долга.
 
@@ -292,6 +300,29 @@ product card, product detail и кнопка `Добавить в заявку`.
 - `dotnet build LineCom.sln -m:1` проходит;
 - `dotnet test LineCom.sln -m:1` проходит.
 
+Изменена: выполнен финальный Playwright QA публичных, auth и account страниц на desktop и mobile ширинах.
+Исправлен найденный QA-дефект с изображениями товаров: frontend теперь проксирует `/storage/:path*`, backend
+публикует локальное файловое хранилище `/storage`, а локальный seed-файл `storage/products/cable.jpg` отдается
+без 404. Playwright подтвердил отсутствие blank pages, горизонтального overflow и видимых `Купить` /
+`Оформить заказ`; публичные страницы показывают `Цена по запросу`. Без auth protected pages ведут на login.
+
+Проверки выполнены:
+
+- `dotnet build LineCom.sln -m:1` - прошел, только `NU1900` warnings из-за недоступности NuGet vulnerability feed.
+- `dotnet test LineCom.sln -m:1` - 285 passed.
+- `npm.cmd run lint` - прошел.
+- `npm.cmd test` - 16 files, 41 tests passed.
+- `npm.cmd run build` - прошел.
+- Playwright desktop/mobile routes: `/`, `/catalog`, `/catalog/vitaya-para`, `/products/u-utp-cat-5e`, `/request`,
+  `/auth/login`, `/auth/register`, `/account/profile`, `/account/requests`, `/account/requests/ЗК26-0001`.
+- `rg -n "Купить|Оформить заказ|оплат|цена \\d|TODO|TBD|FIXME|заглуш|костыл" apps/front docs/superpowers/specs docs/superpowers/plans` -
+  запрещенная коммерческая лексика в `apps/front` не найдена; совпадения относятся к правилам в планах/спеках и
+  случайному фрагменту integrity в `package-lock.json`.
+
+Блокер полного happy path: `POST /api/auth/register` возвращает `500 internal_error`, потому что подключенная
+локальная/QA БД не содержит таблицу `users` (`PostgreSQL 42P01 relation "users" does not exist`). Миграции на
+подключенную БД не запускались в рамках QA без отдельного решения.
+
 ## Порядок работы после очистки контекста
 
 1. Открыть эту заметку.
@@ -307,7 +338,53 @@ product card, product detail и кнопка `Добавить в заявку`.
 
 ## Текущая точка продолжения
 
-Следующий шаг: перейти к `Итерация 9: Заявки в личном кабинете`.
+Следующий шаг: для полного end-to-end happy path применить миграции auth/request к QA-БД или подключить БД,
+где уже есть полный набор миграций, затем повторить сценарий `каталог -> товар -> заявка -> регистрация/вход ->
+отправка -> карточка заявки -> список заявок`.
 
 Отдельный QA-блокер остается для полного happy-path каталога с реальной БД: локальному backend нужен настроенный
 `ConnectionStrings__Default`, потому что пароль development-песочницы не хранится в файлах проекта.
+
+## Итерация 11: QA-БД и полный Playwright happy path
+
+Статус: выполнена 2026-05-07.
+
+Цель: снять блокер полного e2e-сценария `каталог -> товар -> заявка -> регистрация/вход -> отправка -> карточка заявки -> список заявок`.
+
+План итерации: `docs/superpowers/plans/2026-05-07-qa-db-playwright-happy-path.md`.
+
+Изменения:
+
+- применены DbUp-миграции `003_auth_users_organizations.sql` и `004_requests.sql` к подключенной QA-БД;
+- исправлен backend mapping в `DapperCustomerRequestRepository`: row-типы, читающие PostgreSQL `timestamptz`, используют `DateTime`, затем значения явно приводятся к доменным `DateTimeOffset`;
+- добавлен regression-тест `DapperCustomerRequestRepositoryMappingTests`;
+- исправлен `Location` header при создании заявки: кириллический номер заявки URL-encode'ится перед `Created(...)`;
+- обновлен endpoint-тест создания заявки, чтобы проверять encoded `Location`.
+
+Playwright QA:
+
+- frontend проверялся на `http://127.0.0.1:3010`;
+- backend работал на `http://127.0.0.1:8080`;
+- создан QA-пользователь `qa-1778178414535@example.com`;
+- создана заявка `ЗК26-0002`;
+- проверены маршруты `/`, `/catalog`, `/catalog/vitaya-para`, `/products/u-utp-cat-5e`, `/request`, `/auth/login?returnTo=%2Frequest`, `/auth/register?returnTo=%2Frequest`, `/account/requests/%D0%97%D0%9A26-0002`, `/account/requests`;
+- mobile responsive pass на ширине `390px` пройден для `/catalog`, `/catalog/vitaya-para`, `/products/u-utp-cat-5e`, `/request`, `/account/requests`, `/account/requests/%D0%97%D0%9A26-0002`;
+- horizontal overflow не найден, browser console errors не найдены.
+
+Проверки:
+
+- `dotnet build LineCom.sln -m:1` - прошел, только `NU1900` warnings из-за недоступности NuGet vulnerability feed;
+- `dotnet test LineCom.sln -m:1` - 289 passed;
+- `npm.cmd run lint` - прошел;
+- `npm.cmd test` - 17 files, 42 tests passed;
+- `npm.cmd run build` - прошел;
+- поиск `Купить|Оформить заказ|оплат|цена \d|TODO|TBD|FIXME|заглуш|костыл` не нашел запрещенную коммерческую лексику в `apps/front`; совпадения относятся к правилам/историческим заметкам в документации, команде поиска и случайному фрагменту integrity в `package-lock.json`.
+
+Оставшиеся наблюдения:
+
+- при старте backend в текущем пользовательском профиле ASP.NET DataProtection логирует DPAPI warnings по старым ключам, но приложение стартует и сценарий работает;
+- во время Playwright-переходов были два `GET /api/auth/me net::ERR_ABORTED`, связанные с навигацией между routes; сценарий они не блокируют.
+
+## Текущая точка продолжения после итерации 11
+
+Frontend Auth + Request Flow имеет подтвержденный полный happy path на QA-БД. Следующая итерация может переходить к следующему продуктовому срезу: админская обработка заявок, импорт/привязка изображений каталога или дальнейшая каталоговая полнота.

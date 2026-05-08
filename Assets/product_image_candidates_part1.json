@@ -1,0 +1,717 @@
+{
+  "batch": {
+    "number": 1,
+    "createdAt": "2026-05-07",
+    "sourceCatalogFile": "Assets/1c_export_41_01_nomenclature_by_category.json",
+    "sourceAccount": "41.01",
+    "scope": "Первая партия: оптические компоненты и патч-корды, где одна визуальная группа может закрывать несколько номенклатур.",
+    "rightsNote": "Это кандидаты источников. Перед коммерческим использованием изображений нужно получить разрешение правообладателя, использовать изображения поставщика по договору или заменить на собственные фото.",
+    "importShape": "imageAssets описывает уникальные изображения/визуальные группы; productImageAssignments привязывает группы к строкам номенклатуры из 1С."
+  },
+  "imageAssets": [
+    {
+      "assetKey": "sfp-wdm-sc-1g-20km-ddm",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/sfp-wdm-sc-1g-20km-ddm.jpg",
+      "sourceName": "ССД",
+      "candidatePages": [
+        {
+          "url": "https://www.ssd.ru/sfp-wdm-gigalight-1-25g-tx1310-rx1550-20km-sc-ddm/",
+          "matchedTitle": "SFP WDM 1.25G Tx1310/Rx1550 20km SC DDM"
+        },
+        {
+          "url": "https://ssd.ru/sfp-wdm-gigalight-1-25g-tx1550-rx1310-20km-sc-ddm/",
+          "matchedTitle": "SFP WDM 1.25G Tx1550/Rx1310 20km SC DDM"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Визуально одинаковая группа для пары WDM SFP; TX/RX направление влияет на характеристики, но не на общий вид."
+    },
+    {
+      "assetKey": "sfp-dac-2m",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/sfp-dac-2m.jpg",
+      "sourceName": "BBRC",
+      "candidatePages": [
+        {
+          "url": "https://www.bbrc.ru/catalog/item/kabel_fibo_ft_s10_dac2m_sfp_dac_modul_mednyy_kabel_2_metra/",
+          "matchedTitle": "FIBO FT-S10-DAC2m SFP+ DAC модуль, медный кабель, 2 метра"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Точное совпадение типа товара и длины."
+    },
+    {
+      "assetKey": "kdzs-40",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/kdzs-40.jpg",
+      "sourceName": "Tinko / LANart",
+      "candidatePages": [
+        {
+          "url": "https://www.tinko.ru/catalog/product/293678/",
+          "matchedTitle": "КДЗС-40, гильза защитная"
+        },
+        {
+          "url": "https://lan-art.ru/catalog/komplekt-dlya-zashchity-svarnykh-soedineniy-gilza-kdzs/",
+          "matchedTitle": "Комплект для защиты сварных соединений, гильза КДЗС-40"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Группа для гильз/комплектов КДЗС длиной 40 мм."
+    },
+    {
+      "assetKey": "kdzs-60",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/kdzs-60.jpg",
+      "sourceName": "Lanbi / Electroline",
+      "candidatePages": [
+        {
+          "url": "https://lanbi.ru/catalog/good496",
+          "matchedTitle": "ТЕЛКОМ КДЗС-60 комплект деталей для защиты места сварки"
+        },
+        {
+          "url": "https://electroline.ru/product/eurolan-32c-ms-60.html",
+          "matchedTitle": "Гильза защитная КДЗС, 60 мм"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Группа для гильз/комплектов КДЗС длиной 60 мм."
+    },
+    {
+      "assetKey": "plc-splitter-1x4-09-ss-tube",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/plc-splitter-1x4-09-ss-tube.jpg",
+      "sourceName": "Telecom-Sales / Telcord",
+      "candidatePages": [
+        {
+          "url": "https://telecom-sales.ru/product/snr-plc-m-1x4-sc-apc/",
+          "matchedTitle": "SNR-PLC-M-1x4-SC/APC"
+        },
+        {
+          "url": "https://www.telcord.ru/catalog/splittera_plc_1kh4_/splitter-plc-1kh4-sc-apc-0-9mm-1m/",
+          "matchedTitle": "PLC 1x4 SC/APC 0.9 мм 1 м"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Подходит для 1x4 PLC в 0.9 мм оболочке; для неоконцованных вариантов нужна проверка комплектации."
+    },
+    {
+      "assetKey": "plc-splitter-1x8-09-ss-tube",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/plc-splitter-1x8-09-ss-tube.jpg",
+      "sourceName": "Telcord",
+      "candidatePages": [
+        {
+          "url": "https://www.telcord.ru/catalog/splittera_plc_1kh8_/splitter-plc-1kh8-sc-apc-0-9mm-1m/",
+          "matchedTitle": "PLC 1x8 SC/APC 0.9 мм 1 м"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Подходит для 1x8 PLC в 0.9 мм оболочке."
+    },
+    {
+      "assetKey": "plc-splitter-1x2-bare",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/plc-splitter-1x2-bare.jpg",
+      "sourceName": "Fiber-Mart / Telecom-Sales",
+      "candidatePages": [
+        {
+          "url": "https://www.fiber-mart.com/1x2-bare-fiber-plc-splitter-250%CE%BCm-bare-fiber-p-1888.html",
+          "matchedTitle": "1x2 Bare Fiber PLC Splitter"
+        },
+        {
+          "url": "https://telecom-sales.ru/product/qtech-ro-plc-1x2-50-50-a900-1m/",
+          "matchedTitle": "QTech РО-PLC-1x2-50/50-A900-1M"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "medium",
+      "matchNotes": "Визуальная группа для 1x2 разветвителей; проценты 15/85, 20/80, 30/70, 50/50 лучше не различать картинкой."
+    },
+    {
+      "assetKey": "plc-splitter-1x2-3sc-apc",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/plc-splitter-1x2-3sc-apc.jpg",
+      "sourceName": "Opt-ika",
+      "candidatePages": [
+        {
+          "url": "https://www.opt-ika.ru/fiber-optical-coupler/1x2-coupler-sc.html",
+          "matchedTitle": "Оптический сплиттер FBT 1x2 SC/UPC 50/50 0.9 мм"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "medium",
+      "matchNotes": "Похожа по форм-фактору, но для строки 74 нужен дополнительный поиск точного варианта с 3SC/APC."
+    },
+    {
+      "assetKey": "fiber-patchcord-lc-upc-lc-upc-duplex",
+      "categorySlug": "patch-cords",
+      "suggestedStorageKey": "products/patch-cords/fiber-patchcord-lc-upc-lc-upc-duplex.jpg",
+      "sourceName": "Viatec",
+      "candidatePages": [
+        {
+          "url": "https://viatec.ua/product/UPC-3SCLCSM",
+          "matchedTitle": "Патчкорд LC/UPC-LC/UPC SM 3м Simplex"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "medium",
+      "matchNotes": "Найден близкий источник; для duplex желательно найти отдельную карточку с duplex-фото."
+    },
+    {
+      "assetKey": "fiber-patchcord-lc-upc-lc-upc-simplex",
+      "categorySlug": "patch-cords",
+      "suggestedStorageKey": "products/patch-cords/fiber-patchcord-lc-upc-lc-upc-simplex.jpg",
+      "sourceName": "Viatec",
+      "candidatePages": [
+        {
+          "url": "https://viatec.ua/product/UPC-3SCLCSM",
+          "matchedTitle": "Патчкорд LC/UPC-LC/UPC SM 3м Simplex"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "medium",
+      "matchNotes": "Визуально длины 0.5/1/3 м можно закрывать одной картинкой."
+    },
+    {
+      "assetKey": "fiber-patchcord-sc-apc-sc-apc-simplex",
+      "categorySlug": "patch-cords",
+      "suggestedStorageKey": "products/patch-cords/fiber-patchcord-sc-apc-sc-apc-simplex.jpg",
+      "sourceName": "BOUZ / Antena",
+      "candidatePages": [
+        {
+          "url": "https://bouz.ru/catalog/sm_sc_sc/patchkord_opticheskiy_sc_apc_sm_simplex_1_metr_lszh_3mm/",
+          "matchedTitle": "Патчкорд оптический BOUZ, SC/APC, SM, Simplex, 1 метр, LSZH 3мм"
+        },
+        {
+          "url": "https://antena.md/ru/6737648/",
+          "matchedTitle": "SC/APC-SC/APC-SM-simplex-3.0mm-1.0m"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Одна картинка подходит для длин 1/2/3 м."
+    },
+    {
+      "assetKey": "fiber-patchcord-sc-upc-sc-apc-simplex",
+      "categorySlug": "patch-cords",
+      "suggestedStorageKey": "products/patch-cords/fiber-patchcord-sc-upc-sc-apc-simplex.jpg",
+      "sourceName": "BOUZ",
+      "candidatePages": [
+        {
+          "url": "https://bouz.ru/catalog/sm_sc_sc/patchkord_opticheskiy_sc_upc_sc_apc_sm_simplex_1_metr_lszh_3mm/",
+          "matchedTitle": "Патчкорд оптический BOUZ, SC/UPC-SC/APC, SM, Simplex, 1 метр, LSZH 3мм"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Одна картинка подходит для длин 1/1.5/2 м."
+    },
+    {
+      "assetKey": "fiber-patchcord-sc-upc-sc-upc-simplex",
+      "categorySlug": "patch-cords",
+      "suggestedStorageKey": "products/patch-cords/fiber-patchcord-sc-upc-sc-upc-simplex.jpg",
+      "sourceName": "BBRC",
+      "candidatePages": [
+        {
+          "url": "https://www.bbrc.ru/catalog/item/patch_kord_vo_sm_g_652_d_sc_upc_sc_upc_3_0mm_simplex_lszh_1m/",
+          "matchedTitle": "Патч-корд ВО SM(G.652.D), SC/UPC-SC/UPC, 3.0мм, simplex, LSZH, 1м"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Одна картинка подходит для длин 0.5/1/1.5/5 м."
+    },
+    {
+      "assetKey": "fiber-patchcord-sc-apc-lc-upc-simplex",
+      "categorySlug": "patch-cords",
+      "suggestedStorageKey": "products/patch-cords/fiber-patchcord-sc-apc-lc-upc-simplex.jpg",
+      "sourceName": "SUPRLAN",
+      "candidatePages": [
+        {
+          "url": "https://supr.ru/catalog/patch_kordy_odnomodovye_sm/patch_kord_vo_sm_g_652_d_sc_apc_sc_upc_3_0mm_simplex_lszh_1m/",
+          "matchedTitle": "Патч-корд ВО SM(G.652.D), SC/APC-SC/UPC, 3.0мм, simplex, LSZH, 1м"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "medium",
+      "matchNotes": "Найден близкий SC/APC-SC/UPC; для SC/APC-LC/UPC лучше проверить более точный источник."
+    },
+    {
+      "assetKey": "fiber-patchcord-sc-upc-lc-upc-simplex",
+      "categorySlug": "patch-cords",
+      "suggestedStorageKey": "products/patch-cords/fiber-patchcord-sc-upc-lc-upc-simplex.jpg",
+      "sourceName": "BBRC",
+      "candidatePages": [
+        {
+          "url": "https://www.bbrc.ru/catalog/item/patch_kord_vo_sm_g_652_d_fc_upc_lc_upc_3_0mm_simplex_lszh_1m/",
+          "matchedTitle": "Патч-корд ВО SM(G.652.D), FC/UPC-LC/UPC, 3.0мм, simplex, LSZH, 1м"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "low",
+      "matchNotes": "Источник похож только по LC/UPC и форм-фактору; нужен следующий проход для точного SC/UPC-LC/UPC."
+    },
+    {
+      "assetKey": "utp-patchcord-cat5e-grey-lszh",
+      "categorySlug": "patch-cords",
+      "suggestedStorageKey": "products/patch-cords/utp-patchcord-cat5e-grey-lszh.jpg",
+      "sourceName": "Telecom-Sales",
+      "candidatePages": [
+        {
+          "url": "https://telecom-sales.ru/product/netko-n-cca-utp-5e-1-0m-2-lszh/",
+          "matchedTitle": "Патч-корд UTP4 cat.5е 1.0м CCA LSZH серый литой коннектор"
+        },
+        {
+          "url": "https://telecom-sales.ru/product/snr-uu4-5e-010-lst-cca-gy/",
+          "matchedTitle": "Коммутационный шнур U/UTP cat.5e 1м LSZH CCA серый"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Одна картинка подходит для серых UTP cat.5e патч-кордов 1/3 м."
+    },
+    {
+      "assetKey": "pigtail-sc-apc-g652d-09-lszh",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/pigtail-sc-apc-g652d-09-lszh.jpg",
+      "sourceName": "Baytel",
+      "candidatePages": [
+        {
+          "url": "https://baytel.ru/product/%D0%BF%D0%B8%D0%B3%D1%82%D0%B5%D0%B9%D0%BB-scapc-g-652d-09%D0%BC%D0%BC-lszh-15%D0%BC/",
+          "matchedTitle": "Пигтейл SC(APC) G.652D 0,9мм LSZH 1,5м"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Подходит для SC/APC пигтейлов 1.5 м и близких buffer-позиций."
+    },
+    {
+      "assetKey": "pigtail-sc-upc-g652d-09-lszh",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/pigtail-sc-upc-g652d-09-lszh.jpg",
+      "sourceName": "Baytel",
+      "candidatePages": [
+        {
+          "url": "https://baytel.ru/product/%D0%BF%D0%B8%D0%B3%D1%82%D0%B5%D0%B9%D0%BB-fcupc-g-652d-09%D0%BC%D0%BC-lszh-15%D0%BC/",
+          "matchedTitle": "Пигтейл FC(UPC) G.652D 0,9мм LSZH 1,5м"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "low",
+      "matchNotes": "Источник найден близкий по оболочке и длине, но коннектор FC вместо SC; нужен следующий проход для точного SC/UPC."
+    },
+    {
+      "assetKey": "optical-cross-rack-1u",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/optical-cross-rack-1u.jpg",
+      "sourceName": "Telecom-Sales / Tinko",
+      "candidatePages": [
+        {
+          "url": "https://telecom-sales.ru/product/snr-odf-24r-8sc/",
+          "matchedTitle": "Кросс оптический 19 дюймов 1U, укомплектованный на 8 SC портов"
+        },
+        {
+          "url": "https://www.tinko.ru/catalog/product/311849/",
+          "matchedTitle": "FOBX24-1U-16SCUS09, кросс оптический 19 дюймов"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "medium",
+      "matchNotes": "Одна визуальная группа для стоечных 1U кроссов; портность можно различать характеристиками."
+    },
+    {
+      "assetKey": "optical-cross-rack-2u",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/optical-cross-rack-2u.jpg",
+      "sourceName": "Telecom-Sales",
+      "candidatePages": [
+        {
+          "url": "https://telecom-sales.ru/product/snr-odf-24r-8sc/",
+          "matchedTitle": "Кросс оптический 19 дюймов, близкий стоечный форм-фактор"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "low",
+      "matchNotes": "Пока только близкая 1U-картинка; для 2U нужен отдельный поиск."
+    },
+    {
+      "assetKey": "optical-cross-wall",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/optical-cross-wall.jpg",
+      "sourceName": "Telecom-Sales",
+      "candidatePages": [
+        {
+          "url": "https://telecom-sales.ru/product/snr-odf-8re-sc/",
+          "matchedTitle": "Кросс оптический настенный до 8SC портов"
+        },
+        {
+          "url": "https://telecom-sales.ru/product/snr-odf-8wp/",
+          "matchedTitle": "Кросс оптический настенный, 8 портов"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "medium",
+      "matchNotes": "Одна визуальная группа для настенных кроссов; портность и тип SC/FC лучше различать характеристиками."
+    },
+    {
+      "assetKey": "splice-cassette-ku-01",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/splice-cassette-ku-01.jpg",
+      "sourceName": "Telecom-Sales / KOMSS",
+      "candidatePages": [
+        {
+          "url": "https://telecom-sales.ru/product/qtech-ku-01/",
+          "matchedTitle": "Сплайс-кассета QTech КУ-01"
+        },
+        {
+          "url": "https://komss.ru/products/splajs-kasseta-universalnaya-ku-01",
+          "matchedTitle": "Сплайс-кассета универсальная КУ-01"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Подходит и для самой кассеты, и для крышки, если в карточке товара нужна общая визуальная группа."
+    },
+    {
+      "assetKey": "fiber-optic-closure-gjs-2-d-48",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/fiber-optic-closure-gjs-2-d-48.jpg",
+      "sourceName": "UTP Shop",
+      "candidatePages": [
+        {
+          "url": "https://utp-shop.ru/product/mufta-opticheskaya-gjs-2-d/",
+          "matchedTitle": "Муфта оптическая тупиковая GJS-2-D 48 волокон"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Точное совпадение модели и емкости."
+    },
+    {
+      "assetKey": "optical-adapter-sc-apc-simplex",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/optical-adapter-sc-apc-simplex.jpg",
+      "sourceName": "Fibertool / Optcore",
+      "candidatePages": [
+        {
+          "url": "https://fibertool.com/catalog/adapters/6877/",
+          "matchedTitle": "Adapter SC/APC to SC/APC Simplex Singlemode with Flange"
+        },
+        {
+          "url": "https://www.optcore.net/product/fa-sca-f-sca-f-sm-sxf-p/",
+          "matchedTitle": "SC to SC APC Simplex Singlemode Plastic Fiber Adapter"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Точная визуальная группа для зеленого SC/APC simplex адаптера."
+    },
+    {
+      "assetKey": "optical-adapter-sc-upc-simplex",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/optical-adapter-sc-upc-simplex.jpg",
+      "sourceName": "Telecom-Sales / SUPRLAN",
+      "candidatePages": [
+        {
+          "url": "https://telecom-sales.ru/product/netko-nb-9063a/",
+          "matchedTitle": "Оптическая розетка SC-SC / UPC SM Simplex"
+        },
+        {
+          "url": "https://supr.ru/catalog/rozetka_sc_upc_simplex/rozetka_sc_upc_simplex/",
+          "matchedTitle": "Розетка SC/UPC simplex"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Точная визуальная группа для синего SC/UPC simplex адаптера."
+    },
+    {
+      "assetKey": "optical-outlet-rs-02",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/optical-outlet-rs-02.jpg",
+      "sourceName": "KOMSS",
+      "candidatePages": [
+        {
+          "url": "https://komss.ru/products/abonentskaya-opticheskaya-rozetka-rs-02",
+          "matchedTitle": "Абонентская оптическая розетка RS-02"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Точное совпадение модели."
+    },
+    {
+      "assetKey": "optical-outlet-sc-upc-simplex",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/optical-outlet-sc-upc-simplex.jpg",
+      "sourceName": "Telecom-Sales / SUPRLAN",
+      "candidatePages": [
+        {
+          "url": "https://telecom-sales.ru/product/netko-nb-9063a/",
+          "matchedTitle": "Оптическая розетка SC-SC / UPC SM Simplex"
+        },
+        {
+          "url": "https://supr.ru/catalog/rozetka_sc_upc_simplex/rozetka_sc_upc_simplex/",
+          "matchedTitle": "Розетка SC/UPC simplex"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "В каталоге часто называется розеткой или проходным адаптером."
+    },
+    {
+      "assetKey": "adapter-panel-8-sc",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/adapter-panel-8-sc.jpg",
+      "sourceName": "Telecom-Sales / КДДС",
+      "candidatePages": [
+        {
+          "url": "https://telecom-sales.ru/product/snr-odf-ap-sc-bk/",
+          "matchedTitle": "Планка адаптерная на 8 адаптеров SC / LC Duplex"
+        },
+        {
+          "url": "https://www.kdds.ru/krossovoe-oborudovanie/krossy-opticheskie-19-dyuymov/planka-semnaya-na-8-portov-sc",
+          "matchedTitle": "Планка съемная на 8 портов SC"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "high",
+      "matchNotes": "Точная визуальная группа для съемной SC-планки."
+    },
+    {
+      "assetKey": "step-attenuator",
+      "categorySlug": "fiber-optic-components",
+      "suggestedStorageKey": "products/fiber-optic-components/step-attenuator.jpg",
+      "sourceName": "Rohde & Schwarz",
+      "candidatePages": [
+        {
+          "url": "https://www.rohde-schwarz.com/cac/products/test-and-measurement/vna-accessories/rs-rsc-step-attenuator_63493-11395.html",
+          "matchedTitle": "R&S RSC ступенчатый аттенюатор"
+        }
+      ],
+      "rightsStatus": "requires-permission",
+      "matchConfidence": "low",
+      "matchNotes": "Найден лабораторный ступенчатый аттенюатор; нужно уточнить, это ли тип из 1С, или нужен оптический фиксированный/переменный аттенюатор."
+    }
+  ],
+  "productImageAssignments": [
+    {
+      "imageAssetKey": "sfp-wdm-sc-1g-20km-ddm",
+      "sourceRows": [36, 37],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "sfp-dac-2m",
+      "sourceRows": [38],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "optical-outlet-rs-02",
+      "sourceRows": [41],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "optical-adapter-sc-apc-simplex",
+      "sourceRows": [42],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "optical-adapter-sc-upc-simplex",
+      "sourceRows": [43],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "step-attenuator",
+      "sourceRows": [57],
+      "isMain": true,
+      "assignmentConfidence": "low",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "kdzs-40",
+      "sourceRows": [71, 165],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "kdzs-60",
+      "sourceRows": [72, 166],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "plc-splitter-1x2-3sc-apc",
+      "sourceRows": [74],
+      "isMain": true,
+      "assignmentConfidence": "medium",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "plc-splitter-1x4-09-ss-tube",
+      "sourceRows": [75, 76, 77],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "plc-splitter-1x8-09-ss-tube",
+      "sourceRows": [78, 79],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "plc-splitter-1x2-bare",
+      "sourceRows": [80, 81, 82, 83, 275],
+      "isMain": true,
+      "assignmentConfidence": "medium",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "optical-cross-rack-1u",
+      "sourceRows": [181, 182, 183, 184, 185, 188],
+      "isMain": true,
+      "assignmentConfidence": "medium",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "optical-cross-rack-2u",
+      "sourceRows": [186, 187],
+      "isMain": true,
+      "assignmentConfidence": "low",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "optical-cross-wall",
+      "sourceRows": [189, 190, 191, 192, 193],
+      "isMain": true,
+      "assignmentConfidence": "medium",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "splice-cassette-ku-01",
+      "sourceRows": [194, 299],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "fiber-optic-closure-gjs-2-d-48",
+      "sourceRows": [203],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "fiber-patchcord-lc-upc-lc-upc-duplex",
+      "sourceRows": [232],
+      "isMain": true,
+      "assignmentConfidence": "medium",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "utp-patchcord-cat5e-grey-lszh",
+      "sourceRows": [233, 234, 235],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "fiber-patchcord-lc-upc-lc-upc-simplex",
+      "sourceRows": [236, 237, 238],
+      "isMain": true,
+      "assignmentConfidence": "medium",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "fiber-patchcord-sc-apc-lc-upc-simplex",
+      "sourceRows": [239, 240, 241],
+      "isMain": true,
+      "assignmentConfidence": "medium",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "fiber-patchcord-sc-apc-sc-apc-simplex",
+      "sourceRows": [242, 243, 244],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "fiber-patchcord-sc-upc-sc-apc-simplex",
+      "sourceRows": [245, 249, 250, 251],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "fiber-patchcord-sc-upc-lc-upc-simplex",
+      "sourceRows": [246, 247, 248],
+      "isMain": true,
+      "assignmentConfidence": "low",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "fiber-patchcord-sc-upc-sc-upc-simplex",
+      "sourceRows": [252, 253, 254, 255],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "pigtail-sc-apc-g652d-09-lszh",
+      "sourceRows": [263, 264],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "pigtail-sc-upc-g652d-09-lszh",
+      "sourceRows": [265, 266],
+      "isMain": true,
+      "assignmentConfidence": "low",
+      "needsOperatorReview": true
+    },
+    {
+      "imageAssetKey": "adapter-panel-8-sc",
+      "sourceRows": [267],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    },
+    {
+      "imageAssetKey": "optical-outlet-sc-upc-simplex",
+      "sourceRows": [284],
+      "isMain": true,
+      "assignmentConfidence": "high",
+      "needsOperatorReview": false
+    }
+  ],
+  "coverage": {
+    "imageAssetCount": 29,
+    "assignmentGroupCount": 29,
+    "coveredSourceRows": 68,
+    "highConfidenceGroups": 18,
+    "mediumConfidenceGroups": 7,
+    "lowConfidenceGroups": 4
+  }
+}

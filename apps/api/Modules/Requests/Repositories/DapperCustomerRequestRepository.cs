@@ -134,7 +134,7 @@ public sealed class DapperCustomerRequestRepository : ICustomerRequestRepository
                 created.Status,
                 created.Source,
                 created.CustomerComment,
-                created.CreatedAt,
+                ToUtcDateTimeOffset(created.CreatedAt),
                 createdItems);
         }
         catch
@@ -161,11 +161,20 @@ public sealed class DapperCustomerRequestRepository : ICustomerRequestRepository
                 CustomerRequestSql.CountCurrentUserRequests,
                 parameters,
                 cancellationToken: cancellationToken));
-        var items = (await connection.QueryAsync<CustomerRequestListRecord>(
+        var rows = (await connection.QueryAsync<RequestListRow>(
             new CommandDefinition(
                 CustomerRequestSql.FindCurrentUserRequests,
                 parameters,
                 cancellationToken: cancellationToken))).ToArray();
+        var items = rows
+            .Select(row => new CustomerRequestListRecord(
+                row.Number,
+                row.Status,
+                row.Source,
+                row.ItemsCount,
+                row.CustomerComment,
+                ToUtcDateTimeOffset(row.CreatedAt)))
+            .ToArray();
 
         return new CustomerRequestListRecordResponse(items, totalItems);
     }
@@ -194,11 +203,17 @@ public sealed class DapperCustomerRequestRepository : ICustomerRequestRepository
                 CustomerRequestSql.FindRequestItems,
                 new { RequestId = request.Id },
                 cancellationToken: cancellationToken))).ToArray();
-        var history = (await connection.QueryAsync<CustomerRequestHistoryRecord>(
+        var historyRows = (await connection.QueryAsync<RequestHistoryRow>(
             new CommandDefinition(
                 CustomerRequestSql.FindRequestHistory,
                 new { RequestId = request.Id },
                 cancellationToken: cancellationToken))).ToArray();
+        var history = historyRows
+            .Select(row => new CustomerRequestHistoryRecord(
+                row.Event,
+                row.Message,
+                ToUtcDateTimeOffset(row.CreatedAt)))
+            .ToArray();
 
         return new CustomerRequestDetailRecord(
             request.Number,
@@ -215,9 +230,21 @@ public sealed class DapperCustomerRequestRepository : ICustomerRequestRepository
                     request.OrganizationInn,
                     request.OrganizationContactPerson),
             request.CustomerComment,
-            request.CreatedAt,
+            ToUtcDateTimeOffset(request.CreatedAt),
             items,
             history);
+    }
+
+    private static DateTimeOffset ToUtcDateTimeOffset(DateTime value)
+    {
+        var utcValue = value.Kind switch
+        {
+            DateTimeKind.Utc => value,
+            DateTimeKind.Local => value.ToUniversalTime(),
+            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
+        };
+
+        return new DateTimeOffset(utcValue);
     }
 
     private sealed record RequestOrganizationSnapshot(
@@ -247,7 +274,15 @@ public sealed class DapperCustomerRequestRepository : ICustomerRequestRepository
         string Status,
         string Source,
         string? CustomerComment,
-        DateTimeOffset CreatedAt);
+        DateTime CreatedAt);
+
+    private sealed record RequestListRow(
+        string Number,
+        string Status,
+        string Source,
+        int ItemsCount,
+        string? CustomerComment,
+        DateTime CreatedAt);
 
     private sealed record RequestDetailRow(
         Guid Id,
@@ -261,5 +296,10 @@ public sealed class DapperCustomerRequestRepository : ICustomerRequestRepository
         string? OrganizationInn,
         string? OrganizationContactPerson,
         string? CustomerComment,
-        DateTimeOffset CreatedAt);
+        DateTime CreatedAt);
+
+    private sealed record RequestHistoryRow(
+        string Event,
+        string Message,
+        DateTime CreatedAt);
 }

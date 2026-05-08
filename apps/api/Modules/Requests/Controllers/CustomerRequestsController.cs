@@ -67,6 +67,6 @@ public sealed class CustomerRequestsController : ControllerBase
             command,
             cancellationToken);
 
-        return Created($"/api/account/requests/{response.Number}", response);
+        return Created($"/api/account/requests/{Uri.EscapeDataString(response.Number)}", response);
     }
 }

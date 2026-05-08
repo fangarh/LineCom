@@ -44,7 +44,7 @@ public sealed class CustomerRequestsEndpointTests
         using var response = await client.SendAsync(request);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        Assert.Equal("/api/account/requests/ЗК26-0001", response.Headers.Location?.OriginalString);
+        Assert.Equal("/api/account/requests/%D0%97%D0%9A26-0001", response.Headers.Location?.OriginalString);
 
         var body = await ReadJsonAsync<CustomerRequestDetailDto>(response);
         Assert.Equal("ЗК26-0001", body.Number);

@@ -1472,7 +1472,7 @@ git commit -m "feat: submit customer requests from frontend"
 - Create: `apps/front/src/app/account/requests/page.tsx`
 - Create: `apps/front/src/app/account/requests/[number]/page.tsx`
 
-- [ ] **Step 1: Implement request list component**
+- [x] **Step 1: Implement request list component**
 
 Show:
 
@@ -1492,7 +1492,7 @@ Add status filter with values:
 - `completed`;
 - `canceled`.
 
-- [ ] **Step 2: Implement account request list page**
+- [x] **Step 2: Implement account request list page**
 
 On client mount:
 
@@ -1500,7 +1500,7 @@ On client mount:
 - on unauthorized, route to login with `returnTo=/account/requests`;
 - render empty state if no requests.
 
-- [ ] **Step 3: Implement request detail component**
+- [x] **Step 3: Implement request detail component**
 
 Show:
 
@@ -1514,11 +1514,11 @@ Show:
 
 Do not show prices.
 
-- [ ] **Step 4: Implement request detail page**
+- [x] **Step 4: Implement request detail page**
 
 Use route param `number`; call `getCustomerRequest(number)`. For `request.not_found`, show controlled not-found state.
 
-- [ ] **Step 5: Run checks**
+- [x] **Step 5: Run checks**
 
 ```powershell
 npm.cmd run lint
@@ -1526,6 +1526,19 @@ npm.cmd run build
 ```
 
 Expected: pass.
+
+Progress note 2026-05-07: added `RequestList`, `RequestDetail`, `/account/requests`, and
+`/account/requests/[number]` with auth bootstrap, status filtering, controlled backend errors, and not-found handling.
+New tests passed:
+
+```powershell
+npm.cmd test -- src/components/account/request-list.test.tsx src/components/account/request-detail.test.tsx src/app/account/requests/requests-page-client.test.tsx src/app/account/requests/[number]/request-detail-page-client.test.tsx
+```
+
+`npm.cmd run lint` and `npm.cmd run build` passed. Full `npm.cmd test` hit environment OOM in Vitest workers after
+13 of 14 files had passed, so the iteration-specific tests were verified separately. Browser Use opened
+`/account/requests` and `/account/requests/ЗК26-0001`; both routes render instead of 404 and show controlled backend
+errors while the local backend/database connection is unavailable.
 
 - [ ] **Step 6: Commit**
 
@@ -1542,7 +1555,7 @@ git commit -m "feat: add account request views"
 - Modify: `vault/Человекочитаемое/Auth Request Core API.md` only if API usage notes need clarification.
 - Modify or create frontend docs only if a dev setup command changed.
 
-- [ ] **Step 1: Run full verification**
+- [x] **Step 1: Run full verification**
 
 From repo root:
 
@@ -1561,7 +1574,7 @@ npm.cmd run build
 
 Expected: all pass.
 
-- [ ] **Step 2: Start backend and frontend**
+- [x] **Step 2: Start backend and frontend**
 
 Backend:
 
@@ -1601,7 +1614,14 @@ Expected:
 - request number appears after submission;
 - account list includes the created request.
 
-- [ ] **Step 4: Browser QA responsive pass**
+Progress note 2026-05-07: Playwright verified the public part of the flow through `/`, `/catalog`,
+`/catalog/vitaya-para`, `/products/u-utp-cat-5e`, adding the product to `/request`, and redirecting an
+unauthenticated submit to `/auth/login?returnTo=%2Frequest`. Full registration/submission is blocked by the
+connected QA database schema: `POST /api/auth/register` returns `500 internal_error` because PostgreSQL reports
+`42P01 relation "users" does not exist`. DbUp migrations were not run against that database during browser QA
+without a separate decision.
+
+- [x] **Step 4: Browser QA responsive pass**
 
 Check desktop and mobile widths:
 
@@ -1618,7 +1638,12 @@ Expected:
 - cards/forms do not overflow horizontally;
 - long product names wrap cleanly.
 
-- [ ] **Step 5: Search for forbidden language and debt markers**
+Progress note 2026-05-07: Playwright checked desktop `1366px` and mobile `390px` for `/`, `/catalog`,
+`/catalog/vitaya-para`, `/products/u-utp-cat-5e`, `/request`, `/auth/login`, `/auth/register`,
+`/account/profile`, `/account/requests`, and `/account/requests/ЗК26-0001`. No blank pages or horizontal overflow
+were found. Protected pages redirect to login when unauthenticated.
+
+- [x] **Step 5: Search for forbidden language and debt markers**
 
 Run:
 
@@ -1631,6 +1656,9 @@ Expected:
 - no forbidden commerce language in `apps/front`;
 - no accidental TODO/TBD/FIXME markers in changed implementation files;
 - matches in plans/specs are only intentional rule text.
+
+Progress note 2026-05-07: search found no forbidden commerce language in `apps/front`. Matches were limited to
+plan/spec rule text and one accidental `package-lock.json` integrity substring.
 
 - [ ] **Step 6: Final commit**
 

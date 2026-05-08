@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { routes } from "@/lib/routes";
+import { ThemeToggle } from "./theme-toggle";
 
 const navItems = [
   { href: routes.catalog(), label: "Каталог" },
@@ -31,9 +32,12 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <Link className="button button--ghost site-header__login" href={routes.login()}>
-          Войти
-        </Link>
+        <div className="site-header__actions">
+          <ThemeToggle />
+          <Link className="button button--ghost site-header__login" href={routes.login()}>
+            Войти
+          </Link>
+        </div>
       </div>
     </header>
   );
