@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { CategoryNav } from "@/components/catalog/category-nav";
 import { ProductCard } from "@/components/catalog/product-card";
 import { ApiClientError } from "@/lib/api/errors";
-import { getCategory, getProducts } from "@/lib/api/catalog";
+import { getCategory, getCategoryTree, getProducts } from "@/lib/api/catalog";
 
 type CategoryPageProps = {
   params: Promise<{ categorySlug: string }>;
@@ -46,7 +47,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     );
   }
 
-  const { category, products } = data;
+  const { category, categories, products } = data;
 
   return (
     <div className="catalog-page">
@@ -58,37 +59,45 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         </div>
       </section>
 
-      <section className="catalog-content catalog-content--wide" aria-labelledby="category-products-title">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Позиции категории</p>
-            <h2 id="category-products-title">Товары</h2>
-          </div>
-          <span className="muted-text">{products.totalItems} позиций</span>
-        </div>
+      <div className="catalog-layout">
+        <aside className="catalog-sidebar" aria-labelledby="catalog-categories-title">
+          <h2 id="catalog-categories-title">Категории</h2>
+          <CategoryNav items={categories} activeSlug={category.slug} />
+        </aside>
 
-        {products.items.length > 0 ? (
-          <div className="product-grid">
-            {products.items.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+        <section className="catalog-content" aria-labelledby="category-products-title">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Позиции категории</p>
+              <h2 id="category-products-title">Товары</h2>
+            </div>
+            <span className="muted-text">{products.totalItems} позиций</span>
           </div>
-        ) : (
-          <p className="empty-state">В этой категории пока нет опубликованных товаров.</p>
-        )}
-      </section>
+
+          {products.items.length > 0 ? (
+            <div className="product-grid">
+              {products.items.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <p className="empty-state">В этой категории пока нет опубликованных товаров.</p>
+          )}
+        </section>
+      </div>
     </div>
   );
 }
 
 async function loadCategoryPageData(categorySlug: string) {
   try {
-    const [category, products] = await Promise.all([
+    const [category, categories, products] = await Promise.all([
       getCategory(categorySlug),
+      getCategoryTree(),
       getProducts({ categorySlug, pageSize: 24, sort: "category" }),
     ]);
 
-    return { status: "ready" as const, category, products };
+    return { status: "ready" as const, category, categories: categories.items, products };
   } catch (error) {
     if (error instanceof ApiClientError && error.status === 404) {
       notFound();

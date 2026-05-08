@@ -884,13 +884,22 @@ a {
   position: sticky;
   top: 92px;
   padding: 22px;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 88% 8%, rgba(242, 195, 0, 0.14), transparent 30%),
+    linear-gradient(145deg, #20262b, #12181e);
+  border-color: rgba(255, 208, 0, 0.2);
 }
 
-.catalog-sidebar h2,
 .section-heading h2,
 .product-detail__section h2 {
   margin: 0;
   color: var(--color-graphite);
+}
+
+.catalog-sidebar h2 {
+  margin: 0;
+  color: #ffffff;
 }
 
 .catalog-content {
@@ -921,35 +930,79 @@ a {
   margin: 14px 0 0;
 }
 
-.category-nav ul ul {
+.category-nav__children {
+  display: grid;
+  gap: 5px;
   padding-left: 14px;
-  margin-top: 8px;
-  border-left: 1px solid var(--color-border);
+  margin: 7px 0 0 10px;
+  border-left: 2px solid rgba(255, 255, 255, 0.12);
 }
 
 .category-nav li + li {
   margin-top: 8px;
 }
 
-.category-nav a {
+.category-nav__link {
+  position: relative;
   display: grid;
   gap: 4px;
-  padding: 10px 12px;
+  padding: 10px 12px 10px 14px;
+  color: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: var(--radius-sm);
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
 }
 
-.category-nav a:hover {
-  background: var(--color-surface-muted);
+.category-nav__link::before {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 0;
+  width: 3px;
+  height: calc(100% - 26px);
+  background: transparent;
+  border-radius: 999px;
+}
+
+.category-nav__link:hover,
+.category-nav__item--active-branch > .category-nav__link {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.category-nav__link--active {
+  color: var(--color-graphite);
+  background: #ffffff;
+  border-color: rgba(242, 195, 0, 0.76);
+  box-shadow: inset 4px 0 0 var(--color-accent);
+}
+
+.category-nav__link--active:hover {
+  color: var(--color-graphite);
+  background: #ffffff;
+}
+
+.category-nav__link--active::before {
+  background: var(--color-accent);
 }
 
 .category-nav span {
-  color: var(--color-graphite);
+  color: currentColor;
   font-weight: 700;
 }
 
 .category-nav small {
-  color: var(--color-muted);
+  color: rgba(255, 255, 255, 0.58);
   line-height: 1.45;
+}
+
+.category-nav__link--active small {
+  color: var(--color-muted);
 }
 
 .product-grid {
