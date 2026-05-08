@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { CategoryNav } from "@/components/catalog/category-nav";
 import { ProductCard } from "@/components/catalog/product-card";
 import { ApiClientError } from "@/lib/api/errors";
 import { getCategory, getCategoryTree, getProducts } from "@/lib/api/catalog";
+import { routes } from "@/lib/routes";
 
 type CategoryPageProps = {
   params: Promise<{ categorySlug: string }>;
@@ -53,6 +55,22 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     <div className="catalog-page">
       <section className="catalog-intro" aria-labelledby="category-title">
         <div>
+          <nav className="breadcrumbs" aria-label="Хлебные крошки">
+            <Link href={routes.catalog()}>Каталог</Link>
+            {category.breadcrumbs.map((item, index) => {
+              const isCurrent = index === category.breadcrumbs.length - 1;
+
+              return isCurrent ? (
+                <span key={item.slug} aria-current="page">
+                  {item.name}
+                </span>
+              ) : (
+                <Link key={item.slug} href={routes.category(item.slug)}>
+                  {item.name}
+                </Link>
+              );
+            })}
+          </nav>
           <p className="eyebrow">Категория</p>
           <h1 id="category-title">{category.h1 ?? category.name}</h1>
           {category.description ? <p className="lead-text">{category.description}</p> : null}
