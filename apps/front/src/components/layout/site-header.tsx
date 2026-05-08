@@ -9,6 +9,7 @@ import { ThemeToggle } from "./theme-toggle";
 const MOBILE_MENU_QUERY = "(max-width: 860px)";
 
 const navItems = [
+  { href: routes.home(), label: "Главная", mobileOnly: true },
   { href: routes.catalog(), label: "Каталог" },
   { href: routes.about(), label: "О нас" },
   { href: routes.delivery(), label: "Доставка" },
@@ -59,7 +60,12 @@ export function SiteHeader() {
         >
           <nav className="site-header__nav" aria-label="Основная навигация">
             {navItems.map((item) => (
-              <Link key={item.href} className="site-header__link" href={item.href} onClick={closeMenu}>
+              <Link
+                key={item.href}
+                className={`site-header__link${item.mobileOnly ? " site-header__link--mobile-only" : ""}`}
+                href={item.href}
+                onClick={closeMenu}
+              >
                 {item.label}
               </Link>
             ))}

@@ -14,6 +14,7 @@ describe("SiteHeader", () => {
 
     expect(screen.getByRole("link", { name: "LineCom" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("img", { name: "LineCom - кабель и оптоволокно" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Главная" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: "Каталог" })).toHaveAttribute("href", "/catalog");
     expect(screen.getByRole("link", { name: "О нас" })).toHaveAttribute("href", "/about");
     expect(screen.getByRole("link", { name: "Доставка" })).toHaveAttribute("href", "/delivery");
@@ -43,6 +44,7 @@ describe("SiteHeader", () => {
 
     await user.click(brand);
     expect(brand).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("link", { name: "Главная" })).toHaveAttribute("href", "/");
 
     await user.click(screen.getByRole("link", { name: "Каталог" }));
     expect(brand).toHaveAttribute("aria-expanded", "false");

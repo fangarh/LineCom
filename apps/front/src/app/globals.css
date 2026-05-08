@@ -228,6 +228,10 @@ a {
   background: var(--color-header-hover);
 }
 
+.site-header__link--mobile-only {
+  display: none;
+}
+
 .theme-toggle {
   width: 42px;
   height: 42px;
@@ -1474,6 +1478,10 @@ a {
 
   .site-header__link {
     justify-content: flex-start;
+  }
+
+  .site-header__link--mobile-only {
+    display: inline-flex;
   }
 
   .site-header__actions {
