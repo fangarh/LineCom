@@ -27,11 +27,17 @@ public sealed class CatalogImportDatabaseSqlTests
     [Fact]
     public void ImageSql_RegistersProductImageFilesAndConnectsProductImages()
     {
-        Assert.Contains("INSERT INTO stored_files", CatalogImportDatabaseSql.UpsertStoredFile);
-        Assert.Contains("'product_image'", CatalogImportDatabaseSql.UpsertStoredFile);
-        Assert.Contains("'active'", CatalogImportDatabaseSql.UpsertStoredFile);
-        Assert.Contains("ON CONFLICT (storage_key) DO UPDATE", CatalogImportDatabaseSql.UpsertStoredFile);
-        Assert.Contains("RETURNING id", CatalogImportDatabaseSql.UpsertStoredFile);
+        Assert.Contains("INSERT INTO stored_files", CatalogImportDatabaseSql.InsertStoredFile);
+        Assert.Contains("'product_image'", CatalogImportDatabaseSql.InsertStoredFile);
+        Assert.Contains("'active'", CatalogImportDatabaseSql.InsertStoredFile);
+        Assert.Contains("ON CONFLICT (storage_key) DO NOTHING", CatalogImportDatabaseSql.InsertStoredFile);
+        Assert.Contains("RETURNING id", CatalogImportDatabaseSql.InsertStoredFile);
+        Assert.Contains("FROM stored_files", CatalogImportDatabaseSql.SelectStoredFileByStorageKeyAndMetadata);
+        Assert.Contains("checksum = @Checksum", CatalogImportDatabaseSql.SelectStoredFileByStorageKeyAndMetadata);
+        Assert.Contains("size_bytes = @SizeBytes", CatalogImportDatabaseSql.SelectStoredFileByStorageKeyAndMetadata);
+        Assert.Contains("content_type = @ContentType", CatalogImportDatabaseSql.SelectStoredFileByStorageKeyAndMetadata);
+        Assert.Contains("purpose = 'product_image'", CatalogImportDatabaseSql.SelectStoredFileByStorageKeyAndMetadata);
+        Assert.Contains("status = 'active'", CatalogImportDatabaseSql.SelectStoredFileByStorageKeyAndMetadata);
 
         Assert.Contains("UPDATE product_images", CatalogImportDatabaseSql.ClearProductMainImage);
         Assert.Contains("SET is_main = FALSE", CatalogImportDatabaseSql.ClearProductMainImage);
@@ -40,6 +46,30 @@ public sealed class CatalogImportDatabaseSqlTests
         Assert.Contains("ON CONFLICT (product_id, stored_file_id) DO UPDATE", CatalogImportDatabaseSql.UpsertProductImage);
         Assert.Contains("WHEN @ReplaceExistingMainImages THEN EXCLUDED.is_main", CatalogImportDatabaseSql.UpsertProductImage);
         Assert.Contains("ELSE product_images.is_main", CatalogImportDatabaseSql.UpsertProductImage);
+    }
+
+    [Fact]
+    public void StoredFileSql_DoesNotRewriteMetadataForExistingStorageKey()
+    {
+        Assert.DoesNotContain("DO UPDATE", CatalogImportDatabaseSql.InsertStoredFile, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("SET original_file_name", CatalogImportDatabaseSql.InsertStoredFile, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void ApplyFlow_CopiesImagesOnlyAfterResetSafetyChecks()
+    {
+        var source = ReadCatalogImportDatabaseSource();
+        var prepareImageImports = ExtractMethodBody(source, "PrepareImageImports");
+        var applyAsync = ExtractMethodBody(source, "ApplyAsync");
+
+        Assert.DoesNotContain("CopyProductImageToStorage", prepareImageImports);
+        Assert.Contains("CopyPreparedImagesToStorage", applyAsync);
+        Assert.True(
+            applyAsync.IndexOf("ResetCatalogAsync", StringComparison.Ordinal)
+                < applyAsync.IndexOf("CopyPreparedImagesToStorage", StringComparison.Ordinal));
+        Assert.True(
+            applyAsync.IndexOf("CopyPreparedImagesToStorage", StringComparison.Ordinal)
+                < applyAsync.IndexOf("CatalogImportDatabaseSql.InsertStoredFile", StringComparison.Ordinal));
     }
 
     [Fact]
@@ -200,5 +230,61 @@ public sealed class CatalogImportDatabaseSqlTests
                 global::System.IO.Directory.Delete(Path, recursive: true);
             }
         }
+    }
+
+    private static string ReadCatalogImportDatabaseSource()
+    {
+        var sourceFile = Path.Combine(
+            FindRepositoryRoot(),
+            "apps",
+            "catalog-import.core",
+            "Database",
+            "CatalogImportDatabase.cs");
+
+        return File.ReadAllText(sourceFile);
+    }
+
+    private static string ExtractMethodBody(string source, string methodName)
+    {
+        var methodIndex = source.IndexOf(methodName, StringComparison.Ordinal);
+        Assert.True(methodIndex >= 0, $"Method '{methodName}' was not found.");
+        var bodyStart = source.IndexOf('{', methodIndex);
+        Assert.True(bodyStart >= 0, $"Method '{methodName}' body was not found.");
+
+        var depth = 0;
+        for (var index = bodyStart; index < source.Length; index++)
+        {
+            if (source[index] == '{')
+            {
+                depth++;
+            }
+            else if (source[index] == '}')
+            {
+                depth--;
+                if (depth == 0)
+                {
+                    return source[bodyStart..(index + 1)];
+                }
+            }
+        }
+
+        throw new InvalidOperationException($"Method '{methodName}' body was not closed.");
+    }
+
+    private static string FindRepositoryRoot()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null)
+        {
+            var solutionFile = Path.Combine(directory.FullName, "LineCom.sln");
+            if (File.Exists(solutionFile))
+            {
+                return directory.FullName;
+            }
+
+            directory = directory.Parent;
+        }
+
+        throw new InvalidOperationException("Repository root was not found.");
     }
 }

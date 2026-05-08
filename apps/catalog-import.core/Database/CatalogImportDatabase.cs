@@ -98,7 +98,7 @@ public static class CatalogImportDatabaseSql
             sort_order = EXCLUDED.sort_order;
         """;
 
-    public const string UpsertStoredFile = """
+    public const string InsertStoredFile = """
         INSERT INTO stored_files (
             storage_key,
             original_file_name,
@@ -115,14 +115,19 @@ public static class CatalogImportDatabaseSql
             @Checksum,
             'product_image',
             'active')
-        ON CONFLICT (storage_key) DO UPDATE
-        SET original_file_name = EXCLUDED.original_file_name,
-            content_type = EXCLUDED.content_type,
-            size_bytes = EXCLUDED.size_bytes,
-            checksum = EXCLUDED.checksum,
-            purpose = EXCLUDED.purpose,
-            status = EXCLUDED.status
+        ON CONFLICT (storage_key) DO NOTHING
         RETURNING id;
+        """;
+
+    public const string SelectStoredFileByStorageKeyAndMetadata = """
+        SELECT id
+        FROM stored_files
+        WHERE storage_key = @StorageKey
+          AND checksum = @Checksum
+          AND size_bytes = @SizeBytes
+          AND content_type = @ContentType
+          AND purpose = 'product_image'
+          AND status = 'active';
         """;
 
     public const string LockProductForImageImport = """
@@ -275,7 +280,7 @@ public sealed class CatalogImportDatabase
         ArgumentNullException.ThrowIfNull(options);
 
         ValidateResetOptions(options);
-        var imageImportsByExternalId = PrepareImageImports(plan.Products, options.StorageRootPath);
+        var imageImportsByExternalId = PrepareImageImports(plan.Products);
 
         await using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync(cancellationToken);
@@ -286,6 +291,8 @@ public sealed class CatalogImportDatabase
         {
             resetImpact = await ResetCatalogAsync(connection, transaction, cancellationToken);
         }
+
+        CopyPreparedImagesToStorage(imageImportsByExternalId.Values, options.StorageRootPath);
 
         foreach (var category in plan.Categories)
         {
@@ -315,11 +322,16 @@ public sealed class CatalogImportDatabase
                 continue;
             }
 
-            var storedFileId = await connection.ExecuteScalarAsync<Guid>(new CommandDefinition(
-                CatalogImportDatabaseSql.UpsertStoredFile,
+            var insertedStoredFileId = await connection.QuerySingleOrDefaultAsync<Guid?>(new CommandDefinition(
+                CatalogImportDatabaseSql.InsertStoredFile,
                 parameters: imageImport.StoredFile,
                 transaction: transaction,
                 cancellationToken: cancellationToken));
+            var storedFileId = insertedStoredFileId ?? await SelectExistingStoredFileIdAsync(
+                connection,
+                transaction,
+                imageImport.StoredFile,
+                cancellationToken);
 
             await UpsertProductImageAsync(
                 connection,
@@ -351,8 +363,7 @@ public sealed class CatalogImportDatabase
     }
 
     private static IReadOnlyDictionary<string, CatalogImportProductImageImport> PrepareImageImports(
-        IReadOnlyList<CatalogProductImportRow> products,
-        string? storageRootPath)
+        IReadOnlyList<CatalogProductImportRow> products)
     {
         var imports = new Dictionary<string, CatalogImportProductImageImport>(StringComparer.Ordinal);
         foreach (var product in products)
@@ -363,11 +374,23 @@ public sealed class CatalogImportDatabase
             }
 
             var storedFile = CreateStoredFileParameters(product.Image);
-            CatalogImportDatabaseStorage.CopyProductImageToStorage(product.Image.File, storedFile.StorageKey, storageRootPath);
-            imports[product.ExternalId] = new CatalogImportProductImageImport(product.ExternalId, storedFile);
+            imports[product.ExternalId] = new CatalogImportProductImageImport(product.ExternalId, product.Image.File, storedFile);
         }
 
         return imports;
+    }
+
+    private static void CopyPreparedImagesToStorage(
+        IEnumerable<CatalogImportProductImageImport> imageImports,
+        string? storageRootPath)
+    {
+        foreach (var imageImport in imageImports)
+        {
+            CatalogImportDatabaseStorage.CopyProductImageToStorage(
+                imageImport.SourcePath,
+                imageImport.StoredFile.StorageKey,
+                storageRootPath);
+        }
     }
 
     private static async Task<CatalogImportResetImpact> ResetCatalogAsync(
@@ -397,6 +420,27 @@ public sealed class CatalogImportDatabase
             cancellationToken: cancellationToken));
 
         return resetImpact;
+    }
+
+    private static async Task<Guid> SelectExistingStoredFileIdAsync(
+        NpgsqlConnection connection,
+        NpgsqlTransaction transaction,
+        CatalogImportStoredFileParameters storedFile,
+        CancellationToken cancellationToken)
+    {
+        var storedFileId = await connection.QuerySingleOrDefaultAsync<Guid?>(new CommandDefinition(
+            CatalogImportDatabaseSql.SelectStoredFileByStorageKeyAndMetadata,
+            parameters: storedFile,
+            transaction: transaction,
+            cancellationToken: cancellationToken));
+
+        if (storedFileId is null)
+        {
+            throw new InvalidOperationException(
+                $"Stored product image file '{storedFile.StorageKey}' already exists with different metadata.");
+        }
+
+        return storedFileId.Value;
     }
 
     private static async Task UpsertProductImageAsync(
@@ -494,6 +538,7 @@ public sealed class CatalogImportDatabase
 
     private sealed record CatalogImportProductImageImport(
         string ExternalId,
+        string SourcePath,
         CatalogImportStoredFileParameters StoredFile);
 
     private sealed class ProductImageProductRow
