@@ -24,7 +24,7 @@ export function CatalogFilters({ attributeFilters = [], basePath, state, scopeLa
   const activeCount = countActiveFilters(state);
 
   return (
-    <details className="catalog-filters" open>
+    <details className="catalog-filters">
       <summary className="catalog-filters__head">
         <div>
           <p className="eyebrow">Подбор</p>
