@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="LineCom">
+  <defs>
+    <radialGradient id="bg" cx="38%" cy="30%" r="72%">
+      <stop offset="0" stop-color="#202226" />
+      <stop offset="1" stop-color="#050607" />
+    </radialGradient>
+    <linearGradient id="metal" x1="80" x2="432" y1="84" y2="428" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f5f5f2" />
+      <stop offset="0.28" stop-color="#8f9292" />
+      <stop offset="0.52" stop-color="#f9f4e7" />
+      <stop offset="0.76" stop-color="#737776" />
+      <stop offset="1" stop-color="#f7f8f5" />
+    </linearGradient>
+    <linearGradient id="gold" x1="136" x2="474" y1="340" y2="166" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffd536" />
+      <stop offset="0.45" stop-color="#ffb800" />
+      <stop offset="1" stop-color="#ffd84d" />
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="108" fill="url(#bg)" />
+
+  <path
+    d="M257 36c51 0 98 17 136 45l-29 37c-30-22-67-35-107-35-100 0-181 81-181 181s81 181 181 181c42 0 81-14 112-38l29 37c-39 30-88 48-141 48C131 492 29 390 29 264S131 36 257 36Z"
+    fill="url(#metal)"
+  />
+  <path
+    d="M257 83c40 0 77 13 107 35l-31 40c-21-15-47-24-76-24-72 0-130 58-130 130s58 130 130 130c29 0 56-10 78-26l31 40c-30 23-68 37-109 37-100 0-181-81-181-181S157 83 257 83Z"
+    fill="#050607"
+  />
+
+  <path
+    d="M176 147h118l61 61v112l-61 61H176l-61-61V208l61-61Z"
+    fill="#161719"
+    stroke="url(#metal)"
+    stroke-width="14"
+    stroke-linejoin="round"
+  />
+  <path d="M120 317c22 25 46 40 73 46" fill="none" stroke="url(#gold)" stroke-width="10" stroke-linecap="round" />
+
+  <g fill="none" stroke-width="14">
+    <circle cx="184" cy="205" r="31" fill="#111315" stroke="url(#metal)" />
+    <circle cx="257" cy="196" r="31" fill="#111315" stroke="url(#metal)" />
+    <circle cx="326" cy="225" r="31" fill="#111315" stroke="url(#metal)" />
+    <circle cx="184" cy="300" r="31" fill="#111315" stroke="url(#metal)" />
+    <circle cx="294" cy="316" r="31" fill="#111315" stroke="url(#metal)" />
+  </g>
+  <g fill="#0c0d0f" stroke="url(#gold)" stroke-width="9">
+    <circle cx="184" cy="205" r="12" />
+    <circle cx="257" cy="196" r="12" />
+    <circle cx="326" cy="225" r="12" />
+    <circle cx="184" cy="300" r="12" />
+    <circle cx="294" cy="316" r="12" />
+  </g>
+
+  <circle cx="252" cy="258" r="36" fill="url(#gold)" />
+  <circle cx="252" cy="258" r="13" fill="#050607" />
+
+  <path d="M355 218h36l31-28" fill="none" stroke="url(#metal)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M355 291h36l31 28" fill="none" stroke="url(#metal)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" />
+  <g stroke="url(#gold)" stroke-width="10" stroke-linecap="round">
+    <path d="M397 221h76" />
+    <path d="M397 247h85" />
+    <path d="M397 273h85" />
+    <path d="M397 299h76" />
+  </g>
+  <g fill="#ffd23f">
+    <circle cx="473" cy="221" r="9" />
+    <circle cx="482" cy="247" r="9" />
+    <circle cx="482" cy="273" r="9" />
+    <circle cx="473" cy="299" r="9" />
+  </g>
+</svg>

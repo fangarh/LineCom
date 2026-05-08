@@ -33,6 +33,14 @@ const themeScript = `
 export const metadata: Metadata = {
   title: "LineCom - каталог кабеля и компонентов",
   description: "Каталог кабеля, СКС, ВОЛС и сопутствующих компонентов с заявками по запросу.",
+  icons: {
+    icon: [
+      {
+        url: "/linecom-tab-icon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
