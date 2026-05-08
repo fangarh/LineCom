@@ -123,3 +123,35 @@ Scope-search:
 
 - Команда `rg -n "Купить|В корзину|Розничная цена|Мелкий опт|оплат|TODO|TBD|FIXME|заглуш|костыл" tools tests apps/dbmigrator docs/superpowers/specs docs/superpowers/plans vault/Человекочитаемое` не выявила запрещенный коммерческий текст или незакрытые TODO/FIXME в новых importer/migration implementation files.
 - Найденные совпадения относятся к существующим тестам публичного каталога, историческим/архитектурным документам, excluded-scope формулировкам и самим правилам проверки.
+
+## 2026-05-08. WinForms production-like catalog import pipeline
+
+Цель итерации: перейти от тестового seed к production-oriented import pipeline для альфа-каталога.
+
+Решения:
+
+- основной источник: `Assets/1c_export_41_01_nomenclature_by_category.json`;
+- UI: WinForms;
+- бизнес-логика импорта вынесена в `LineCom.CatalogImport.Core`;
+- первый workflow: dry-run preview, отчеты, guarded dev/QA apply/reset;
+- публичные цены, онлайн-оплата, заказы и публичные остатки не импортируются.
+
+Артефакты:
+
+- spec: `docs/superpowers/specs/2026-05-08-catalog-importer-winforms-design.md`;
+- plan: `docs/superpowers/plans/2026-05-08-catalog-importer-winforms.md`;
+- core project: `apps/catalog-import.core/LineCom.CatalogImport.Core.csproj`;
+- WinForms project: `apps/catalog-import.winforms/LineCom.CatalogImport.WinForms.csproj`.
+
+Проверки:
+
+- `dotnet build LineCom.sln -m:1`: exit code `0`; сборка успешна, `0 Error(s)`, `2 Warning(s)`. Оба предупреждения `NU1900` связаны с недоступностью NuGet vulnerability feed `https://api.nuget.org/v3/index.json`.
+- `dotnet test LineCom.sln -m:1`: exit code `0`; `LineCom.Api.Tests` прошли, `347` passed, `0` failed, `0` skipped.
+- `npm.cmd test` from `apps/front`: первая попытка завершилась exit code `1`, потому что `vitest` не был установлен в локальных dependencies; после `npm.cmd install` повторная проверка завершилась exit code `0`, `17` test files passed, `42` tests passed.
+- `npm.cmd run build` from `apps/front`: exit code `0`; Next.js `16.2.4` production build успешно compiled, TypeScript завершился без ошибок, static pages сгенерированы.
+
+Scope-search:
+
+- Команда `rg -n "Купить|В корзину|Розничная цена|Мелкий опт|оплат|TODO|TBD|FIXME|заглуш|костыл" apps/catalog-import.core apps/catalog-import.winforms tests/LineCom.Api.Tests/CatalogImport docs/superpowers/specs docs/superpowers/plans vault/Человекочитаемое` завершилась exit code `0`, потому что нашла ожидаемые документационные совпадения.
+- В `apps/catalog-import.core`, `apps/catalog-import.winforms` и `tests/LineCom.Api.Tests/CatalogImport` совпадений нет: запрещенная commerce language и незакрытые `TODO`/`TBD`/`FIXME` в importer implementation не обнаружены.
+- Найденные совпадения относятся к excluded-scope формулировкам, историческим заметкам, правилам проверки и самой команде scope-search в документации.
