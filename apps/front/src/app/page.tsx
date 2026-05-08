@@ -5,6 +5,7 @@ import { selectFeaturedProducts } from "@/lib/homepage/featured-products";
 import { formatSku } from "@/lib/format";
 import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
 import { routes } from "@/lib/routes";
+import { HomeHeroProducts } from "@/components/home/home-hero-products";
 import { AddToRequestButton } from "@/components/request/add-to-request-button";
 
 function flattenCategories(items: PublicCategoryTreeItem[]) {
@@ -70,7 +71,7 @@ export default async function Home() {
   const categories = categoryResult.status === "fulfilled" ? categoryResult.value.items : [];
   const products = productResult.status === "fulfilled" ? productResult.value.items : [];
   const featuredProducts = selectFeaturedProducts(products);
-  const heroProducts = featuredProducts.filter((product) => product.mainImage).slice(0, 3);
+  const heroProducts = featuredProducts.slice(0, 3);
   const highlights = categoryHighlights(categories);
 
   return (
@@ -97,24 +98,7 @@ export default async function Home() {
             <span>Ходовые позиции</span>
             <strong>СКС · ВОЛС · монтаж</strong>
           </div>
-          <div className="home-hero__product-stack">
-            {heroProducts.length > 0 ? (
-              heroProducts.map((product) => (
-                <Link key={product.id} className="home-hero-product" href={routes.product(product.slug)}>
-                  <span className="home-hero-product__image">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={product.mainImage?.url} alt={product.mainImage?.alt ?? product.name} />
-                  </span>
-                  <span>
-                    <strong>{product.name}</strong>
-                    <small>{product.category.name}</small>
-                  </span>
-                </Link>
-              ))
-            ) : (
-              <p className="home-hero__empty">Добавьте позиции из каталога в заявку или опишите задачу.</p>
-            )}
-          </div>
+          <HomeHeroProducts products={heroProducts} />
         </div>
       </section>
 

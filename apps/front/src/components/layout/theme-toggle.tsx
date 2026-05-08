@@ -69,7 +69,7 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      className="theme-toggle"
+      className={`theme-toggle theme-toggle--${theme}`}
       aria-label={label}
       aria-pressed={theme === "dark"}
       title={label}
@@ -77,7 +77,13 @@ export function ThemeToggle() {
         setThemePreference(nextTheme);
       }}
     >
-      <span aria-hidden="true">Т</span>
+      <span className="theme-toggle__icon theme-toggle__icon--light" aria-hidden="true">
+        ☀
+      </span>
+      <span className="theme-toggle__knob" aria-hidden="true" />
+      <span className="theme-toggle__icon theme-toggle__icon--dark" aria-hidden="true">
+        ☾
+      </span>
     </button>
   );
 }
