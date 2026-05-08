@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PublicProductAttribute, PublicProductDetail as PublicProductDetailType } from "@/lib/api/catalog";
 import { formatSku } from "@/lib/format";
+import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
 import { routes } from "@/lib/routes";
 import { AddToRequestButton } from "@/components/request/add-to-request-button";
 
@@ -24,12 +25,8 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
       <div className="product-detail__grid">
         <div className="product-detail__media">
-          {leadImage ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={leadImage.url} alt={leadImage.alt} />
-          ) : (
-            <span>Изображение будет добавлено позже</span>
-          )}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={leadImage?.url ?? PRODUCT_IMAGE_FALLBACK} alt={leadImage?.alt ?? PRODUCT_IMAGE_FALLBACK_ALT} />
         </div>
 
         <div className="product-detail__summary">

@@ -3,6 +3,7 @@ import type { PublicCategoryTreeItem, PublicProductListItem } from "@/lib/api/ca
 import { getCategoryTree, getProducts } from "@/lib/api/catalog";
 import { selectFeaturedProducts } from "@/lib/homepage/featured-products";
 import { formatSku } from "@/lib/format";
+import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
 import { routes } from "@/lib/routes";
 import { AddToRequestButton } from "@/components/request/add-to-request-button";
 
@@ -157,12 +158,8 @@ export default async function Home() {
             {featuredProducts.map((product) => (
               <article key={product.id} className="featured-product">
                 <Link className="featured-product__image" href={routes.product(product.slug)} aria-label={product.name}>
-                  {product.mainImage ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={product.mainImage.url} alt={product.mainImage.alt} />
-                  ) : (
-                    <span>Нет изображения</span>
-                  )}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={product.mainImage?.url ?? PRODUCT_IMAGE_FALLBACK} alt={product.mainImage?.alt ?? PRODUCT_IMAGE_FALLBACK_ALT} />
                 </Link>
                 <div className="featured-product__body">
                   <div className="product-card__meta">

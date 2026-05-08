@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PublicProductListItem } from "@/lib/api/catalog";
 import { formatSku } from "@/lib/format";
+import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
 import { routes } from "@/lib/routes";
 import { AddToRequestButton } from "@/components/request/add-to-request-button";
 
@@ -12,12 +13,8 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <article className="product-card">
       <Link className="product-card__media" href={routes.product(product.slug)} aria-label={product.name}>
-        {product.mainImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={product.mainImage.url} alt={product.mainImage.alt} />
-        ) : (
-          <span>Нет изображения</span>
-        )}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={product.mainImage?.url ?? PRODUCT_IMAGE_FALLBACK} alt={product.mainImage?.alt ?? PRODUCT_IMAGE_FALLBACK_ALT} />
       </Link>
 
       <div className="product-card__body">

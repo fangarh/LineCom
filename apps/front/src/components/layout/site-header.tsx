@@ -1,7 +1,12 @@
+"use client";
+
+import { useState, type MouseEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { routes } from "@/lib/routes";
 import { ThemeToggle } from "./theme-toggle";
+
+const MOBILE_MENU_QUERY = "(max-width: 860px)";
 
 const navItems = [
   { href: routes.catalog(), label: "Каталог" },
@@ -12,10 +17,32 @@ const navItems = [
 ];
 
 export function SiteHeader() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleBrandClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window === "undefined" || !window.matchMedia(MOBILE_MENU_QUERY).matches) {
+      return;
+    }
+
+    event.preventDefault();
+    setIsMenuOpen((isOpen) => !isOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="site-header">
       <div className="site-header__inner">
-        <Link className="site-header__brand" href={routes.home()} aria-label="LineCom">
+        <Link
+          className="site-header__brand"
+          href={routes.home()}
+          aria-label="LineCom"
+          aria-controls="site-header-menu"
+          aria-expanded={isMenuOpen}
+          onClick={handleBrandClick}
+        >
           <Image
             className="site-header__logo"
             src="/linecom-logo-full.png"
@@ -26,19 +53,24 @@ export function SiteHeader() {
           />
         </Link>
 
-        <nav className="site-header__nav" aria-label="Основная навигация">
-          {navItems.map((item) => (
-            <Link key={item.href} className="site-header__link" href={item.href}>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <div
+          id="site-header-menu"
+          className={`site-header__menu${isMenuOpen ? " site-header__menu--open" : ""}`}
+        >
+          <nav className="site-header__nav" aria-label="Основная навигация">
+            {navItems.map((item) => (
+              <Link key={item.href} className="site-header__link" href={item.href} onClick={closeMenu}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
 
-        <div className="site-header__actions">
-          <ThemeToggle />
-          <Link className="button button--ghost site-header__login" href={routes.login()}>
-            Войти
-          </Link>
+          <div className="site-header__actions">
+            <ThemeToggle />
+            <Link className="button button--ghost site-header__login" href={routes.login()} onClick={closeMenu}>
+              Войти
+            </Link>
+          </div>
         </div>
       </div>
     </header>
