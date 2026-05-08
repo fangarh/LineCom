@@ -5,6 +5,8 @@ import { ThemeToggle } from "./theme-toggle";
 
 const navItems = [
   { href: routes.catalog(), label: "Каталог" },
+  { href: routes.about(), label: "О нас" },
+  { href: routes.delivery(), label: "Доставка" },
   { href: routes.request(), label: "Заявка" },
   { href: routes.accountRequests(), label: "Мои заявки" },
 ];
