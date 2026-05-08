@@ -25,24 +25,17 @@ describe("CatalogFilters", () => {
         totalItems={12}
         state={{
           sort: "name",
-          availabilityStatus: "in_stock",
-          saleUnit: undefined,
           attributes: { connector: "lc" },
         }}
       />,
     );
 
-    expect(screen.getByRole("link", { name: "В наличии" })).toHaveAttribute(
-      "href",
-      "/catalog/adapters?sort=name&attribute.connector=lc",
-    );
-    expect(screen.getByRole("link", { name: "Штука" })).toHaveAttribute(
-      "href",
-      "/catalog/adapters?sort=name&availabilityStatus=in_stock&saleUnit=piece&attribute.connector=lc",
-    );
+    expect(screen.queryByRole("link", { name: "В наличии" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Штука" })).not.toBeInTheDocument();
+    expect(screen.getByText("Фильтры товаров").closest("summary")).not.toBeNull();
     expect(screen.getByRole("link", { name: "LC" })).toHaveAttribute(
       "href",
-      "/catalog/adapters?sort=name&availabilityStatus=in_stock",
+      "/catalog/adapters?sort=name",
     );
     expect(screen.getByRole("link", { name: "Сбросить фильтры" })).toHaveAttribute("href", "/catalog/adapters");
   });

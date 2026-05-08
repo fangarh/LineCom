@@ -28,17 +28,13 @@ describe("catalog filtering", () => {
 
     expect(filters).toEqual({
       sort: "name",
-      availabilityStatus: "in_stock",
-      saleUnit: "piece",
       attributes: { connector: "lc" },
     });
-    expect(countActiveFilters(filters)).toBe(3);
+    expect(countActiveFilters(filters)).toBe(1);
     expect(toProductListParams(filters, "adapters")).toEqual({
       categorySlug: "adapters",
       pageSize: 24,
       sort: "name",
-      availabilityStatus: "in_stock",
-      saleUnit: "piece",
       attributes: { connector: "lc" },
     });
   });
@@ -57,8 +53,6 @@ describe("catalog filtering", () => {
 
     expect(filters).toEqual({
       sort: "category",
-      availabilityStatus: undefined,
-      saleUnit: undefined,
       attributes: {},
     });
     expect(countActiveFilters(filters)).toBe(0);

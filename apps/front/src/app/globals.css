@@ -1042,8 +1042,6 @@ a {
 }
 
 .catalog-filters {
-  display: grid;
-  gap: 16px;
   padding: 16px;
   margin-bottom: 18px;
   background: var(--color-surface-muted);
@@ -1056,6 +1054,35 @@ a {
   justify-content: space-between;
   gap: 16px;
   align-items: flex-start;
+  cursor: pointer;
+  list-style: none;
+}
+
+.catalog-filters__head::-webkit-details-marker {
+  display: none;
+}
+
+.catalog-filters__head::after {
+  flex: 0 0 auto;
+  align-self: center;
+  width: 10px;
+  height: 10px;
+  margin-left: 2px;
+  border-right: 2px solid var(--color-muted);
+  border-bottom: 2px solid var(--color-muted);
+  content: "";
+  transform: rotate(45deg);
+  transition: transform 150ms ease;
+}
+
+.catalog-filters[open] .catalog-filters__head::after {
+  transform: rotate(225deg);
+}
+
+.catalog-filters__body {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
 }
 
 .catalog-filters__head h2 {

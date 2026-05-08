@@ -1,8 +1,6 @@
 import Link from "next/link";
 import type { PublicFilter } from "@/lib/api/catalog";
 import {
-  AVAILABILITY_FILTER_OPTIONS,
-  SALE_UNIT_FILTER_OPTIONS,
   SORT_OPTIONS,
   countActiveFilters,
   type CatalogFilterState,
@@ -26,8 +24,8 @@ export function CatalogFilters({ attributeFilters = [], basePath, state, scopeLa
   const activeCount = countActiveFilters(state);
 
   return (
-    <section className="catalog-filters" aria-labelledby="catalog-filters-title">
-      <div className="catalog-filters__head">
+    <details className="catalog-filters" open>
+      <summary className="catalog-filters__head">
         <div>
           <p className="eyebrow">Подбор</p>
           <h2 id="catalog-filters-title">Фильтры товаров</h2>
@@ -35,46 +33,35 @@ export function CatalogFilters({ attributeFilters = [], basePath, state, scopeLa
         <div className="catalog-filters__summary">
           <span>{scopeLabel}</span>
           {typeof totalItems === "number" ? <strong>{totalItems} позиций</strong> : null}
+          {activeCount > 0 ? <span>{activeCount} выбрано</span> : null}
         </div>
-      </div>
+      </summary>
 
-      <FilterGroup
-        title="Наличие"
-        options={AVAILABILITY_FILTER_OPTIONS}
-        activeValue={state.availabilityStatus}
-        hrefFor={(value) => buildFilterHref(basePath, state, { availabilityStatus: value })}
-      />
+      <div className="catalog-filters__body">
+        {attributeFilters.map((filter) => (
+          <FilterGroup
+            key={filter.code}
+            title={filter.unit ? `${filter.name}, ${filter.unit}` : filter.name}
+            options={filter.options.map((option) => ({ value: option.slug, label: option.value }))}
+            activeValue={state.attributes[filter.code]}
+            hrefFor={(value) => buildFilterHref(basePath, state, { attribute: { code: filter.code, value } })}
+          />
+        ))}
 
-      <FilterGroup
-        title="Единица продажи"
-        options={SALE_UNIT_FILTER_OPTIONS}
-        activeValue={state.saleUnit}
-        hrefFor={(value) => buildFilterHref(basePath, state, { saleUnit: value })}
-      />
-
-      {attributeFilters.map((filter) => (
         <FilterGroup
-          key={filter.code}
-          title={filter.unit ? `${filter.name}, ${filter.unit}` : filter.name}
-          options={filter.options.map((option) => ({ value: option.slug, label: option.value }))}
-          activeValue={state.attributes[filter.code]}
-          hrefFor={(value) => buildFilterHref(basePath, state, { attribute: { code: filter.code, value } })}
+          title="Сортировка"
+          options={SORT_OPTIONS}
+          activeValue={state.sort}
+          hrefFor={(value) => buildFilterHref(basePath, state, { sort: value as CatalogSort })}
         />
-      ))}
 
-      <FilterGroup
-        title="Сортировка"
-        options={SORT_OPTIONS}
-        activeValue={state.sort}
-        hrefFor={(value) => buildFilterHref(basePath, state, { sort: value as CatalogSort })}
-      />
-
-      {activeCount > 0 ? (
-        <Link className="catalog-filters__reset" href={basePath}>
-          Сбросить фильтры
-        </Link>
-      ) : null}
-    </section>
+        {activeCount > 0 ? (
+          <Link className="catalog-filters__reset" href={basePath}>
+            Сбросить фильтры
+          </Link>
+        ) : null}
+      </div>
+    </details>
   );
 }
 
@@ -115,18 +102,8 @@ function FilterGroup({
 function buildFilterHref(basePath: string, state: CatalogFilterState, patch: FilterPatch): string {
   const nextState: CatalogFilterState = {
     sort: state.sort,
-    availabilityStatus: state.availabilityStatus,
-    saleUnit: state.saleUnit,
     attributes: { ...state.attributes },
   };
-
-  if ("availabilityStatus" in patch) {
-    nextState.availabilityStatus = state.availabilityStatus === patch.availabilityStatus ? undefined : patch.availabilityStatus;
-  }
-
-  if ("saleUnit" in patch) {
-    nextState.saleUnit = state.saleUnit === patch.saleUnit ? undefined : patch.saleUnit;
-  }
 
   if ("sort" in patch) {
     nextState.sort = patch.sort;
@@ -147,12 +124,6 @@ function buildFilterHref(basePath: string, state: CatalogFilterState, patch: Fil
   if (nextState.sort !== "category") {
     search.set("sort", nextState.sort);
   }
-  if (nextState.availabilityStatus) {
-    search.set("availabilityStatus", nextState.availabilityStatus);
-  }
-  if (nextState.saleUnit) {
-    search.set("saleUnit", nextState.saleUnit);
-  }
   for (const [code, value] of Object.entries(nextState.attributes).sort(([left], [right]) => left.localeCompare(right))) {
     search.set(`attribute.${code}`, value);
   }
@@ -162,7 +133,5 @@ function buildFilterHref(basePath: string, state: CatalogFilterState, patch: Fil
 }
 
 type FilterPatch =
-  | { availabilityStatus: string }
-  | { saleUnit: string }
   | { sort: CatalogSort }
   | { attribute: { code: string; value: string } };
