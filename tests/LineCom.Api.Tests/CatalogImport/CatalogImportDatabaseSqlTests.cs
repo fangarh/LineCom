@@ -49,6 +49,26 @@ public sealed class CatalogImportDatabaseSqlTests
     }
 
     [Fact]
+    public void AttributeSql_UpsertsFilterableSelectAttributesAndProductValues()
+    {
+        Assert.Contains("INSERT INTO category_attributes", CatalogImportDatabaseSql.UpsertCategoryAttribute);
+        Assert.Contains("WHERE category.slug = @CategorySlug", CatalogImportDatabaseSql.UpsertCategoryAttribute);
+        Assert.Contains("'select'", CatalogImportDatabaseSql.UpsertCategoryAttribute);
+        Assert.Contains("is_filterable", CatalogImportDatabaseSql.UpsertCategoryAttribute);
+        Assert.Contains("ON CONFLICT (category_id, code) DO UPDATE", CatalogImportDatabaseSql.UpsertCategoryAttribute);
+        Assert.Contains("RETURNING id", CatalogImportDatabaseSql.UpsertCategoryAttribute);
+
+        Assert.Contains("INSERT INTO attribute_options", CatalogImportDatabaseSql.UpsertAttributeOption);
+        Assert.Contains("ON CONFLICT (attribute_id, slug) DO UPDATE", CatalogImportDatabaseSql.UpsertAttributeOption);
+        Assert.Contains("RETURNING id", CatalogImportDatabaseSql.UpsertAttributeOption);
+
+        Assert.Contains("INSERT INTO product_attribute_values", CatalogImportDatabaseSql.UpsertProductAttributeValue);
+        Assert.Contains("attribute_option_id", CatalogImportDatabaseSql.UpsertProductAttributeValue);
+        Assert.Contains("ON CONFLICT (product_id, attribute_id) DO UPDATE", CatalogImportDatabaseSql.UpsertProductAttributeValue);
+        Assert.Contains("value_text = NULL", CatalogImportDatabaseSql.UpsertProductAttributeValue);
+    }
+
+    [Fact]
     public void StoredFileSql_DoesNotRewriteMetadataForExistingStorageKey()
     {
         Assert.DoesNotContain("DO UPDATE", CatalogImportDatabaseSql.InsertStoredFile, StringComparison.OrdinalIgnoreCase);

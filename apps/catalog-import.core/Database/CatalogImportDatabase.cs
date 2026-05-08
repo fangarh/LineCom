@@ -98,6 +98,94 @@ public static class CatalogImportDatabaseSql
             sort_order = EXCLUDED.sort_order;
         """;
 
+    public const string SelectProductIdByExternalId = """
+        SELECT id
+        FROM products
+        WHERE external_id = @ExternalId;
+        """;
+
+    public const string UpsertCategoryAttribute = """
+        INSERT INTO category_attributes (
+            category_id,
+            name,
+            code,
+            type,
+            is_filterable,
+            is_comparable,
+            is_visible_in_product,
+            is_seo_important,
+            is_used_in_generated_name,
+            sort_order,
+            is_active)
+        SELECT
+            category.id,
+            @Name,
+            @Code,
+            'select',
+            TRUE,
+            TRUE,
+            TRUE,
+            @IsSeoImportant,
+            @IsUsedInGeneratedName,
+            @SortOrder,
+            TRUE
+        FROM categories category
+        WHERE category.slug = @CategorySlug
+        ON CONFLICT (category_id, code) DO UPDATE
+        SET name = EXCLUDED.name,
+            type = EXCLUDED.type,
+            is_filterable = TRUE,
+            is_comparable = TRUE,
+            is_visible_in_product = TRUE,
+            is_seo_important = EXCLUDED.is_seo_important,
+            is_used_in_generated_name = EXCLUDED.is_used_in_generated_name,
+            sort_order = EXCLUDED.sort_order,
+            is_active = TRUE
+        RETURNING id;
+        """;
+
+    public const string UpsertAttributeOption = """
+        INSERT INTO attribute_options (
+            attribute_id,
+            value,
+            slug,
+            normalized_value,
+            sort_order,
+            is_active)
+        VALUES (
+            @AttributeId,
+            @Value,
+            @Slug,
+            @NormalizedValue,
+            @OptionSortOrder,
+            TRUE)
+        ON CONFLICT (attribute_id, slug) DO UPDATE
+        SET value = EXCLUDED.value,
+            normalized_value = EXCLUDED.normalized_value,
+            sort_order = EXCLUDED.sort_order,
+            is_active = TRUE
+        RETURNING id;
+        """;
+
+    public const string UpsertProductAttributeValue = """
+        INSERT INTO product_attribute_values (
+            product_id,
+            attribute_id,
+            attribute_option_id,
+            normalized_value)
+        VALUES (
+            @ProductId,
+            @AttributeId,
+            @AttributeOptionId,
+            @NormalizedValue)
+        ON CONFLICT (product_id, attribute_id) DO UPDATE
+        SET value_text = NULL,
+            value_number = NULL,
+            value_boolean = NULL,
+            attribute_option_id = EXCLUDED.attribute_option_id,
+            normalized_value = EXCLUDED.normalized_value;
+        """;
+
     public const string InsertStoredFile = """
         INSERT INTO stored_files (
             storage_key,
@@ -317,6 +405,8 @@ public sealed class CatalogImportDatabase
                     $"Product '{product.ExternalId}' was not imported because category '{product.CategorySlug}' was not found.");
             }
 
+            await UpsertProductAttributesAsync(connection, transaction, product, cancellationToken);
+
             if (!imageImportsByExternalId.TryGetValue(product.ExternalId, out var imageImport))
             {
                 continue;
@@ -351,6 +441,77 @@ public sealed class CatalogImportDatabase
             plan.Products.Count,
             imagesProcessed,
             resetImpact);
+    }
+
+    private static async Task UpsertProductAttributesAsync(
+        NpgsqlConnection connection,
+        NpgsqlTransaction transaction,
+        CatalogProductImportRow product,
+        CancellationToken cancellationToken)
+    {
+        if (product.Attributes.Count == 0)
+        {
+            return;
+        }
+
+        var productId = await connection.QuerySingleOrDefaultAsync<Guid?>(new CommandDefinition(
+            CatalogImportDatabaseSql.SelectProductIdByExternalId,
+            parameters: new { product.ExternalId },
+            transaction: transaction,
+            cancellationToken: cancellationToken));
+
+        if (productId is null)
+        {
+            throw new InvalidOperationException($"Product '{product.ExternalId}' was not found while importing attributes.");
+        }
+
+        foreach (var attribute in product.Attributes)
+        {
+            var attributeId = await connection.QuerySingleOrDefaultAsync<Guid?>(new CommandDefinition(
+                CatalogImportDatabaseSql.UpsertCategoryAttribute,
+                parameters: new
+                {
+                    product.CategorySlug,
+                    attribute.Name,
+                    attribute.Code,
+                    attribute.SortOrder,
+                    attribute.IsSeoImportant,
+                    attribute.IsUsedInGeneratedName
+                },
+                transaction: transaction,
+                cancellationToken: cancellationToken));
+
+            if (attributeId is null)
+            {
+                throw new InvalidOperationException(
+                    $"Attribute '{attribute.Code}' was not imported because category '{product.CategorySlug}' was not found.");
+            }
+
+            var optionId = await connection.QuerySingleAsync<Guid>(new CommandDefinition(
+                CatalogImportDatabaseSql.UpsertAttributeOption,
+                parameters: new
+                {
+                    AttributeId = attributeId.Value,
+                    attribute.Value,
+                    attribute.Slug,
+                    attribute.NormalizedValue,
+                    attribute.OptionSortOrder
+                },
+                transaction: transaction,
+                cancellationToken: cancellationToken));
+
+            await connection.ExecuteAsync(new CommandDefinition(
+                CatalogImportDatabaseSql.UpsertProductAttributeValue,
+                parameters: new
+                {
+                    ProductId = productId.Value,
+                    AttributeId = attributeId.Value,
+                    AttributeOptionId = optionId,
+                    attribute.NormalizedValue
+                },
+                transaction: transaction,
+                cancellationToken: cancellationToken));
+        }
     }
 
     private static void ValidateResetOptions(CatalogImportApplyOptions options)

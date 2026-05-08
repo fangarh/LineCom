@@ -8,5 +8,7 @@ public interface IPublicCategoryQuery
 
     Task<PublicCategoryDetailDto> GetCategoryDetailAsync(string slug, CancellationToken cancellationToken = default);
 
+    Task<PublicCatalogFiltersDto> GetCatalogFiltersAsync(CancellationToken cancellationToken = default);
+
     Task<PublicCategoryFiltersDto> GetCategoryFiltersAsync(string slug, CancellationToken cancellationToken = default);
 }

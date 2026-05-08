@@ -37,6 +37,15 @@ public sealed class DapperPublicCategoryQuery : IPublicCategoryQuery
         return PublicCategoryDetailBuilder.Build(rows.ToArray());
     }
 
+    public async Task<PublicCatalogFiltersDto> GetCatalogFiltersAsync(CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+        var rows = await connection.QueryAsync<PublicCategoryFilterRow>(
+            new CommandDefinition(PublicCategorySql.GetActiveCatalogFilters, cancellationToken: cancellationToken));
+
+        return new PublicCatalogFiltersDto(PublicCategoryFiltersBuilder.BuildFilters(rows.ToArray()));
+    }
+
     public async Task<PublicCategoryFiltersDto> GetCategoryFiltersAsync(
         string slug,
         CancellationToken cancellationToken = default)

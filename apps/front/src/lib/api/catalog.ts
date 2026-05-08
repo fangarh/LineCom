@@ -128,6 +128,10 @@ export type PublicCategoryFiltersResponse = {
   filters: PublicFilter[];
 };
 
+export type PublicCatalogFiltersResponse = {
+  filters: PublicFilter[];
+};
+
 export type ProductListParams = {
   categorySlug?: string;
   page?: number;
@@ -158,6 +162,12 @@ export function getCategoryFilters(slug: string) {
       next: { revalidate: 60 },
     },
   );
+}
+
+export function getCatalogFilters() {
+  return apiJson<PublicCatalogFiltersResponse>("/api/public/catalog/filters", {
+    next: { revalidate: 60 },
+  });
 }
 
 export function getProducts(params: ProductListParams = {}) {

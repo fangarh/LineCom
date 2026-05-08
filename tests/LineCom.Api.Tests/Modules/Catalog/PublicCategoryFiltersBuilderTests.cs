@@ -46,6 +46,35 @@ public sealed class PublicCategoryFiltersBuilderTests
     }
 
     [Fact]
+    public void BuildFilters_MergesGlobalRowsByCodeAndUsesCanonicalTechnicalNames()
+    {
+        var filters = PublicCategoryFiltersBuilder.BuildFilters(
+        [
+            CreateRow(
+                "conductor-material",
+                "Conductor material",
+                "select",
+                sortOrder: 10,
+                optionValue: "Cu",
+                optionSlug: "cu",
+                optionSortOrder: 10),
+            CreateRow(
+                "conductor-material",
+                "Материал проводника",
+                "select",
+                sortOrder: 30,
+                optionValue: "CCA",
+                optionSlug: "cca",
+                optionSortOrder: 20)
+        ]);
+
+        var filter = Assert.Single(filters);
+        Assert.Equal("Материал проводника", filter.Name);
+        Assert.Equal(10, filter.SortOrder);
+        Assert.Equal(["cu", "cca"], filter.Options.Select(option => option.Slug).ToArray());
+    }
+
+    [Fact]
     public void Build_ThrowsCategoryNotFound_WhenCategoryRowIsMissing()
     {
         var exception = Assert.Throws<ApiException>(() => PublicCategoryFiltersBuilder.Build(null, []));

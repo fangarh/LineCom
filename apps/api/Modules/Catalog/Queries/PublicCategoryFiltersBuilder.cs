@@ -13,27 +13,43 @@ internal static class PublicCategoryFiltersBuilder
             throw PublicCatalogErrors.CategoryNotFound();
         }
 
-        var filters = rows
+        var filters = BuildFilters(rows);
+
+        return new PublicCategoryFiltersDto(
+            new PublicCategorySummaryDto(category.Name, category.Slug),
+            filters);
+    }
+
+    public static IReadOnlyList<PublicFilterDto> BuildFilters(IReadOnlyCollection<PublicCategoryFilterRow> rows)
+    {
+        return rows
             .GroupBy(row => new
             {
                 row.Code,
-                row.Name,
                 row.Type,
-                row.Unit,
-                row.SortOrder
+                row.Unit
             })
             .Select(group => new PublicFilterDto(
                 group.Key.Code,
-                group.Key.Name,
+                ResolveFilterName(group.Key.Code, group),
                 group.Key.Type,
                 group.Key.Unit,
-                group.Key.SortOrder,
+                group.Min(row => row.SortOrder),
                 group
                     .Where(row => row.OptionValue is not null && row.OptionSlug is not null)
-                    .Select(row => new PublicFilterOptionDto(
-                        row.OptionValue!,
-                        row.OptionSlug!,
-                        row.OptionSortOrder ?? 0))
+                    .GroupBy(row => row.OptionSlug!, StringComparer.Ordinal)
+                    .Select(optionGroup =>
+                    {
+                        var optionRow = optionGroup
+                            .OrderBy(row => row.OptionSortOrder ?? 0)
+                            .ThenBy(row => row.OptionValue)
+                            .First();
+
+                        return new PublicFilterOptionDto(
+                            optionRow.OptionValue!,
+                            optionGroup.Key,
+                            optionGroup.Min(row => row.OptionSortOrder ?? 0));
+                    })
                     .OrderBy(option => option.SortOrder)
                     .ThenBy(option => option.Value)
                     .ThenBy(option => option.Slug)
@@ -42,9 +58,29 @@ internal static class PublicCategoryFiltersBuilder
             .ThenBy(filter => filter.Name)
             .ThenBy(filter => filter.Code)
             .ToArray();
+    }
 
-        return new PublicCategoryFiltersDto(
-            new PublicCategorySummaryDto(category.Name, category.Slug),
-            filters);
+    private static string ResolveFilterName(
+        string code,
+        IEnumerable<PublicCategoryFilterRow> rows)
+    {
+        return code switch
+        {
+            "application" => "Применение",
+            "conductor-material" => "Материал проводника",
+            "construction" => "Конструкция",
+            "support-element" => "Несущий элемент",
+            "cable-category" => "Категория кабеля",
+            "jacket-material" => "Материал оболочки",
+            "connector-type" => "Тип разъема",
+            "fiber-type" => "Тип волокна",
+            "form-factor" => "Форм-фактор",
+            "color" => "Цвет",
+            _ => rows
+                .OrderBy(row => row.SortOrder)
+                .ThenBy(row => row.Name)
+                .Select(row => row.Name)
+                .First()
+        };
     }
 }

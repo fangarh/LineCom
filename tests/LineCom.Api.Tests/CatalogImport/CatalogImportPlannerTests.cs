@@ -131,6 +131,49 @@ public sealed class CatalogImportPlannerTests
         Assert.Equal([0, 1], plan.Products.Select(product => product.SortOrder).ToArray());
     }
 
+    [Fact]
+    public void BuildPlan_ExtractsTechnicalSelectAttributesForFilters()
+    {
+        var source = new OneCExportDocument(
+            Source: new OneCExportSource("source.xlsx", "Sheet1", "41.01"),
+            Extraction: new OneCExportExtraction("41.01", null, 1, null, null),
+            Categories:
+            [
+                new OneCExportCategory(
+                    Slug: "twisted-pair-cable",
+                    Name: "Витая пара",
+                    ProjectCoreCategory: true,
+                    ItemCount: 1,
+                    Items:
+                    [
+                        new OneCExportItem(
+                            SourceRow: 10,
+                            Name: "Cable FTP4 Cat.5e 305m Cu outdoor PE black with messenger",
+                            SourceAccount: "41.01",
+                            Quantity: 1,
+                            UnitCost: 10,
+                            Amount: 10,
+                            Classification: new OneCExportClassification(
+                                CategorySlug: "twisted-pair-cable",
+                                CategoryName: "Витая пара",
+                                Confidence: "high",
+                                MatchedKeywords: ["ftp"],
+                                NeedsReview: false))
+                    ])
+            ]);
+
+        var product = Assert.Single(CatalogImportPlanner.BuildPlan(source).Products);
+        var attributes = product.Attributes.ToDictionary(attribute => attribute.Code, StringComparer.Ordinal);
+
+        Assert.Equal("outdoor", attributes["application"].Slug);
+        Assert.Equal("f-utp", attributes["construction"].Slug);
+        Assert.Equal("with-messenger", attributes["support-element"].Slug);
+        Assert.Equal("cu", attributes["conductor-material"].Slug);
+        Assert.Equal("cat-5e", attributes["cable-category"].Slug);
+        Assert.Equal("pe", attributes["jacket-material"].Slug);
+        Assert.Equal("black", attributes["color"].Slug);
+    }
+
     private static OneCExportDocument CreateSource()
     {
         return new OneCExportDocument(

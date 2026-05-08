@@ -73,7 +73,8 @@ public static class CatalogImportPlanner
                 UnitQuantity: DefaultUnitQuantity,
                 PublishStatus: publishStatus,
                 SortOrder: sortOrder,
-                Image: CreateImageRow(item.SourceRow, imagesBySourceRow)));
+                Image: CreateImageRow(item.SourceRow, imagesBySourceRow),
+                Attributes: CatalogAttributeExtractor.Extract(item.Name)));
 
             sortOrder++;
         }

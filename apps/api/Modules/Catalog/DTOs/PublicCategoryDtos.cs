@@ -28,6 +28,9 @@ public sealed record PublicCategoryFiltersDto(
     PublicCategorySummaryDto Category,
     IReadOnlyList<PublicFilterDto> Filters);
 
+public sealed record PublicCatalogFiltersDto(
+    IReadOnlyList<PublicFilterDto> Filters);
+
 public sealed record PublicFilterDto(
     string Code,
     string Name,

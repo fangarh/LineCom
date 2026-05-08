@@ -85,4 +85,18 @@ public sealed class PublicCategorySqlTests
         Assert.DoesNotContain("seo_description", PublicCategorySql.GetActiveCategoryFilters);
         Assert.DoesNotContain("price", PublicCategorySql.GetActiveCategoryFilters, StringComparison.OrdinalIgnoreCase);
     }
+
+    [Fact]
+    public void GetActiveCatalogFilters_GroupsActiveFilterableAttributesAcrossCategories()
+    {
+        Assert.Contains("FROM category_attributes attribute", PublicCategorySql.GetActiveCatalogFilters);
+        Assert.Contains("INNER JOIN categories category", PublicCategorySql.GetActiveCatalogFilters);
+        Assert.Contains("category.is_active = TRUE", PublicCategorySql.GetActiveCatalogFilters);
+        Assert.Contains("attribute.is_active = TRUE", PublicCategorySql.GetActiveCatalogFilters);
+        Assert.Contains("attribute.is_filterable = TRUE", PublicCategorySql.GetActiveCatalogFilters);
+        Assert.Contains("GROUP BY", PublicCategorySql.GetActiveCatalogFilters);
+        Assert.Contains("attribute.code", PublicCategorySql.GetActiveCatalogFilters);
+        Assert.Contains("option.slug", PublicCategorySql.GetActiveCatalogFilters);
+        Assert.Contains("MIN(option.value) NULLS FIRST", PublicCategorySql.GetActiveCatalogFilters);
+    }
 }

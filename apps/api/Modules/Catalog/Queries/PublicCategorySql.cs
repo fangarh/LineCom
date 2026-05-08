@@ -100,4 +100,35 @@ internal static class PublicCategorySql
             option.value NULLS FIRST,
             option.slug NULLS FIRST;
         """;
+
+    public const string GetActiveCatalogFilters = """
+        SELECT
+            attribute.code AS "Code",
+            MIN(attribute.name) AS "Name",
+            attribute.type AS "Type",
+            MIN(attribute.unit) AS "Unit",
+            MIN(attribute.sort_order) AS "SortOrder",
+            MIN(option.value) AS "OptionValue",
+            option.slug AS "OptionSlug",
+            MIN(option.sort_order) AS "OptionSortOrder"
+        FROM category_attributes attribute
+        INNER JOIN categories category ON category.id = attribute.category_id
+            AND category.is_active = TRUE
+        LEFT JOIN attribute_options option ON option.attribute_id = attribute.id
+            AND attribute.type = 'select'
+            AND option.is_active = TRUE
+        WHERE attribute.is_active = TRUE
+            AND attribute.is_filterable = TRUE
+        GROUP BY
+            attribute.code,
+            attribute.type,
+            option.slug
+        ORDER BY
+            MIN(attribute.sort_order),
+            MIN(attribute.name),
+            attribute.code,
+            MIN(option.sort_order) NULLS FIRST,
+            MIN(option.value) NULLS FIRST,
+            option.slug NULLS FIRST;
+        """;
 }

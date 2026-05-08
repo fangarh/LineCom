@@ -1,7 +1,7 @@
 import { CatalogFilters } from "@/components/catalog/catalog-filters";
 import { CategoryNav } from "@/components/catalog/category-nav";
 import { ProductCard } from "@/components/catalog/product-card";
-import { getCategoryTree, getProducts } from "@/lib/api/catalog";
+import { getCatalogFilters, getCategoryTree, getProducts } from "@/lib/api/catalog";
 import { parseCatalogFilters, toProductListParams, type CatalogSearchParams } from "@/lib/catalog/filtering";
 import { routes } from "@/lib/routes";
 
@@ -15,11 +15,14 @@ type CatalogPageProps = {
 };
 
 export default async function CatalogPage({ searchParams }: CatalogPageProps) {
-  const filterState = parseCatalogFilters(await searchParams);
-  const [categoryResult, productResult] = await Promise.allSettled([
+  const rawSearchParams = await searchParams;
+  const [categoryResult, catalogFiltersResult] = await Promise.allSettled([
     getCategoryTree(),
-    getProducts(toProductListParams(filterState)),
+    getCatalogFilters(),
   ]);
+  const catalogFilters = catalogFiltersResult.status === "fulfilled" ? catalogFiltersResult.value.filters : [];
+  const filterState = parseCatalogFilters(rawSearchParams, catalogFilters);
+  const [productResult] = await Promise.allSettled([getProducts(toProductListParams(filterState))]);
 
   const categories = categoryResult.status === "fulfilled" ? categoryResult.value.items : [];
   const products = productResult.status === "fulfilled" ? productResult.value.items : [];
@@ -54,6 +57,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
           </div>
 
           <CatalogFilters
+            attributeFilters={catalogFilters}
             basePath={routes.catalog()}
             state={filterState}
             scopeLabel="Все категории"

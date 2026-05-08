@@ -197,7 +197,8 @@ public sealed class CatalogImportReportWriterTests
                 UnitQuantity: "1 pc.",
                 PublishStatus: "published",
                 SortOrder: 0,
-                Image: includeImage ? new CatalogProductImageImportRow("asset-10", imageFile, "requires-permission") : null),
+                Image: includeImage ? new CatalogProductImageImportRow("asset-10", imageFile, "requires-permission") : null,
+                Attributes: []),
             new CatalogProductImportRow(
                 SourceRow: 11,
                 ExternalId: "ext-11",
@@ -209,7 +210,8 @@ public sealed class CatalogImportReportWriterTests
                 UnitQuantity: "1 pc.",
                 PublishStatus: "draft",
                 SortOrder: 1,
-                Image: null),
+                Image: null,
+                Attributes: []),
             new CatalogProductImportRow(
                 SourceRow: 12,
                 ExternalId: "ext-12",
@@ -221,7 +223,8 @@ public sealed class CatalogImportReportWriterTests
                 UnitQuantity: "1 pc.",
                 PublishStatus: "draft",
                 SortOrder: 2,
-                Image: null)
+                Image: null,
+                Attributes: [])
         };
         var warnings = includeWarning
             ? [new CatalogImportWarning(11, "product.requires_review", warningMessage)]

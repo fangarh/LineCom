@@ -158,6 +158,43 @@ public sealed class PublicCategoriesEndpointTests
     }
 
     [Fact]
+    public async Task GetCatalogFilters_ReturnsGlobalPublicFilters()
+    {
+        var responseBody = new PublicCatalogFiltersDto(
+        [
+            new PublicFilterDto(
+                "material",
+                "Материал",
+                "select",
+                null,
+                30,
+                [
+                    new PublicFilterOptionDto("Медь", "copper", 10),
+                    new PublicFilterOptionDto("CCA", "cca", 20)
+                ])
+        ]);
+
+        await using var factory = CreateFactory(new StubPublicCategoryQuery(
+            new PublicCategoryTreeResponse([]),
+            catalogFilters: responseBody));
+
+        using var client = factory.CreateClient();
+
+        using var response = await client.GetAsync("/api/public/catalog/filters");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var body = await JsonSerializer.DeserializeAsync<PublicCatalogFiltersDto>(
+            await response.Content.ReadAsStreamAsync(),
+            new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+        Assert.NotNull(body);
+        var filter = Assert.Single(body.Filters);
+        Assert.Equal("material", filter.Code);
+        Assert.Equal(["copper", "cca"], filter.Options.Select(option => option.Slug).ToArray());
+    }
+
+    [Fact]
     public async Task GetCategoryFilters_MapsNotFound_ToPublicCatalogError()
     {
         await using var factory = CreateFactory(new StubPublicCategoryQuery(
@@ -308,15 +345,18 @@ public sealed class PublicCategoriesEndpointTests
     {
         private readonly PublicCategoryTreeResponse _responseBody;
         private readonly PublicCategoryDetailDto? _categoryDetail;
+        private readonly PublicCatalogFiltersDto _catalogFilters;
         private readonly PublicCategoryFiltersDto? _filters;
 
         public StubPublicCategoryQuery(
             PublicCategoryTreeResponse responseBody,
             PublicCategoryDetailDto? categoryDetail = null,
+            PublicCatalogFiltersDto? catalogFilters = null,
             PublicCategoryFiltersDto? filters = null)
         {
             _responseBody = responseBody;
             _categoryDetail = categoryDetail;
+            _catalogFilters = catalogFilters ?? new PublicCatalogFiltersDto([]);
             _filters = filters;
         }
 
@@ -338,6 +378,11 @@ public sealed class PublicCategoriesEndpointTests
                 "catalog.category_not_found",
                 "Категория не найдена.",
                 StatusCodes.Status404NotFound);
+        }
+
+        public Task<PublicCatalogFiltersDto> GetCatalogFiltersAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(_catalogFilters);
         }
 
         public Task<PublicCategoryFiltersDto> GetCategoryFiltersAsync(
@@ -373,6 +418,11 @@ public sealed class PublicCategoriesEndpointTests
         public Task<PublicCategoryDetailDto> GetCategoryDetailAsync(
             string slug,
             CancellationToken cancellationToken = default)
+        {
+            throw _exception;
+        }
+
+        public Task<PublicCatalogFiltersDto> GetCatalogFiltersAsync(CancellationToken cancellationToken = default)
         {
             throw _exception;
         }

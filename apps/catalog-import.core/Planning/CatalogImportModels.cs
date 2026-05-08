@@ -32,7 +32,19 @@ public sealed record CatalogProductImportRow(
     string UnitQuantity,
     string PublishStatus,
     int SortOrder,
-    CatalogProductImageImportRow? Image);
+    CatalogProductImageImportRow? Image,
+    IReadOnlyList<CatalogProductAttributeImportRow> Attributes);
+
+public sealed record CatalogProductAttributeImportRow(
+    string Code,
+    string Name,
+    string Value,
+    string Slug,
+    string NormalizedValue,
+    int SortOrder,
+    int OptionSortOrder,
+    bool IsSeoImportant,
+    bool IsUsedInGeneratedName);
 
 public sealed record CatalogProductImageImportRow(
     string AssetKey,
