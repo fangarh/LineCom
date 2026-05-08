@@ -285,12 +285,13 @@ a {
   opacity: 1;
 }
 
-.site-header__login {
+.site-header__login.button--ghost {
   color: var(--color-header-text);
   border-color: rgba(255, 255, 255, 0.22);
 }
 
-.site-header__login:hover {
+.site-header__login.button--ghost:hover {
+  color: var(--color-header-text);
   background: var(--color-header-hover);
   border-color: rgba(255, 208, 0, 0.5);
 }
