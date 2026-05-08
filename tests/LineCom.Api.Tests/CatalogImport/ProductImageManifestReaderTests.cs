@@ -53,6 +53,14 @@ public sealed class ProductImageManifestReaderTests
                   "status": "downloaded_png",
                   "file": "Assets/product-images/no-source-rows.png",
                   "visualReviewStatus": "accepted_visual_scan"
+                },
+                {
+                  "assetKey": "trusted-tktdf",
+                  "status": "downloaded_png",
+                  "file": "Assets/product-images/tktdf/trusted-tktdf.png",
+                  "sourceRows": [14],
+                  "visualReviewStatus": "trusted_source_tktdf",
+                  "rightsStatus": "requires-permission"
                 }
               ]
             }
@@ -70,6 +78,8 @@ public sealed class ProductImageManifestReaderTests
         Assert.Equal("no-rights", images[13].AssetKey);
         Assert.Equal("Assets/product-images/no-rights.png", images[13].File);
         Assert.Equal("requires-permission", images[13].RightsStatus);
+        Assert.Equal("trusted-tktdf", images[14].AssetKey);
+        Assert.Equal("Assets/product-images/tktdf/trusted-tktdf.png", images[14].File);
     }
 
     private sealed class TemporaryDirectory : IDisposable

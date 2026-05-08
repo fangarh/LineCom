@@ -1,0 +1,58 @@
+{
+  "batch": {
+    "sourceSite": "tktdf.ru",
+    "createdAt": "2026-05-08",
+    "notes": "Trusted-source product image import input for the catalog importer. Pages are selected conservatively from tktdf.ru; prices, cart text, payment terms, and commercial wording are not imported."
+  },
+  "items": [
+    {
+      "assetKey": "tktdf-utp4-cat5e-cu-indoor-51108",
+      "sourceRows": [117],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51108/",
+      "isMain": true,
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-utp4-cat5e-cu-outdoor-59956",
+      "sourceRows": [123],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/59956/",
+      "isMain": true,
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-kdzs-40-52687",
+      "sourceRows": [71],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52687/",
+      "isMain": true,
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-kdzs-60-52683",
+      "sourceRows": [72],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52683/",
+      "isMain": true,
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-optical-adapter-sc-upc-simplex-54158",
+      "sourceRows": [43, 284],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54158/",
+      "isMain": true,
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-utp4-cat5e-grey-lszh-patchcord-1m-58652",
+      "sourceRows": [233, 235],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/58652/",
+      "isMain": true,
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-utp4-cat5e-grey-lszh-patchcord-3m-67635",
+      "sourceRows": [234],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67635/",
+      "isMain": true,
+      "rightsStatus": "requires-permission"
+    }
+  ]
+}

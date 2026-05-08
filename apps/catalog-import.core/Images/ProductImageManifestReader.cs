@@ -7,7 +7,11 @@ public static class ProductImageManifestReader
     public const string DefaultRightsStatus = "requires-permission";
 
     private const string AcceptedStatus = "downloaded_png";
-    private const string AcceptedVisualReviewStatus = "accepted_visual_scan";
+    private static readonly string[] AcceptedVisualReviewStatuses =
+    [
+        "accepted_visual_scan",
+        "trusted_source_tktdf"
+    ];
 
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
@@ -56,7 +60,8 @@ public static class ProductImageManifestReader
             && !string.IsNullOrWhiteSpace(item.File)
             && item.SourceRows is { Count: > 0 }
             && string.Equals(item.Status, AcceptedStatus, StringComparison.OrdinalIgnoreCase)
-            && string.Equals(item.VisualReviewStatus, AcceptedVisualReviewStatus, StringComparison.OrdinalIgnoreCase);
+            && AcceptedVisualReviewStatuses.Any(
+                status => string.Equals(item.VisualReviewStatus, status, StringComparison.OrdinalIgnoreCase));
     }
 
     private static string NormalizeRightsStatus(string? rightsStatus)

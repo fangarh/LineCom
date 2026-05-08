@@ -1,0 +1,145 @@
+{
+  "source": "Assets/tktdf_image_sources.json",
+  "sourceSite": "tktdf.ru",
+  "outputDir": "Assets/product-images/tktdf",
+  "totalItemsAttempted": 7,
+  "downloadedPng": 7,
+  "failed": 0,
+  "items": [
+    {
+      "assetKey": "tktdf-utp4-cat5e-cu-indoor-51108",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        117
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51108/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/9f1/i4w8sumyvbnxsp70rvwmsv4wjyt30049.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-utp4-cat5e-cu-indoor-51108.png",
+      "width": 650,
+      "height": 650,
+      "checksum": "c27da2cb8a27308eccbadf462197779f2c08eaecee1db5084216e523cecdc722",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-utp4-cat5e-cu-outdoor-59956",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        123
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/59956/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/277/ipba8b4jy5k6u9j18ga1km5j202g74cj.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-utp4-cat5e-cu-outdoor-59956.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "0429c545254c03459e3c9ecb6210ef2329315c22f3dc9ae19d602aadebe10451",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-kdzs-40-52687",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        71
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52687/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/ca9/ugzan4dx8nhqqqmqy4u5esheoq8rs0fq.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-kdzs-40-52687.png",
+      "width": 450,
+      "height": 320,
+      "checksum": "41066d5ce5f2a889644cc141571ce8b5eb22cce5d78941962a70fe2869846c09",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-kdzs-60-52683",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        72
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52683/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/008/gr8jz8j7bmjp2s9lhbhyaltqz917vhim.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-kdzs-60-52683.png",
+      "width": 450,
+      "height": 320,
+      "checksum": "514177afbc6a99c9aa8b404be050236938cda2051e4cc818d1861f7b2b20ad6b",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-optical-adapter-sc-upc-simplex-54158",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        43,
+        284
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54158/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/38e/8df1hhtspc0nm35q3w44jjeemxjlcuvd.jpeg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-optical-adapter-sc-upc-simplex-54158.png",
+      "width": 178,
+      "height": 178,
+      "checksum": "b17e548b84f890c99a8d605dfeacbad4e671b7f761691a694e57e40588f564be",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-utp4-cat5e-grey-lszh-patchcord-1m-58652",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        233,
+        235
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/58652/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/2d9/w6xx2qq2vvx2n1rtknpr6sfjfmi3lbco.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-utp4-cat5e-grey-lszh-patchcord-1m-58652.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "9f81df3f034d62485d5fd15c0370b612f0ee7f0f53660fa6aa62ea4be7b493f0",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-utp4-cat5e-grey-lszh-patchcord-3m-67635",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        234
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67635/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/73e/3jqov65fdgszwg5yv433tc3p53u60h35.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-utp4-cat5e-grey-lszh-patchcord-3m-67635.png",
+      "width": 1000,
+      "height": 800,
+      "checksum": "bd443461de6b68f423b95448a39a6492a0341837236c83e43d59a4974af113a2",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    }
+  ]
+}

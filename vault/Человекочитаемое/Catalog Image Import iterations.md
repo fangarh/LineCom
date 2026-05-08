@@ -155,3 +155,41 @@ Scope-search:
 - Команда `rg -n "Купить|В корзину|Розничная цена|Мелкий опт|оплат|TODO|TBD|FIXME|заглуш|костыл" apps/catalog-import.core apps/catalog-import.winforms tests/LineCom.Api.Tests/CatalogImport docs/superpowers/specs docs/superpowers/plans vault/Человекочитаемое` завершилась exit code `0`, потому что нашла ожидаемые документационные совпадения.
 - В `apps/catalog-import.core`, `apps/catalog-import.winforms` и `tests/LineCom.Api.Tests/CatalogImport` совпадений нет: запрещенная commerce language и незакрытые `TODO`/`TBD`/`FIXME` в importer implementation не обнаружены.
 - Найденные совпадения относятся к excluded-scope формулировкам, историческим заметкам, правилам проверки и самой команде scope-search в документации.
+
+## 2026-05-08. Замена старой image-партии на tktdf trusted-source
+
+Цель итерации: убрать старую multi-source партию изображений и подготовить новую партию из утвержденного источника `https://www.tktdf.ru/` для catalog importer.
+
+Решения:
+
+- старые `Assets/product-images/part1_png_reviewed/`, `Assets/product-images/part1_png_reviewed_manifest.json` и `Assets/product-images/part1_png_reviewed_contact_sheet.png` удалены;
+- новый входной файл для downloader: `Assets/tktdf_image_sources.json`;
+- новый output folder: `Assets/product-images/tktdf/`;
+- новый manifest для WinForms importer: `Assets/product-images/tktdf_manifest.json`;
+- WinForms importer по умолчанию выбирает `Assets/product-images/tktdf_manifest.json`;
+- `LineCom.CatalogImport.Core` принимает trusted-source manifest items со статусом `visualReviewStatus = trusted_source_tktdf`;
+- цены, корзина, оплата, заказы и коммерческие тексты с `tktdf.ru` не импортируются.
+
+Результат выгрузки:
+
+- `python tools\download_tktdf_product_images.py --source Assets\tktdf_image_sources.json --output-dir Assets\product-images\tktdf --manifest Assets\product-images\tktdf_manifest.json --delay 0.2`: exit code `0`;
+- попыток: `7`;
+- скачано PNG: `7`;
+- технических ошибок: `0`;
+- покрытые `sourceRows`: `43`, `71`, `72`, `117`, `123`, `233`, `234`, `235`, `284`;
+- все manifest items имеют `status = downloaded_png`, `visualReviewStatus = trusted_source_tktdf`, `rightsStatus = requires-permission`.
+
+Проверки:
+
+- `dotnet test LineCom.sln -m:1 --filter CatalogImport`: exit code `0`, `55` passed;
+- `dotnet build LineCom.sln -m:1`: exit code `0`, `0 Error(s)`, `2 Warning(s)`; оба предупреждения `NU1900` связаны с недоступностью NuGet vulnerability feed `https://api.nuget.org/v3/index.json`;
+- `python -m unittest tests.tools.test_download_tktdf_product_images`: exit code `0`, `Ran 3 tests`, `OK`;
+- `python -m json.tool Assets\tktdf_image_sources.json` и `python -m json.tool Assets\product-images\tktdf_manifest.json`: exit code `0`;
+- scope search по importer/source области не нашел запрещенную commerce/payment/order language и незакрытые `TODO`/`TBD`/`FIXME`;
+- все PNG в `Assets/product-images/tktdf/` успешно декодируются;
+- `dotnet test LineCom.sln -m:1`: exit code `0`, `347` passed, `0` failed, `0` skipped.
+
+Принцип подбора страниц:
+
+- в `Assets/tktdf_image_sources.json` включены только консервативные сопоставления с конкретными страницами `tktdf.ru`;
+- неоднозначные товары оставлены без изображения, чтобы не подменять товар похожим, но неверным визуалом.

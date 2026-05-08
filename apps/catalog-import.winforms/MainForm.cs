@@ -47,7 +47,7 @@ public sealed class MainForm : Form
         Height = 800;
 
         _sourcePath.Text = Path.Combine("Assets", "1c_export_41_01_nomenclature_by_category.json");
-        _manifestPath.Text = Path.Combine("Assets", "product-images", "part1_png_reviewed_manifest.json");
+        _manifestPath.Text = Path.Combine("Assets", "product-images", "tktdf_manifest.json");
         _reportPath.Text = Path.Combine(".codex-tmp", "catalog-import-reports");
 
         _sourcePath.TextChanged += (_, _) => InvalidateCurrentPlan();
