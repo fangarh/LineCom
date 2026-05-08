@@ -1,16 +1,24 @@
+import { CatalogFilters } from "@/components/catalog/catalog-filters";
 import { CategoryNav } from "@/components/catalog/category-nav";
 import { ProductCard } from "@/components/catalog/product-card";
 import { getCategoryTree, getProducts } from "@/lib/api/catalog";
+import { parseCatalogFilters, toProductListParams, type CatalogSearchParams } from "@/lib/catalog/filtering";
+import { routes } from "@/lib/routes";
 
 export const metadata = {
   title: "Каталог кабеля и компонентов LineCom",
   description: "Каталог кабеля, СКС, ВОЛС и компонентов LineCom для заявок по запросу.",
 };
 
-export default async function CatalogPage() {
+type CatalogPageProps = {
+  searchParams?: Promise<CatalogSearchParams>;
+};
+
+export default async function CatalogPage({ searchParams }: CatalogPageProps) {
+  const filterState = parseCatalogFilters(await searchParams);
   const [categoryResult, productResult] = await Promise.allSettled([
     getCategoryTree(),
-    getProducts({ pageSize: 24, sort: "category" }),
+    getProducts(toProductListParams(filterState)),
   ]);
 
   const categories = categoryResult.status === "fulfilled" ? categoryResult.value.items : [];
@@ -44,6 +52,13 @@ export default async function CatalogPage() {
               <span className="muted-text">{productResult.value.totalItems} позиций</span>
             ) : null}
           </div>
+
+          <CatalogFilters
+            basePath={routes.catalog()}
+            state={filterState}
+            scopeLabel="Все категории"
+            totalItems={productResult.status === "fulfilled" ? productResult.value.totalItems : undefined}
+          />
 
           {products.length > 0 ? (
             <div className="product-grid">
