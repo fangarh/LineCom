@@ -82,6 +82,48 @@ public sealed class ProductImageManifestReaderTests
         Assert.Equal("Assets/product-images/tktdf/trusted-tktdf.png", images[14].File);
     }
 
+    [Fact]
+    public void ReadAcceptedBySourceRow_ResolvesRepositoryRelativeImagePathsFromManifestLocation()
+    {
+        using var temp = new TemporaryDirectory();
+        var manifestDirectory = Path.Combine(temp.Path, "Assets", "product-images");
+        var imageDirectory = Path.Combine(manifestDirectory, "tktdf");
+        Directory.CreateDirectory(imageDirectory);
+        var imagePath = Path.Combine(imageDirectory, "image.png");
+        File.WriteAllBytes(imagePath, [1, 2, 3]);
+        var manifest = Path.Combine(manifestDirectory, "tktdf_manifest.json");
+        File.WriteAllText(
+            manifest,
+            """
+            {
+              "items": [
+                {
+                  "assetKey": "image",
+                  "status": "downloaded_png",
+                  "file": "Assets/product-images/tktdf/image.png",
+                  "sourceRows": [117],
+                  "visualReviewStatus": "trusted_source_tktdf",
+                  "rightsStatus": "requires-permission"
+                }
+              ]
+            }
+            """);
+
+        var originalCurrentDirectory = Environment.CurrentDirectory;
+        try
+        {
+            Environment.CurrentDirectory = Path.GetTempPath();
+
+            var images = ProductImageManifestReader.ReadAcceptedBySourceRow(manifest);
+
+            Assert.Equal(Path.GetFullPath(imagePath), images[117].File);
+        }
+        finally
+        {
+            Environment.CurrentDirectory = originalCurrentDirectory;
+        }
+    }
+
     private sealed class TemporaryDirectory : IDisposable
     {
         public TemporaryDirectory()

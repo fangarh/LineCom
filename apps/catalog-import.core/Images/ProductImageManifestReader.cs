@@ -34,6 +34,7 @@ public static class ProductImageManifestReader
         }
 
         var result = new Dictionary<int, ProductImageManifestItem>();
+        var manifestDirectory = Path.GetDirectoryName(Path.GetFullPath(path));
         foreach (var item in manifest.Items)
         {
             if (!IsAccepted(item))
@@ -43,7 +44,7 @@ public static class ProductImageManifestReader
 
             var image = new ProductImageManifestItem(
                 item.AssetKey,
-                item.File,
+                ResolveImagePath(item.File, manifestDirectory),
                 NormalizeRightsStatus(item.RightsStatus));
             foreach (var sourceRow in item.SourceRows ?? [])
             {
@@ -67,5 +68,35 @@ public static class ProductImageManifestReader
     private static string NormalizeRightsStatus(string? rightsStatus)
     {
         return string.IsNullOrWhiteSpace(rightsStatus) ? DefaultRightsStatus : rightsStatus;
+    }
+
+    private static string ResolveImagePath(string filePath, string? manifestDirectory)
+    {
+        if (Path.IsPathFullyQualified(filePath))
+        {
+            return Path.GetFullPath(filePath);
+        }
+
+        var currentDirectoryPath = Path.GetFullPath(filePath);
+        if (File.Exists(currentDirectoryPath))
+        {
+            return currentDirectoryPath;
+        }
+
+        var directory = string.IsNullOrWhiteSpace(manifestDirectory)
+            ? null
+            : new DirectoryInfo(manifestDirectory);
+        while (directory is not null)
+        {
+            var candidate = Path.GetFullPath(Path.Combine(directory.FullName, filePath));
+            if (File.Exists(candidate))
+            {
+                return candidate;
+            }
+
+            directory = directory.Parent;
+        }
+
+        return filePath;
     }
 }
