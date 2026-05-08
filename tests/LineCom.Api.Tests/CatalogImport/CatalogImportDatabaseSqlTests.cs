@@ -75,6 +75,33 @@ public sealed class CatalogImportDatabaseSqlTests
     }
 
     [Fact]
+    public void ProductImageStorageKey_IncludesChecksumPrefixAndKeepsLocalStorageContract()
+    {
+        var storageKey = CatalogImportDatabaseStorage.FormatProductImageStorageKey(
+            "asset/key one",
+            "abcdef1234567890fedcba0987654321abcdef1234567890fedcba0987654321");
+
+        Assert.Equal("storage/products/catalog-import/asset-key-one-abcdef123456.png", storageKey);
+    }
+
+    [Fact]
+    public void CopyProductImageToStorage_DoesNotOverwriteExistingPublicFile()
+    {
+        using var temp = new TemporaryDirectory();
+        var sourcePath = Path.Combine(temp.Path, "source.png");
+        var storageRootPath = Path.Combine(temp.Path, "storage");
+        var storageKey = "storage/products/catalog-import/asset-abcdef123456.png";
+        var existingPath = Path.Combine(storageRootPath, "products", "catalog-import", "asset-abcdef123456.png");
+        Directory.CreateDirectory(Path.GetDirectoryName(existingPath)!);
+        File.WriteAllText(sourcePath, "new-bytes");
+        File.WriteAllText(existingPath, "existing-bytes");
+
+        CatalogImportDatabaseStorage.CopyProductImageToStorage(sourcePath, storageKey, storageRootPath);
+
+        Assert.Equal("existing-bytes", File.ReadAllText(existingPath));
+    }
+
+    [Fact]
     public void ResetSql_ChecksProtectedRequestItemsAndDoesNotDeleteRequests()
     {
         Assert.Contains("FROM request_items item", CatalogImportDatabaseSql.CountProtectedProductReferences);
@@ -106,6 +133,14 @@ public sealed class CatalogImportDatabaseSqlTests
         Assert.Contains("FROM stored_files", CatalogImportDatabaseSql.CountResetImpact);
         Assert.Contains("purpose = 'product_image'", CatalogImportDatabaseSql.CountResetImpact);
         Assert.Contains("storage_key LIKE 'storage/products/catalog-import/%'", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("AS \"ProductAttributeValues\"", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("FROM product_attribute_values", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("AS \"AttributeValueAliases\"", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("FROM attribute_value_aliases", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("AS \"AttributeOptions\"", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("FROM attribute_options", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("AS \"CategoryAttributes\"", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("FROM category_attributes", CatalogImportDatabaseSql.CountResetImpact);
     }
 
     [Fact]
@@ -119,7 +154,11 @@ public sealed class CatalogImportDatabaseSqlTests
             Categories: 4,
             Products: 5,
             ProductImages: 6,
-            StoredProductImageFiles: 7);
+            StoredProductImageFiles: 7,
+            ProductAttributeValues: 8,
+            AttributeValueAliases: 9,
+            AttributeOptions: 10,
+            CategoryAttributes: 11);
         var resetResult = noResetResult with { ResetImpact = impact };
 
         Assert.Null(noResetResult.ResetImpact);
@@ -142,5 +181,24 @@ public sealed class CatalogImportDatabaseSqlTests
                 new CatalogImportApplyOptions(ResetCatalog: true, AllowResetInCurrentEnvironment: false)));
 
         Assert.Contains("explicitly approved dev/QA", exception.Message);
+    }
+
+    private sealed class TemporaryDirectory : IDisposable
+    {
+        public TemporaryDirectory()
+        {
+            Path = global::System.IO.Path.Combine(global::System.IO.Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+            global::System.IO.Directory.CreateDirectory(Path);
+        }
+
+        public string Path { get; }
+
+        public void Dispose()
+        {
+            if (global::System.IO.Directory.Exists(Path))
+            {
+                global::System.IO.Directory.Delete(Path, recursive: true);
+            }
+        }
     }
 }

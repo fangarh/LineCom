@@ -23,7 +23,11 @@ public static class CatalogImportDatabaseSql
                 FROM stored_files
                 WHERE purpose = 'product_image'
                   AND storage_key LIKE 'storage/products/catalog-import/%'
-            ) AS "StoredProductImageFiles";
+            ) AS "StoredProductImageFiles",
+            (SELECT COUNT(*) FROM product_attribute_values) AS "ProductAttributeValues",
+            (SELECT COUNT(*) FROM attribute_value_aliases) AS "AttributeValueAliases",
+            (SELECT COUNT(*) FROM attribute_options) AS "AttributeOptions",
+            (SELECT COUNT(*) FROM category_attributes) AS "CategoryAttributes";
         """;
 
     public const string ResetCatalog = """
@@ -167,6 +171,61 @@ public static class CatalogImportDatabaseSql
 public static class CatalogImportDatabaseStorage
 {
     public const string ProductImageStorageKeyPrefix = "storage/products/catalog-import/";
+
+    private const string StorageRequestPathPrefix = "storage/";
+    private const int ChecksumPrefixLength = 12;
+
+    public static string FormatProductImageStorageKey(string assetKey, string checksum)
+    {
+        if (string.IsNullOrWhiteSpace(checksum))
+        {
+            throw new ArgumentException("Checksum is required.", nameof(checksum));
+        }
+
+        var checksumPrefixLength = Math.Min(ChecksumPrefixLength, checksum.Length);
+
+        return $"{ProductImageStorageKeyPrefix}{NormalizeStorageName(assetKey)}-{checksum[..checksumPrefixLength]}.png";
+    }
+
+    public static void CopyProductImageToStorage(string sourcePath, string storageKey, string? storageRootPath)
+    {
+        if (string.IsNullOrWhiteSpace(storageRootPath))
+        {
+            return;
+        }
+
+        var relativeStoragePath = storageKey.StartsWith(StorageRequestPathPrefix, StringComparison.Ordinal)
+            ? storageKey[StorageRequestPathPrefix.Length..]
+            : storageKey;
+        var destinationPath = Path.Combine(
+            storageRootPath,
+            relativeStoragePath.Replace('/', Path.DirectorySeparatorChar));
+        var destinationDirectory = Path.GetDirectoryName(destinationPath)
+            ?? throw new InvalidOperationException($"Storage destination path is invalid: {destinationPath}");
+
+        Directory.CreateDirectory(destinationDirectory);
+        if (!string.Equals(Path.GetFullPath(sourcePath), Path.GetFullPath(destinationPath), StringComparison.OrdinalIgnoreCase)
+            && !File.Exists(destinationPath))
+        {
+            File.Copy(sourcePath, destinationPath, overwrite: false);
+        }
+    }
+
+    private static string NormalizeStorageName(string value)
+    {
+        var normalized = value
+            .Replace("\\", "-", StringComparison.Ordinal)
+            .Replace("/", "-", StringComparison.Ordinal)
+            .Replace(" ", "-", StringComparison.Ordinal)
+            .Trim(' ', '.', '-');
+
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            throw new InvalidOperationException("Product image asset key is required.");
+        }
+
+        return normalized;
+    }
 }
 
 public sealed record CatalogImportApplyOptions(
@@ -185,11 +244,14 @@ public sealed record CatalogImportResetImpact(
     long Categories,
     long Products,
     long ProductImages,
-    long StoredProductImageFiles);
+    long StoredProductImageFiles,
+    long ProductAttributeValues,
+    long AttributeValueAliases,
+    long AttributeOptions,
+    long CategoryAttributes);
 
 public sealed class CatalogImportDatabase
 {
-    private const string StorageRequestPathPrefix = "storage/";
     private const string ProductImageContentType = "image/png";
 
     private readonly string _connectionString;
@@ -301,7 +363,7 @@ public sealed class CatalogImportDatabase
             }
 
             var storedFile = CreateStoredFileParameters(product.Image);
-            CopyToStorageRoot(product.Image.File, storedFile.StorageKey, storageRootPath);
+            CatalogImportDatabaseStorage.CopyProductImageToStorage(product.Image.File, storedFile.StorageKey, storageRootPath);
             imports[product.ExternalId] = new CatalogImportProductImageImport(product.ExternalId, storedFile);
         }
 
@@ -400,52 +462,14 @@ public sealed class CatalogImportDatabase
             throw new InvalidOperationException($"Product image file must be a PNG: {image.File}");
         }
 
-        var storageName = $"{NormalizeStorageName(image.AssetKey)}.png";
+        var checksum = ComputeSha256(image.File);
 
         return new CatalogImportStoredFileParameters(
-            StorageKey: $"{CatalogImportDatabaseStorage.ProductImageStorageKeyPrefix}{storageName}",
+            StorageKey: CatalogImportDatabaseStorage.FormatProductImageStorageKey(image.AssetKey, checksum),
             OriginalFileName: file.Name,
             ContentType: GetContentType(extension),
             SizeBytes: file.Length,
-            Checksum: ComputeSha256(image.File));
-    }
-
-    private static void CopyToStorageRoot(string sourcePath, string storageKey, string? storageRootPath)
-    {
-        if (string.IsNullOrWhiteSpace(storageRootPath))
-        {
-            return;
-        }
-
-        var relativeStoragePath = storageKey.StartsWith(StorageRequestPathPrefix, StringComparison.Ordinal)
-            ? storageKey[StorageRequestPathPrefix.Length..]
-            : storageKey;
-        var destinationPath = Path.Combine(
-            storageRootPath,
-            relativeStoragePath.Replace('/', Path.DirectorySeparatorChar));
-        var destinationDirectory = Path.GetDirectoryName(destinationPath)
-            ?? throw new InvalidOperationException($"Storage destination path is invalid: {destinationPath}");
-
-        Directory.CreateDirectory(destinationDirectory);
-        if (!string.Equals(Path.GetFullPath(sourcePath), Path.GetFullPath(destinationPath), StringComparison.OrdinalIgnoreCase))
-        {
-            File.Copy(sourcePath, destinationPath, overwrite: true);
-        }
-    }
-
-    private static string NormalizeStorageName(string value)
-    {
-        var normalized = value
-            .Replace("\\", "-", StringComparison.Ordinal)
-            .Replace("/", "-", StringComparison.Ordinal)
-            .Trim(' ', '.', '-');
-
-        if (string.IsNullOrWhiteSpace(normalized))
-        {
-            throw new InvalidOperationException("Product image asset key is required.");
-        }
-
-        return normalized;
+            Checksum: checksum);
     }
 
     private static string GetContentType(string extension)
