@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\apps\api\LineCom.Api.csproj" />
+    <ProjectReference Include="..\..\apps\catalog-import.core\LineCom.CatalogImport.Core.csproj" />
     <ProjectReference Include="..\..\apps\dbmigrator.core\LineCom.DbMigrator.Core.csproj" />
   </ItemGroup>
 

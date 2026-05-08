@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineCom.DbMigrator", "apps\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineCom.DbMigrator.Core", "apps\dbmigrator.core\LineCom.DbMigrator.Core.csproj", "{FF4512BC-4080-4B7C-8649-6C66B03352D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LineCom.CatalogImport.Core", "apps\catalog-import.core\LineCom.CatalogImport.Core.csproj", "{9B9FF06B-94DA-4B3A-8B2A-6B5149C69281}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{FF4512BC-4080-4B7C-8649-6C66B03352D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF4512BC-4080-4B7C-8649-6C66B03352D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF4512BC-4080-4B7C-8649-6C66B03352D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B9FF06B-94DA-4B3A-8B2A-6B5149C69281}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B9FF06B-94DA-4B3A-8B2A-6B5149C69281}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B9FF06B-94DA-4B3A-8B2A-6B5149C69281}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B9FF06B-94DA-4B3A-8B2A-6B5149C69281}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,5 +52,6 @@ Global
 		{47746700-A1D2-4527-9462-968AF2B6ADF9} = {57B804AF-CB22-4CF1-8283-0AEEA3B85CF4}
 		{4FED118E-7879-4CEF-8649-30B72A3550B3} = {FCC606EF-1085-429B-A0B7-21FFBCC9289C}
 		{FF4512BC-4080-4B7C-8649-6C66B03352D4} = {FCC606EF-1085-429B-A0B7-21FFBCC9289C}
+		{9B9FF06B-94DA-4B3A-8B2A-6B5149C69281} = {FCC606EF-1085-429B-A0B7-21FFBCC9289C}
 	EndGlobalSection
 EndGlobal
