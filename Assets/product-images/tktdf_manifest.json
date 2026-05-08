@@ -2,8 +2,8 @@
   "source": "Assets/tktdf_image_sources.json",
   "sourceSite": "tktdf.ru",
   "outputDir": "Assets/product-images/tktdf",
-  "totalItemsAttempted": 7,
-  "downloadedPng": 7,
+  "totalItemsAttempted": 77,
+  "downloadedPng": 77,
   "failed": 0,
   "items": [
     {
@@ -136,6 +136,1360 @@
       "width": 1000,
       "height": 800,
       "checksum": "bd443461de6b68f423b95448a39a6492a0341837236c83e43d59a4974af113a2",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-exegate-utp2-cat.5-305m-cca-55968",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        106
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55968/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8a5/c6bvovvg6y70nutzc5xnyor3sz9ar77u.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-exegate-utp2-cat.5-305m-cca-55968.png",
+      "width": 650,
+      "height": 650,
+      "checksum": "91c9d0fc3782293184f2e0c1b200eba49647ee932c1715c85ca97b9edbe51d18",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-lanmax-utp4-cat5e-305m-cu-24awg-indoor-pvc-67667",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        109,
+        118
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67667/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/038/kzcrxdgn2rf6zitdlbnm7dq123qhpuzn.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-lanmax-utp4-cat5e-305m-cu-24awg-indoor-pvc-67667.png",
+      "width": 1000,
+      "height": 800,
+      "checksum": "2e01c99c4e2563f70dbf245421f080ada053a76ee33c4052f93aeb5a266abcce",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-lanmax-utp4-cat5e-305m-cu-24awg-outdoor-pe-67486",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        110,
+        119,
+        120,
+        121,
+        124
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67486/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/681/u9a3mq4i9addnw1flm3h83btb26o1m6i.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-lanmax-utp4-cat5e-305m-cu-24awg-outdoor-pe-67486.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "25c150553731ee17707ee25ac1048d461ba616fca7af99cf059f3c071146295f",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-lappnet-utp4x2x0.5-cat.5-305m-cca-pvc-67482",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        111
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67482/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/e12/x959uypppmdwsswciksxxf5u2kz59agq.png",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-lappnet-utp4x2x0.5-cat.5-305m-cca-pvc-67482.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "2b1feaa8c20d1973896c7566648f7f9ccd58f9a311aa1bda7c0f4ccdc7afe804",
+      "contentType": "image/png",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-skynet-premium-ftp4-cat.5-305m-cu-56140",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        113
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56140/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/af9/6d0x56md4z27w4decfrmxuhbwzylvz6w.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-skynet-premium-ftp4-cat.5-305m-cu-56140.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "b4f77986ea0887e8c9c81efe0538416ace0d6f338f3586b054a632d8f61d5726",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-skynet-premium-utp4-cat.5-305m-cu-pe-58920",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        114,
+        115,
+        125
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/58920/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/9ff/0wvc54ecgle531qv8cvpy5rfgm5d2s0y.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-skynet-premium-utp4-cat.5-305m-cu-pe-58920.png",
+      "width": 755,
+      "height": 1000,
+      "checksum": "2b95573e20bc1a01e73b3e4ccd225c96f5286bcc1631b456e25184b9ed1a9162",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-utp4-cat.5-305m-cu-fluke-lsltx-69456",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        122
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/69456/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/836/khkxox2dch2nh7urwxvkxo8ope0w1qzg.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-utp4-cat.5-305m-cu-fluke-lsltx-69456.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "2fd836a836de739b43118c47c574630e4f4a487c163d1e539c15a4cfae323b17",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-10-01-0-22-8-2-7-56637",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        147,
+        196
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56637/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/bd8/bd8bba6cfde4bc11785d0649ea5bd6af.png",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-10-01-0-22-8-2-7-56637.png",
+      "width": 800,
+      "height": 355,
+      "checksum": "5ce29edba3d67424a82b7829104a8d8a2774f91555395b8ca759d9155e2dc46a",
+      "contentType": "image/png",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-32-2-7-53941",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        151,
+        273
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/53941/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/fbb/2wmlu4r1v5dezezpdg9jgt75yetjc0g8.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-32-2-7-53941.png",
+      "width": 650,
+      "height": 650,
+      "checksum": "c001ec48eaaa4708a90dfc034be0711104ec4751f62d4b560df7914d0fb77c70",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-sfp-dac-2-57041",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        38
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/57041/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/c01/foqwpc1wusfj3iomhrpdfc874rjcwq34.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-sfp-dac-2-57041.png",
+      "width": 4160,
+      "height": 3120,
+      "checksum": "e9a3da8751b0a5d7163ae092c65f0d1a4cc848909d282f0997b9aea15681e621",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-sc-apc-simplex-58919",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        42
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/58919/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/e22/549dmunla4wt0fpw8lckp2xbzzd2vb1c.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-sc-apc-simplex-58919.png",
+      "width": 1500,
+      "height": 1125,
+      "checksum": "b8199556530f3acb3a1491395a614aff5076b21cdac7a66204bf65f7300d7635",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-1-2-50-50-65050",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        83
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/65050/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8fa/wneun3f5tnrq41noph7503nvq1k2keso.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-1-2-50-50-65050.png",
+      "width": 238,
+      "height": 198,
+      "checksum": "c0d493811ee056b06f4453537343e3b53e98df5adbbe1d31198804310889c58d",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-60-53509",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        166
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/53509/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/c75/c75ab8dcec8058fdf6018cc3f85604fb.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-60-53509.png",
+      "width": 439,
+      "height": 386,
+      "checksum": "a05350cc262d0aef921fe264682e885efad586f5bb16a918d18e952ff7ec4593",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-1u-16-54422",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        181
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54422/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/576/576fc321be3f1cfd00fb7dee52f013a8.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-1u-16-54422.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "6e54e1b21f777b963f6b5a1ad808e053d18907363dcb26f251627f25bb903475",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-1u-16-sc-upc-66189",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        182,
+        264
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/66189/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/7ce/fxw2b22252eedp1pjkydnfa3clcl0n0v.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-1u-16-sc-upc-66189.png",
+      "width": 4160,
+      "height": 3120,
+      "checksum": "2a2ee7a7143aa36ae92ae82f86086675df9a395c7cb993d64851a4688e1fc6ca",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-1u-24-55047",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        183
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55047/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/e7b/e7b64aec291754179ba81300fdddd84a.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-1u-24-55047.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "d8d08e24bacf1d6ed8e05a044c22bb08f61177df0095afa84a70189158e88761",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-2u-48-sc-52270",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        187
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52270/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/498/4989a97993bf7435a9bb73680f995125.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-2u-48-sc-52270.png",
+      "width": 450,
+      "height": 320,
+      "checksum": "c7b45ece19630b40ed86630e8419532c17d8c7e50aae0dcb4a8640a9fabee490",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-24-8sc-sm-71598",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        188
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/71598/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/2a9/rapkt0riasszxva2fvlkz32none74oc7.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-24-8sc-sm-71598.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "3b61e93defc38b5f806cc2dbfba07f6646175b4cb38b7e710920d68c9d6f9ebe",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-16-sc-57018",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        189
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/57018/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/567/nqn9stbh621en219orp2y8asx2pvr3hg.jpeg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-16-sc-57018.png",
+      "width": 800,
+      "height": 800,
+      "checksum": "d36202a09d2778df06320069298345bc469e26f5af70d9cb53341aa2c7aacf9f",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-4-sc-52275",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        191
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52275/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/6e9/6e926f6d5e4827ad1c910a883656f241.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-4-sc-52275.png",
+      "width": 450,
+      "height": 320,
+      "checksum": "f3eb78626305589282fdeefd15bb575877fa56dc9bfbb9d2e434328bcb05b7e7",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-8-fc-68860",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        192
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/68860/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/141/18chcdxrsfoukvi2jo97h8hrnboc1m6b.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-8-fc-68860.png",
+      "width": 1000,
+      "height": 750,
+      "checksum": "47f66a67278593ce38982ef3d8e574f72b877d152bf075900c6e44b01be6c005",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-8-sc-54920",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        193,
+        267
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54920/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/66c/fdjlvgh5mg71to461x43t3lr8b67mvfb.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-8-sc-54920.png",
+      "width": 4320,
+      "height": 3240,
+      "checksum": "d1dff83d3666c01a1d062d9bfe20754c0bec567a4a7bf9b459fee3c369482fd2",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-gjs-2-d-48-55045",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        203
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55045/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/fee/fee4d10d88da24f588b10fe4977f977d.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-gjs-2-d-48-55045.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "aeb7d06d43a7569c7e76c1cc6406bb7962c50c9a6913e43c9ef5f953bca6e939",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-sc-up-sm-buffer-1.5m-56400",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        266
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56400/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/65d/ffvzo0amj0yiwonoyx8wm45or51agpis.jpeg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-sc-up-sm-buffer-1.5m-56400.png",
+      "width": 800,
+      "height": 800,
+      "checksum": "95e77ddcceed9bb064ee2a3a661490218c92c4d35ae4f49475f002b584cf9f48",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-lc-upc-lc-upc-sm-3mm-simplex-lszh-1m-66688",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        237
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/66688/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8fa/wneun3f5tnrq41noph7503nvq1k2keso.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-lc-upc-lc-upc-sm-3mm-simplex-lszh-1m-66688.png",
+      "width": 238,
+      "height": 198,
+      "checksum": "c0d493811ee056b06f4453537343e3b53e98df5adbbe1d31198804310889c58d",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-lc-upc-lc-upc-sm-3mm-simplex-lszh-3m-66689",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        238
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/66689/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8fa/wneun3f5tnrq41noph7503nvq1k2keso.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-lc-upc-lc-upc-sm-3mm-simplex-lszh-3m-66689.png",
+      "width": 238,
+      "height": 198,
+      "checksum": "c0d493811ee056b06f4453537343e3b53e98df5adbbe1d31198804310889c58d",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-sc-apc-lc-upc-sm-3mm-simplex-lszh-2m-65851",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        241,
+        250
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/65851/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8fa/wneun3f5tnrq41noph7503nvq1k2keso.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-sc-apc-lc-upc-sm-3mm-simplex-lszh-2m-65851.png",
+      "width": 238,
+      "height": 198,
+      "checksum": "c0d493811ee056b06f4453537343e3b53e98df5adbbe1d31198804310889c58d",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-sc-apc-sc-apc-sm-3mm-simplex-lszh-3m-66179",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        244,
+        247
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/66179/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8fa/wneun3f5tnrq41noph7503nvq1k2keso.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-sc-apc-sc-apc-sm-3mm-simplex-lszh-3m-66179.png",
+      "width": 238,
+      "height": 198,
+      "checksum": "c0d493811ee056b06f4453537343e3b53e98df5adbbe1d31198804310889c58d",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-sc-upc-sc-apc-sm-3mm-simplex-lszh-1.5m-57814",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        251
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/57814/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/5fb/2ed5l70436gp6cp4v1710xhd7qkh6l7c.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-sc-upc-sc-apc-sm-3mm-simplex-lszh-1.5m-57814.png",
+      "width": 4160,
+      "height": 3120,
+      "checksum": "74b859eef91500f01613f3567b302e02af96732e8e45bb0cfbb1c9be34d3b053",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-sc-upc-sc-upc-sm-3mm-simplex-lszh-0-5m-57815",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        252,
+        253,
+        255
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/57815/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/357/1oobq2xinox76o9s9rqiffapazkadapi.jpeg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-sc-upc-sc-upc-sm-3mm-simplex-lszh-0-5m-57815.png",
+      "width": 650,
+      "height": 650,
+      "checksum": "1c027a63c52c188bde15c47768342465c0a8a4c6e4cdd012470475eb48b38565",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-15u-600-750-736mm-19-55466",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        55,
+        204
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55466/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/805/k8ngmlki4qcelh3fkb021bs9uubzwrdg.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-15u-600-750-736mm-19-55466.png",
+      "width": 1562,
+      "height": 1562,
+      "checksum": "d1b847a18580a30f2121cad952bb2184a262d353d8d5213bf5a84e578ff07f82",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-3u-550-220-500mm-55462",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        56
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55462/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/39c/ulpm4q1shkyon65e7aurjgqnttcu1g5h.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-3u-550-220-500mm-55462.png",
+      "width": 1562,
+      "height": 1562,
+      "checksum": "f244f848c3e95bf33cad0542babf42619e5851582eb60556fa001278381f5226",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-4u-520-400-370-19-55467",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        329
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55467/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/c51/e6x7v5csdct76p9p0417y7utovu200ge.jpeg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-4u-520-400-370-19-55467.png",
+      "width": 1400,
+      "height": 994,
+      "checksum": "9885d4cd03c94a8485344ecee7ad4c2357b0fbf6a7228f5fc009cdf0e1b04a09",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-rj45-rj11-rj12-bnc-56627",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        158
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56627/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/9b2/9b25cebb431f64e657bbc69f21cdcc89.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-rj45-rj11-rj12-bnc-56627.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "ae3529f39acb1914f318d371f86cb09d3b30ed6b496c043b7ba07a3fc72185a4",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-rj-45-6p-8p-67495",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        180
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67495/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/1c3/jgg4v1zx8w25wf0j4tbjtyl04966nlva.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-rj-45-6p-8p-67495.png",
+      "width": 3120,
+      "height": 4160,
+      "checksum": "79c0b51095939213ad106ddd1f9b1207e935161cea881cef32843ebf33609fc2",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-8p8c-rj-45-6p6c-rj-12-4p4c-67392",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        202
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67392/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/f8c/i38v23bs4g212wbnekp1a4e0jatyoa0y.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-8p8c-rj-45-6p6c-rj-12-4p4c-67392.png",
+      "width": 3120,
+      "height": 4160,
+      "checksum": "cdec493022a4100f043c7b7376dc29d0acf44f20da02ceb5acabfde7f54e371f",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-abs-10-0-9-lsa-plus-55881",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        268
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55881/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/074/074f23d99436edaa3599bfa071495929.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-abs-10-0-9-lsa-plus-55881.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "9a5083c700f5e37033d9782782240e256f929881ff7875d2f4703d805aa337b4",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-rj45-cat5e-krone-54135",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        283
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54135/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/94a/94a003bd906fe0cacc0053b125e06aae.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-rj45-cat5e-krone-54135.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "2c89cbd0f1dcb266f9fe9f862bbef2a102efff13bac1ec7a632abe46d6f627ec",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-rg-6u-75-cu-32-al-51158",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        133,
+        134
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51158/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/f23/3s94llnh7631d2qe06c5uix9oyi2s4e0.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-rg-6u-75-cu-32-al-51158.png",
+      "width": 650,
+      "height": 650,
+      "checksum": "5e00a0348e57e7ff1210724272fe2db16099978596330ce4c8ca68b258484cfb",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-rg-6u-ccs-51157",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        135
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51157/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/413/6f1tny3mwycn8lja29mkwxha5vzrvzv8.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-rg-6u-ccs-51157.png",
+      "width": 750,
+      "height": 750,
+      "checksum": "6521be97fdd3576eaab0526893b35cabe835ec7374d2d79b5b8df2a2841b22aa",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-rg6-48w-ccs-1.02mm-6.8mm-48-0.12mm-al-al-870-20.13-51991",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        137
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51991/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/258/0lh2xwx6yz67nxo4a4q4ulpuy4s4e8ya.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-rg6-48w-ccs-1.02mm-6.8mm-48-0.12mm-al-al-870-20.13-51991.png",
+      "width": 750,
+      "height": 750,
+      "checksum": "f86ec7b53d8a4432784cfd46c1b132ff7e228e4b0ac01aa0d0e5e3cf27ee187e",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-2-rf-220-65572",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        213
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/65572/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/aca/h0yc43lzekryz29es00xm9yexo580aap.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-2-rf-220-65572.png",
+      "width": 2983,
+      "height": 2625,
+      "checksum": "93d6911b95c547c3a60979fd2855fb13643509922a8b3792cef1c0ec56f46e5c",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-420-tah-53419",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        231
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/53419/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/40e/40e7c4456dc885539c5a34ba8f1402bc.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-420-tah-53419.png",
+      "width": 800,
+      "height": 568,
+      "checksum": "ec8478e3c8c08dcd78391fd7c9834aa6091eb49e25886ad9b0490fcea27ce854",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-ck-12-9-56841",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        45
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56841/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/163/qkbv5le2w4jf6fh2hgvo90hrndhtf49c.JPG",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-ck-12-9-56841.png",
+      "width": 600,
+      "height": 800,
+      "checksum": "de050ca111abd8a42132d1dedaa86db8718d67127802a97e553359431a7d58fa",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-gpl-12-100-12-100-53492",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        46
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/53492/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/528/528a67e234219ffb94d55ec3b830434d.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-gpl-12-100-12-100-53492.png",
+      "width": 4320,
+      "height": 3240,
+      "checksum": "a5a272a371d542741316f986909190afc24207c55c1ef0531da45d565f16aed2",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-iec-c14-10a-250v-56121",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        66
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56121/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/deb/3cajorj3iney7mgs2k585t28ptlnv52v.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-iec-c14-10a-250v-56121.png",
+      "width": 1000,
+      "height": 800,
+      "checksum": "796f6b02dbb6b2d2d6aa005c018005beede3a447c4da3465be585a3bc947ff41",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-3-0-75-5-1.8m-52196",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        289
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52196/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/568/01huxu13faxodhpeeact0h7g3aqdbixi.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-3-0-75-5-1.8m-52196.png",
+      "width": 750,
+      "height": 750,
+      "checksum": "58a028b8ee6daeb27054b33dd392e5296649df0e8d9f07a382fcfbfd38087293",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-8-12-10-din-proxima-ekf-sn0-125-10-d-55409",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        328
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55409/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8fa/wneun3f5tnrq41noph7503nvq1k2keso.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-8-12-10-din-proxima-ekf-sn0-125-10-d-55409.png",
+      "width": 238,
+      "height": 198,
+      "checksum": "c0d493811ee056b06f4453537343e3b53e98df5adbbe1d31198804310889c58d",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-frls-2-2-1.5-54998",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        139
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54998/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/d2d/mdq8fboqqwfjbgx084m0fi8f51kefabp.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-frls-2-2-1.5-54998.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "b986e248157bf234055121e04c4ff77f1d0a99e6a10a95d1514b9c1bec68a436",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-2-0-5-500m-70347",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        141
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/70347/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/118/cnpbpy6ufd2rkgm03aqq3dcaftqwdr88.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-2-0-5-500m-70347.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "96c56fc77edc8ade7146073e7a452243c427e8e0ca3b6b0f3fee27bf6c2b017d",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-100-60-ckk11-100-060-1-k01-iek-52160",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        58,
+        155
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52160/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/7dc/fm3vcmdexg29znphst9vuq8uw4e9cmk4.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-100-60-ckk11-100-060-1-k01-iek-52160.png",
+      "width": 650,
+      "height": 650,
+      "checksum": "133457b8383b5146e96230a754dfae27e7d7f6a8f9f572abee3f8c9c205ca556",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-20mm-100m-51477",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        315,
+        316
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51477/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/2a7/1a24xcye5v86jp6z4d5arb78kojnscxy.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-20mm-100m-51477.png",
+      "width": 650,
+      "height": 650,
+      "checksum": "b33ae0c7d9a0f02b1ff4aeb0bc5c624c53a5b47a0369d1e1e4f3bb30efb69450",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-15-52076",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        54
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52076/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/ba7/f5pk629ok3rmfvckrgzajf1fnk8j0ic8.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-15-52076.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "315aa2aa76638938def1dd9676054a477d6094c7428ee3bc7873c92b2dea1c24",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-m6-12-70061",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        178
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/70061/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/b1b/gq59m9lvkcr0glpqylrq7o8qgukt31j0.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-m6-12-70061.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "e55d326b77b806eb940750207200d7dbf1d42265990c250e11b7f49342c63786",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-12-0-7-51818",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        259
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51818/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/ebf/c2565zoaemu1arclfs0m177fy85xyfj3.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-12-0-7-51818.png",
+      "width": 1000,
+      "height": 800,
+      "checksum": "04132a178919202a26901ff3bdacac0a2b0332e75cc4f22ef870cca53155a232",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-3-5-35-52420",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        287,
+        288
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52420/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/49e/49eaec5f5351f0dcb28a735dcb37000d.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-3-5-35-52420.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "ebc9370c91107fc77e94917904abf16475ac3faeafd23416f4d05967d902d105",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-200-3.6mm-100-60241",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        303
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/60241/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/a0b/08z73koax0rlvkq4vdnagkit9ahaltbw.JPG",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-200-3.6mm-100-60241.png",
+      "width": 1000,
+      "height": 800,
+      "checksum": "8a23729edbff74c2b1b3e6e2bd6386dd0982da47f6babe1b4315c73f4c58f3cd",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-3-6-200-dkc-100-25314sr-60243",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        304
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/60243/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/3d1/vs1br2q7f50n31c374tj25c4i2bt05ou.JPG",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-3-6-200-dkc-100-25314sr-60243.png",
+      "width": 1000,
+      "height": 800,
+      "checksum": "68184ac8aab20a6e8f6197319734d32ea44a765fe9dd9dfdc80468bfffd625d1",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-200-4-6-100-3m-60247",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        305
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/60247/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/2e8/bse8ylb56z3nync9lo753ule27b5rwi6.JPG",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-200-4-6-100-3m-60247.png",
+      "width": 1000,
+      "height": 800,
+      "checksum": "1cb0feb40ceeff1481aaa49988e74c990bb1de2b5dbe500c3d86367ea1024c50",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-200-4-8-100-58141",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        306,
+        307
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/58141/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/41a/b65xno1d9of8970wrcrbyd11m9jmht8i.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-200-4-8-100-58141.png",
+      "width": 1920,
+      "height": 1080,
+      "checksum": "0ca8752496625647d17af23b62d3e03c875a55fa22efe917fb7c018fe625c2bd",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-282-4-6-100-3m-54282",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        308
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54282/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/967/967c3aa668b8710dc24d4d7513cf1795.jpeg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-282-4-6-100-3m-54282.png",
+      "width": 600,
+      "height": 445,
+      "checksum": "4389dae4eda8af07ae60bf5c85a3540f6fedf09b5e91136b6562ba5472e82270",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-100-2-5-100-52161",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        309,
+        310
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52161/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/90f/8kd2ifol0sx22ix2wi6q4zv5yo8j5t8u.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-100-2-5-100-52161.png",
+      "width": 1562,
+      "height": 1534,
+      "checksum": "9e392b1a03f760cb7bef02d4009c8115ddd7137fc145c78ee1f00b6b7f3c2767",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-50-59377",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        320
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/59377/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/700/waqgwa4f2v80o3duqj2197599bqnhfxz.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-50-59377.png",
+      "width": 750,
+      "height": 750,
+      "checksum": "12b6dc8a0ce4257b46074ebc59d2617c5066fa18fe4bc8ff42dc82dc1d0a4a03",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-slt-30m-9mm-56008",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        327
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56008/",
+      "sourceProductCode": "56008",
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/854/854ee0452aa5df02507555bf90a1d8a5.jpeg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-slt-30m-9mm-56008.png",
+      "width": 800,
+      "height": 800,
+      "checksum": "5a80fbe102c6940284fb1c71d64d69f04054d806f536567066b59e53605c8804",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-ft-120a-wdm-10-100base-tx-100base-fx-tx-1310-rx-1550-sc-20-59829",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        197,
+        198
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/59829/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8fa/wneun3f5tnrq41noph7503nvq1k2keso.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-ft-120a-wdm-10-100base-tx-100base-fx-tx-1310-rx-1550-sc-20-59829.png",
+      "width": 238,
+      "height": 198,
+      "checksum": "c0d493811ee056b06f4453537343e3b53e98df5adbbe1d31198804310889c58d",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-8-1000mm-sds-55392",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        61
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55392/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/02e/02eb304b9e0b286848b96be0ec3c2381.jpeg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-8-1000mm-sds-55392.png",
+      "width": 500,
+      "height": 500,
+      "checksum": "5857f58b9a63d93d56158e957cb6aa49bdc50db2d89bc3eab35685fe3258aefa",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-30m-3.5m-53350",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        199
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/53350/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/2d2/2d271bbd96ce5b90e3095179dffb3710.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-30m-3.5m-53350.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "2ea0a6cd7fd34a4af73b3616273af84750de3059728ee83fcea7031b7146f5c6",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-40m-4.5m-55231",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        324
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55231/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/e38/e38fccdb26a73d6f5d4fc13fe5a0a223.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-40m-4.5m-55231.png",
+      "width": 600,
+      "height": 600,
+      "checksum": "e2198b4af7b9496a417837a9d19fae1820d39728698154ea2f9d86aea89f3d16",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-5m-4.5m-51654",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        326
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51654/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/210/2104d1c4b81aba59616b115b8d90451b.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-5m-4.5m-51654.png",
+      "width": 600,
+      "height": 371,
+      "checksum": "46d65a859ffbfb8497850eb0fa419d0b1dee3adaf7194b764ea05335ae84e7f2",
+      "contentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "trusted_source_tktdf",
+      "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-19mm-20m-54833",
+      "sourceSite": "tktdf.ru",
+      "sourceRows": [
+        101,
+        102
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54833/",
+      "sourceProductCode": null,
+      "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/865/865dea4ab0fe07c3bf1e73e5a93b969d.jpg",
+      "status": "downloaded_png",
+      "file": "Assets/product-images/tktdf/tktdf-19mm-20m-54833.png",
+      "width": 800,
+      "height": 600,
+      "checksum": "7dc575ee7870f36a8b606de2777cb30edbddda76d0c8bb91e98652df69f00ec8",
       "contentType": "image/jpeg",
       "isMain": true,
       "visualReviewStatus": "trusted_source_tktdf",

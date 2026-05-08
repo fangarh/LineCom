@@ -193,3 +193,39 @@ Scope-search:
 
 - в `Assets/tktdf_image_sources.json` включены только консервативные сопоставления с конкретными страницами `tktdf.ru`;
 - неоднозначные товары оставлены без изображения, чтобы не подменять товар похожим, но неверным визуалом.
+
+## 2026-05-08. Массовое auto-match расширение tktdf image-партии
+
+Цель итерации: расширить покрытие изображениями после удаления старой партии, принимая, что отдельные несовпадения проще исправить вручную, чем загружать около 300 изображений вручную.
+
+Решения:
+
+- сохранены ручные trusted-source сопоставления из предыдущей партии;
+- дополнительные страницы подобраны через поиск `tktdf.ru` по нормализованным названиям 1С;
+- применен token-score порог `>= 5`, заведомо битые ссылки без числового `/catalog/id/{id}/` исключены;
+- в `Assets/tktdf_image_sources.json` добавлено предупреждение, что auto-matched изображения могут потребовать ручной корректировки после импорта;
+- цены, корзина, оплата, заказы и коммерческие тексты с `tktdf.ru` не импортируются.
+
+Результат выгрузки:
+
+- входной source: `Assets/tktdf_image_sources.json`;
+- output folder: `Assets/product-images/tktdf/`;
+- manifest: `Assets/product-images/tktdf_manifest.json`;
+- карточек tktdf в source: `77`;
+- скачано PNG: `77`;
+- технических ошибок скачивания: `0`;
+- покрытые `sourceRows`: `103`;
+- все manifest items имеют `status = downloaded_png`, `visualReviewStatus = trusted_source_tktdf`, `rightsStatus = requires-permission`.
+
+Применение на сервере:
+
+- `dotnet run --project .codex-tmp\catalog-import-apply\catalog-import-apply.csproj`: exit code `0`;
+- dry-run: `categories=15`, `products=298`, `images=103`, `warnings=4`;
+- apply: `categories=15`, `products=298`, `images=103`;
+- отчет: `.codex-tmp/catalog-import-reports/catalog-import-20260508T141545Z-034d766ee50f44379c7a965b9423172d.md`.
+
+Проверки:
+
+- все `77` PNG в `Assets/product-images/tktdf/` успешно декодируются;
+- `python -m json.tool Assets\tktdf_image_sources.json`: exit code `0`;
+- `python -m json.tool Assets\product-images\tktdf_manifest.json`: exit code `0`.

@@ -2,57 +2,1077 @@
   "batch": {
     "sourceSite": "tktdf.ru",
     "createdAt": "2026-05-08",
-    "notes": "Trusted-source product image import input for the catalog importer. Pages are selected conservatively from tktdf.ru; prices, cart text, payment terms, and commercial wording are not imported."
+    "notes": "Expanded trusted-source product image import input. Initial pages were selected manually; additional pages were selected by tktdf.ru search and token scoring with threshold >= 5. Prices, cart text, payment terms, and commercial wording are not imported. Auto-matched images may require manual correction after import."
   },
   "items": [
     {
       "assetKey": "tktdf-utp4-cat5e-cu-indoor-51108",
-      "sourceRows": [117],
+      "sourceRows": [
+        117
+      ],
       "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51108/",
       "isMain": true,
       "rightsStatus": "requires-permission"
     },
     {
       "assetKey": "tktdf-utp4-cat5e-cu-outdoor-59956",
-      "sourceRows": [123],
+      "sourceRows": [
+        123
+      ],
       "sourceProductUrl": "https://www.tktdf.ru/catalog/id/59956/",
       "isMain": true,
       "rightsStatus": "requires-permission"
     },
     {
       "assetKey": "tktdf-kdzs-40-52687",
-      "sourceRows": [71],
+      "sourceRows": [
+        71
+      ],
       "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52687/",
       "isMain": true,
       "rightsStatus": "requires-permission"
     },
     {
       "assetKey": "tktdf-kdzs-60-52683",
-      "sourceRows": [72],
+      "sourceRows": [
+        72
+      ],
       "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52683/",
       "isMain": true,
       "rightsStatus": "requires-permission"
     },
     {
       "assetKey": "tktdf-optical-adapter-sc-upc-simplex-54158",
-      "sourceRows": [43, 284],
+      "sourceRows": [
+        43,
+        284
+      ],
       "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54158/",
       "isMain": true,
       "rightsStatus": "requires-permission"
     },
     {
       "assetKey": "tktdf-utp4-cat5e-grey-lszh-patchcord-1m-58652",
-      "sourceRows": [233, 235],
+      "sourceRows": [
+        233,
+        235
+      ],
       "sourceProductUrl": "https://www.tktdf.ru/catalog/id/58652/",
       "isMain": true,
       "rightsStatus": "requires-permission"
     },
     {
       "assetKey": "tktdf-utp4-cat5e-grey-lszh-patchcord-3m-67635",
-      "sourceRows": [234],
+      "sourceRows": [
+        234
+      ],
       "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67635/",
       "isMain": true,
       "rightsStatus": "requires-permission"
+    },
+    {
+      "assetKey": "tktdf-exegate-utp2-cat.5-305m-cca-55968",
+      "sourceRows": [
+        106
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55968/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 21.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-lanmax-utp4-cat5e-305m-cu-24awg-indoor-pvc-67667",
+      "sourceRows": [
+        109,
+        118
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67667/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 21.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-lanmax-utp4-cat5e-305m-cu-24awg-outdoor-pe-67486",
+      "sourceRows": [
+        110,
+        119,
+        120,
+        121,
+        124
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67486/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 18.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-lappnet-utp4x2x0.5-cat.5-305m-cca-pvc-67482",
+      "sourceRows": [
+        111
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67482/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 15.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-skynet-premium-ftp4-cat.5-305m-cu-56140",
+      "sourceRows": [
+        113
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56140/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 27.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-skynet-premium-utp4-cat.5-305m-cu-pe-58920",
+      "sourceRows": [
+        114,
+        115,
+        125
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/58920/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 27.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-utp4-cat.5-305m-cu-fluke-lsltx-69456",
+      "sourceRows": [
+        122
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/69456/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 27.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-10-01-0-22-8-2-7-56637",
+      "sourceRows": [
+        147,
+        196
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56637/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-32-2-7-53941",
+      "sourceRows": [
+        151,
+        273
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/53941/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-sfp-dac-2-57041",
+      "sourceRows": [
+        38
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/57041/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 10.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-sc-apc-simplex-58919",
+      "sourceRows": [
+        42
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/58919/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 7.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-1-2-50-50-65050",
+      "sourceRows": [
+        83
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/65050/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-60-53509",
+      "sourceRows": [
+        166
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/53509/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-1u-16-54422",
+      "sourceRows": [
+        181
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54422/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 9.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-1u-16-sc-upc-66189",
+      "sourceRows": [
+        182,
+        264
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/66189/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 7.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-1u-24-55047",
+      "sourceRows": [
+        183
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55047/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 9.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-2u-48-sc-52270",
+      "sourceRows": [
+        187
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52270/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 12.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-24-8sc-sm-71598",
+      "sourceRows": [
+        188
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/71598/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-16-sc-57018",
+      "sourceRows": [
+        189
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/57018/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 9.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-4-sc-52275",
+      "sourceRows": [
+        191
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52275/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-8-fc-68860",
+      "sourceRows": [
+        192
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/68860/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-8-sc-54920",
+      "sourceRows": [
+        193,
+        267
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54920/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-gjs-2-d-48-55045",
+      "sourceRows": [
+        203
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55045/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-sc-up-sm-buffer-1.5m-56400",
+      "sourceRows": [
+        266
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56400/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 14.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-lc-upc-lc-upc-sm-3mm-simplex-lszh-1m-66688",
+      "sourceRows": [
+        237
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/66688/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 14.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-lc-upc-lc-upc-sm-3mm-simplex-lszh-3m-66689",
+      "sourceRows": [
+        238
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/66689/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 14.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-sc-apc-lc-upc-sm-3mm-simplex-lszh-2m-65851",
+      "sourceRows": [
+        241,
+        250
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/65851/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 8.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-sc-apc-sc-apc-sm-3mm-simplex-lszh-3m-66179",
+      "sourceRows": [
+        244,
+        247
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/66179/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 8.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-sc-upc-sc-apc-sm-3mm-simplex-lszh-1.5m-57814",
+      "sourceRows": [
+        251
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/57814/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 18.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-sc-upc-sc-upc-sm-3mm-simplex-lszh-0-5m-57815",
+      "sourceRows": [
+        252,
+        253,
+        255
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/57815/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-15u-600-750-736mm-19-55466",
+      "sourceRows": [
+        55,
+        204
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55466/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 15.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-3u-550-220-500mm-55462",
+      "sourceRows": [
+        56
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55462/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 15.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-4u-520-400-370-19-55467",
+      "sourceRows": [
+        329
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55467/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 12.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-rj45-rj11-rj12-bnc-56627",
+      "sourceRows": [
+        158
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56627/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 16.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-rj-45-6p-8p-67495",
+      "sourceRows": [
+        180
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67495/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-8p8c-rj-45-6p6c-rj-12-4p4c-67392",
+      "sourceRows": [
+        202
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/67392/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 18.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-abs-10-0-9-lsa-plus-55881",
+      "sourceRows": [
+        268
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55881/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 12.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-rj45-cat5e-krone-54135",
+      "sourceRows": [
+        283
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54135/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 10.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-rg-6u-75-cu-32-al-51158",
+      "sourceRows": [
+        133,
+        134
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51158/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 18.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-rg-6u-ccs-51157",
+      "sourceRows": [
+        135
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51157/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-rg6-48w-ccs-1.02mm-6.8mm-48-0.12mm-al-al-870-20.13-51991",
+      "sourceRows": [
+        137
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51991/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-2-rf-220-65572",
+      "sourceRows": [
+        213
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/65572/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-420-tah-53419",
+      "sourceRows": [
+        231
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/53419/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-ck-12-9-56841",
+      "sourceRows": [
+        45
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56841/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-gpl-12-100-12-100-53492",
+      "sourceRows": [
+        46
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/53492/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-iec-c14-10a-250v-56121",
+      "sourceRows": [
+        66
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56121/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-3-0-75-5-1.8m-52196",
+      "sourceRows": [
+        289
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52196/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 11.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-8-12-10-din-proxima-ekf-sn0-125-10-d-55409",
+      "sourceRows": [
+        328
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55409/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-frls-2-2-1.5-54998",
+      "sourceRows": [
+        139
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54998/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 9.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-2-0-5-500m-70347",
+      "sourceRows": [
+        141
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/70347/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 17.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-100-60-ckk11-100-060-1-k01-iek-52160",
+      "sourceRows": [
+        58,
+        155
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52160/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-20mm-100m-51477",
+      "sourceRows": [
+        315,
+        316
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51477/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 8.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-15-52076",
+      "sourceRows": [
+        54
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52076/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-m6-12-70061",
+      "sourceRows": [
+        178
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/70061/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 9.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-12-0-7-51818",
+      "sourceRows": [
+        259
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51818/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 9.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-3-5-35-52420",
+      "sourceRows": [
+        287,
+        288
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52420/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-200-3.6mm-100-60241",
+      "sourceRows": [
+        303
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/60241/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-3-6-200-dkc-100-25314sr-60243",
+      "sourceRows": [
+        304
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/60243/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 12.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-200-4-6-100-3m-60247",
+      "sourceRows": [
+        305
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/60247/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 12.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-200-4-8-100-58141",
+      "sourceRows": [
+        306,
+        307
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/58141/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-282-4-6-100-3m-54282",
+      "sourceRows": [
+        308
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54282/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-100-2-5-100-52161",
+      "sourceRows": [
+        309,
+        310
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/52161/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 9.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-50-59377",
+      "sourceRows": [
+        320
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/59377/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-slt-30m-9mm-56008",
+      "sourceRows": [
+        327
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/56008/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 8.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-ft-120a-wdm-10-100base-tx-100base-fx-tx-1310-rx-1550-sc-20-59829",
+      "sourceRows": [
+        197,
+        198
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/59829/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 27.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-8-1000mm-sds-55392",
+      "sourceRows": [
+        61
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55392/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 6.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-30m-3.5m-53350",
+      "sourceRows": [
+        199
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/53350/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 5.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-40m-4.5m-55231",
+      "sourceRows": [
+        324
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/55231/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 8.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-5m-4.5m-51654",
+      "sourceRows": [
+        326
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/51654/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 8.0,
+        "threshold": 5.0
+      }
+    },
+    {
+      "assetKey": "tktdf-19mm-20m-54833",
+      "sourceRows": [
+        101,
+        102
+      ],
+      "sourceProductUrl": "https://www.tktdf.ru/catalog/id/54833/",
+      "isMain": true,
+      "rightsStatus": "requires-permission",
+      "match": {
+        "method": "tktdf-search-token-score",
+        "score": 11.0,
+        "threshold": 5.0
+      }
     }
   ]
 }
