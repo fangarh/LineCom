@@ -29,7 +29,13 @@ function CategoryList({ items, activeSlug, level = 0 }: CategoryListProps) {
       {items.map((item) => (
         <li key={item.id} className={hasActiveDescendant(item, activeSlug) ? "category-nav__item--active-branch" : undefined}>
           <Link
-            className={item.slug === activeSlug ? "category-nav__link category-nav__link--active" : "category-nav__link"}
+            className={[
+              "category-nav__link",
+              level > 0 ? "category-nav__link--child" : "category-nav__link--parent",
+              item.slug === activeSlug ? "category-nav__link--active" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
             href={routes.category(item.slug)}
             aria-current={item.slug === activeSlug ? "page" : undefined}
           >
