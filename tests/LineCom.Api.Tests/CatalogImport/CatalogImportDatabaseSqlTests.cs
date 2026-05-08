@@ -1,0 +1,80 @@
+using LineCom.CatalogImport.Core.Database;
+using LineCom.CatalogImport.Core.Planning;
+
+namespace LineCom.Api.Tests.CatalogImport;
+
+public sealed class CatalogImportDatabaseSqlTests
+{
+    [Fact]
+    public void UpsertCategory_UsesSlugIdentity()
+    {
+        Assert.Contains("INSERT INTO categories", CatalogImportDatabaseSql.UpsertCategory);
+        Assert.Contains("ON CONFLICT (slug) DO UPDATE", CatalogImportDatabaseSql.UpsertCategory);
+        Assert.Contains("is_visible_in_menu = EXCLUDED.is_visible_in_menu", CatalogImportDatabaseSql.UpsertCategory);
+    }
+
+    [Fact]
+    public void UpsertProduct_UsesExternalIdIdentityAndDoesNotImportCommerceFields()
+    {
+        Assert.Contains("INSERT INTO products", CatalogImportDatabaseSql.UpsertProduct);
+        Assert.Contains("FROM categories category", CatalogImportDatabaseSql.UpsertProduct);
+        Assert.Contains("WHERE category.slug = @CategorySlug", CatalogImportDatabaseSql.UpsertProduct);
+        Assert.Contains("ON CONFLICT (external_id) WHERE external_id IS NOT NULL DO UPDATE", CatalogImportDatabaseSql.UpsertProduct);
+        Assert.DoesNotContain("price", CatalogImportDatabaseSql.UpsertProduct, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("stock", CatalogImportDatabaseSql.UpsertProduct, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void ImageSql_RegistersProductImageFilesAndConnectsProductImages()
+    {
+        Assert.Contains("INSERT INTO stored_files", CatalogImportDatabaseSql.UpsertStoredFile);
+        Assert.Contains("'product_image'", CatalogImportDatabaseSql.UpsertStoredFile);
+        Assert.Contains("'active'", CatalogImportDatabaseSql.UpsertStoredFile);
+        Assert.Contains("ON CONFLICT (storage_key) DO UPDATE", CatalogImportDatabaseSql.UpsertStoredFile);
+        Assert.Contains("RETURNING id", CatalogImportDatabaseSql.UpsertStoredFile);
+
+        Assert.Contains("UPDATE product_images", CatalogImportDatabaseSql.UpsertProductImage);
+        Assert.Contains("SET is_main = FALSE", CatalogImportDatabaseSql.UpsertProductImage);
+        Assert.Contains("INSERT INTO product_images", CatalogImportDatabaseSql.UpsertProductImage);
+        Assert.Contains("WHERE product.external_id = @ExternalId", CatalogImportDatabaseSql.UpsertProductImage);
+        Assert.Contains("ON CONFLICT (product_id, stored_file_id) DO UPDATE", CatalogImportDatabaseSql.UpsertProductImage);
+        Assert.Contains("is_main = EXCLUDED.is_main", CatalogImportDatabaseSql.UpsertProductImage);
+    }
+
+    [Fact]
+    public void ResetSql_ChecksProtectedRequestItemsAndDoesNotDeleteRequests()
+    {
+        Assert.Contains("FROM request_items item", CatalogImportDatabaseSql.CountProtectedProductReferences);
+        Assert.Contains("JOIN products product ON product.id = item.product_id", CatalogImportDatabaseSql.CountProtectedProductReferences);
+
+        Assert.Contains("DELETE FROM product_images", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.Contains("DELETE FROM product_attribute_values", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.Contains("DELETE FROM attribute_value_aliases", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.Contains("DELETE FROM attribute_options", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.Contains("DELETE FROM category_attributes", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.Contains("DELETE FROM products", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.Contains("DELETE FROM categories", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.Contains("purpose = 'product_image'", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.Contains("storage_key LIKE 'catalog-import/products/%'", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.DoesNotContain("DELETE FROM request_items", CatalogImportDatabaseSql.ResetCatalog, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("DELETE FROM requests", CatalogImportDatabaseSql.ResetCatalog, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ApplyAsync_RefusesResetBeforeOpeningConnection_WhenEnvironmentIsNotExplicitlyAllowed()
+    {
+        var database = new CatalogImportDatabase("Host=127.0.0.1;Username=not-used;Password=not-used;Database=not-used");
+        var plan = new CatalogImportPlan(
+            new CatalogImportSummary(0, 0, 0, 0, 0, 0),
+            [],
+            [],
+            []);
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            database.ApplyAsync(
+                plan,
+                new CatalogImportApplyOptions(ResetCatalog: true, AllowResetInCurrentEnvironment: false)));
+
+        Assert.Contains("explicitly approved dev/QA", exception.Message);
+    }
+}
