@@ -94,6 +94,39 @@ public sealed class CatalogImportDatabaseSqlTests
     }
 
     [Fact]
+    public void CountResetImpactSql_CountsAllDestructiveResetTargets()
+    {
+        Assert.Contains("AS \"Categories\"", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("FROM categories", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("AS \"Products\"", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("FROM products", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("AS \"ProductImages\"", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("FROM product_images", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("AS \"StoredProductImageFiles\"", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("FROM stored_files", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("purpose = 'product_image'", CatalogImportDatabaseSql.CountResetImpact);
+        Assert.Contains("storage_key LIKE 'storage/products/catalog-import/%'", CatalogImportDatabaseSql.CountResetImpact);
+    }
+
+    [Fact]
+    public void ApplyResult_CanCarryResetImpactOnlyWhenResetRuns()
+    {
+        var noResetResult = new CatalogImportApplyResult(
+            CategoriesProcessed: 1,
+            ProductsProcessed: 2,
+            ImagesProcessed: 3);
+        var impact = new CatalogImportResetImpact(
+            Categories: 4,
+            Products: 5,
+            ProductImages: 6,
+            StoredProductImageFiles: 7);
+        var resetResult = noResetResult with { ResetImpact = impact };
+
+        Assert.Null(noResetResult.ResetImpact);
+        Assert.Same(impact, resetResult.ResetImpact);
+    }
+
+    [Fact]
     public async Task ApplyAsync_RefusesResetBeforeOpeningConnection_WhenEnvironmentIsNotExplicitlyAllowed()
     {
         var database = new CatalogImportDatabase("Host=127.0.0.1;Username=not-used;Password=not-used;Database=not-used");

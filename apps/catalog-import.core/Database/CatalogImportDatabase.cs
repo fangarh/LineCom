@@ -13,6 +13,19 @@ public static class CatalogImportDatabaseSql
         JOIN products product ON product.id = item.product_id;
         """;
 
+    public const string CountResetImpact = """
+        SELECT
+            (SELECT COUNT(*) FROM categories) AS "Categories",
+            (SELECT COUNT(*) FROM products) AS "Products",
+            (SELECT COUNT(*) FROM product_images) AS "ProductImages",
+            (
+                SELECT COUNT(*)
+                FROM stored_files
+                WHERE purpose = 'product_image'
+                  AND storage_key LIKE 'storage/products/catalog-import/%'
+            ) AS "StoredProductImageFiles";
+        """;
+
     public const string ResetCatalog = """
         DELETE FROM product_images;
         DELETE FROM product_attribute_values;
@@ -165,7 +178,14 @@ public sealed record CatalogImportApplyOptions(
 public sealed record CatalogImportApplyResult(
     int CategoriesProcessed,
     int ProductsProcessed,
-    int ImagesProcessed);
+    int ImagesProcessed,
+    CatalogImportResetImpact? ResetImpact = null);
+
+public sealed record CatalogImportResetImpact(
+    long Categories,
+    long Products,
+    long ProductImages,
+    long StoredProductImageFiles);
 
 public sealed class CatalogImportDatabase
 {
@@ -199,9 +219,10 @@ public sealed class CatalogImportDatabase
         await connection.OpenAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
 
+        CatalogImportResetImpact? resetImpact = null;
         if (options.ResetCatalog)
         {
-            await ResetCatalogAsync(connection, transaction, cancellationToken);
+            resetImpact = await ResetCatalogAsync(connection, transaction, cancellationToken);
         }
 
         foreach (var category in plan.Categories)
@@ -254,7 +275,8 @@ public sealed class CatalogImportDatabase
         return new CatalogImportApplyResult(
             plan.Categories.Count,
             plan.Products.Count,
-            imagesProcessed);
+            imagesProcessed,
+            resetImpact);
     }
 
     private static void ValidateResetOptions(CatalogImportApplyOptions options)
@@ -286,7 +308,7 @@ public sealed class CatalogImportDatabase
         return imports;
     }
 
-    private static async Task ResetCatalogAsync(
+    private static async Task<CatalogImportResetImpact> ResetCatalogAsync(
         NpgsqlConnection connection,
         NpgsqlTransaction transaction,
         CancellationToken cancellationToken)
@@ -302,10 +324,17 @@ public sealed class CatalogImportDatabase
                 $"Catalog reset refused because {protectedReferences} request item(s) reference products.");
         }
 
+        var resetImpact = await connection.QuerySingleAsync<CatalogImportResetImpact>(new CommandDefinition(
+            CatalogImportDatabaseSql.CountResetImpact,
+            transaction: transaction,
+            cancellationToken: cancellationToken));
+
         await connection.ExecuteAsync(new CommandDefinition(
             CatalogImportDatabaseSql.ResetCatalog,
             transaction: transaction,
             cancellationToken: cancellationToken));
+
+        return resetImpact;
     }
 
     private static async Task UpsertProductImageAsync(
