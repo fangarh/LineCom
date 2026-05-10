@@ -4,6 +4,7 @@ using System.Text.Json;
 using LineCom.Api.Modules.Auth.DTOs;
 using LineCom.Api.Modules.Auth.Services;
 using LineCom.Api.Shared.Errors;
+using LineCom.Api.Tests.Support;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -93,7 +94,7 @@ public sealed class AuthRegisterEndpointTests
 
     private static WebApplicationFactory<Program> CreateFactory(ICustomerRegistrationService registrationService)
     {
-        return new WebApplicationFactory<Program>()
+        return new LineComWebApplicationFactory()
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureLogging(logging => logging.ClearProviders());

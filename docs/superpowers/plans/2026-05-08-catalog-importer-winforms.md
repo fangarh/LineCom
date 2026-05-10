@@ -171,7 +171,7 @@ Run frontend commands from `apps/front`.
 - Modify: `tests/LineCom.Api.Tests/LineCom.Api.Tests.csproj`
 - Create: `tests/LineCom.Api.Tests/CatalogImport/OneCExportReaderTests.cs`
 
-- [ ] **Step 1: Create the core project file**
+- [x] **Step 1: Create the core project file**
 
 Create `apps/catalog-import.core/LineCom.CatalogImport.Core.csproj`:
 
@@ -192,7 +192,7 @@ Create `apps/catalog-import.core/LineCom.CatalogImport.Core.csproj`:
 </Project>
 ```
 
-- [ ] **Step 2: Add the project to the solution**
+- [x] **Step 2: Add the project to the solution**
 
 Run:
 
@@ -202,7 +202,7 @@ dotnet sln LineCom.sln add apps\catalog-import.core\LineCom.CatalogImport.Core.c
 
 Expected: solution includes `LineCom.CatalogImport.Core`.
 
-- [ ] **Step 3: Add test project reference**
+- [x] **Step 3: Add test project reference**
 
 Modify `tests/LineCom.Api.Tests/LineCom.Api.Tests.csproj` and add:
 
@@ -212,7 +212,7 @@ Modify `tests/LineCom.Api.Tests/LineCom.Api.Tests.csproj` and add:
 
 inside the existing `<ItemGroup>` with project references.
 
-- [ ] **Step 4: Write failing reader tests**
+- [x] **Step 4: Write failing reader tests**
 
 Create `tests/LineCom.Api.Tests/CatalogImport/OneCExportReaderTests.cs`:
 
@@ -302,7 +302,7 @@ public sealed class OneCExportReaderTests
 }
 ```
 
-- [ ] **Step 5: Run tests and verify they fail**
+- [x] **Step 5: Run tests and verify they fail**
 
 Run:
 
@@ -312,7 +312,7 @@ dotnet test LineCom.sln -m:1 --filter OneCExportReaderTests
 
 Expected: fail because `LineCom.CatalogImport.Core.Source` does not exist.
 
-- [ ] **Step 6: Add source DTOs**
+- [x] **Step 6: Add source DTOs**
 
 Create `apps/catalog-import.core/Source/OneCExportModels.cs`:
 
@@ -362,7 +362,7 @@ public sealed record OneCExportClassification(
     [property: JsonPropertyName("needsReview")] bool NeedsReview);
 ```
 
-- [ ] **Step 7: Add source reader**
+- [x] **Step 7: Add source reader**
 
 Create `apps/catalog-import.core/Source/OneCExportReader.cs`:
 
@@ -441,7 +441,7 @@ public static class OneCExportReader
 }
 ```
 
-- [ ] **Step 8: Run tests and build**
+- [x] **Step 8: Run tests and build**
 
 Run:
 
@@ -452,7 +452,7 @@ dotnet build LineCom.sln -m:1
 
 Expected: tests and build pass.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 Run:
 
@@ -474,7 +474,7 @@ git commit -m "feat: add catalog import source reader"
 - Create: `tests/LineCom.Api.Tests/CatalogImport/CatalogImportPlannerTests.cs`
 - Create: `tests/LineCom.Api.Tests/CatalogImport/ProductImageManifestReaderTests.cs`
 
-- [ ] **Step 1: Write failing slug tests**
+- [x] **Step 1: Write failing slug tests**
 
 Create `tests/LineCom.Api.Tests/CatalogImport/SlugGeneratorTests.cs`:
 
@@ -511,7 +511,7 @@ public sealed class SlugGeneratorTests
 }
 ```
 
-- [ ] **Step 2: Write failing image manifest tests**
+- [x] **Step 2: Write failing image manifest tests**
 
 Create `tests/LineCom.Api.Tests/CatalogImport/ProductImageManifestReaderTests.cs`:
 
@@ -580,7 +580,7 @@ public sealed class ProductImageManifestReaderTests
 }
 ```
 
-- [ ] **Step 3: Write failing planner tests**
+- [x] **Step 3: Write failing planner tests**
 
 Create `tests/LineCom.Api.Tests/CatalogImport/CatalogImportPlannerTests.cs`:
 
@@ -650,7 +650,7 @@ public sealed class CatalogImportPlannerTests
 }
 ```
 
-- [ ] **Step 4: Run tests and verify they fail**
+- [x] **Step 4: Run tests and verify they fail**
 
 Run:
 
@@ -660,7 +660,7 @@ dotnet test LineCom.sln -m:1 --filter CatalogImport
 
 Expected: fail because planning/image classes do not exist.
 
-- [ ] **Step 5: Add image manifest DTOs and reader**
+- [x] **Step 5: Add image manifest DTOs and reader**
 
 Create `apps/catalog-import.core/Images/ProductImageManifestModels.cs`:
 
@@ -735,7 +735,7 @@ public static class ProductImageManifestReader
 }
 ```
 
-- [ ] **Step 6: Add planning models**
+- [x] **Step 6: Add planning models**
 
 Create `apps/catalog-import.core/Planning/CatalogImportModels.cs`:
 
@@ -787,7 +787,7 @@ public sealed record CatalogImportWarning(
     string Message);
 ```
 
-- [ ] **Step 7: Add slug generator**
+- [x] **Step 7: Add slug generator**
 
 Create `apps/catalog-import.core/Planning/SlugGenerator.cs`:
 
@@ -853,7 +853,7 @@ public static partial class SlugGenerator
 }
 ```
 
-- [ ] **Step 8: Add planner**
+- [x] **Step 8: Add planner**
 
 Create `apps/catalog-import.core/Planning/CatalogImportPlanner.cs`:
 
@@ -940,7 +940,7 @@ public static class CatalogImportPlanner
 }
 ```
 
-- [ ] **Step 9: Run tests and build**
+- [x] **Step 9: Run tests and build**
 
 Run:
 
@@ -951,7 +951,7 @@ dotnet build LineCom.sln -m:1
 
 Expected: tests and build pass.
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 Run:
 
@@ -967,7 +967,7 @@ git commit -m "feat: add catalog import dry run planner"
 - Create: `apps/catalog-import.core/Reporting/CatalogImportReportWriter.cs`
 - Create: `tests/LineCom.Api.Tests/CatalogImport/CatalogImportReportWriterTests.cs`
 
-- [ ] **Step 1: Write failing report tests**
+- [x] **Step 1: Write failing report tests**
 
 Create `tests/LineCom.Api.Tests/CatalogImport/CatalogImportReportWriterTests.cs`:
 
@@ -1042,7 +1042,7 @@ public sealed class CatalogImportReportWriterTests
 }
 ```
 
-- [ ] **Step 2: Run tests and verify they fail**
+- [x] **Step 2: Run tests and verify they fail**
 
 Run:
 
@@ -1052,7 +1052,7 @@ dotnet test LineCom.sln -m:1 --filter CatalogImportReportWriterTests
 
 Expected: fail because `CatalogImportReportWriter` does not exist.
 
-- [ ] **Step 3: Add report writer**
+- [x] **Step 3: Add report writer**
 
 Create `apps/catalog-import.core/Reporting/CatalogImportReportWriter.cs`:
 
@@ -1140,7 +1140,7 @@ public static class CatalogImportReportWriter
 }
 ```
 
-- [ ] **Step 4: Run tests and build**
+- [x] **Step 4: Run tests and build**
 
 Run:
 
@@ -1151,7 +1151,7 @@ dotnet build LineCom.sln -m:1
 
 Expected: tests and build pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 Run:
 
@@ -1167,7 +1167,7 @@ git commit -m "feat: add catalog import reports"
 - Create: `apps/catalog-import.core/Database/CatalogImportDatabase.cs`
 - Create: `tests/LineCom.Api.Tests/CatalogImport/CatalogImportDatabaseSqlTests.cs`
 
-- [ ] **Step 1: Write failing database SQL tests**
+- [x] **Step 1: Write failing database SQL tests**
 
 Create `tests/LineCom.Api.Tests/CatalogImport/CatalogImportDatabaseSqlTests.cs`:
 
@@ -1201,7 +1201,7 @@ public sealed class CatalogImportDatabaseSqlTests
 }
 ```
 
-- [ ] **Step 2: Run tests and verify they fail**
+- [x] **Step 2: Run tests and verify they fail**
 
 Run:
 
@@ -1211,7 +1211,7 @@ dotnet test LineCom.sln -m:1 --filter CatalogImportDatabaseSqlTests
 
 Expected: fail because database import classes do not exist.
 
-- [ ] **Step 3: Add database SQL and importer skeleton**
+- [x] **Step 3: Add database SQL and importer skeleton**
 
 Create `apps/catalog-import.core/Database/CatalogImportDatabase.cs`:
 
@@ -1416,7 +1416,7 @@ public sealed class CatalogImportDatabase
 }
 ```
 
-- [ ] **Step 4: Run tests and build**
+- [x] **Step 4: Run tests and build**
 
 Run:
 
@@ -1427,7 +1427,7 @@ dotnet build LineCom.sln -m:1
 
 Expected: tests and build pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 Run:
 
@@ -1445,7 +1445,7 @@ git commit -m "feat: add catalog import database apply"
 - Create: `apps/catalog-import.winforms/MainForm.cs`
 - Modify: `LineCom.sln`
 
-- [ ] **Step 1: Create WinForms project**
+- [x] **Step 1: Create WinForms project**
 
 Create `apps/catalog-import.winforms/LineCom.CatalogImport.WinForms.csproj`:
 
@@ -1467,7 +1467,7 @@ Create `apps/catalog-import.winforms/LineCom.CatalogImport.WinForms.csproj`:
 </Project>
 ```
 
-- [ ] **Step 2: Add WinForms project to solution**
+- [x] **Step 2: Add WinForms project to solution**
 
 Run:
 
@@ -1477,7 +1477,7 @@ dotnet sln LineCom.sln add apps\catalog-import.winforms\LineCom.CatalogImport.Wi
 
 Expected: project added.
 
-- [ ] **Step 3: Add WinForms entrypoint**
+- [x] **Step 3: Add WinForms entrypoint**
 
 Create `apps/catalog-import.winforms/Program.cs`:
 
@@ -1495,7 +1495,7 @@ internal static class Program
 }
 ```
 
-- [ ] **Step 4: Add main form**
+- [x] **Step 4: Add main form**
 
 Create `apps/catalog-import.winforms/MainForm.cs`:
 
@@ -1683,7 +1683,7 @@ public sealed class MainForm : Form
 }
 ```
 
-- [ ] **Step 5: Build solution**
+- [x] **Step 5: Build solution**
 
 Run:
 
@@ -1693,7 +1693,7 @@ dotnet build LineCom.sln -m:1
 
 Expected: build passes. If WinForms targeting requires Windows targeting properties in CI/build context, add the minimal project property required by the SDK and rerun.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 Run:
 
@@ -1708,7 +1708,7 @@ git commit -m "feat: add catalog import winforms shell"
 
 - Modify: `vault/Человекочитаемое/Catalog Image Import iterations.md`
 
-- [ ] **Step 1: Update iteration notes**
+- [x] **Step 1: Update iteration notes**
 
 Append to `vault/Человекочитаемое/Catalog Image Import iterations.md`:
 
@@ -1740,7 +1740,7 @@ Append to `vault/Человекочитаемое/Catalog Image Import iteration
 - `npm.cmd run build` from `apps/front`.
 ```
 
-- [ ] **Step 2: Run full verification**
+- [x] **Step 2: Run full verification**
 
 Run:
 
@@ -1758,7 +1758,7 @@ npm.cmd run build
 
 Expected: all pass. Allow existing `NU1900` warnings only if NuGet vulnerability feed is unavailable.
 
-- [ ] **Step 3: Search for forbidden scope and unfinished markers**
+- [x] **Step 3: Search for forbidden scope and unfinished markers**
 
 Run:
 
@@ -1772,7 +1772,7 @@ Expected:
 - documentation matches are only explicit excluded-scope notes or historical notes;
 - no unfinished markers in changed implementation files.
 
-- [ ] **Step 4: Commit documentation**
+- [x] **Step 4: Commit documentation**
 
 Run:
 
@@ -1796,3 +1796,23 @@ Spec coverage:
 - Documentation and verification: Task 6.
 
 No intentional placeholders are left. Attribute normalization, WPF, web admin UI, full 1C synchronization, and legal approval automation remain out of scope by design.
+
+
+## Closure Checkpoint 2026-05-10
+
+- All plan task checkboxes are marked complete after implementation, review, verification, and main-branch push.
+- Task 6 documentation and verification were closed with fresh full verification on 2026-05-10.
+- RedMRT auxiliary catalog export files were retained as source-analysis assets:
+  - `Assets/redmrt_catalog_scraper.py`;
+  - `Assets/redmrt_catalog_scraper_fixed.py`;
+  - `Assets/redmrt_catalog_scraper_full.py`;
+  - `Assets/redmrt_products.json`;
+  - `Assets/result1.json`;
+  - `Assets/result2.json`.
+- `Assets/result2.json` was cleaned before commit: non-product account URLs and commercial boilerplate were removed; `products_count` is `260`.
+- Fresh verification completed:
+  - `dotnet build LineCom.sln -m:1`: passed with `0` warnings and `0` errors;
+  - `dotnet test LineCom.sln -m:1`: passed, `353` tests;
+  - `npm.cmd test` from `apps/front`: passed, `51` tests;
+  - `npm.cmd run build` from `apps/front`: passed.
+- Let's Encrypt production ACME availability was rechecked after issuance resumed: `https://acme-v02.api.letsencrypt.org/directory` returned `200 OK`.

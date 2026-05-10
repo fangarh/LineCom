@@ -1,0 +1,805 @@
+{
+  "source": "https://redmrt.ru",
+  "export_note": "Цены, остатки и количество исключены из выгрузки.",
+  "categories": [
+    {
+      "name": "Витая пара",
+      "url": "https://redmrt.ru/vitaya-para",
+      "children": [
+        {
+          "name": "Для внутренней прокладки",
+          "url": "https://redmrt.ru/vitaya-para/dlya-vnutrennej-prokladki",
+          "children": []
+        },
+        {
+          "name": "Для внешней прокладки",
+          "url": "https://redmrt.ru/vitaya-para/dlya-vneshnej-prokladki",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Компоненты СКС",
+      "url": "https://redmrt.ru/komponenty-sks",
+      "children": [
+        {
+          "name": "Патч-панели",
+          "url": "https://redmrt.ru/komponenty-sks/patch-paneli",
+          "children": []
+        },
+        {
+          "name": "Патч-корды",
+          "url": "https://redmrt.ru/komponenty-sks/patch-kordy",
+          "children": []
+        },
+        {
+          "name": "Розетки",
+          "url": "https://redmrt.ru/komponenty-sks/rozetki",
+          "children": []
+        },
+        {
+          "name": "Коннекторы",
+          "url": "https://redmrt.ru/komponenty-sks/konnektory",
+          "children": []
+        },
+        {
+          "name": "Скотчлоки/соединительные модули",
+          "url": "https://redmrt.ru/komponenty-sks/skotchloki-soedinitelnye-moduli",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Оптический кабель",
+      "url": "https://redmrt.ru/opticheskij-kabel",
+      "children": [
+        {
+          "name": "Оптический кабель FTTH",
+          "url": "https://redmrt.ru/opticheskij-kabel/opticheskij-kabel-ftth",
+          "children": []
+        },
+        {
+          "name": "Оптический кабель самонесущий ADSS",
+          "url": "https://redmrt.ru/opticheskij-kabel/opticheskij-kabel-samonesushhij-adss",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Оптические компоненты",
+      "url": "https://redmrt.ru/opticheskie-komponenty",
+      "children": [
+        {
+          "name": "Абонентская розетка",
+          "url": "https://redmrt.ru/opticheskie-komponenty/abonentskaya-rozetka",
+          "children": []
+        },
+        {
+          "name": "Быстрые коннекторы, соединители",
+          "url": "https://redmrt.ru/opticheskie-komponenty/bystrye-konnektory-soediniteli",
+          "children": []
+        },
+        {
+          "name": "Гильзы КДЗС",
+          "url": "https://redmrt.ru/opticheskie-komponenty/gilzy-kdzs",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Оптические трансиверы",
+      "url": "https://redmrt.ru/opticheskie-transivery",
+      "children": []
+    },
+    {
+      "name": "Медиаконвертеры",
+      "url": "https://redmrt.ru/mediakonvertery",
+      "children": []
+    },
+    {
+      "name": "Оптические муфты",
+      "url": "https://redmrt.ru/opticheskie-mufty",
+      "children": [
+        {
+          "name": "Оптические кросс-муфты FTTH",
+          "url": "https://redmrt.ru/opticheskie-mufty/opticheskie-kross-mufty-ftth",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Арматура ВОЛС",
+      "url": "https://redmrt.ru/armatura-vols",
+      "children": []
+    },
+    {
+      "name": "Коаксиальные кабели",
+      "url": "https://redmrt.ru/koaksialnye-kabeli",
+      "children": []
+    },
+    {
+      "name": "Телекоммуникационные шкафы",
+      "url": "https://redmrt.ru/telekommunikacionnye-shkafy",
+      "children": [
+        {
+          "name": "Шкафы телекоммуникационные настенные",
+          "url": "https://redmrt.ru/telekommunikacionnye-shkafy/shkafy-telekommunikacionnye-nastennye",
+          "children": []
+        },
+        {
+          "name": "Шкафы напольные телекоммуникационные",
+          "url": "https://redmrt.ru/telekommunikacionnye-shkafy/shkafy-napolnye-telekommunikacionnye",
+          "children": []
+        },
+        {
+          "name": "Шкафы антивандальные",
+          "url": "https://redmrt.ru/telekommunikacionnye-shkafy/shkafy-antivandalnye",
+          "children": []
+        },
+        {
+          "name": "Всепогодные шкафы",
+          "url": "https://redmrt.ru/telekommunikacionnye-shkafy/vsepogodnye-shkafy",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "Разъемы, переходы, штекеры для RG-КАБЕЛЯ",
+      "url": "https://redmrt.ru/razemy-perehody-shtekery-dlya-rg-kabelya",
+      "children": []
+    },
+    {
+      "name": "ТВ-делители",
+      "url": "https://redmrt.ru/tv-deliteli",
+      "children": []
+    }
+  ],
+  "category_scan_stats": [
+    {
+      "url": "https://redmrt.ru/vitaya-para",
+      "path": [
+        "Витая пара"
+      ],
+      "products_found": 10
+    },
+    {
+      "url": "https://redmrt.ru/vitaya-para/dlya-vnutrennej-prokladki",
+      "path": [
+        "Витая пара",
+        "Для внутренней прокладки"
+      ],
+      "products_found": 6
+    },
+    {
+      "url": "https://redmrt.ru/vitaya-para/dlya-vneshnej-prokladki",
+      "path": [
+        "Витая пара",
+        "Для внешней прокладки"
+      ],
+      "products_found": 2
+    },
+    {
+      "url": "https://redmrt.ru/komponenty-sks",
+      "path": [
+        "Компоненты СКС"
+      ],
+      "products_found": 5
+    },
+    {
+      "url": "https://redmrt.ru/komponenty-sks/patch-paneli",
+      "path": [
+        "Компоненты СКС",
+        "Патч-панели"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/komponenty-sks/patch-kordy",
+      "path": [
+        "Компоненты СКС",
+        "Патч-корды"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/komponenty-sks/rozetki",
+      "path": [
+        "Компоненты СКС",
+        "Розетки"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/komponenty-sks/konnektory",
+      "path": [
+        "Компоненты СКС",
+        "Коннекторы"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/komponenty-sks/skotchloki-soedinitelnye-moduli",
+      "path": [
+        "Компоненты СКС",
+        "Скотчлоки/соединительные модули"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/opticheskij-kabel",
+      "path": [
+        "Оптический кабель"
+      ],
+      "products_found": 2
+    },
+    {
+      "url": "https://redmrt.ru/opticheskij-kabel/opticheskij-kabel-ftth",
+      "path": [
+        "Оптический кабель",
+        "Оптический кабель FTTH"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/opticheskij-kabel/opticheskij-kabel-samonesushhij-adss",
+      "path": [
+        "Оптический кабель",
+        "Оптический кабель самонесущий ADSS"
+      ],
+      "error": "404 Client Error: Not Found for url: https://redmrt.ru/opticheskij-kabel/opticheskij-kabel-samonesushhij-adss"
+    },
+    {
+      "url": "https://redmrt.ru/opticheskie-komponenty",
+      "path": [
+        "Оптические компоненты"
+      ],
+      "products_found": 3
+    },
+    {
+      "url": "https://redmrt.ru/opticheskie-komponenty/abonentskaya-rozetka",
+      "path": [
+        "Оптические компоненты",
+        "Абонентская розетка"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/opticheskie-komponenty/bystrye-konnektory-soediniteli",
+      "path": [
+        "Оптические компоненты",
+        "Быстрые коннекторы, соединители"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/opticheskie-komponenty/gilzy-kdzs",
+      "path": [
+        "Оптические компоненты",
+        "Гильзы КДЗС"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/opticheskie-transivery",
+      "path": [
+        "Оптические трансиверы"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/mediakonvertery",
+      "path": [
+        "Медиаконвертеры"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/opticheskie-mufty",
+      "path": [
+        "Оптические муфты"
+      ],
+      "products_found": 1
+    },
+    {
+      "url": "https://redmrt.ru/opticheskie-mufty/opticheskie-kross-mufty-ftth",
+      "path": [
+        "Оптические муфты",
+        "Оптические кросс-муфты FTTH"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/armatura-vols",
+      "path": [
+        "Арматура ВОЛС"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/koaksialnye-kabeli",
+      "path": [
+        "Коаксиальные кабели"
+      ],
+      "products_found": 1
+    },
+    {
+      "url": "https://redmrt.ru/telekommunikacionnye-shkafy",
+      "path": [
+        "Телекоммуникационные шкафы"
+      ],
+      "products_found": 4
+    },
+    {
+      "url": "https://redmrt.ru/telekommunikacionnye-shkafy/shkafy-telekommunikacionnye-nastennye",
+      "path": [
+        "Телекоммуникационные шкафы",
+        "Шкафы телекоммуникационные настенные"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/telekommunikacionnye-shkafy/shkafy-napolnye-telekommunikacionnye",
+      "path": [
+        "Телекоммуникационные шкафы",
+        "Шкафы напольные телекоммуникационные"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/telekommunikacionnye-shkafy/shkafy-antivandalnye",
+      "path": [
+        "Телекоммуникационные шкафы",
+        "Шкафы антивандальные"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/telekommunikacionnye-shkafy/vsepogodnye-shkafy",
+      "path": [
+        "Телекоммуникационные шкафы",
+        "Всепогодные шкафы"
+      ],
+      "products_found": 0
+    },
+    {
+      "url": "https://redmrt.ru/razemy-perehody-shtekery-dlya-rg-kabelya",
+      "path": [
+        "Разъемы, переходы, штекеры для RG-КАБЕЛЯ"
+      ],
+      "error": "404 Client Error: Not Found for url: https://redmrt.ru/razemy-perehody-shtekery-dlya-rg-kabelya"
+    },
+    {
+      "url": "https://redmrt.ru/tv-deliteli",
+      "path": [
+        "ТВ-делители"
+      ],
+      "products_found": 0
+    }
+  ],
+  "products_count": 26,
+  "products": [
+    {
+      "name": "Кабель коаксиальный RG-11U, 75 Ом CCS, AL, трос, внешний, черный, 305м",
+      "url": "https://redmrt.ru/koaksialnye-kabeli/kabel-koaksialnyj-rg-11u-75-om-ccs-al-tros-vneshnij-chernyj-305m",
+      "code": "Кабель коаксиальный RG-11U, 75 Ом CCS, AL, трос, внешний, черный",
+      "category_path": [
+        "Коаксиальные кабели"
+      ],
+      "characteristics": {
+        "Тип прокладки: наружный": "Тип: RG-11U",
+        "Внешняя оболочка: ПЭ": "Материал оплетки: AL",
+        "Вес, кг: 0.098": "Кабель питания: нет",
+        "Тип прокладки": "наружный",
+        "Тип": "RG-11U",
+        "Материал проводника": "CCS",
+        "Внешняя оболочка": "ПЭ",
+        "Материал оплетки": "AL",
+        "Страна производитель": "Китай",
+        "Вес, кг": "0.098",
+        "Кабель питания": "нет",
+        "Объем, (м3)": "0.001",
+        "Волновое сопротивление": "75 Ом"
+      }
+    },
+    {
+      "name": "Коннекторы",
+      "url": "https://redmrt.ru/komponenty-sks/konnektory",
+      "code": "Коннектор RJ45 (8p8c) cat.5e, экранированный, для одножильного и Коннектор RJ45 (8p8c) cat.5e, экранированный, для одножильного и многожильного кабеля",
+      "category_path": [
+        "Компоненты СКС"
+      ]
+    },
+    {
+      "name": "Патч-корды",
+      "url": "https://redmrt.ru/komponenty-sks/patch-kordy",
+      "code": "Патч-корд UTP4 cat 5e, 1,0м, CU, серый Патч-корд UTP4 cat 5e, 1,0м, CU, серый",
+      "category_path": [
+        "Компоненты СКС"
+      ]
+    },
+    {
+      "name": "Патч-панели",
+      "url": "https://redmrt.ru/komponenty-sks/patch-paneli",
+      "code": "Патч-панель 19 Патч-панель 19\" 0,5U, 24 порта, UTP, RJ-45, CAT 5e, 180 градусов, с задним кабельным организатором",
+      "category_path": [
+        "Компоненты СКС"
+      ]
+    },
+    {
+      "name": "Розетки",
+      "url": "https://redmrt.ru/komponenty-sks/rozetki",
+      "code": "Розетка компьютерная внешняя на плате 1xRJ45, неэкран, cat.5e Розетка компьютерная внешняя на плате 1xRJ45, неэкран, cat.5e",
+      "category_path": [
+        "Компоненты СКС"
+      ]
+    },
+    {
+      "name": "Скотчлоки/соединительные модули",
+      "url": "https://redmrt.ru/komponenty-sks/skotchloki-soedinitelnye-moduli",
+      "code": "Соединитель кабельный тип Скотчлок-2 для жил 0,4-0,9 мм Соединитель кабельный тип Скотчлок-2 для жил 0,4-0,9 мм",
+      "category_path": [
+        "Компоненты СКС"
+      ]
+    },
+    {
+      "name": "Абонентская розетка",
+      "url": "https://redmrt.ru/opticheskie-komponenty/abonentskaya-rozetka",
+      "code": "Абонентская розетка FTTH-001 Абонентская розетка FTTH",
+      "category_path": [
+        "Оптические компоненты"
+      ]
+    },
+    {
+      "name": "Быстрые коннекторы, соединители",
+      "url": "https://redmrt.ru/opticheskie-komponenty/bystrye-konnektory-soediniteli",
+      "code": "Быстрый коннектор SC/APC Быстрый коннектор SC/APC",
+      "category_path": [
+        "Оптические компоненты"
+      ]
+    },
+    {
+      "name": "Гильзы КДЗС",
+      "url": "https://redmrt.ru/opticheskie-komponenty/gilzy-kdzs",
+      "code": "Комплект для защиты сварных соединений 40мм (гильза КДЗС-40) Комплект для защиты сварных соединений 40мм (гильза КДЗС-40)",
+      "category_path": [
+        "Оптические компоненты"
+      ]
+    },
+    {
+      "name": "Оптические кросс-муфты FTTH",
+      "url": "https://redmrt.ru/opticheskie-mufty/opticheskie-kross-mufty-ftth",
+      "code": "Оптическая кросс-муфта GJS-X04 Оптическая кросс-муфта GJS-X",
+      "category_path": [
+        "Оптические муфты"
+      ]
+    },
+    {
+      "name": "Оптический кабель FTTH",
+      "url": "https://redmrt.ru/opticheskij-kabel/opticheskij-kabel-ftth",
+      "code": "Оптический дроп кабель, 1 волокно G652, стальная проволока, тип Оптический дроп кабель, 1 волокно G652, стальная проволока, тип FTTH",
+      "category_path": [
+        "Оптический кабель"
+      ]
+    },
+    {
+      "name": "Оптический кабель самонесущий ADSS",
+      "url": "https://redmrt.ru/opticheskij-kabel/opticheskij-kabel-samonesushchij-adss",
+      "code": "Оптический самонесущий кабель, 1 волокно,1,5кН, диэлектрический, Оптический самонесущий кабель, 1 волокно,1,5кН, диэлектрический, ADSS",
+      "category_path": [
+        "Оптический кабель"
+      ]
+    },
+    {
+      "name": "Шкафы антивандальные",
+      "url": "https://redmrt.ru/telekommunikacionnye-shkafy/shkafy-antivandalnye",
+      "code": "Антивандальный Шкаф 12U распашного типа, (Ш*Г*В 600*450*600мм) 1 Антивандальный Шкаф 12U распашного типа, (Ш*Г*В 600*450*600мм) 19\" направляющие, передняя дверь металл, замок, серый",
+      "category_path": [
+        "Телекоммуникационные шкафы"
+      ]
+    },
+    {
+      "name": "Шкафы напольные телекоммуникационные",
+      "url": "https://redmrt.ru/telekommunikacionnye-shkafy/shkafy-napolnye-telekommunikacionnye",
+      "code": "Шкаф напольный 19 Шкаф напольный 19\" 22U(600х600х1132), передняя дверь стекло, серый, разобранный",
+      "category_path": [
+        "Телекоммуникационные шкафы"
+      ]
+    },
+    {
+      "name": "Шкафы телекоммуникационные настенные",
+      "url": "https://redmrt.ru/telekommunikacionnye-shkafy/shkafy-telekommunikacionnye-nastennye",
+      "code": "Шкаф настенный 12U (540х600х625) собранный, передняя дверь стекл Шкаф настенный 12U (540х600х625) собранный, передняя дверь стекло, серый",
+      "category_path": [
+        "Телекоммуникационные шкафы"
+      ]
+    },
+    {
+      "name": "Всепогодные шкафы",
+      "url": "https://redmrt.ru/telekommunikacionnye-shkafy/vsepogodnye-shkafy",
+      "code": "Климатический всепогодный шкаф 6U, (Ш*Г*В 660*600*550мм) 19 Климатический всепогодный шкаф 6U, (Ш*Г*В 660*600*550мм) 19\" направляющие, оборудование в комплекте",
+      "category_path": [
+        "Телекоммуникационные шкафы"
+      ]
+    },
+    {
+      "name": "Для внешней прокладки",
+      "url": "https://redmrt.ru/vitaya-para/dlya-vneshnej-prokladki",
+      "code": "Кабель витая пара F/UTP, ССА Кабель витая пара F/UTP, ССА ,CAT 5e, 4PR, 24AWG, OUTDOOR, черный, 305м REDMART",
+      "category_path": [
+        "Витая пара"
+      ]
+    },
+    {
+      "name": "Кабель витая пара F/UTP, ССА ,CAT 5e, 4PR, 24AWG, OUTDOOR, черный, 305м REDMART",
+      "url": "https://redmrt.ru/vitaya-para/dlya-vneshnej-prokladki/kabel-vitaya-para-f-utp-ssa-cat-5e-4pr-24awg-outdoor-chernyj-305m-redmart",
+      "code": "Кабель витая пара F/UTP, ССА",
+      "category_path": [
+        "Витая пара",
+        "Для внешней прокладки"
+      ],
+      "characteristics": {
+        "Серия Кабель": "Применение Связь, передача данных",
+        "Цвет внешн. оболочки Черный": "Категория (Cat) 5Е",
+        "Экран поверх скрутки Есть": "Длина изделия 30500 см",
+        "Серия": "Кабель",
+        "Применение": "Связь, передача данных",
+        "Маркировка жил": "Цвет",
+        "Цвет внешн. оболочки": "Черный",
+        "Категория (Cat)": "5Е",
+        "Материал проводника": "Омедненный алюминий",
+        "Экран поверх скрутки": "Есть",
+        "Длина изделия": "30500 см",
+        "Марка кабеля провода": "F/UTP",
+        "Не поддерживает горения": "Нет",
+        "Низкое дымовыделение": "Нет",
+        "Не содержит галогенов": "Нет"
+      }
+    },
+    {
+      "name": "Кабель витая пара U/UTP, ССА ,CAT 5e, 4PR, 24AWG, OUTDOOR, черный, 305м ,REDMART",
+      "url": "https://redmrt.ru/vitaya-para/dlya-vneshnej-prokladki/kabel-vitaya-para-u-utp-ssa-cat-5e-4pr-24awg-outdoor-chernyj-305m-redmart",
+      "code": "Кабель витая пара U/UTP, ССА",
+      "category_path": [
+        "Витая пара",
+        "Для внешней прокладки"
+      ],
+      "characteristics": {
+        "Серия Кабель": "Применение Связь, передача данных",
+        "Цвет внешн. оболочки Черный": "Категория (Cat) 5Е",
+        "Экран поверх скрутки Нет(без)": "Длина изделия 30500 см",
+        "Серия": "Кабель",
+        "Применение": "Связь, передача данных",
+        "Маркировка жил": "Цвет",
+        "Цвет внешн. оболочки": "Черный",
+        "Категория (Cat)": "5Е",
+        "Материал проводника": "Омедненный алюминий",
+        "Экран поверх скрутки": "Нет(без)",
+        "Длина изделия": "30500 см",
+        "Марка кабеля провода": "U/UTP (UTP)",
+        "Не поддерживает горения": "Нет",
+        "Низкое дымовыделение": "Нет",
+        "Не содержит галогенов": "Нет"
+      }
+    },
+    {
+      "name": "Для внутренней прокладки",
+      "url": "https://redmrt.ru/vitaya-para/dlya-vnutrennej-prokladki",
+      "code": "Кабель витая пара F/UTP, ССА Кабель витая пара F/UTP, ССА ,CAT 5e, 4PR, 24AWG, INDOOR, серый, 305м REDMART",
+      "category_path": [
+        "Витая пара"
+      ]
+    },
+    {
+      "name": "Кабель витая пара F/UTP,CU, CAT 5e, PVC, 4PR, 24AWG, INDOOR, серый, 305м REDMART",
+      "url": "https://redmrt.ru/vitaya-para/dlya-vnutrennej-prokladki/kabel-vitaya-para-f-utp-cu-cat-5e-pvc-4pr-24awg-indoor-seryj-305m-redmart",
+      "code": "Кабель витая пара F/UTP, CAT 5e, PVC, 4PR, 24AWG, INDOOR, серый,",
+      "category_path": [
+        "Витая пара",
+        "Для внутренней прокладки"
+      ],
+      "characteristics": {
+        "Серия Кабель": "Применение Связь, передача данных",
+        "Толщина изоляционного материала 0.4 мм": "Минимальный радиус изгиба кабеля 8 внешних диаметров",
+        "Номин. сечение проводника 0 2 мм кв.": "Маркировка жил Цвет",
+        "Серия": "Кабель",
+        "Применение": "Связь, передача данных",
+        "Номинальное напряжение": "50 В",
+        "Толщина изоляционного материала": "0.4 мм",
+        "Минимальный радиус изгиба кабеля": "8 внешних диаметров",
+        "Огнестойкий": "Нет",
+        "Номин. сечение проводника": "0 2 мм кв.",
+        "Маркировка жил": "Цвет",
+        "Элемент скрутки": "Парный",
+        "Цвет внешн. оболочки": "Серый",
+        "Категория (Cat)": "5E",
+        "Диаметр проводника": "0.5 мм",
+        "Материал проводника": "Медь",
+        "Экран поверх скрутки": "Нет (без)",
+        "Материал внешн, оболочки": "Полиэтилен (PE)",
+        "Класс проводника": "Класс 1 (однопроволочная жила)",
+        "Температура эксплуатации": "60…60 °C",
+        "Наруж диаметр (прибл.)": "5.1 мм",
+        "Ширина изделия": "0.51 см",
+        "Высота изделия": "0.51 см",
+        "Длина изделия": "30500 см",
+        "Марка кабеля провода": "U/UTP (UTP)",
+        "Материал изоляции жилы": "Полиэтилен (РE)",
+        "Не поддерживает горения": "Нет",
+        "Низкое дымовыделение": "Нет",
+        "Не содержит галогенов": "Нет",
+        "Bec": "8.372 кг"
+      }
+    },
+    {
+      "name": "Кабель витая пара F/UTP, ССА ,CAT 5e, 4PR, 24AWG, INDOOR, серый, 305м REDMART",
+      "url": "https://redmrt.ru/vitaya-para/dlya-vnutrennej-prokladki/kabel-vitaya-para-f-utp-ssa-cat-5e-4pr-24awg-indoor-seryj-305m-redmart",
+      "code": "Кабель витая пара F/UTP, ССА",
+      "category_path": [
+        "Витая пара",
+        "Для внутренней прокладки"
+      ],
+      "characteristics": {
+        "Серия Кабель": "Применение Связь, передача данных",
+        "Цвет внешн. оболочки Серый": "Категория (Cat) 5Е",
+        "Экран поверх скрутки Есть": "Длина изделия 30500 см",
+        "Серия": "Кабель",
+        "Применение": "Связь, передача данных",
+        "Маркировка жил": "Цвет",
+        "Цвет внешн. оболочки": "Серый",
+        "Категория (Cat)": "5Е",
+        "Материал проводника": "Омедненный алюминий",
+        "Экран поверх скрутки": "Есть",
+        "Длина изделия": "30500 см",
+        "Марка кабеля провода": "F/UTP",
+        "Не поддерживает горения": "Нет",
+        "Низкое дымовыделение": "Нет",
+        "Не содержит галогенов": "Нет"
+      }
+    },
+    {
+      "name": "Кабель витая пара U/UTP, MEDIAN ,CU,CAT 5e, PVC, 4PR, 24AWG, INDOOR, серый, 305м REDMART",
+      "url": "https://redmrt.ru/vitaya-para/dlya-vnutrennej-prokladki/kabel-vitaya-para-u-utp-median-cat-5e-pvc-4pr-24awg-indoor-seryj-305m",
+      "code": "Кабель витая пара U/UTP, MEDIAN CAT 5e",
+      "category_path": [
+        "Витая пара",
+        "Для внутренней прокладки"
+      ],
+      "characteristics": {
+        "Толщина изоляционного материала 0.4 мм": "Минимальный радиус изгиба кабеля 8 внешних диаметров",
+        "Элемент скрутки Парный": "Экран поверх скрутки Нет (без)",
+        "Наруж диаметр (прибл.) 4.9 мм \"": "Цвет внешн. оболочки Серый",
+        "Толщина изоляционного материала": "0.4 мм",
+        "Минимальный радиус изгиба кабеля": "8 внешних диаметров",
+        "Огнестойкий": "Нет",
+        "Элемент скрутки": "Парный",
+        "Экран поверх скрутки": "Нет (без)",
+        "Температура эксплуатации": "40…60 °C",
+        "Наруж диаметр (прибл.)": "4.9 мм \"",
+        "Цвет внешн. оболочки": "Серый",
+        "Категория (Cat)": "5E",
+        "Ширина изделия": "0.49 см",
+        "Bec": "10.0785",
+        "Маркировка жил": "Цвет",
+        "Диаметр проводника": "0.46 мм",
+        "Материал проводника": "Медь",
+        "Материал внешн, оболочки": "Поливинилхлорид (ПВХ)",
+        "Класс проводника": "Класс 1 (однопроволочная жила)",
+        "Марка кабеля провода": "U/UTP (UTP)",
+        "Материал изоляции жилы": "Полиэтилен (РE)",
+        "Высота изделия": "0.49 см",
+        "Применение": "Связь, передача данных",
+        "Номинальное напряжение": "50 В",
+        "Длина изделия": "30500 см",
+        "Серия": "Кабель"
+      }
+    },
+    {
+      "name": "Кабель витая пара U/UTP, PREMIUM,CU,CAT 5e, PVC, 4PR, 24AWG, INDOOR, серый, 305м REDMART",
+      "url": "https://redmrt.ru/vitaya-para/dlya-vnutrennej-prokladki/kabel-vitaya-para-u-utp-premium-cu-cat-5e-pvc-4pr-24awg-indoor-seryj-305m-redmart",
+      "code": "U/UTP, PREMIUM T CAT 5e",
+      "category_path": [
+        "Витая пара",
+        "Для внутренней прокладки"
+      ],
+      "characteristics": {
+        "Серия Кабель": "Применение Связь, передача данных",
+        "Толщина изоляционного материала 0.4 мм": "Минимальный радиус изгиба кабеля 8 внешних диаметров",
+        "Номин. сечение проводника 0 2 мм кв.": "Маркировка жил Цвет",
+        "Серия": "Кабель",
+        "Применение": "Связь, передача данных",
+        "Номинальное напряжение": "50 В",
+        "Толщина изоляционного материала": "0.4 мм",
+        "Минимальный радиус изгиба кабеля": "8 внешних диаметров",
+        "Огнестойкий": "Нет",
+        "Номин. сечение проводника": "0 2 мм кв.",
+        "Маркировка жил": "Цвет",
+        "Элемент скрутки": "Парный",
+        "Цвет внешн. оболочки": "Серый",
+        "Категория (Cat)": "5E",
+        "Диаметр проводника": "0.51 мм",
+        "Материал проводника": "Медь",
+        "Экран поверх скрутки": "Нет (без)",
+        "Материал внешн, оболочки": "Поливинилхлорид (ПВХ)",
+        "Класс проводника": "Класс 1 (однопроволочная жила)",
+        "Температура эксплуатации": "40…60 °C",
+        "Наруж диаметр (прибл.)": "4.9 мм",
+        "Ширина изделия": "0.49 см",
+        "Высота изделия": "0.49 см",
+        "Длина изделия": "30500 см",
+        "Марка кабеля провода": "U/UTP (UTP)",
+        "Материал изоляции жилы": "Полиэтилен (РE)",
+        "Не поддерживает горения": "Нет",
+        "Низкое дымовыделение": "Нет",
+        "Не содержит галогенов": "Нет",
+        "Bec": "10.0785 кг"
+      }
+    },
+    {
+      "name": "Кабель витая пара U/UTP, ССА , CAT 5e, 4PR, 24AWG, INDOOR, серый, 305м , REDMART",
+      "url": "https://redmrt.ru/vitaya-para/dlya-vnutrennej-prokladki/kabel-vitaya-para-u-utp-ssa-cat-5e-4pr-24awg-indoor-seryj-305m-redmart",
+      "code": "Кабель витая пара U/UTP, ССА",
+      "category_path": [
+        "Витая пара",
+        "Для внутренней прокладки"
+      ],
+      "characteristics": {
+        "Серия Кабель": "Применение Связь, передача данных",
+        "Цвет внешн. оболочки Серый": "Категория (Cat) 5Е",
+        "Экран поверх скрутки Нет(без)": "Длина изделия 30500 см",
+        "Серия": "Кабель",
+        "Применение": "Связь, передача данных",
+        "Маркировка жил": "Цвет",
+        "Цвет внешн. оболочки": "Серый",
+        "Категория (Cat)": "5Е",
+        "Материал проводника": "Омедненный алюминий",
+        "Экран поверх скрутки": "Нет(без)",
+        "Длина изделия": "30500 см",
+        "Марка кабеля провода": "U/UTP (UTP)",
+        "Не поддерживает горения": "Нет",
+        "Низкое дымовыделение": "Нет",
+        "Не содержит галогенов": "Нет"
+      }
+    },
+    {
+      "name": "Кабель витая пара U/UTP, STANDART ,CU,CAT 5e, PVC, 4PR, 24AWG, INDOOR, серый, 305м REDMART",
+      "url": "https://redmrt.ru/vitaya-para/dlya-vnutrennej-prokladki/kabel-vitaya-para-u-utp-standart-cat-5e-pvc-4pr-24awg-indoor-seryj-305m-redmart",
+      "code": "U/UTP, STANDART CAT 5e",
+      "category_path": [
+        "Витая пара",
+        "Для внутренней прокладки"
+      ],
+      "characteristics": {
+        "Серия Кабель": "Применение Связь, передача данных",
+        "Толщина изоляционного материала 0.4 мм": "Минимальный радиус изгиба кабеля 8 внешних диаметров",
+        "Номин. сечение проводника 0 2 мм кв.": "Маркировка жил Цвет",
+        "Серия": "Кабель",
+        "Применение": "Связь, передача данных",
+        "Номинальное напряжение": "50 В",
+        "Толщина изоляционного материала": "0.4 мм",
+        "Минимальный радиус изгиба кабеля": "8 внешних диаметров",
+        "Огнестойкий": "Нет",
+        "Номин. сечение проводника": "0 2 мм кв.",
+        "Маркировка жил": "Цвет",
+        "Элемент скрутки": "Парный",
+        "Цвет внешн. оболочки": "Серый",
+        "Категория (Cat)": "5E",
+        "Диаметр проводника": "0.46 мм",
+        "Материал проводника": "Медь",
+        "Экран поверх скрутки": "Нет (без)",
+        "Материал внешн, оболочки": "Поливинилхлорид (ПВХ)",
+        "Класс проводника": "Класс 1 (однопроволочная жила)",
+        "Температура эксплуатации": "40…60 °C",
+        "Наруж диаметр (прибл.)": "4.9 мм",
+        "Ширина изделия": "0.49 см",
+        "Высота изделия": "0.49 см",
+        "Длина изделия": "30500 см",
+        "Марка кабеля провода": "U/UTP (UTP)",
+        "Материал изоляции жилы": "Полиэтилен (РE)",
+        "Не поддерживает горения": "Нет",
+        "Низкое дымовыделение": "Нет",
+        "Не содержит галогенов": "Нет",
+        "Bec": "10.0785"
+      }
+    }
+  ]
+}

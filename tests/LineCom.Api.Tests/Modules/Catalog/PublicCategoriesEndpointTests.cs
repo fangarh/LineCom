@@ -3,6 +3,7 @@ using System.Text.Json;
 using LineCom.Api.Modules.Catalog.DTOs;
 using LineCom.Api.Modules.Catalog.Queries;
 using LineCom.Api.Shared.Errors;
+using LineCom.Api.Tests.Support;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -329,7 +330,7 @@ public sealed class PublicCategoriesEndpointTests
 
     private static WebApplicationFactory<Program> CreateFactory(IPublicCategoryQuery categoryQuery)
     {
-        return new WebApplicationFactory<Program>()
+        return new LineComWebApplicationFactory()
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureLogging(logging => logging.ClearProviders());

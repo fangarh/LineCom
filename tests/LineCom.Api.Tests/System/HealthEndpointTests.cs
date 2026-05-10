@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using LineCom.Api.Tests.Support;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Logging;
@@ -63,7 +64,7 @@ public sealed class HealthEndpointTests
 
     private static WebApplicationFactory<Program> CreateFactory()
     {
-        return new WebApplicationFactory<Program>()
+        return new LineComWebApplicationFactory()
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureLogging(logging => logging.ClearProviders());

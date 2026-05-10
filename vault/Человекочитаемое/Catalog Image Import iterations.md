@@ -229,3 +229,38 @@ Scope-search:
 - все `77` PNG в `Assets/product-images/tktdf/` успешно декодируются;
 - `python -m json.tool Assets\tktdf_image_sources.json`: exit code `0`;
 - `python -m json.tool Assets\product-images\tktdf_manifest.json`: exit code `0`.
+
+## 2026-05-10. Закрытие формальностей после WinForms importer и RedMRT export assets
+
+Цель итерации: закрыть плановые отметки по Catalog Importer WinForms, сохранить новые вспомогательные RedMRT-артефакты и подтвердить, что внешний блокер Let's Encrypt снят.
+
+Решения:
+
+- все чекбоксы плана `docs/superpowers/plans/2026-05-08-catalog-importer-winforms.md` отмечены как выполненные;
+- новые файлы RedMRT сохранены как вспомогательные артефакты анализа каталога:
+  - `Assets/redmrt_catalog_scraper.py`;
+  - `Assets/redmrt_catalog_scraper_fixed.py`;
+  - `Assets/redmrt_catalog_scraper_full.py`;
+  - `Assets/redmrt_products.json`;
+  - `Assets/result1.json`;
+  - `Assets/result2.json`;
+- `Assets/result2.json` очищен от служебных страниц и коммерческого boilerplate внутри характеристик; итоговая выгрузка содержит `260` товарных записей;
+- в `Assets/redmrt_catalog_scraper_full.py` добавлены исключения для `create-account`, `forgot-password`, коммерческих ссылок и мусорных характеристик про корзину, оплату, заказ и обратный звонок;
+- пользовательский PDF `Дополнительное_соглашение_ТЗ_LineCom.pdf` оставлен вне git как пользовательский untracked-файл.
+
+Let's Encrypt:
+
+- официальный статус Let's Encrypt показывает, что выпуск сертификатов возобновлен;
+- `https://acme-v02.api.letsencrypt.org/directory` вернул `200 OK`;
+- `http://linecom.ghostring.ru/.well-known/acme-challenge/probe-linecom` дошел до nginx и вернул ожидаемый `404 Not Found` для несуществующего probe-файла.
+
+Проверки:
+
+- `python -m json.tool Assets\redmrt_products.json`: exit code `0`;
+- `python -m json.tool Assets\result1.json`: exit code `0`;
+- `python -m json.tool Assets\result2.json`: exit code `0`;
+- `dotnet build LineCom.sln -m:1`: exit code `0`, `0` warnings, `0` errors;
+- `dotnet test LineCom.sln -m:1`: exit code `0`, `353` passed, `0` failed, `0` skipped;
+- `npm.cmd test` from `apps/front`: exit code `0`, `21` test files passed, `51` tests passed;
+- `npm.cmd run build` from `apps/front`: exit code `0`, Next.js production build completed;
+- scope-search по importer/WinForms/docs/vault/assets не выявил незакрытые `TODO`/`TBD`/`FIXME` в реализации; найденные commerce/payment/order совпадения относятся к явным skip/filter правилам scraper и историческим документационным формулировкам, а не к импортируемой реализации.

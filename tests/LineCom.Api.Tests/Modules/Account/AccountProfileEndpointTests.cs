@@ -7,6 +7,7 @@ using LineCom.Api.Modules.Auth.DTOs;
 using LineCom.Api.Modules.Auth.Repositories;
 using LineCom.Api.Modules.Auth.Services;
 using LineCom.Api.Shared.Errors;
+using LineCom.Api.Tests.Support;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -150,7 +151,7 @@ public sealed class AccountProfileEndpointTests
 
     private static WebApplicationFactory<Program> CreateFactory(IAccountProfileService accountProfileService)
     {
-        return new WebApplicationFactory<Program>()
+        return new LineComWebApplicationFactory()
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureLogging(logging => logging.ClearProviders());

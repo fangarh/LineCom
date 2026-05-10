@@ -7,6 +7,7 @@ using LineCom.Api.Modules.Auth.Services;
 using LineCom.Api.Modules.Requests.DTOs;
 using LineCom.Api.Modules.Requests.Services;
 using LineCom.Api.Shared.Errors;
+using LineCom.Api.Tests.Support;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -187,7 +188,7 @@ public sealed class CustomerRequestsEndpointTests
 
     private static WebApplicationFactory<Program> CreateFactory(ICustomerRequestService requestService)
     {
-        return new WebApplicationFactory<Program>()
+        return new LineComWebApplicationFactory()
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureLogging(logging => logging.ClearProviders());
