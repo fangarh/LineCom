@@ -15,6 +15,7 @@ public sealed class AdminRequestService : IAdminRequestService
     private readonly IAuthCurrentUserService _currentUserService;
     private readonly IAdminRequestRepository _repository;
     private readonly IRequestReferenceData _requestReferenceData;
+    private readonly IPublicCatalogReferenceData _catalogReferenceData;
 
     public AdminRequestService(
         IAuthCurrentUserService currentUserService,
@@ -25,6 +26,7 @@ public sealed class AdminRequestService : IAdminRequestService
         _currentUserService = currentUserService;
         _repository = repository;
         _requestReferenceData = requestReferenceData;
+        _catalogReferenceData = catalogReferenceData;
     }
 
     public async Task<AdminRequestListResponse> GetRequestsAsync(
@@ -58,30 +60,79 @@ public sealed class AdminRequestService : IAdminRequestService
         return new AdminRequestListResponse(items, page, pageSize, result.TotalItems, totalPages);
     }
 
-    public Task<AdminRequestDetailDto> GetRequestAsync(
+    public async Task<AdminRequestDetailDto> GetRequestAsync(
         HttpContext httpContext,
         string number,
         CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException();
+        await RequireStaffAsync(httpContext, cancellationToken);
+        var normalizedNumber = NormalizeText(number);
+        if (normalizedNumber is null)
+        {
+            throw RequestErrors.NotFound();
+        }
+
+        var record = await _repository.GetRequestAsync(normalizedNumber, cancellationToken);
+        if (record is null)
+        {
+            throw RequestErrors.NotFound();
+        }
+
+        return ToDetailDto(record);
     }
 
-    public Task<AdminRequestDetailDto> UpdateStatusAsync(
+    public async Task<AdminRequestDetailDto> UpdateStatusAsync(
         HttpContext httpContext,
         string number,
         UpdateAdminRequestStatusCommand command,
         CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException();
+        var actor = await RequireStaffAsync(httpContext, cancellationToken);
+        var normalizedNumber = NormalizeText(number);
+        var status = NormalizeText(command.Status);
+        if (normalizedNumber is null || status is null)
+        {
+            throw AuthErrors.InvalidRequest();
+        }
+
+        _requestReferenceData.GetStatus(status);
+
+        var record = await _repository.UpdateStatusAsync(
+            new AdminRequestStatusUpdate(normalizedNumber, status, actor.Id),
+            cancellationToken);
+        if (record is null)
+        {
+            throw RequestErrors.NotFound();
+        }
+
+        return ToDetailDto(record);
     }
 
-    public Task<AdminRequestDetailDto> UpdateInternalCommentAsync(
+    public async Task<AdminRequestDetailDto> UpdateInternalCommentAsync(
         HttpContext httpContext,
         string number,
         UpdateAdminRequestInternalCommentCommand command,
         CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException();
+        var actor = await RequireStaffAsync(httpContext, cancellationToken);
+        var normalizedNumber = NormalizeText(number);
+        if (normalizedNumber is null)
+        {
+            throw RequestErrors.NotFound();
+        }
+
+        var record = await _repository.UpdateInternalCommentAsync(
+            new AdminRequestInternalCommentUpdate(
+                normalizedNumber,
+                NormalizeText(command.InternalComment),
+                actor.Id),
+            cancellationToken);
+        if (record is null)
+        {
+            throw RequestErrors.NotFound();
+        }
+
+        return ToDetailDto(record);
     }
 
     private async Task<CurrentUserDto> RequireStaffAsync(
@@ -118,6 +169,44 @@ public sealed class AdminRequestService : IAdminRequestService
             record.InternalComment,
             record.CreatedAt,
             record.UpdatedAt);
+    }
+
+    private AdminRequestDetailDto ToDetailDto(AdminRequestDetailRecord record)
+    {
+        return new AdminRequestDetailDto(
+            record.Number,
+            _requestReferenceData.GetStatus(record.Status),
+            record.Source,
+            new RequestCustomerSnapshotDto(
+                record.Customer.Name,
+                record.Customer.Email,
+                record.Customer.Phone),
+            record.Organization is null
+                ? null
+                : new RequestOrganizationSnapshotDto(
+                    record.Organization.Name,
+                    record.Organization.Inn,
+                    record.Organization.ContactPerson),
+            record.CustomerComment,
+            record.InternalComment,
+            record.CreatedAt,
+            record.UpdatedAt,
+            record.Items
+                .Select(item => new CustomerRequestItemDto(
+                    item.ProductId,
+                    item.ProductName,
+                    item.ProductSku,
+                    _catalogReferenceData.GetSaleUnit(item.SaleUnit),
+                    item.UnitQuantity,
+                    item.Quantity,
+                    item.CustomerComment))
+                .ToArray(),
+            record.History
+                .Select(history => new CustomerRequestHistoryDto(
+                    history.Event,
+                    history.Message,
+                    history.CreatedAt))
+                .ToArray());
     }
 
     private static int NormalizePage(int? value)
