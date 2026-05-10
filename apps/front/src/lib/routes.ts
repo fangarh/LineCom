@@ -11,4 +11,6 @@ export const routes = {
   accountProfile: () => "/account/profile",
   accountRequests: () => "/account/requests",
   accountRequest: (number: string) => `/account/requests/${encodeURIComponent(number)}`,
+  adminRequests: () => "/admin/requests",
+  adminRequest: (number: string) => `/admin/requests/${encodeURIComponent(number)}`,
 };

@@ -1,7 +1,7 @@
 import { ApiClientError, type ApiErrorResponse, isApiErrorResponse } from "./errors";
 
 type JsonRequestOptions = {
-  method?: "GET" | "POST" | "PUT" | "DELETE";
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   body?: unknown;
   csrfToken?: string | null;
   cache?: RequestCache;
