@@ -16,7 +16,6 @@ public sealed class RequestReferenceData : IRequestReferenceData
         {
             ["new"] = "Новая",
             ["in_progress"] = "В работе",
-            ["quoted"] = "КП отправлено",
             ["completed"] = "Завершена",
             ["cancelled"] = "Отменена"
         };

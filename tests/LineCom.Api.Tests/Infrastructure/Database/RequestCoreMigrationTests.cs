@@ -15,10 +15,12 @@ public sealed class RequestCoreMigrationTests
     }
 
     [Theory]
-    [InlineData("CONSTRAINT ck_requests_status CHECK (status IN ('new', 'in_progress', 'quoted', 'completed', 'cancelled'))")]
+    [InlineData("CONSTRAINT ck_requests_status CHECK (status IN ('new', 'in_progress', 'completed', 'cancelled'))")]
     [InlineData("CONSTRAINT ck_requests_source CHECK (source IN ('cart', 'quick_order'))")]
     [InlineData("CONSTRAINT ck_request_items_quantity_positive CHECK (quantity > 0)")]
     [InlineData("CONSTRAINT ck_request_history_event_type CHECK (event_type IN ('created', 'status_changed', 'comment_added', 'items_changed'))")]
+    [InlineData("CONSTRAINT ck_request_history_old_status CHECK (old_status IS NULL OR old_status IN ('new', 'in_progress', 'completed', 'cancelled'))")]
+    [InlineData("CONSTRAINT ck_request_history_new_status CHECK (new_status IS NULL OR new_status IN ('new', 'in_progress', 'completed', 'cancelled'))")]
     public void RequestCore_ConstrainsReleaseValues(string expectedConstraint)
     {
         Assert.Contains(expectedConstraint, RequestCoreSql);

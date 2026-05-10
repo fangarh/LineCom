@@ -30,7 +30,7 @@ CREATE TABLE requests (
     CONSTRAINT ck_requests_number_not_blank CHECK (btrim(number) <> ''),
     CONSTRAINT ck_requests_number_year CHECK (number_year >= 2000 AND number_year <= 9999),
     CONSTRAINT ck_requests_number_sequence_positive CHECK (number_sequence > 0),
-    CONSTRAINT ck_requests_status CHECK (status IN ('new', 'in_progress', 'quoted', 'completed', 'cancelled')),
+    CONSTRAINT ck_requests_status CHECK (status IN ('new', 'in_progress', 'completed', 'cancelled')),
     CONSTRAINT ck_requests_source CHECK (source IN ('cart', 'quick_order')),
     CONSTRAINT ck_requests_customer_name_not_blank CHECK (btrim(customer_name) <> ''),
     CONSTRAINT ck_requests_customer_email_not_blank CHECK (customer_email IS NULL OR btrim(customer_email::text) <> ''),
@@ -95,8 +95,8 @@ CREATE TABLE request_history (
     comment text NULL,
     created_at timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT ck_request_history_event_type CHECK (event_type IN ('created', 'status_changed', 'comment_added', 'items_changed')),
-    CONSTRAINT ck_request_history_old_status CHECK (old_status IS NULL OR old_status IN ('new', 'in_progress', 'quoted', 'completed', 'cancelled')),
-    CONSTRAINT ck_request_history_new_status CHECK (new_status IS NULL OR new_status IN ('new', 'in_progress', 'quoted', 'completed', 'cancelled')),
+    CONSTRAINT ck_request_history_old_status CHECK (old_status IS NULL OR old_status IN ('new', 'in_progress', 'completed', 'cancelled')),
+    CONSTRAINT ck_request_history_new_status CHECK (new_status IS NULL OR new_status IN ('new', 'in_progress', 'completed', 'cancelled')),
     CONSTRAINT ck_request_history_comment_not_blank CHECK (comment IS NULL OR btrim(comment) <> '')
 );
 
