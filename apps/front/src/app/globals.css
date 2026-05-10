@@ -1720,6 +1720,109 @@ a {
   width: fit-content;
 }
 
+.admin-requests-page {
+  display: grid;
+  gap: 18px;
+}
+
+.admin-requests {
+  display: grid;
+  gap: 20px;
+}
+
+.admin-requests__header {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.admin-requests__header h1 {
+  margin: 0;
+  color: var(--color-graphite);
+  font-size: 34px;
+  line-height: 1.12;
+}
+
+.admin-requests__filters {
+  display: grid;
+  grid-template-columns: 170px repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.admin-filter-field {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-filter-field span {
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-filter-field input,
+.admin-filter-field select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.admin-filter-field input::placeholder {
+  color: var(--color-muted);
+}
+
+.admin-request-list {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-request-card {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  background: #fbfcfd;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.admin-request-card__head {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.admin-request-card__head h2 {
+  margin: 0;
+  color: var(--color-graphite);
+  font-size: 24px;
+}
+
+.admin-request-card__meta {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.admin-request-card__comment {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.admin-request-card__comment--internal {
+  padding-left: 12px;
+  border-left: 3px solid var(--color-accent);
+}
+
+.admin-request-card__link {
+  width: fit-content;
+}
+
 .status-pill {
   display: inline-flex;
   min-height: 32px;
@@ -1854,6 +1957,8 @@ a {
   .request-item__main,
   .request-list-section__header,
   .request-list-card__main,
+  .admin-requests__header,
+  .admin-request-card__head,
   .request-detail__head {
     align-items: flex-start;
     flex-direction: column;
@@ -1912,6 +2017,8 @@ a {
   .featured-products,
   .home-directions,
   .request-list-card__meta,
+  .admin-requests__filters,
+  .admin-request-card__meta,
   .request-detail-item__meta {
     grid-template-columns: 1fr;
   }
