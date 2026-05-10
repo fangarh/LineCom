@@ -11,6 +11,8 @@ public static class RequestServiceCollectionExtensions
         services.AddScoped<IRequestNumberRepository, DapperRequestNumberRepository>();
         services.AddScoped<ICustomerRequestService, CustomerRequestService>();
         services.AddScoped<ICustomerRequestRepository, DapperCustomerRequestRepository>();
+        services.AddScoped<IAdminRequestService, AdminRequestService>();
+        services.AddScoped<IAdminRequestRepository, DapperAdminRequestRepository>();
         services.AddSingleton<IRequestReferenceData, RequestReferenceData>();
 
         return services;
