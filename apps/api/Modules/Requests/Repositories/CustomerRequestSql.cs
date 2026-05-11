@@ -34,6 +34,7 @@ internal static class CustomerRequestSql
         LEFT JOIN brands brand ON brand.id = product.brand_id
             AND brand.is_active = TRUE
         WHERE product.id = ANY(@ProductIds)
+            AND product.is_active = TRUE
             AND product.publish_status = 'published';
         """;
 
