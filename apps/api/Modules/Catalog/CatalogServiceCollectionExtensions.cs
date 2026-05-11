@@ -7,6 +7,7 @@ public static class CatalogServiceCollectionExtensions
 {
     public static IServiceCollection AddCatalogModule(this IServiceCollection services)
     {
+        services.AddScoped<IAdminHomepageQuery, DapperAdminHomepageQuery>();
         services.AddScoped<IPublicCategoryQuery, DapperPublicCategoryQuery>();
         services.AddScoped<IPublicProductQuery, DapperPublicProductQuery>();
         services.AddSingleton<IPublicCatalogReferenceData, PublicCatalogReferenceData>();
