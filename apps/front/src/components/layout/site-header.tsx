@@ -39,6 +39,7 @@ export function SiteHeader() {
         <Link
           className="site-header__brand"
           href={routes.home()}
+          prefetch={false}
           aria-label="LineCom"
           aria-controls="site-header-menu"
           aria-expanded={isMenuOpen}
@@ -50,7 +51,7 @@ export function SiteHeader() {
             alt="LineCom - кабель и оптоволокно"
             width={1297}
             height={373}
-            priority
+            preload
           />
         </Link>
 
@@ -64,6 +65,7 @@ export function SiteHeader() {
                 key={item.href}
                 className={`site-header__link${item.mobileOnly ? " site-header__link--mobile-only" : ""}`}
                 href={item.href}
+                prefetch={item.href === routes.home() ? false : undefined}
                 onClick={closeMenu}
               >
                 {item.label}
