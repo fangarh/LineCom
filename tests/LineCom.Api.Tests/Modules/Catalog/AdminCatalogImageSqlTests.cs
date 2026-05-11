@@ -24,6 +24,52 @@ public sealed class AdminCatalogImageSqlTests
     }
 
     [Fact]
+    public void AddProductImagesSql_LocksProductBeforeInsertingImages()
+    {
+        Assert.Contains("FROM products product", AdminCatalogImageSql.LockProductForImageUpdate);
+        Assert.Contains("WHERE product.id = @ProductId", AdminCatalogImageSql.LockProductForImageUpdate);
+        Assert.Contains("FOR UPDATE", AdminCatalogImageSql.LockProductForImageUpdate);
+    }
+
+    [Fact]
+    public void AddProductImagesRepository_LocksProductBeforeInsertingImages()
+    {
+        var repositorySource = File.ReadAllText(
+            Path.Combine(
+                AppContext.BaseDirectory,
+                "..",
+                "..",
+                "..",
+                "..",
+                "..",
+                "apps",
+                "api",
+                "Modules",
+                "Catalog",
+                "Repositories",
+                "DapperAdminCatalogImageRepository.cs"));
+
+        Assert.True(
+            repositorySource.IndexOf("AdminCatalogImageSql.LockProductForImageUpdate", StringComparison.Ordinal)
+                < repositorySource.IndexOf("AdminCatalogImageSql.InsertStoredFile", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void InsertProductImage_DefaultMainCheckRequiresActiveProductImagePurpose()
+    {
+        Assert.Contains("existing_file.status = 'active'", AdminCatalogImageSql.InsertProductImage);
+        Assert.Contains("existing_file.purpose = 'product_image'", AdminCatalogImageSql.InsertProductImage);
+    }
+
+    [Fact]
+    public void UpdateProductImage_UpdatesOnlyActiveProductImages()
+    {
+        Assert.Contains("FROM stored_files stored_file", AdminCatalogImageSql.UpdateProductImage);
+        Assert.Contains("stored_file.status = 'active'", AdminCatalogImageSql.UpdateProductImage);
+        Assert.Contains("stored_file.purpose = 'product_image'", AdminCatalogImageSql.UpdateProductImage);
+    }
+
+    [Fact]
     public void DeleteProductImage_MarksFileDeletedOnlyWhenUnreferenced()
     {
         Assert.Contains("DELETE FROM product_images", AdminCatalogImageSql.DeleteProductImage);

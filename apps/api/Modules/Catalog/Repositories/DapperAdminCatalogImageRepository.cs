@@ -60,6 +60,18 @@ public sealed class DapperAdminCatalogImageRepository : IAdminCatalogImageReposi
 
         try
         {
+            var lockedProductId = await connection.QuerySingleOrDefaultAsync<Guid?>(
+                new CommandDefinition(
+                    AdminCatalogImageSql.LockProductForImageUpdate,
+                    new { ProductId = productId },
+                    transaction,
+                    cancellationToken: cancellationToken));
+            if (lockedProductId is null)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return Array.Empty<AdminProductImageRecord>();
+            }
+
             foreach (var file in files)
             {
                 await connection.ExecuteAsync(new CommandDefinition(

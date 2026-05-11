@@ -16,6 +16,13 @@ internal static class AdminCatalogImageSql
         WHERE product.id = @ProductId;
         """;
 
+    public const string LockProductForImageUpdate = """
+        SELECT product.id
+        FROM products product
+        WHERE product.id = @ProductId
+        FOR UPDATE;
+        """;
+
     public const string ListProductImages = """
         SELECT
             image.id AS "Id",
@@ -83,6 +90,7 @@ internal static class AdminCatalogImageSql
                 FROM product_images existing
                 INNER JOIN stored_files existing_file ON existing_file.id = existing.stored_file_id
                     AND existing_file.status = 'active'
+                    AND existing_file.purpose = 'product_image'
                 WHERE existing.product_id = @ProductId
             )
         FROM product_images
@@ -95,8 +103,12 @@ internal static class AdminCatalogImageSql
         SET
             alt = @Alt,
             title = @Title
+        FROM stored_files stored_file
         WHERE image.id = @ImageId
             AND image.product_id = @ProductId
+            AND image.stored_file_id = stored_file.id
+            AND stored_file.status = 'active'
+            AND stored_file.purpose = 'product_image'
         RETURNING image.id;
         """;
 
