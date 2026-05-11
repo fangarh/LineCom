@@ -28,6 +28,38 @@ internal static class AdminCatalogErrors
         return new ApiException("admin_catalog.product_not_found", "Товар не найден.", StatusCodes.Status404NotFound);
     }
 
+    public static ApiException ImageNotFound()
+    {
+        return new ApiException(
+            "admin_catalog.image_not_found",
+            "Изображение не найдено.",
+            StatusCodes.Status404NotFound);
+    }
+
+    public static ApiException InvalidImageType()
+    {
+        return new ApiException(
+            "admin_catalog.invalid_image_type",
+            "Изображение имеет недопустимый тип.",
+            StatusCodes.Status400BadRequest);
+    }
+
+    public static ApiException ImageTooLarge()
+    {
+        return new ApiException(
+            "admin_catalog.image_too_large",
+            "Изображение превышает допустимый размер.",
+            StatusCodes.Status400BadRequest);
+    }
+
+    public static ApiException ImageOrderMismatch()
+    {
+        return new ApiException(
+            "admin_catalog.image_order_mismatch",
+            "Порядок изображений не соответствует изображениям товара.",
+            StatusCodes.Status400BadRequest);
+    }
+
     public static ApiException SlugAlreadyExists()
     {
         return new ApiException("admin_catalog.slug_already_exists", "Slug уже используется.", StatusCodes.Status409Conflict);
