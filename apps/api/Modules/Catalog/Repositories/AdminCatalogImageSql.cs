@@ -179,6 +179,9 @@ internal static class AdminCatalogImageSql
             AND NOT EXISTS (
                 SELECT 1
                 FROM product_images main_image
+                INNER JOIN stored_files main_file ON main_file.id = main_image.stored_file_id
+                    AND main_file.status = 'active'
+                    AND main_file.purpose = 'product_image'
                 WHERE main_image.product_id = @ProductId
                     AND main_image.is_main = TRUE
             );

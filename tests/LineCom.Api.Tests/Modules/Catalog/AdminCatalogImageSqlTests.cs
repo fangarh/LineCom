@@ -31,4 +31,14 @@ public sealed class AdminCatalogImageSqlTests
         Assert.Contains("NOT EXISTS", AdminCatalogImageSql.MarkStoredFileDeletedIfUnreferenced);
         Assert.Contains("UPDATE product_images", AdminCatalogImageSql.PromoteFirstRemainingProductImage);
     }
+
+    [Fact]
+    public void PromoteFirstRemainingProductImage_IgnoresInactiveMainImagesWhenCheckingMainExists()
+    {
+        Assert.Contains(
+            "INNER JOIN stored_files main_file ON main_file.id = main_image.stored_file_id",
+            AdminCatalogImageSql.PromoteFirstRemainingProductImage);
+        Assert.Contains("main_file.status = 'active'", AdminCatalogImageSql.PromoteFirstRemainingProductImage);
+        Assert.Contains("main_file.purpose = 'product_image'", AdminCatalogImageSql.PromoteFirstRemainingProductImage);
+    }
 }
