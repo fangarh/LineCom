@@ -47,4 +47,12 @@ internal static class AdminCatalogErrors
     {
         return new ApiException("admin_catalog.entity_in_use", message, StatusCodes.Status409Conflict);
     }
+
+    public static ApiException ProductNotReady()
+    {
+        return new ApiException(
+            "admin_catalog.product_not_ready",
+            "\u0422\u043e\u0432\u0430\u0440 \u043d\u0435 \u0433\u043e\u0442\u043e\u0432 \u043a \u043f\u0443\u0431\u043b\u0438\u043a\u0430\u0446\u0438\u0438.",
+            StatusCodes.Status409Conflict);
+    }
 }

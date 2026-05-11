@@ -1,0 +1,311 @@
+using Dapper;
+using LineCom.Api.Infrastructure.Database;
+using Npgsql;
+
+namespace LineCom.Api.Modules.Catalog.Repositories;
+
+public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRepository
+{
+    private readonly IDbConnectionFactory _connectionFactory;
+
+    public DapperAdminCatalogProductRepository(IDbConnectionFactory connectionFactory)
+    {
+        _connectionFactory = connectionFactory;
+    }
+
+    public async Task<AdminProductListRecordResponse> GetProductsAsync(
+        AdminProductReadListQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+        var parameters = new
+        {
+            query.CategoryId,
+            query.BrandId,
+            query.IsActive,
+            query.PublishStatus,
+            query.Search,
+            query.PageSize,
+            Offset = (query.Page - 1) * query.PageSize
+        };
+
+        var totalItems = await connection.QuerySingleAsync<int>(
+            new CommandDefinition(
+                AdminCatalogProductSql.CountProducts,
+                parameters,
+                cancellationToken: cancellationToken));
+        var items = (await connection.QueryAsync<AdminProductListRecord>(
+            new CommandDefinition(
+                AdminCatalogProductSql.ListProducts,
+                parameters,
+                cancellationToken: cancellationToken))).ToArray();
+
+        return new AdminProductListRecordResponse(items, totalItems);
+    }
+
+    public async Task<AdminProductDetailRecord?> GetProductAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+
+        return await QueryProductAsync(connection, id, cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<AdminProductAttributeValueRecord>> GetProductAttributesAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+        var rows = await connection.QueryAsync<AdminProductAttributeValueRecord>(
+            new CommandDefinition(
+                AdminCatalogProductSql.GetProductAttributes,
+                new { Id = id },
+                cancellationToken: cancellationToken));
+
+        return rows.ToArray();
+    }
+
+    public async Task<AdminProductDuplicateIdentity?> FindDuplicateHardIdentityAsync(
+        Guid? excludeProductId,
+        string slug,
+        string? sku,
+        string? externalId,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+
+        return await connection.QuerySingleOrDefaultAsync<AdminProductDuplicateIdentity>(
+            new CommandDefinition(
+                AdminCatalogProductSql.FindDuplicateHardIdentity,
+                new { ExcludeProductId = excludeProductId, Slug = slug, Sku = sku, ExternalId = externalId },
+                cancellationToken: cancellationToken));
+    }
+
+    public async Task<AdminProductReadinessMetadata> GetReadinessMetadataAsync(
+        Guid? productId,
+        Guid categoryId,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+        var category = await connection.QuerySingleOrDefaultAsync<CategoryReadinessRow>(
+            new CommandDefinition(
+                AdminCatalogProductSql.GetReadinessCategory,
+                new { CategoryId = categoryId },
+                cancellationToken: cancellationToken));
+        if (category is null)
+        {
+            return new AdminProductReadinessMetadata(
+                CategoryExists: false,
+                CategoryIsActive: false,
+                RequiredAttributes: [],
+                InvalidAttributeValueCount: 0);
+        }
+
+        var requiredAttributes = (await connection.QueryAsync<AdminProductRequiredAttributeRecord>(
+            new CommandDefinition(
+                AdminCatalogProductSql.GetReadinessRequiredAttributes,
+                new { ProductId = productId, CategoryId = categoryId },
+                cancellationToken: cancellationToken))).ToArray();
+        var invalidAttributeValueCount = productId is null
+            ? 0
+            : await connection.QuerySingleAsync<int>(
+                new CommandDefinition(
+                    AdminCatalogProductSql.CountInvalidAttributeValues,
+                    new { ProductId = productId, CategoryId = categoryId },
+                    cancellationToken: cancellationToken));
+
+        return new AdminProductReadinessMetadata(
+            CategoryExists: true,
+            category.CategoryIsActive,
+            requiredAttributes,
+            invalidAttributeValueCount);
+    }
+
+    public async Task<AdminProductDetailRecord> CreateProductAsync(
+        AdminProductUpsert command,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+            var id = await connection.QuerySingleAsync<Guid>(
+                new CommandDefinition(
+                    AdminCatalogProductSql.InsertProduct,
+                    ToParameters(command),
+                    cancellationToken: cancellationToken));
+
+            return await QueryRequiredProductAsync(connection, id, cancellationToken);
+        }
+        catch (PostgresException exception) when (TryGetDuplicateField(exception, out var field))
+        {
+            throw new AdminProductDuplicateIdentityException(field, exception);
+        }
+        catch (PostgresException exception) when (IsInvalidRequest(exception))
+        {
+            throw new InvalidAdminProductException(exception);
+        }
+    }
+
+    public async Task<AdminProductDetailRecord?> UpdateProductAsync(
+        Guid id,
+        AdminProductUpsert command,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+
+        try
+        {
+            var updatedId = await connection.QuerySingleOrDefaultAsync<Guid?>(
+                new CommandDefinition(
+                    AdminCatalogProductSql.UpdateProduct,
+                    ToParameters(command, id),
+                    transaction,
+                    cancellationToken: cancellationToken));
+            if (updatedId is null)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return null;
+            }
+
+            await transaction.CommitAsync(cancellationToken);
+        }
+        catch (PostgresException exception) when (TryGetDuplicateField(exception, out var field))
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            throw new AdminProductDuplicateIdentityException(field, exception);
+        }
+        catch (PostgresException exception) when (IsInvalidRequest(exception))
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            throw new InvalidAdminProductException(exception);
+        }
+        catch
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            throw;
+        }
+
+        return await GetProductAsync(id, cancellationToken);
+    }
+
+    public async Task<int> CountProductUsageAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+
+        return await connection.QuerySingleAsync<int>(
+            new CommandDefinition(
+                AdminCatalogProductSql.CountProductUsage,
+                new { Id = id },
+                cancellationToken: cancellationToken));
+    }
+
+    public async Task<bool> DeleteProductAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+
+        try
+        {
+            var deleted = await connection.ExecuteAsync(
+                new CommandDefinition(
+                    AdminCatalogProductSql.DeleteProduct,
+                    new { Id = id },
+                    transaction,
+                    cancellationToken: cancellationToken));
+            await transaction.CommitAsync(cancellationToken);
+
+            return deleted > 0;
+        }
+        catch (PostgresException exception) when (exception.SqlState == PostgresErrorCodes.ForeignKeyViolation)
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            throw new AdminProductInUseException(exception);
+        }
+        catch
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            throw;
+        }
+    }
+
+    private static async Task<AdminProductDetailRecord?> QueryProductAsync(
+        NpgsqlConnection connection,
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        return await connection.QuerySingleOrDefaultAsync<AdminProductDetailRecord>(
+            new CommandDefinition(
+                AdminCatalogProductSql.GetProduct,
+                new { Id = id },
+                cancellationToken: cancellationToken));
+    }
+
+    private static async Task<AdminProductDetailRecord> QueryRequiredProductAsync(
+        NpgsqlConnection connection,
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        return await connection.QuerySingleAsync<AdminProductDetailRecord>(
+            new CommandDefinition(
+                AdminCatalogProductSql.GetProduct,
+                new { Id = id },
+                cancellationToken: cancellationToken));
+    }
+
+    private static object ToParameters(AdminProductUpsert command, Guid? id = null)
+    {
+        return new
+        {
+            Id = id,
+            command.CategoryId,
+            command.BrandId,
+            command.Name,
+            command.Slug,
+            command.Sku,
+            command.ExternalId,
+            command.Description,
+            command.ShortDescription,
+            command.AvailabilityStatus,
+            command.SaleUnit,
+            command.UnitQuantity,
+            command.PublishStatus,
+            command.IsActive,
+            command.SeoTitle,
+            command.SeoDescription,
+            command.H1,
+            command.SortOrder
+        };
+    }
+
+    private static bool TryGetDuplicateField(PostgresException exception, out string field)
+    {
+        if (exception.SqlState != PostgresErrorCodes.UniqueViolation)
+        {
+            field = string.Empty;
+            return false;
+        }
+
+        field = exception.ConstraintName switch
+        {
+            "ux_products_sku" => "sku",
+            "ux_products_external_id" => "external_id",
+            _ => "slug"
+        };
+        return true;
+    }
+
+    private static bool IsInvalidRequest(PostgresException exception)
+    {
+        return exception.SqlState is PostgresErrorCodes.ForeignKeyViolation
+            or PostgresErrorCodes.CheckViolation
+            or PostgresErrorCodes.RaiseException;
+    }
+
+    private sealed record CategoryReadinessRow(bool CategoryExists, bool CategoryIsActive);
+}

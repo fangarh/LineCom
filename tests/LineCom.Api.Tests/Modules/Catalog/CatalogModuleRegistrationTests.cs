@@ -170,6 +170,30 @@ public sealed class CatalogModuleRegistrationTests
         Assert.Equal(typeof(AdminCatalogAttributeService), descriptor.ImplementationType);
     }
 
+    [Fact]
+    public void AddCatalogModule_RegistersAdminCatalogProductRepositoryAsScoped()
+    {
+        var services = new ServiceCollection();
+        services.AddCatalogModule();
+
+        var descriptor = Assert.Single(services, service => service.ServiceType == typeof(IAdminCatalogProductRepository));
+
+        Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
+        Assert.Equal(typeof(DapperAdminCatalogProductRepository), descriptor.ImplementationType);
+    }
+
+    [Fact]
+    public void AddCatalogModule_RegistersAdminCatalogProductServiceAsScoped()
+    {
+        var services = new ServiceCollection();
+        services.AddCatalogModule();
+
+        var descriptor = Assert.Single(services, service => service.ServiceType == typeof(IAdminCatalogProductService));
+
+        Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
+        Assert.Equal(typeof(AdminCatalogProductService), descriptor.ImplementationType);
+    }
+
     [Theory]
     [InlineData("in_stock", "В наличии")]
     [InlineData("on_order", "Под заказ")]
