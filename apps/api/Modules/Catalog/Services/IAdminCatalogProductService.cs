@@ -10,6 +10,11 @@ public interface IAdminCatalogProductService
         AdminProductListQuery query,
         CancellationToken cancellationToken = default);
 
+    Task<AdminProductDuplicateCandidatesResponse> FindDuplicateCandidatesAsync(
+        HttpContext httpContext,
+        AdminProductDuplicateCandidatesQueryDto query,
+        CancellationToken cancellationToken = default);
+
     Task<AdminProductDetailDto> GetProductAsync(
         HttpContext httpContext,
         Guid id,

@@ -1,4 +1,5 @@
 using LineCom.Api.Modules.Catalog.DTOs;
+using LineCom.Api.Modules.Catalog.Queries;
 using LineCom.Api.Modules.Catalog.Repositories;
 using Microsoft.AspNetCore.Http;
 
@@ -10,13 +11,16 @@ public sealed class AdminCatalogProductService : IAdminCatalogProductService
 
     private readonly IAdminCatalogStaffGuard _staffGuard;
     private readonly IAdminCatalogProductRepository _repository;
+    private readonly IAdminProductDuplicateQuery _duplicateQuery;
 
     public AdminCatalogProductService(
         IAdminCatalogStaffGuard staffGuard,
-        IAdminCatalogProductRepository repository)
+        IAdminCatalogProductRepository repository,
+        IAdminProductDuplicateQuery duplicateQuery)
     {
         _staffGuard = staffGuard;
         _repository = repository;
+        _duplicateQuery = duplicateQuery;
     }
 
     public async Task<AdminProductListResponse> GetProductsAsync(
@@ -48,6 +52,37 @@ public sealed class AdminCatalogProductService : IAdminCatalogProductService
             pageSize,
             result.TotalItems,
             totalPages);
+    }
+
+    public async Task<AdminProductDuplicateCandidatesResponse> FindDuplicateCandidatesAsync(
+        HttpContext httpContext,
+        AdminProductDuplicateCandidatesQueryDto query,
+        CancellationToken cancellationToken = default)
+    {
+        await _staffGuard.RequireStaffAsync(httpContext, cancellationToken);
+
+        var name = AdminCatalogInput.NormalizeText(query.Name);
+        var sku = AdminCatalogInput.NormalizeText(query.Sku);
+        var externalId = AdminCatalogInput.NormalizeText(query.ExternalId);
+        var slug = AdminCatalogInput.NormalizeText(query.Slug);
+
+        if (name is null && sku is null && externalId is null && slug is null)
+        {
+            throw AdminCatalogErrors.InvalidRequest();
+        }
+
+        return await _duplicateQuery.FindCandidatesAsync(
+            new AdminProductDuplicateCandidateQuery(
+                name,
+                query.CategoryId,
+                query.BrandId,
+                sku,
+                externalId,
+                slug,
+                query.ExcludeProductId,
+                Math.Clamp(query.Limit ?? 10, 1, 25),
+                Math.Clamp(query.SimilarityThreshold ?? 0.35m, 0m, 1m)),
+            cancellationToken);
     }
 
     public async Task<AdminProductDetailDto> GetProductAsync(

@@ -9,6 +9,17 @@ public sealed record AdminProductListQuery(
     string? PublishStatus,
     string? Search);
 
+public sealed record AdminProductDuplicateCandidatesQueryDto(
+    string? Name,
+    Guid? CategoryId,
+    Guid? BrandId,
+    string? Sku,
+    string? ExternalId,
+    string? Slug,
+    Guid? ExcludeProductId,
+    int? Limit,
+    decimal? SimilarityThreshold);
+
 public sealed record AdminProductListResponse(
     IReadOnlyList<AdminProductListItemDto> Items,
     int Page,

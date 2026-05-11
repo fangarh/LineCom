@@ -167,15 +167,42 @@ public sealed class AdminCatalogProductsEndpointTests
     }
 
     [Fact]
-    public async Task DuplicateCandidatesRoute_IsNotImplementedInProductCrudTask()
+    public async Task GetDuplicateCandidates_AsSeller_ReturnsCandidates()
     {
-        await using var factory = CreateFactory(new ReturningAdminCatalogProductService(), "seller");
+        var productService = new ReturningAdminCatalogProductService();
+        await using var factory = CreateFactory(productService, "seller");
         using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
         await LoginAsync(client);
 
-        using var response = await client.GetAsync("/api/admin/catalog/products/duplicate-candidates");
+        using var response = await client.GetAsync(
+            $"/api/admin/catalog/products/duplicate-candidates?name=Cable&categoryId={CategoryId}&slug=cable");
 
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var body = await ReadJsonAsync<AdminProductDuplicateCandidatesResponse>(response);
+        var candidate = Assert.Single(body.Items);
+        Assert.Equal(ProductId, candidate.Id);
+        Assert.Equal(1m, candidate.Similarity);
+        Assert.NotNull(productService.LastDuplicateCandidatesQuery);
+        Assert.Equal("Cable", productService.LastDuplicateCandidatesQuery.Name);
+        Assert.Equal(CategoryId, productService.LastDuplicateCandidatesQuery.CategoryId);
+        Assert.Equal("cable", productService.LastDuplicateCandidatesQuery.Slug);
+    }
+
+    [Fact]
+    public async Task GetDuplicateCandidates_AsCustomer_ReturnsForbiddenError()
+    {
+        await using var factory = CreateFactory(new ReturningAdminCatalogProductService(), "customer");
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        await LoginAsync(client);
+
+        using var response = await client.GetAsync(
+            $"/api/admin/catalog/products/duplicate-candidates?name=Cable&categoryId={CategoryId}&slug=cable");
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+
+        var body = await ReadJsonAsync<ApiErrorResponse>(response);
+        Assert.Equal("auth.forbidden", body.Code);
     }
 
     private static WebApplicationFactory<Program> CreateFactory(
@@ -265,6 +292,7 @@ public sealed class AdminCatalogProductsEndpointTests
     private sealed class ReturningAdminCatalogProductService : IAdminCatalogProductService
     {
         public AdminProductListQuery? LastListQuery { get; private set; }
+        public AdminProductDuplicateCandidatesQueryDto? LastDuplicateCandidatesQuery { get; private set; }
         public UpsertAdminProductCommand? LastUpsertCommand { get; private set; }
         public UpdateAdminProductAttributesCommand? LastAttributesCommand { get; private set; }
 
@@ -297,6 +325,31 @@ public sealed class AdminCatalogProductsEndpointTests
                 PageSize: query.PageSize ?? 20,
                 TotalItems: 1,
                 TotalPages: 1));
+        }
+
+        public Task<AdminProductDuplicateCandidatesResponse> FindDuplicateCandidatesAsync(
+            HttpContext httpContext,
+            AdminProductDuplicateCandidatesQueryDto query,
+            CancellationToken cancellationToken = default)
+        {
+            RequireStaff(httpContext);
+            LastDuplicateCandidatesQuery = query;
+
+            return Task.FromResult(new AdminProductDuplicateCandidatesResponse(
+            [
+                new AdminProductDuplicateCandidateDto(
+                    ProductId,
+                    "Cable",
+                    "cable",
+                    "LC-1",
+                    null,
+                    "Category",
+                    "category",
+                    "Brand",
+                    "draft",
+                    IsActive: true,
+                    1m)
+            ]));
         }
 
         public Task<AdminProductDetailDto> GetProductAsync(

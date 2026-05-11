@@ -1,6 +1,7 @@
 using LineCom.Api.Modules.Auth.DTOs;
 using LineCom.Api.Modules.Auth.Services;
 using LineCom.Api.Modules.Catalog.DTOs;
+using LineCom.Api.Modules.Catalog.Queries;
 using LineCom.Api.Modules.Catalog.Repositories;
 using LineCom.Api.Modules.Catalog.Services;
 using LineCom.Api.Shared.Errors;
@@ -377,13 +378,81 @@ public sealed class AdminCatalogProductServiceTests
         Assert.Equal(StatusCodes.Status409Conflict, exception.StatusCode);
     }
 
+    [Fact]
+    public async Task FindDuplicateCandidatesAsync_NormalizesAndClampsQueryBeforeDuplicateLookup()
+    {
+        var duplicateQuery = new CapturingAdminProductDuplicateQuery
+        {
+            Response = new AdminProductDuplicateCandidatesResponse(
+            [
+                DuplicateCandidate()
+            ])
+        };
+        var service = CreateService("seller", new CapturingAdminCatalogProductRepository(), duplicateQuery);
+        var excludeProductId = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee");
+
+        var response = await service.FindDuplicateCandidatesAsync(
+            new DefaultHttpContext(),
+            new AdminProductDuplicateCandidatesQueryDto(
+                " Cable ",
+                CategoryId,
+                BrandId,
+                " LC-1 ",
+                " EXT-1 ",
+                " cable ",
+                excludeProductId,
+                100,
+                2m),
+            CancellationToken.None);
+
+        var candidate = Assert.Single(response.Items);
+        Assert.Equal(ProductId, candidate.Id);
+        Assert.NotNull(duplicateQuery.LastQuery);
+        Assert.Equal("Cable", duplicateQuery.LastQuery.Name);
+        Assert.Equal(CategoryId, duplicateQuery.LastQuery.CategoryId);
+        Assert.Equal(BrandId, duplicateQuery.LastQuery.BrandId);
+        Assert.Equal("LC-1", duplicateQuery.LastQuery.Sku);
+        Assert.Equal("EXT-1", duplicateQuery.LastQuery.ExternalId);
+        Assert.Equal("cable", duplicateQuery.LastQuery.Slug);
+        Assert.Equal(excludeProductId, duplicateQuery.LastQuery.ExcludeProductId);
+        Assert.Equal(25, duplicateQuery.LastQuery.Limit);
+        Assert.Equal(1m, duplicateQuery.LastQuery.SimilarityThreshold);
+    }
+
+    [Fact]
+    public async Task FindDuplicateCandidatesAsync_BlankIdentityQuery_ThrowsInvalidRequest()
+    {
+        var duplicateQuery = new CapturingAdminProductDuplicateQuery();
+        var service = CreateService("seller", new CapturingAdminCatalogProductRepository(), duplicateQuery);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.FindDuplicateCandidatesAsync(
+                new DefaultHttpContext(),
+                new AdminProductDuplicateCandidatesQueryDto(
+                    "   ",
+                    CategoryId,
+                    BrandId,
+                    "   ",
+                    null,
+                    "   ",
+                    null,
+                    null,
+                    null),
+                CancellationToken.None));
+
+        Assert.Equal("admin_catalog.invalid_request", exception.Code);
+        Assert.Null(duplicateQuery.LastQuery);
+    }
+
     private static AdminCatalogProductService CreateService(
         string role,
-        CapturingAdminCatalogProductRepository repository)
+        CapturingAdminCatalogProductRepository repository,
+        CapturingAdminProductDuplicateQuery? duplicateQuery = null)
     {
         return new AdminCatalogProductService(
             new RoleAdminCatalogStaffGuard(role),
-            repository);
+            repository,
+            duplicateQuery ?? new CapturingAdminProductDuplicateQuery());
     }
 
     private static UpsertAdminProductCommand ValidCommand(
@@ -484,6 +553,22 @@ public sealed class AdminCatalogProductServiceTests
             IsValidValue: valueText is not null);
     }
 
+    private static AdminProductDuplicateCandidateDto DuplicateCandidate()
+    {
+        return new AdminProductDuplicateCandidateDto(
+            ProductId,
+            "Cable",
+            "cable",
+            "LC-1",
+            null,
+            "Category",
+            "category",
+            "Brand",
+            "draft",
+            IsActive: true,
+            1m);
+    }
+
     private sealed class RoleAdminCatalogStaffGuard : IAdminCatalogStaffGuard
     {
         private readonly string _role;
@@ -508,6 +593,21 @@ public sealed class AdminCatalogProductServiceTests
                 "staff@example.com",
                 null,
                 _role));
+        }
+    }
+
+    private sealed class CapturingAdminProductDuplicateQuery : IAdminProductDuplicateQuery
+    {
+        public AdminProductDuplicateCandidateQuery? LastQuery { get; private set; }
+        public AdminProductDuplicateCandidatesResponse Response { get; init; } =
+            new([]);
+
+        public Task<AdminProductDuplicateCandidatesResponse> FindCandidatesAsync(
+            AdminProductDuplicateCandidateQuery query,
+            CancellationToken cancellationToken = default)
+        {
+            LastQuery = query;
+            return Task.FromResult(Response);
         }
     }
 

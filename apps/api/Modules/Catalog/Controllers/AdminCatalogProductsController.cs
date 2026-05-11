@@ -35,6 +35,18 @@ public sealed class AdminCatalogProductsController : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("duplicate-candidates")]
+    [ProducesResponseType(typeof(AdminProductDuplicateCandidatesResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<ActionResult<AdminProductDuplicateCandidatesResponse>> GetDuplicateCandidates(
+        [FromQuery] AdminProductDuplicateCandidatesQueryDto query,
+        CancellationToken cancellationToken)
+    {
+        return Ok(await _productService.FindDuplicateCandidatesAsync(HttpContext, query, cancellationToken));
+    }
+
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(AdminProductDetailDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
