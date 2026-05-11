@@ -87,7 +87,116 @@ public sealed class AdminCatalogImageServiceTests
                 [FormFile("cable.jpg", "image/jpeg")],
                 CancellationToken.None));
 
-        Assert.Equal("storage/products/admin/captured.jpg", Assert.Single(writer.DeletedStorageKeys));
+        Assert.Equal("storage/products/admin/captured-1.jpg", Assert.Single(writer.DeletedStorageKeys));
+    }
+
+    [Fact]
+    public async Task UploadProductImagesAsync_WriterFailureAfterDrafts_CleansWrittenDraftsAndMapsError()
+    {
+        var writer = new CapturingLocalStoredFileWriter
+        {
+            ThrowOnSaveCallNumber = 2,
+            SaveException = new InvalidLocalStoredFileException("Invalid image content type.")
+        };
+        var service = CreateService(new CapturingAdminCatalogImageRepository(), writer);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.UploadProductImagesAsync(
+                new DefaultHttpContext(),
+                ProductId,
+                [
+                    FormFile("first.jpg", "image/jpeg"),
+                    FormFile("second.txt", "text/plain")
+                ],
+                CancellationToken.None));
+
+        Assert.Equal("admin_catalog.invalid_image_type", exception.Code);
+        Assert.Equal("storage/products/admin/captured-1.jpg", Assert.Single(writer.DeletedStorageKeys));
+    }
+
+    [Fact]
+    public async Task UploadProductImagesAsync_ProductDisappearsDuringRepositoryAdd_CleansDraftsAndThrowsProductNotFound()
+    {
+        var repository = new CapturingAdminCatalogImageRepository
+        {
+            AddReturnsEmpty = true
+        };
+        var writer = new CapturingLocalStoredFileWriter();
+        var service = CreateService(repository, writer);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.UploadProductImagesAsync(
+                new DefaultHttpContext(),
+                ProductId,
+                [FormFile("cable.jpg", "image/jpeg")],
+                CancellationToken.None));
+
+        Assert.Equal("admin_catalog.product_not_found", exception.Code);
+        Assert.Equal("storage/products/admin/captured-1.jpg", Assert.Single(writer.DeletedStorageKeys));
+    }
+
+    [Fact]
+    public async Task UpdateProductImageAsync_NullCommand_ThrowsInvalidRequest()
+    {
+        var service = CreateService(new CapturingAdminCatalogImageRepository(), new CapturingLocalStoredFileWriter());
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.UpdateProductImageAsync(
+                new DefaultHttpContext(),
+                ProductId,
+                ImageId,
+                null!,
+                CancellationToken.None));
+
+        Assert.Equal("admin_catalog.invalid_request", exception.Code);
+    }
+
+    [Fact]
+    public async Task UpdateProductImageOrderAsync_NullCommand_ThrowsInvalidRequest()
+    {
+        var service = CreateService(new CapturingAdminCatalogImageRepository(), new CapturingLocalStoredFileWriter());
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.UpdateProductImageOrderAsync(
+                new DefaultHttpContext(),
+                ProductId,
+                null!,
+                CancellationToken.None));
+
+        Assert.Equal("admin_catalog.invalid_request", exception.Code);
+    }
+
+    [Fact]
+    public async Task UploadProductImagesAsync_CleanupFailure_DoesNotMaskRepositoryExceptionAndAttemptsRemainingDeletes()
+    {
+        var repositoryException = new InvalidOperationException("database failed");
+        var repository = new CapturingAdminCatalogImageRepository
+        {
+            AddException = repositoryException
+        };
+        var writer = new CapturingLocalStoredFileWriter
+        {
+            ThrowOnDeleteCallNumber = 1
+        };
+        var service = CreateService(repository, writer);
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.UploadProductImagesAsync(
+                new DefaultHttpContext(),
+                ProductId,
+                [
+                    FormFile("first.jpg", "image/jpeg"),
+                    FormFile("second.jpg", "image/jpeg")
+                ],
+                CancellationToken.None));
+
+        Assert.Same(repositoryException, exception);
+        Assert.Equal(
+            [
+                "storage/products/admin/captured-1.jpg",
+                "storage/products/admin/captured-2.jpg"
+            ],
+            writer.DeletedStorageKeys);
     }
 
     [Fact]
@@ -194,10 +303,15 @@ public sealed class AdminCatalogImageServiceTests
 
     private sealed class CapturingLocalStoredFileWriter : ILocalStoredFileWriter
     {
+        private int _deleteCallCount;
+        private int _saveCallCount;
+
         public string? LastStorageDirectory { get; private set; }
         public string? LastPurpose { get; private set; }
         public Guid? CreatedByUserId { get; private set; }
         public Exception? SaveException { get; init; }
+        public int? ThrowOnSaveCallNumber { get; init; }
+        public int? ThrowOnDeleteCallNumber { get; init; }
         public List<string> DeletedStorageKeys { get; } = [];
 
         public Task<LocalStoredFileDraft> SaveAsync(
@@ -211,15 +325,17 @@ public sealed class AdminCatalogImageServiceTests
             LastPurpose = purpose;
             LastStorageDirectory = storageDirectory;
             CreatedByUserId = createdByUserId;
+            _saveCallCount++;
 
-            if (SaveException is not null)
+            if (SaveException is not null
+                && (ThrowOnSaveCallNumber is null || ThrowOnSaveCallNumber == _saveCallCount))
             {
                 throw SaveException;
             }
 
             return Task.FromResult(new LocalStoredFileDraft(
                 fileId,
-                "storage/products/admin/captured.jpg",
+                $"storage/products/admin/captured-{_saveCallCount}.jpg",
                 file.FileName,
                 file.ContentType,
                 file.Length,
@@ -233,6 +349,12 @@ public sealed class AdminCatalogImageServiceTests
             CancellationToken cancellationToken = default)
         {
             DeletedStorageKeys.Add(storageKey);
+            _deleteCallCount++;
+            if (ThrowOnDeleteCallNumber == _deleteCallCount)
+            {
+                throw new IOException("cleanup failed");
+            }
+
             return Task.CompletedTask;
         }
     }
@@ -243,6 +365,7 @@ public sealed class AdminCatalogImageServiceTests
         public string? ProductName { get; init; } = "Cable";
         public Exception? AddException { get; init; }
         public Exception? OrderException { get; init; }
+        public bool AddReturnsEmpty { get; init; }
 
         public Task<bool> ProductExistsAsync(Guid productId, CancellationToken cancellationToken = default)
         {
@@ -271,6 +394,11 @@ public sealed class AdminCatalogImageServiceTests
             if (AddException is not null)
             {
                 throw AddException;
+            }
+
+            if (AddReturnsEmpty)
+            {
+                return Task.FromResult<IReadOnlyList<AdminProductImageRecord>>([]);
             }
 
             return Task.FromResult<IReadOnlyList<AdminProductImageRecord>>([ImageRecord()]);

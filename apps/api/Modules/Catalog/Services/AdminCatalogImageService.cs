@@ -77,21 +77,22 @@ public sealed class AdminCatalogImageService : IAdminCatalogImageService
         }
         catch (InvalidLocalStoredFileException exception)
         {
+            await DeleteDraftsBestEffortAsync(drafts);
             throw MapInvalidStoredFileException(exception);
         }
 
+        IReadOnlyList<AdminProductImageRecord> images;
         try
         {
-            var images = await _repository.AddProductImagesAsync(
+            images = await _repository.AddProductImagesAsync(
                 productId,
                 drafts,
                 productName,
                 cancellationToken);
-            return ToResponse(images);
         }
         catch (Exception exception)
         {
-            await DeleteDraftsAsync(drafts);
+            await DeleteDraftsBestEffortAsync(drafts);
 
             if (exception is ApiException)
             {
@@ -107,6 +108,14 @@ public sealed class AdminCatalogImageService : IAdminCatalogImageService
             ExceptionDispatchInfo.Capture(exception).Throw();
             throw;
         }
+
+        if (images.Count == 0 && drafts.Count > 0)
+        {
+            await DeleteDraftsBestEffortAsync(drafts);
+            throw AdminCatalogErrors.ProductNotFound();
+        }
+
+        return ToResponse(images);
     }
 
     public async Task<AdminProductImageDto> UpdateProductImageAsync(
@@ -117,6 +126,11 @@ public sealed class AdminCatalogImageService : IAdminCatalogImageService
         CancellationToken cancellationToken = default)
     {
         await _staffGuard.RequireStaffAsync(httpContext, cancellationToken);
+
+        if (command is null)
+        {
+            throw AdminCatalogErrors.InvalidRequest();
+        }
 
         var update = new AdminProductImageMetadataUpdate(
             AdminCatalogInput.RequireText(command.Alt),
@@ -138,7 +152,7 @@ public sealed class AdminCatalogImageService : IAdminCatalogImageService
     {
         await _staffGuard.RequireStaffAsync(httpContext, cancellationToken);
 
-        if (command.ImageIds is null || command.ImageIds.Count == 0)
+        if (command is null || command.ImageIds is null || command.ImageIds.Count == 0)
         {
             throw AdminCatalogErrors.InvalidRequest();
         }
@@ -188,13 +202,20 @@ public sealed class AdminCatalogImageService : IAdminCatalogImageService
         }
     }
 
-    private async Task DeleteDraftsAsync(IReadOnlyList<LocalStoredFileDraft> drafts)
+    private async Task DeleteDraftsBestEffortAsync(IReadOnlyList<LocalStoredFileDraft> drafts)
     {
         foreach (var draft in drafts)
         {
-            await _fileWriter.DeletePhysicalFileIfExistsAsync(
-                draft.StorageKey,
-                CancellationToken.None);
+            try
+            {
+                await _fileWriter.DeletePhysicalFileIfExistsAsync(
+                    draft.StorageKey,
+                    CancellationToken.None);
+            }
+            catch
+            {
+                // Best-effort cleanup must not mask the original upload error.
+            }
         }
     }
 
