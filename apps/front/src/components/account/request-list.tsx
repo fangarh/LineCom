@@ -16,7 +16,7 @@ const statusOptions = [
   { value: "new", label: "Новые" },
   { value: "in_progress", label: "В работе" },
   { value: "completed", label: "Завершенные" },
-  { value: "canceled", label: "Отмененные" },
+  { value: "cancelled", label: "Отмененные" },
 ];
 
 export function RequestList({ requests, status, onStatusChange }: RequestListProps) {

@@ -49,6 +49,17 @@ describe("RequestList", () => {
     expect(onStatusChange).toHaveBeenCalledWith("completed");
   });
 
+  it("uses the release cancellation status code", async () => {
+    const user = userEvent.setup();
+    const onStatusChange = vi.fn();
+
+    render(<RequestList requests={requests} status="all" onStatusChange={onStatusChange} />);
+
+    await user.selectOptions(screen.getByRole("combobox"), "cancelled");
+
+    expect(onStatusChange).toHaveBeenCalledWith("cancelled");
+  });
+
   it("shows an empty state without order wording", () => {
     const forbiddenOrderText = ["Оформить", "заказ"].join(" ");
 
