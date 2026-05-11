@@ -202,6 +202,7 @@ internal static class CustomerRequestSql
             history.created_at AS "CreatedAt"
         FROM request_history history
         WHERE history.request_id = @RequestId
+            AND history.event_type IN ('created', 'status_changed')
         ORDER BY history.created_at, history.id;
         """;
 }
