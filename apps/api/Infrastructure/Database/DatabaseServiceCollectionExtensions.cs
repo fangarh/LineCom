@@ -1,3 +1,4 @@
+using LineCom.Api.Infrastructure.Storage;
 using Npgsql;
 
 namespace LineCom.Api.Infrastructure.Database;
@@ -17,6 +18,8 @@ public static class DatabaseServiceCollectionExtensions
 
         services.AddSingleton(dataSource);
         services.AddScoped<IDbConnectionFactory, NpgsqlConnectionFactory>();
+        services.Configure<LocalStoredFileOptions>(configuration.GetSection("Storage"));
+        services.AddScoped<ILocalStoredFileWriter, LocalStoredFileWriter>();
 
         return services;
     }

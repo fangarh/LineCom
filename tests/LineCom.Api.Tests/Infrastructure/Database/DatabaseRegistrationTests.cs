@@ -1,6 +1,8 @@
 using LineCom.Api.Infrastructure.Database;
+using LineCom.Api.Infrastructure.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Npgsql;
 
 namespace LineCom.Api.Tests.Infrastructure.Database;
@@ -96,6 +98,29 @@ public sealed class DatabaseRegistrationTests
 
         Assert.Same(firstInScope, secondInScope);
         Assert.NotSame(firstInScope, otherScope);
+    }
+
+    [Fact]
+    public void AddDatabase_RegistersLocalStoredFileWriterAndOptions()
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:Default"] = "Host=localhost;Port=5432;Database=linecom;Username=linecom;Password=linecom",
+                ["Storage:RootPath"] = "D:\\linecom-storage"
+            })
+            .Build();
+        var services = new ServiceCollection();
+
+        services.AddDatabase(configuration);
+
+        using var provider = services.BuildServiceProvider();
+        using var scope = provider.CreateScope();
+        var writer = scope.ServiceProvider.GetRequiredService<ILocalStoredFileWriter>();
+        var options = provider.GetRequiredService<IOptions<LocalStoredFileOptions>>();
+
+        Assert.IsType<LocalStoredFileWriter>(writer);
+        Assert.Equal("D:\\linecom-storage", options.Value.RootPath);
     }
 
     [Fact]
