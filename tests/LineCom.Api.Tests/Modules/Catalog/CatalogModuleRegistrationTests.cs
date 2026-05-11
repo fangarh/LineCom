@@ -73,6 +73,18 @@ public sealed class CatalogModuleRegistrationTests
         Assert.Equal(typeof(DapperAdminHomepageQuery), descriptor.ImplementationType);
     }
 
+    [Fact]
+    public void AddCatalogModule_RegistersAdminProductDuplicateQueryAsScoped()
+    {
+        var services = new ServiceCollection();
+        services.AddCatalogModule();
+
+        var descriptor = Assert.Single(services, service => service.ServiceType == typeof(IAdminProductDuplicateQuery));
+
+        Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
+        Assert.Equal(typeof(DapperAdminProductDuplicateQuery), descriptor.ImplementationType);
+    }
+
     [Theory]
     [InlineData("in_stock", "В наличии")]
     [InlineData("on_order", "Под заказ")]
