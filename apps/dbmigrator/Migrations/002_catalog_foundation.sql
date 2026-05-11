@@ -219,6 +219,44 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION validate_category_parent_cycle()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF NEW.parent_id IS NULL THEN
+        RETURN NEW;
+    END IF;
+
+    IF EXISTS (
+        WITH RECURSIVE category_ancestors AS (
+            SELECT id, parent_id
+            FROM categories
+            WHERE id = NEW.parent_id
+
+            UNION ALL
+
+            SELECT parent.id, parent.parent_id
+            FROM categories parent
+            INNER JOIN category_ancestors child ON child.parent_id = parent.id
+        )
+        SELECT 1
+        FROM category_ancestors
+        WHERE id = NEW.id
+    ) THEN
+        RAISE EXCEPTION 'Category % cannot use its descendant % as parent.', NEW.id, NEW.parent_id
+            USING ERRCODE = 'check_violation';
+    END IF;
+
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_categories_validate_parent_cycle
+BEFORE INSERT OR UPDATE OF parent_id ON categories
+FOR EACH ROW
+EXECUTE FUNCTION validate_category_parent_cycle();
+
 CREATE TRIGGER trg_categories_set_updated_at
 BEFORE UPDATE ON categories
 FOR EACH ROW
@@ -233,6 +271,33 @@ CREATE TRIGGER trg_products_set_updated_at
 BEFORE UPDATE ON products
 FOR EACH ROW
 EXECUTE FUNCTION set_updated_at();
+
+CREATE OR REPLACE FUNCTION validate_product_primary_category_change()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF NEW.primary_category_id = OLD.primary_category_id THEN
+        RETURN NEW;
+    END IF;
+
+    IF EXISTS (
+        SELECT 1
+        FROM product_attribute_values
+        WHERE product_id = NEW.id
+    ) THEN
+        RAISE EXCEPTION 'Product % primary category cannot be changed while attribute values exist.', NEW.id
+            USING ERRCODE = 'check_violation';
+    END IF;
+
+    RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER trg_products_validate_primary_category_change
+BEFORE UPDATE OF primary_category_id ON products
+FOR EACH ROW
+EXECUTE FUNCTION validate_product_primary_category_change();
 
 CREATE OR REPLACE FUNCTION validate_brand_logo_file()
 RETURNS trigger

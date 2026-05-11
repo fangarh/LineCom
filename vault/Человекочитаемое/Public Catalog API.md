@@ -23,6 +23,7 @@ API предназначен для публичных страниц катег
 - `dotnet restore LineCom.sln`;
 - `dotnet build LineCom.sln --no-restore`;
 - `dotnet test LineCom.sln --no-build --no-restore`: 177 тестов, 0 ошибок.
+- opt-in PostgreSQL-интеграционные тесты Dapper-запросов публичного каталога запускаются при наличии `LINECOM_TEST_CONNECTION_STRING`.
 
 ## Общие правила
 

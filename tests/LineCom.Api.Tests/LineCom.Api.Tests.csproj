@@ -12,8 +12,11 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Dapper" Version="2.1.72" />
+    <PackageReference Include="dbup-postgresql" Version="7.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.26" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Npgsql" Version="10.0.2" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
   </ItemGroup>
@@ -25,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\apps\api\LineCom.Api.csproj" />
     <ProjectReference Include="..\..\apps\catalog-import.core\LineCom.CatalogImport.Core.csproj" />
+    <ProjectReference Include="..\..\apps\dbmigrator\LineCom.DbMigrator.csproj" />
     <ProjectReference Include="..\..\apps\dbmigrator.core\LineCom.DbMigrator.Core.csproj" />
   </ItemGroup>
 

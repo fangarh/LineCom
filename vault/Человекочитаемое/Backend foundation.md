@@ -74,30 +74,32 @@ $env:LINECOM_CONNECTION_STRING="Host=localhost;Port=5432;Database=linecom;Userna
 dotnet run --project apps/dbmigrator/LineCom.DbMigrator.csproj
 ```
 
-## Песочница разработки
+## Локальные строки подключения
 
-Для разработки используется PostgreSQL-песочница:
+Реальная строка подключения к песочной или локальной PostgreSQL БД не хранится в git.
 
-```text
-Host=ghostring.ru
-Port=5432
-Database=linecom
-Username=sa
-```
-
-Пароль не хранится в файлах проекта. Для запуска API передайте полный connection string через стандартную переменную конфигурации ASP.NET Core:
+Для запуска API используется стандартная переменная конфигурации ASP.NET Core:
 
 ```powershell
-$env:ConnectionStrings__Default="Host=ghostring.ru;Port=5432;Database=linecom;Username=sa;Password=<password>"
+$env:ConnectionStrings__Default="<connection string>"
 dotnet run --project apps/api/LineCom.Api.csproj
 ```
 
-Для запуска миграций:
+Для запуска мигратора используется:
 
 ```powershell
-$env:LINECOM_CONNECTION_STRING="Host=ghostring.ru;Port=5432;Database=linecom;Username=sa;Password=<password>"
+$env:LINECOM_CONNECTION_STRING="<connection string>"
 dotnet run --project apps/dbmigrator/LineCom.DbMigrator.csproj
 ```
+
+Для PostgreSQL-интеграционных тестов миграций и Dapper-запросов используется:
+
+```powershell
+$env:LINECOM_TEST_CONNECTION_STRING="<disposable test database connection string>"
+dotnet test tests/LineCom.Api.Tests/LineCom.Api.Tests.csproj
+```
+
+Тестовая БД считается одноразовой: интеграционные тесты могут удалять и пересоздавать схему `public`.
 
 ## Правила качества
 

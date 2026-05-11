@@ -57,15 +57,39 @@ public sealed class CatalogFoundationMigrationTests
     [Theory]
     [InlineData("CREATE OR REPLACE FUNCTION validate_brand_logo_file()")]
     [InlineData("CREATE OR REPLACE FUNCTION validate_product_image_file()")]
+    [InlineData("CREATE OR REPLACE FUNCTION validate_category_parent_cycle()")]
+    [InlineData("CREATE OR REPLACE FUNCTION validate_product_primary_category_change()")]
     [InlineData("CREATE OR REPLACE FUNCTION validate_attribute_option_attribute()")]
     [InlineData("CREATE OR REPLACE FUNCTION validate_product_attribute_value()")]
     [InlineData("CREATE TRIGGER trg_brands_validate_logo_file")]
     [InlineData("CREATE TRIGGER trg_product_images_validate_file")]
+    [InlineData("CREATE TRIGGER trg_categories_validate_parent_cycle")]
+    [InlineData("CREATE TRIGGER trg_products_validate_primary_category_change")]
     [InlineData("CREATE TRIGGER trg_attribute_value_aliases_validate_option")]
     [InlineData("CREATE TRIGGER trg_product_attribute_values_validate")]
     public void CatalogFoundation_DefinesCrossTableValidationTriggers(string expectedSql)
     {
         Assert.Contains(expectedSql, CatalogFoundationSql);
+    }
+
+    [Fact]
+    public void CatalogFoundation_CategoryCycleValidationChecksAncestorPath()
+    {
+        Assert.Contains("IF EXISTS (", CatalogFoundationSql);
+        Assert.Contains("WITH RECURSIVE category_ancestors AS", CatalogFoundationSql);
+        Assert.Contains("WHERE id = NEW.parent_id", CatalogFoundationSql);
+        Assert.Contains("FROM category_ancestors", CatalogFoundationSql);
+        Assert.Contains("WHERE id = NEW.id", CatalogFoundationSql);
+        Assert.Contains("Category % cannot use its descendant % as parent.", CatalogFoundationSql);
+    }
+
+    [Fact]
+    public void CatalogFoundation_ProductPrimaryCategoryCannotChangeWhenAttributeValuesExist()
+    {
+        Assert.Contains("IF NEW.primary_category_id = OLD.primary_category_id THEN", CatalogFoundationSql);
+        Assert.Contains("FROM product_attribute_values", CatalogFoundationSql);
+        Assert.Contains("WHERE product_id = NEW.id", CatalogFoundationSql);
+        Assert.Contains("Product % primary category cannot be changed while attribute values exist.", CatalogFoundationSql);
     }
 
     [Theory]
