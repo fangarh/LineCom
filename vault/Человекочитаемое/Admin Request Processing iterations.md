@@ -55,7 +55,7 @@ rg -n "canceled|cancelled" apps/front/src apps/api tests/LineCom.Api.Tests apps/
 - backend build: PASS, 0 warnings, 0 errors;
 - backend tests: PASS, 392/392;
 - frontend lint: PASS;
-- frontend tests: PASS, 78/78; Vitest печатает jsdom-сообщение `Not implemented: navigation to another Document`, процесс завершается с кодом 0;
+- frontend tests: PASS, 79/79; Vitest печатает jsdom-сообщение `Not implemented: navigation to another Document`, процесс завершается с кодом 0;
 - frontend production build: PASS, маршруты `/admin/requests` и `/admin/requests/[number]` собираются;
 - targeted account request list test: PASS, 4/4;
 - scope search: в реализации используется `cancelled`; `canceled` остался только в отрицательной frontend-проверке, что старый код статуса не показывается.
