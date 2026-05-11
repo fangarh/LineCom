@@ -221,6 +221,24 @@ describe("AdminRequestDetailPageClient", () => {
     expect(await screen.findByText("Статус сохранен.")).toBeInTheDocument();
   });
 
+  it("keeps detail mounted when status mutation fails", async () => {
+    const user = userEvent.setup();
+    adminRequestsApiMock.updateAdminRequestStatus.mockRejectedValue(
+      new ApiClientError(500, { code: "requests.status_failed", message: "status failed" }),
+    );
+
+    renderPage();
+
+    await screen.findByDisplayValue(request.internalComment);
+    await user.selectOptions(screen.getAllByRole("combobox")[0], "in_progress");
+    await user.click(screen.getAllByRole("button")[0]);
+
+    expect(await screen.findByText("status failed")).toBeInTheDocument();
+    expect(screen.getByDisplayValue(request.internalComment)).toBeInTheDocument();
+    expect(screen.getByText(request.customer.name)).toBeInTheDocument();
+    expect(screen.getAllByRole("button")[0]).not.toBeDisabled();
+  });
+
   it("does not call mutation APIs when csrf token is missing", async () => {
     authApiMock.getMe.mockResolvedValue({
       user: {

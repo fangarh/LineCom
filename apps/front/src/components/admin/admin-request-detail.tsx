@@ -17,6 +17,7 @@ type AdminRequestDetailProps = {
   isCommentSaving: boolean;
   canSave: boolean;
   actionMessage: string | null;
+  actionError: string | null;
 };
 
 const statusOptions: Array<{ value: AdminRequestStatusCode; label: string }> = [
@@ -34,6 +35,7 @@ export function AdminRequestDetail({
   isCommentSaving,
   canSave,
   actionMessage,
+  actionError,
 }: AdminRequestDetailProps) {
   const [selectedStatus, setSelectedStatus] = useState<AdminRequestStatusCode>(
     request.status.code as AdminRequestStatusCode,
@@ -140,6 +142,12 @@ export function AdminRequestDetail({
           {actionMessage ? (
             <p className="form-success" role="status">
               {actionMessage}
+            </p>
+          ) : null}
+
+          {actionError ? (
+            <p className="form-alert" role="alert">
+              {actionError}
             </p>
           ) : null}
 

@@ -59,6 +59,7 @@ describe("AdminRequestDetail", () => {
         isCommentSaving={false}
         canSave={true}
         actionMessage={null}
+        actionError={null}
       />,
     );
 
@@ -105,6 +106,7 @@ describe("AdminRequestDetail", () => {
         isCommentSaving={false}
         canSave={true}
         actionMessage={null}
+        actionError={null}
       />,
     );
 
@@ -132,6 +134,7 @@ describe("AdminRequestDetail", () => {
         isCommentSaving={false}
         canSave={false}
         actionMessage={null}
+        actionError={null}
       />,
     );
 

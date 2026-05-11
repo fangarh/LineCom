@@ -30,6 +30,7 @@ export function AdminRequestDetailPageClient({ number }: AdminRequestDetailPageC
   const [isStatusSaving, setIsStatusSaving] = useState(false);
   const [isCommentSaving, setIsCommentSaving] = useState(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
   const mountedRef = useRef(false);
   const currentNumberRef = useRef(number);
   const isStatusSavingRef = useRef(false);
@@ -66,6 +67,7 @@ export function AdminRequestDetailPageClient({ number }: AdminRequestDetailPageC
       setPageError(null);
       setIsForbidden(false);
       setActionMessage(null);
+      setActionError(null);
 
       try {
         const session = await getMe();
@@ -121,7 +123,7 @@ export function AdminRequestDetailPageClient({ number }: AdminRequestDetailPageC
       if (isStatusSavingRef.current) return;
 
       if (!csrfToken) {
-        setPageError("Сессия не подтверждена. Обновите страницу и войдите снова.");
+        setActionError("Сессия не подтверждена. Обновите страницу и войдите снова.");
         return;
       }
 
@@ -129,8 +131,8 @@ export function AdminRequestDetailPageClient({ number }: AdminRequestDetailPageC
       statusMutationSeqRef.current = mutationSeq;
       isStatusSavingRef.current = true;
       setIsStatusSaving(true);
-      setPageError(null);
       setActionMessage(null);
+      setActionError(null);
 
       try {
         const response = await updateAdminRequestStatus(number, status, csrfToken);
@@ -139,7 +141,7 @@ export function AdminRequestDetailPageClient({ number }: AdminRequestDetailPageC
         setActionMessage("Статус сохранен.");
       } catch (error) {
         if (!isCurrentMutation(mountedRef, currentNumberRef, number, statusMutationSeqRef, mutationSeq)) return;
-        setPageError(normalizeApiError(error).message);
+        setActionError(normalizeApiError(error).message);
       } finally {
         if (isCurrentMutation(mountedRef, currentNumberRef, number, statusMutationSeqRef, mutationSeq)) {
           setIsStatusSaving(false);
@@ -157,7 +159,7 @@ export function AdminRequestDetailPageClient({ number }: AdminRequestDetailPageC
       if (isCommentSavingRef.current) return;
 
       if (!csrfToken) {
-        setPageError("Сессия не подтверждена. Обновите страницу и войдите снова.");
+        setActionError("Сессия не подтверждена. Обновите страницу и войдите снова.");
         return;
       }
 
@@ -165,8 +167,8 @@ export function AdminRequestDetailPageClient({ number }: AdminRequestDetailPageC
       commentMutationSeqRef.current = mutationSeq;
       isCommentSavingRef.current = true;
       setIsCommentSaving(true);
-      setPageError(null);
       setActionMessage(null);
+      setActionError(null);
 
       try {
         const normalizedComment = comment.trim() ? comment : "";
@@ -176,7 +178,7 @@ export function AdminRequestDetailPageClient({ number }: AdminRequestDetailPageC
         setActionMessage("Комментарий сохранен.");
       } catch (error) {
         if (!isCurrentMutation(mountedRef, currentNumberRef, number, commentMutationSeqRef, mutationSeq)) return;
-        setPageError(normalizeApiError(error).message);
+        setActionError(normalizeApiError(error).message);
       } finally {
         if (isCurrentMutation(mountedRef, currentNumberRef, number, commentMutationSeqRef, mutationSeq)) {
           setIsCommentSaving(false);
@@ -223,6 +225,7 @@ export function AdminRequestDetailPageClient({ number }: AdminRequestDetailPageC
           isCommentSaving={isCommentSaving}
           canSave={Boolean(csrfToken)}
           actionMessage={actionMessage}
+          actionError={actionError}
         />
       ) : null}
     </div>
