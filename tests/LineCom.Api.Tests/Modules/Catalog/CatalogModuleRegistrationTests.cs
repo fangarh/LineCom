@@ -4,6 +4,7 @@ using System.Text.Json;
 using LineCom.Api.Modules.Catalog;
 using LineCom.Api.Modules.Catalog.DTOs;
 using LineCom.Api.Modules.Catalog.Queries;
+using LineCom.Api.Modules.Catalog.Repositories;
 using LineCom.Api.Modules.Catalog.Services;
 using LineCom.Api.Shared.Errors;
 using Microsoft.AspNetCore.Http;
@@ -95,6 +96,30 @@ public sealed class CatalogModuleRegistrationTests
 
         Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
         Assert.Equal(typeof(AdminCatalogStaffGuard), descriptor.ImplementationType);
+    }
+
+    [Fact]
+    public void AddCatalogModule_RegistersAdminCatalogCategoryRepositoryAsScoped()
+    {
+        var services = new ServiceCollection();
+        services.AddCatalogModule();
+
+        var descriptor = Assert.Single(services, service => service.ServiceType == typeof(IAdminCatalogCategoryRepository));
+
+        Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
+        Assert.Equal(typeof(DapperAdminCatalogCategoryRepository), descriptor.ImplementationType);
+    }
+
+    [Fact]
+    public void AddCatalogModule_RegistersAdminCatalogCategoryServiceAsScoped()
+    {
+        var services = new ServiceCollection();
+        services.AddCatalogModule();
+
+        var descriptor = Assert.Single(services, service => service.ServiceType == typeof(IAdminCatalogCategoryService));
+
+        Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
+        Assert.Equal(typeof(AdminCatalogCategoryService), descriptor.ImplementationType);
     }
 
     [Theory]
