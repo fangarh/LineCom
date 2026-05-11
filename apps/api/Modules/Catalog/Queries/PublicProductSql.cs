@@ -18,8 +18,9 @@ internal static class PublicProductSql
                 AND category.is_active = TRUE
             LEFT JOIN brands brand ON brand.id = product.brand_id
                 AND brand.is_active = TRUE
-            WHERE product.publish_status = 'published'
-            {{whereSql}};
+            WHERE product.is_active = TRUE
+                AND product.publish_status = 'published'
+                {{whereSql}};
 
             SELECT
                 product.id AS "Id",
@@ -54,8 +55,9 @@ internal static class PublicProductSql
                 ORDER BY image.is_main DESC, image.sort_order, image.id
                 LIMIT 1
             ) main_image ON TRUE
-            WHERE product.publish_status = 'published'
-            {{whereSql}}
+            WHERE product.is_active = TRUE
+                AND product.publish_status = 'published'
+                {{whereSql}}
             {{orderBySql}}
             OFFSET @Offset
             LIMIT @PageSize;
@@ -106,6 +108,7 @@ internal static class PublicProductSql
         LEFT JOIN brands brand ON brand.id = product.brand_id
             AND brand.is_active = TRUE
         WHERE product.slug = @Slug
+            AND product.is_active = TRUE
             AND product.publish_status = 'published';
 
         SELECT
@@ -120,6 +123,7 @@ internal static class PublicProductSql
         INNER JOIN categories category ON category.id = product.primary_category_id
             AND category.is_active = TRUE
         WHERE product.slug = @Slug
+            AND product.is_active = TRUE
             AND product.publish_status = 'published'
         ORDER BY image.is_main DESC, image.sort_order, image.id;
 
@@ -143,6 +147,7 @@ internal static class PublicProductSql
         LEFT JOIN attribute_options option ON option.id = value.attribute_option_id
             AND option.is_active = TRUE
         WHERE product.slug = @Slug
+            AND product.is_active = TRUE
             AND product.publish_status = 'published'
             AND (attribute.type <> 'select' OR option.id IS NOT NULL)
         ORDER BY attribute.sort_order, attribute.name, attribute.code;
@@ -159,6 +164,7 @@ internal static class PublicProductSql
             INNER JOIN categories category ON category.id = product.primary_category_id
                 AND category.is_active = TRUE
             WHERE product.slug = @Slug
+                AND product.is_active = TRUE
                 AND product.publish_status = 'published'
 
             UNION ALL

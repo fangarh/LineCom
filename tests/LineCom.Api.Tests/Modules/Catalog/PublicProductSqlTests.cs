@@ -12,10 +12,11 @@ public sealed class PublicProductSqlTests
     }
 
     [Fact]
-    public void BuildProductListSql_SelectsOnlyPublishedProductsAndActiveCategories()
+    public void BuildProductListSql_SelectsOnlyActivePublishedProductsAndActiveCategories()
     {
         var sql = PublicProductSql.BuildProductListSql(string.Empty, "ORDER BY product.sort_order, product.name, product.slug");
 
+        Assert.Contains("product.is_active = TRUE", sql);
         Assert.Contains("product.publish_status = 'published'", sql);
         Assert.Contains("category.is_active = TRUE", sql);
         Assert.Contains("brand.is_active = TRUE", sql);
@@ -67,9 +68,10 @@ public sealed class PublicProductSqlTests
     }
 
     [Fact]
-    public void GetProductDetail_SelectsOnlyPublishedProductFromActiveCategory()
+    public void GetProductDetail_SelectsOnlyActivePublishedProductFromActiveCategory()
     {
         Assert.Contains("product.slug = @Slug", PublicProductSql.GetProductDetail);
+        Assert.Contains("product.is_active = TRUE", PublicProductSql.GetProductDetail);
         Assert.Contains("product.publish_status = 'published'", PublicProductSql.GetProductDetail);
         Assert.Contains("category.is_active = TRUE", PublicProductSql.GetProductDetail);
     }

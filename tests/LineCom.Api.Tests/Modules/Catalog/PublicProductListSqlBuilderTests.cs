@@ -15,7 +15,8 @@ public sealed class PublicProductListSqlBuilderTests
 
         Assert.Empty(sql.WhereSql);
         Assert.Equal("ORDER BY product.sort_order, product.name, product.slug", sql.OrderBySql);
-        Assert.Contains("WHERE product.publish_status = 'published'", sql.CommandText);
+        Assert.Contains("WHERE product.is_active = TRUE", sql.CommandText);
+        Assert.Contains("AND product.publish_status = 'published'", sql.CommandText);
         Assert.Equal(24, sql.Parameters.Get<int>("Offset"));
         Assert.Equal(12, sql.Parameters.Get<int>("PageSize"));
         Assert.Null(sql.Parameters.Get<Guid?>("CategoryId"));
