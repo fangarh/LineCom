@@ -183,6 +183,18 @@ public sealed class CatalogModuleRegistrationTests
     }
 
     [Fact]
+    public void AddCatalogModule_RegistersAdminCatalogImageRepositoryAsScoped()
+    {
+        var services = new ServiceCollection();
+        services.AddCatalogModule();
+
+        var descriptor = Assert.Single(services, service => service.ServiceType == typeof(IAdminCatalogImageRepository));
+
+        Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
+        Assert.Equal(typeof(DapperAdminCatalogImageRepository), descriptor.ImplementationType);
+    }
+
+    [Fact]
     public void AddCatalogModule_RegistersAdminCatalogProductServiceAsScoped()
     {
         var services = new ServiceCollection();
