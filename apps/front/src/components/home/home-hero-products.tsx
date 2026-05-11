@@ -12,6 +12,7 @@ type HomeHeroProductsProps = {
 
 export function HomeHeroProducts({ products }: HomeHeroProductsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const visibleIndex = products.length === 0 ? 0 : Math.min(activeIndex, products.length - 1);
 
   useEffect(() => {
     const prefersReducedMotion =
@@ -28,12 +29,6 @@ export function HomeHeroProducts({ products }: HomeHeroProductsProps) {
     return () => window.clearInterval(timerId);
   }, [products.length]);
 
-  useEffect(() => {
-    if (activeIndex >= products.length) {
-      setActiveIndex(0);
-    }
-  }, [activeIndex, products.length]);
-
   if (products.length === 0) {
     return <p className="home-hero__empty">Добавьте позиции из каталога в заявку или опишите задачу.</p>;
   }
@@ -45,7 +40,7 @@ export function HomeHeroProducts({ products }: HomeHeroProductsProps) {
           // eslint-disable-next-line @next/next/no-img-element
           <img
             key={product.id}
-            className={index === activeIndex ? "is-active" : undefined}
+            className={index === visibleIndex ? "is-active" : undefined}
             src={product.mainImage?.url ?? PRODUCT_IMAGE_FALLBACK}
             alt=""
           />
@@ -56,7 +51,7 @@ export function HomeHeroProducts({ products }: HomeHeroProductsProps) {
         {products.map((product, index) => (
           <Link
             key={product.id}
-            className={`home-hero-product${index === activeIndex ? " is-active" : ""}`}
+            className={`home-hero-product${index === visibleIndex ? " is-active" : ""}`}
             href={routes.product(product.slug)}
             onFocus={() => setActiveIndex(index)}
             onMouseEnter={() => setActiveIndex(index)}

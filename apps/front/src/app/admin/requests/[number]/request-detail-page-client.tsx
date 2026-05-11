@@ -58,10 +58,10 @@ export function AdminRequestDetailPageClient({ number }: AdminRequestDetailPageC
     commentMutationSeqRef.current += 1;
     isStatusSavingRef.current = false;
     isCommentSavingRef.current = false;
-    setIsStatusSaving(false);
-    setIsCommentSaving(false);
 
     async function loadRequest() {
+      setIsStatusSaving(false);
+      setIsCommentSaving(false);
       setIsLoading(true);
       setPageError(null);
       setIsForbidden(false);
@@ -215,6 +215,7 @@ export function AdminRequestDetailPageClient({ number }: AdminRequestDetailPageC
 
       {!isLoading && !pageError && !isForbidden && request ? (
         <AdminRequestDetail
+          key={`${request.number}:${request.status.code}:${request.internalComment ?? ""}:${request.updatedAt}`}
           request={request}
           onStatusSave={saveStatus}
           onInternalCommentSave={saveInternalComment}

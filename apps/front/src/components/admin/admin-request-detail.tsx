@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import type {
   AdminRequestDetail as AdminRequestDetailModel,
@@ -39,11 +39,6 @@ export function AdminRequestDetail({
     request.status.code as AdminRequestStatusCode,
   );
   const [internalComment, setInternalComment] = useState(request.internalComment ?? "");
-
-  useEffect(() => {
-    setSelectedStatus(request.status.code as AdminRequestStatusCode);
-    setInternalComment(request.internalComment ?? "");
-  }, [request]);
 
   return (
     <article className="admin-request-detail">
