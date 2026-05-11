@@ -2,6 +2,8 @@ using LineCom.Api.Infrastructure.Database;
 using LineCom.Api.Infrastructure.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
@@ -111,6 +113,7 @@ public sealed class DatabaseRegistrationTests
             })
             .Build();
         var services = new ServiceCollection();
+        services.AddSingleton<IHostEnvironment>(new FakeHostEnvironment(Directory.GetCurrentDirectory()));
 
         services.AddDatabase(configuration);
 
@@ -145,5 +148,22 @@ public sealed class DatabaseRegistrationTests
                 ["ConnectionStrings:Default"] = "Host=localhost;Port=5432;Database=linecom;Username=linecom;Password=linecom"
             })
             .Build();
+    }
+
+    private sealed class FakeHostEnvironment : IHostEnvironment
+    {
+        public FakeHostEnvironment(string contentRootPath)
+        {
+            ContentRootPath = contentRootPath;
+            ContentRootFileProvider = new PhysicalFileProvider(contentRootPath);
+        }
+
+        public string EnvironmentName { get; set; } = Environments.Development;
+
+        public string ApplicationName { get; set; } = "LineCom.Api.Tests";
+
+        public string ContentRootPath { get; set; }
+
+        public IFileProvider ContentRootFileProvider { get; set; }
     }
 }
