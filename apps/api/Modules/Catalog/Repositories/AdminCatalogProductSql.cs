@@ -294,6 +294,115 @@ internal static class AdminCatalogProductSql
         RETURNING id;
         """;
 
+    public const string LockProductForAttributeUpdate = """
+        SELECT product.id
+        FROM products product
+        WHERE product.id = @ProductId
+        FOR UPDATE;
+        """;
+
+    public const string DeleteProductAttributes = """
+        DELETE FROM product_attribute_values
+        WHERE product_id = @ProductId;
+        """;
+
+    public const string InsertProductAttributeValue = """
+        INSERT INTO product_attribute_values (
+            product_id,
+            attribute_id,
+            value_text,
+            value_number,
+            value_boolean,
+            attribute_option_id,
+            normalized_value
+        )
+        SELECT
+            product.id,
+            attribute.id,
+            CASE WHEN attribute.type = 'text' THEN @ValueText ELSE NULL END,
+            CASE WHEN attribute.type = 'number' THEN @ValueNumber ELSE NULL END,
+            CASE WHEN attribute.type = 'boolean' THEN @ValueBoolean ELSE NULL END,
+            CASE WHEN attribute.type = 'select' THEN @AttributeOptionId ELSE NULL END,
+            CASE
+                WHEN attribute.type = 'text' THEN lower(btrim(@ValueText))
+                WHEN attribute.type = 'number' THEN CAST(@ValueNumber AS text)
+                WHEN attribute.type = 'boolean' THEN CAST(@ValueBoolean AS text)
+                WHEN attribute.type = 'select' THEN option.normalized_value
+                ELSE NULL
+            END
+        FROM products product
+        INNER JOIN category_attributes attribute ON attribute.id = @AttributeId
+        LEFT JOIN attribute_options option ON option.id = @AttributeOptionId
+        WHERE product.id = @ProductId
+            AND attribute.category_id = product.primary_category_id
+            AND attribute.is_active = TRUE
+            AND (
+                (
+                    attribute.type = 'text' AND @ValueText IS NOT NULL
+                    AND btrim(@ValueText) <> ''
+                    AND @ValueNumber IS NULL
+                    AND @ValueBoolean IS NULL
+                    AND @AttributeOptionId IS NULL
+                )
+                OR (
+                    attribute.type = 'number' AND @ValueNumber IS NOT NULL
+                    AND @ValueText IS NULL
+                    AND @ValueBoolean IS NULL
+                    AND @AttributeOptionId IS NULL
+                )
+                OR (
+                    attribute.type = 'boolean' AND @ValueBoolean IS NOT NULL
+                    AND @ValueText IS NULL
+                    AND @ValueNumber IS NULL
+                    AND @AttributeOptionId IS NULL
+                )
+                OR (
+                    attribute.type = 'select'
+                    AND @AttributeOptionId IS NOT NULL
+                    AND option.attribute_id = attribute.id
+                    AND option.is_active = TRUE
+                    AND @ValueText IS NULL
+                    AND @ValueNumber IS NULL
+                    AND @ValueBoolean IS NULL
+                )
+            )
+        RETURNING id;
+        """;
+
+    public const string CountBlockingAttributeReadinessIssues = """
+        SELECT COUNT(*)::int
+        FROM (
+            SELECT required_attribute.id
+            FROM products product
+            INNER JOIN category_attributes required_attribute ON required_attribute.category_id = product.primary_category_id
+            LEFT JOIN product_attribute_values value ON value.product_id = product.id
+                AND value.attribute_id = required_attribute.id
+            WHERE product.id = @ProductId
+                AND product.publish_status = 'published'
+                AND required_attribute.is_required = TRUE
+                AND required_attribute.is_active = TRUE
+                AND value.id IS NULL
+
+            UNION ALL
+
+            SELECT value.id
+            FROM products product
+            INNER JOIN product_attribute_values value ON value.product_id = product.id
+            INNER JOIN category_attributes attribute ON attribute.id = value.attribute_id
+            LEFT JOIN attribute_options option ON option.id = value.attribute_option_id
+                AND option.is_active = TRUE
+            WHERE product.id = @ProductId
+                AND product.publish_status = 'published'
+                AND attribute.category_id = product.primary_category_id
+                AND NOT (
+                    (attribute.type = 'text' AND value.value_text IS NOT NULL)
+                    OR (attribute.type = 'number' AND value.value_number IS NOT NULL)
+                    OR (attribute.type = 'boolean' AND value.value_boolean IS NOT NULL)
+                    OR (attribute.type = 'select' AND value.attribute_option_id IS NOT NULL AND option.id IS NOT NULL)
+                )
+        ) blocking_issues;
+        """;
+
     public const string CountProductUsage = """
         SELECT
             (SELECT COUNT(*)::int FROM request_items item WHERE item.product_id = @Id)

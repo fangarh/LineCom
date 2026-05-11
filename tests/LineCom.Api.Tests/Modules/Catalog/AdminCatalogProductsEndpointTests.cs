@@ -24,6 +24,8 @@ public sealed class AdminCatalogProductsEndpointTests
     private static readonly Guid ProductId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
     private static readonly Guid CategoryId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
     private static readonly Guid BrandId = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc");
+    private static readonly Guid AttributeId = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd");
+    private static readonly Guid AttributeOptionId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
 
     [Fact]
     public async Task GetProducts_WithoutAuth_ReturnsUnauthorizedError()
@@ -118,9 +120,37 @@ public sealed class AdminCatalogProductsEndpointTests
         Assert.Equal("Cable", productService.LastUpsertCommand?.Name);
     }
 
+    [Fact]
+    public async Task PutProductAttributes_WithCsrfToken_ReturnsUpdatedProductDetail()
+    {
+        var productService = new ReturningAdminCatalogProductService();
+        await using var factory = CreateFactory(productService, "seller");
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var csrfToken = await LoginAsync(client);
+
+        using var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admin/catalog/products/{ProductId}/attributes")
+        {
+            Content = JsonContent.Create(new UpdateAdminProductAttributesCommand(
+            [
+                new UpsertAdminProductAttributeValueCommand(AttributeId, null, null, null, AttributeOptionId)
+            ]))
+        };
+        request.Headers.Add("X-CSRF-Token", csrfToken);
+
+        using var response = await client.SendAsync(request);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(productService.LastAttributesCommand);
+        Assert.Equal(AttributeOptionId, Assert.Single(productService.LastAttributesCommand.Values).AttributeOptionId);
+
+        var body = await ReadJsonAsync<AdminProductDetailDto>(response);
+        Assert.Equal(AttributeOptionId, Assert.Single(body.Attributes).AttributeOptionId);
+    }
+
     [Theory]
     [InlineData("POST", "/api/admin/catalog/products")]
     [InlineData("PUT", "/api/admin/catalog/products/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")]
+    [InlineData("PUT", "/api/admin/catalog/products/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/attributes")]
     [InlineData("DELETE", "/api/admin/catalog/products/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")]
     public async Task Mutations_WithoutCsrfToken_ReturnForbiddenError(string method, string path)
     {
@@ -236,6 +266,7 @@ public sealed class AdminCatalogProductsEndpointTests
     {
         public AdminProductListQuery? LastListQuery { get; private set; }
         public UpsertAdminProductCommand? LastUpsertCommand { get; private set; }
+        public UpdateAdminProductAttributesCommand? LastAttributesCommand { get; private set; }
 
         public Task<AdminProductListResponse> GetProductsAsync(
             HttpContext httpContext,
@@ -298,6 +329,17 @@ public sealed class AdminCatalogProductsEndpointTests
             return Task.FromResult(Detail(id));
         }
 
+        public Task<AdminProductDetailDto> UpdateAttributesAsync(
+            HttpContext httpContext,
+            Guid id,
+            UpdateAdminProductAttributesCommand command,
+            CancellationToken cancellationToken = default)
+        {
+            RequireStaff(httpContext);
+            LastAttributesCommand = command;
+            return Task.FromResult(Detail(id, includeAttribute: true));
+        }
+
         public Task DeleteProductAsync(
             HttpContext httpContext,
             Guid id,
@@ -307,7 +349,7 @@ public sealed class AdminCatalogProductsEndpointTests
             return Task.CompletedTask;
         }
 
-        private static AdminProductDetailDto Detail(Guid id)
+        private static AdminProductDetailDto Detail(Guid id, bool includeAttribute = false)
         {
             return new AdminProductDetailDto(
                 id,
@@ -332,7 +374,22 @@ public sealed class AdminCatalogProductsEndpointTests
                 10,
                 new AdminProductReadinessDto(false, []),
                 new AdminProductImageSummaryDto(1, Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee")),
-                []);
+                includeAttribute
+                    ?
+                    [
+                        new AdminProductAttributeValueDto(
+                            AttributeId,
+                            "jacket",
+                            "Jacket",
+                            "select",
+                            null,
+                            null,
+                            null,
+                            null,
+                            AttributeOptionId,
+                            "PVC")
+                    ]
+                    : []);
         }
 
         private static void RequireStaff(HttpContext httpContext)

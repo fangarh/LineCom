@@ -278,6 +278,105 @@ public sealed class AdminCatalogProductServiceTests
         Assert.False(repository.DeleteCalled);
     }
 
+    [Fact]
+    public async Task UpdateAttributesAsync_ReplacesValuesAndReturnsUpdatedAttributes()
+    {
+        var optionId = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff");
+        var repository = new CapturingAdminCatalogProductRepository
+        {
+            Attributes =
+            [
+                AttributeValueRecord(valueText: "PVC")
+            ],
+            UpdatedAttributes =
+            [
+                new AdminProductAttributeValueRecord(
+                    AttributeId,
+                    "jacket",
+                    "Jacket",
+                    "select",
+                    null,
+                    null,
+                    null,
+                    null,
+                    optionId,
+                    "PVC",
+                    IsRequired: true,
+                    IsValidValue: true)
+            ]
+        };
+        var service = CreateService("seller", repository);
+
+        var response = await service.UpdateAttributesAsync(
+            new DefaultHttpContext(),
+            ProductId,
+            new UpdateAdminProductAttributesCommand(
+            [
+                new UpsertAdminProductAttributeValueCommand(AttributeId, null, null, null, optionId)
+            ]),
+            CancellationToken.None);
+
+        Assert.True(repository.UpdateAttributesCalled);
+        Assert.NotNull(repository.LastAttributeValues);
+        var command = Assert.Single(repository.LastAttributeValues);
+        Assert.Equal(AttributeId, command.AttributeId);
+        Assert.Equal(optionId, command.AttributeOptionId);
+        var attribute = Assert.Single(response.Attributes);
+        Assert.Equal(optionId, attribute.AttributeOptionId);
+        Assert.Equal("PVC", attribute.OptionValue);
+    }
+
+    [Theory]
+    [InlineData("text")]
+    [InlineData("number")]
+    [InlineData("boolean")]
+    [InlineData("select")]
+    public async Task UpdateAttributesAsync_InvalidTypedValue_ThrowsInvalidRequest(string type)
+    {
+        var repository = new CapturingAdminCatalogProductRepository
+        {
+            AttributeUpdateException = new InvalidAdminProductException()
+        };
+        var service = CreateService("seller", repository);
+
+        var command = type switch
+        {
+            "text" => new UpsertAdminProductAttributeValueCommand(AttributeId, null, null, null, null),
+            "number" => new UpsertAdminProductAttributeValueCommand(AttributeId, null, null, null, null),
+            "boolean" => new UpsertAdminProductAttributeValueCommand(AttributeId, null, null, null, null),
+            _ => new UpsertAdminProductAttributeValueCommand(AttributeId, null, null, null, null)
+        };
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.UpdateAttributesAsync(
+                new DefaultHttpContext(),
+                ProductId,
+                new UpdateAdminProductAttributesCommand([command]),
+                CancellationToken.None));
+
+        Assert.Equal("admin_catalog.invalid_request", exception.Code);
+    }
+
+    [Fact]
+    public async Task UpdateAttributesAsync_PublishedProductNotReady_ThrowsProductNotReady()
+    {
+        var repository = new CapturingAdminCatalogProductRepository
+        {
+            AttributeUpdateException = new AdminProductNotReadyException()
+        };
+        var service = CreateService("seller", repository);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.UpdateAttributesAsync(
+                new DefaultHttpContext(),
+                ProductId,
+                new UpdateAdminProductAttributesCommand([]),
+                CancellationToken.None));
+
+        Assert.Equal("admin_catalog.product_not_ready", exception.Code);
+        Assert.Equal(StatusCodes.Status409Conflict, exception.StatusCode);
+    }
+
     private static AdminCatalogProductService CreateService(
         string role,
         CapturingAdminCatalogProductRepository repository)
@@ -416,10 +515,14 @@ public sealed class AdminCatalogProductServiceTests
     {
         public AdminProductReadListQuery? LastListQuery { get; private set; }
         public AdminProductUpsert? LastUpsert { get; private set; }
+        public IReadOnlyList<AdminProductAttributeValueUpsert>? LastAttributeValues { get; private set; }
         public bool DeleteCalled { get; private set; }
+        public bool UpdateAttributesCalled { get; private set; }
         public IReadOnlyList<AdminProductListRecord> ListItems { get; init; } = [ProductListRecord()];
         public AdminProductDetailRecord? Detail { get; init; } = ProductDetailRecord();
-        public IReadOnlyList<AdminProductAttributeValueRecord> Attributes { get; init; } = [];
+        public IReadOnlyList<AdminProductAttributeValueRecord> Attributes { get; set; } = [];
+        public IReadOnlyList<AdminProductAttributeValueRecord>? UpdatedAttributes { get; init; }
+        public Exception? AttributeUpdateException { get; init; }
         public AdminProductDuplicateIdentity? DuplicateIdentity { get; init; }
         public int ProductUsageCount { get; init; }
         public bool DeleteResult { get; init; } = true;
@@ -490,6 +593,26 @@ public sealed class AdminCatalogProductServiceTests
         {
             LastUpsert = command;
             return Task.FromResult<AdminProductDetailRecord?>(ProductDetailRecord());
+        }
+
+        public Task<AdminProductDetailRecord?> UpdateProductAttributesAsync(
+            Guid id,
+            IReadOnlyList<AdminProductAttributeValueUpsert> values,
+            CancellationToken cancellationToken = default)
+        {
+            UpdateAttributesCalled = true;
+            LastAttributeValues = values;
+            if (AttributeUpdateException is not null)
+            {
+                throw AttributeUpdateException;
+            }
+
+            if (UpdatedAttributes is not null)
+            {
+                Attributes = UpdatedAttributes;
+            }
+
+            return Task.FromResult(Detail);
         }
 
         public Task<int> CountProductUsageAsync(

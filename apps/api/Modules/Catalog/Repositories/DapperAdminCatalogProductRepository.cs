@@ -190,6 +190,86 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
         return await GetProductAsync(id, cancellationToken);
     }
 
+    public async Task<AdminProductDetailRecord?> UpdateProductAttributesAsync(
+        Guid id,
+        IReadOnlyList<AdminProductAttributeValueUpsert> values,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+
+        try
+        {
+            var lockedProductId = await connection.QuerySingleOrDefaultAsync<Guid?>(
+                new CommandDefinition(
+                    AdminCatalogProductSql.LockProductForAttributeUpdate,
+                    new { ProductId = id },
+                    transaction,
+                    cancellationToken: cancellationToken));
+            if (lockedProductId is null)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return null;
+            }
+
+            await connection.ExecuteAsync(
+                new CommandDefinition(
+                    AdminCatalogProductSql.DeleteProductAttributes,
+                    new { ProductId = id },
+                    transaction,
+                    cancellationToken: cancellationToken));
+
+            foreach (var value in values)
+            {
+                var insertedId = await connection.QuerySingleOrDefaultAsync<Guid?>(
+                    new CommandDefinition(
+                        AdminCatalogProductSql.InsertProductAttributeValue,
+                        ToParameters(id, value),
+                        transaction,
+                        cancellationToken: cancellationToken));
+                if (insertedId is null)
+                {
+                    throw new InvalidAdminProductException();
+                }
+            }
+
+            var blockingReadinessIssues = await connection.QuerySingleAsync<int>(
+                new CommandDefinition(
+                    AdminCatalogProductSql.CountBlockingAttributeReadinessIssues,
+                    new { ProductId = id },
+                    transaction,
+                    cancellationToken: cancellationToken));
+            if (blockingReadinessIssues > 0)
+            {
+                throw new AdminProductNotReadyException();
+            }
+
+            await transaction.CommitAsync(cancellationToken);
+        }
+        catch (PostgresException exception) when (IsInvalidAttributeUpdate(exception))
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            throw new InvalidAdminProductException(exception);
+        }
+        catch (AdminProductNotReadyException)
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            throw;
+        }
+        catch (InvalidAdminProductException)
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            throw;
+        }
+        catch
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            throw;
+        }
+
+        return await GetProductAsync(id, cancellationToken);
+    }
+
     public async Task<int> CountProductUsageAsync(
         Guid id,
         CancellationToken cancellationToken = default)
@@ -283,6 +363,19 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
         };
     }
 
+    private static object ToParameters(Guid productId, AdminProductAttributeValueUpsert command)
+    {
+        return new
+        {
+            ProductId = productId,
+            command.AttributeId,
+            command.ValueText,
+            command.ValueNumber,
+            command.ValueBoolean,
+            command.AttributeOptionId
+        };
+    }
+
     private static bool TryGetDuplicateField(PostgresException exception, out string field)
     {
         if (exception.SqlState != PostgresErrorCodes.UniqueViolation)
@@ -305,6 +398,12 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
         return exception.SqlState is PostgresErrorCodes.ForeignKeyViolation
             or PostgresErrorCodes.CheckViolation
             or PostgresErrorCodes.RaiseException;
+    }
+
+    private static bool IsInvalidAttributeUpdate(PostgresException exception)
+    {
+        return IsInvalidRequest(exception)
+            || exception.SqlState == PostgresErrorCodes.UniqueViolation;
     }
 
     private sealed record CategoryReadinessRow(bool CategoryExists, bool CategoryIsActive);

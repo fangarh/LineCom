@@ -26,6 +26,12 @@ public interface IAdminCatalogProductService
         UpsertAdminProductCommand command,
         CancellationToken cancellationToken = default);
 
+    Task<AdminProductDetailDto> UpdateAttributesAsync(
+        HttpContext httpContext,
+        Guid id,
+        UpdateAdminProductAttributesCommand command,
+        CancellationToken cancellationToken = default);
+
     Task DeleteProductAsync(
         HttpContext httpContext,
         Guid id,

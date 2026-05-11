@@ -94,6 +94,21 @@ public sealed class AdminCatalogProductsController : ControllerBase
     }
 
     [RequireCsrfToken]
+    [HttpPut("{id:guid}/attributes")]
+    [ProducesResponseType(typeof(AdminProductDetailDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<AdminProductDetailDto>> UpdateAttributes(
+        Guid id,
+        UpdateAdminProductAttributesCommand command,
+        CancellationToken cancellationToken)
+    {
+        return Ok(await _productService.UpdateAttributesAsync(HttpContext, id, command, cancellationToken));
+    }
+
+    [RequireCsrfToken]
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -50,4 +50,75 @@ public sealed class AdminCatalogProductSqlTests
         Assert.Contains("product.external_id = @ExternalId", AdminCatalogProductSql.FindDuplicateHardIdentity);
         Assert.Contains("@ExcludeProductId IS NULL OR product.id <> @ExcludeProductId", AdminCatalogProductSql.FindDuplicateHardIdentity);
     }
+
+    [Fact]
+    public void UpdateAttributes_LocksProductDeletesPreviousValuesAndInsertsNewValues()
+    {
+        Assert.Contains("FROM products product", AdminCatalogProductSql.LockProductForAttributeUpdate);
+        Assert.Contains("FOR UPDATE", AdminCatalogProductSql.LockProductForAttributeUpdate);
+        Assert.Contains("DELETE FROM product_attribute_values", AdminCatalogProductSql.DeleteProductAttributes);
+        Assert.Contains("WHERE product_id = @ProductId", AdminCatalogProductSql.DeleteProductAttributes);
+        Assert.Contains("INSERT INTO product_attribute_values", AdminCatalogProductSql.InsertProductAttributeValue);
+        Assert.Contains("@ProductId", AdminCatalogProductSql.InsertProductAttributeValue);
+    }
+
+    [Fact]
+    public void UpdateAttributes_ValidatesCategoryTypeAndActiveSelectOption()
+    {
+        Assert.Contains("attribute.category_id = product.primary_category_id", AdminCatalogProductSql.InsertProductAttributeValue);
+        Assert.Contains("attribute.is_active = TRUE", AdminCatalogProductSql.InsertProductAttributeValue);
+        Assert.Contains("attribute.type = 'text' AND @ValueText IS NOT NULL", AdminCatalogProductSql.InsertProductAttributeValue);
+        Assert.Contains("attribute.type = 'number' AND @ValueNumber IS NOT NULL", AdminCatalogProductSql.InsertProductAttributeValue);
+        Assert.Contains("attribute.type = 'boolean' AND @ValueBoolean IS NOT NULL", AdminCatalogProductSql.InsertProductAttributeValue);
+        Assert.Contains("attribute.type = 'select'", AdminCatalogProductSql.InsertProductAttributeValue);
+        Assert.Contains("option.attribute_id = attribute.id", AdminCatalogProductSql.InsertProductAttributeValue);
+        Assert.Contains("option.is_active = TRUE", AdminCatalogProductSql.InsertProductAttributeValue);
+    }
+
+    [Fact]
+    public void UpdateAttributes_RepositoryReplacesValuesInTransaction()
+    {
+        var repositorySource = File.ReadAllText(Path.Combine(
+            FindRepositoryRoot(),
+            "apps",
+            "api",
+            "Modules",
+            "Catalog",
+            "Repositories",
+            "DapperAdminCatalogProductRepository.cs"));
+
+        Assert.Contains("BeginTransactionAsync", repositorySource);
+        Assert.Contains("AdminCatalogProductSql.LockProductForAttributeUpdate", repositorySource);
+        Assert.Contains("AdminCatalogProductSql.DeleteProductAttributes", repositorySource);
+        Assert.Contains("AdminCatalogProductSql.InsertProductAttributeValue", repositorySource);
+        Assert.Contains("CommitAsync", repositorySource);
+        Assert.Contains("RollbackAsync", repositorySource);
+    }
+
+    [Fact]
+    public void UpdateAttributes_ChecksPublishedProductReadinessBeforeCommit()
+    {
+        Assert.Contains("product.publish_status = 'published'", AdminCatalogProductSql.CountBlockingAttributeReadinessIssues);
+        Assert.Contains("required_attribute.is_required = TRUE", AdminCatalogProductSql.CountBlockingAttributeReadinessIssues);
+        Assert.Contains("required_attribute.is_active = TRUE", AdminCatalogProductSql.CountBlockingAttributeReadinessIssues);
+        Assert.Contains("AND value.id IS NULL", AdminCatalogProductSql.CountBlockingAttributeReadinessIssues);
+        Assert.Contains("attribute.type = 'select' AND value.attribute_option_id IS NOT NULL AND option.id IS NOT NULL", AdminCatalogProductSql.CountBlockingAttributeReadinessIssues);
+    }
+
+    private static string FindRepositoryRoot()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null)
+        {
+            var solutionFile = Path.Combine(directory.FullName, "LineCom.sln");
+            if (File.Exists(solutionFile))
+            {
+                return directory.FullName;
+            }
+
+            directory = directory.Parent;
+        }
+
+        throw new InvalidOperationException("Repository root was not found.");
+    }
 }

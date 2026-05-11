@@ -127,6 +127,40 @@ public sealed class AdminCatalogProductService : IAdminCatalogProductService
         {
             throw AdminCatalogErrors.InvalidRequest();
         }
+        if (product is null)
+        {
+            throw AdminCatalogErrors.ProductNotFound();
+        }
+
+        var attributes = await _repository.GetProductAttributesAsync(id, cancellationToken);
+
+        return ToDetailDto(product, attributes);
+    }
+
+    public async Task<AdminProductDetailDto> UpdateAttributesAsync(
+        HttpContext httpContext,
+        Guid id,
+        UpdateAdminProductAttributesCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        await _staffGuard.RequireStaffAsync(httpContext, cancellationToken);
+
+        AdminProductDetailRecord? product;
+        try
+        {
+            product = await _repository.UpdateProductAttributesAsync(
+                id,
+                ToAttributeValueUpserts(command),
+                cancellationToken);
+        }
+        catch (InvalidAdminProductException)
+        {
+            throw AdminCatalogErrors.InvalidRequest();
+        }
+        catch (AdminProductNotReadyException)
+        {
+            throw AdminCatalogErrors.ProductNotReady();
+        }
 
         if (product is null)
         {
@@ -251,6 +285,52 @@ public sealed class AdminCatalogProductService : IAdminCatalogProductService
             AdminCatalogInput.NormalizeText(command.SeoDescription),
             AdminCatalogInput.NormalizeText(command.H1),
             command.SortOrder ?? 0);
+    }
+
+    private static IReadOnlyList<AdminProductAttributeValueUpsert> ToAttributeValueUpserts(
+        UpdateAdminProductAttributesCommand command)
+    {
+        var values = command.Values ?? throw AdminCatalogErrors.InvalidRequest();
+        var attributeIds = new HashSet<Guid>();
+        var result = new List<AdminProductAttributeValueUpsert>(values.Count);
+
+        foreach (var value in values)
+        {
+            if (value.AttributeId == Guid.Empty || !attributeIds.Add(value.AttributeId))
+            {
+                throw AdminCatalogErrors.InvalidRequest();
+            }
+
+            var valueText = AdminCatalogInput.NormalizeText(value.ValueText);
+            var storageColumnCount = CountPresent(valueText, value.ValueNumber, value.ValueBoolean, value.AttributeOptionId);
+            if (storageColumnCount != 1)
+            {
+                throw AdminCatalogErrors.InvalidRequest();
+            }
+
+            result.Add(new AdminProductAttributeValueUpsert(
+                value.AttributeId,
+                valueText,
+                value.ValueNumber,
+                value.ValueBoolean,
+                value.AttributeOptionId));
+        }
+
+        return result;
+    }
+
+    private static int CountPresent(
+        string? valueText,
+        decimal? valueNumber,
+        bool? valueBoolean,
+        Guid? attributeOptionId)
+    {
+        var count = 0;
+        if (valueText is not null) count++;
+        if (valueNumber is not null) count++;
+        if (valueBoolean is not null) count++;
+        if (attributeOptionId is not null) count++;
+        return count;
     }
 
     private static AdminProductListItemDto ToListItemDto(AdminProductListRecord record)

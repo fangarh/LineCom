@@ -94,3 +94,13 @@ public sealed record UpsertAdminProductCommand(
     string? SeoDescription,
     string? H1,
     int? SortOrder);
+
+public sealed record UpdateAdminProductAttributesCommand(
+    IReadOnlyList<UpsertAdminProductAttributeValueCommand> Values);
+
+public sealed record UpsertAdminProductAttributeValueCommand(
+    Guid AttributeId,
+    string? ValueText,
+    decimal? ValueNumber,
+    bool? ValueBoolean,
+    Guid? AttributeOptionId);

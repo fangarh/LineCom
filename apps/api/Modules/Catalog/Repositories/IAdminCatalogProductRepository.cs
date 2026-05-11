@@ -92,6 +92,13 @@ public sealed record AdminProductUpsert(
     string? H1,
     int SortOrder);
 
+public sealed record AdminProductAttributeValueUpsert(
+    Guid AttributeId,
+    string? ValueText,
+    decimal? ValueNumber,
+    bool? ValueBoolean,
+    Guid? AttributeOptionId);
+
 public sealed record AdminProductDuplicateIdentity(Guid ProductId, string Field);
 
 public sealed record AdminProductRequiredAttributeRecord(
@@ -125,6 +132,14 @@ internal sealed class InvalidAdminProductException : Exception
 {
     public InvalidAdminProductException(Exception? innerException = null)
         : base("Product request is invalid.", innerException)
+    {
+    }
+}
+
+internal sealed class AdminProductNotReadyException : Exception
+{
+    public AdminProductNotReadyException()
+        : base("Published product is not ready.")
     {
     }
 }
@@ -170,6 +185,11 @@ public interface IAdminCatalogProductRepository
     Task<AdminProductDetailRecord?> UpdateProductAsync(
         Guid id,
         AdminProductUpsert command,
+        CancellationToken cancellationToken = default);
+
+    Task<AdminProductDetailRecord?> UpdateProductAttributesAsync(
+        Guid id,
+        IReadOnlyList<AdminProductAttributeValueUpsert> values,
         CancellationToken cancellationToken = default);
 
     Task<int> CountProductUsageAsync(
