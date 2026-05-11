@@ -10,6 +10,7 @@
 - Database migrations are SQL scripts executed through the DbUp migrator.
 - Local FileStorage is the target file-storage approach for this project.
 - SEO and GEO requirements must be considered when changing catalog, landing pages, routing, metadata, or public content.
+- Showing visual material in the browser does not require separate approval in this project. Browser-based mockups, diagrams, UI previews, and visual QA are always preferred when they can make the discussion or verification clearer.
 
 # Context7
 
