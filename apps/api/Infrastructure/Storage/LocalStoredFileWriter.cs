@@ -217,6 +217,11 @@ public sealed class LocalStoredFileWriter : ILocalStoredFileWriter
 
     private static string NormalizeOriginalFileName(string fileName)
     {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            throw new InvalidLocalStoredFileException("Invalid original file name.");
+        }
+
         var normalized = Path.GetFileName(fileName.Replace('\\', Path.DirectorySeparatorChar));
         if (string.IsNullOrWhiteSpace(normalized) || normalized is "." or "..")
         {

@@ -138,6 +138,22 @@ public sealed class LocalStoredFileWriterTests
     }
 
     [Fact]
+    public async Task SaveAsync_RejectsNullOriginalFileNameWithInvalidLocalStoredFileException()
+    {
+        using var tempDirectory = new TempDirectory();
+        var writer = CreateWriter(tempDirectory.Path);
+        var file = new TestFormFile(null, "image/jpeg", "image-bytes"u8.ToArray());
+
+        await Assert.ThrowsAsync<InvalidLocalStoredFileException>(async () =>
+            await writer.SaveAsync(
+                file,
+                Guid.NewGuid(),
+                "product_image",
+                "products/admin",
+                Guid.NewGuid()));
+    }
+
+    [Fact]
     public async Task SaveAsync_NormalizesOriginalFileName()
     {
         using var tempDirectory = new TempDirectory();
@@ -203,6 +219,47 @@ public sealed class LocalStoredFileWriterTests
             Headers = new HeaderDictionary(),
             ContentType = contentType
         };
+    }
+
+    private sealed class TestFormFile : IFormFile
+    {
+        private readonly byte[] bytes;
+
+        public TestFormFile(string? fileName, string contentType, byte[] bytes)
+        {
+            FileName = fileName!;
+            ContentType = contentType;
+            this.bytes = bytes;
+        }
+
+        public string ContentType { get; }
+
+        public string ContentDisposition => string.Empty;
+
+        public IHeaderDictionary Headers { get; } = new HeaderDictionary();
+
+        public long Length => bytes.Length;
+
+        public string Name => "file";
+
+        public string FileName { get; }
+
+        public void CopyTo(Stream target)
+        {
+            using var stream = OpenReadStream();
+            stream.CopyTo(target);
+        }
+
+        public async Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
+        {
+            await using var stream = OpenReadStream();
+            await stream.CopyToAsync(target, cancellationToken);
+        }
+
+        public Stream OpenReadStream()
+        {
+            return new MemoryStream(bytes);
+        }
     }
 
     private sealed class FakeHostEnvironment : IHostEnvironment
