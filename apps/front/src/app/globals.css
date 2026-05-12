@@ -1825,6 +1825,107 @@ a {
   width: fit-content;
 }
 
+.admin-catalog-page {
+  display: grid;
+  gap: 18px;
+}
+
+.admin-catalog-shell {
+  display: grid;
+  gap: 18px;
+}
+
+.admin-catalog-toolbar {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.admin-catalog-toolbar h1 {
+  margin: 0;
+  color: var(--color-graphite);
+  font-size: 34px;
+  line-height: 1.12;
+}
+
+.admin-catalog-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-catalog-tabs .button {
+  min-width: 126px;
+  max-width: 100%;
+  min-height: 38px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-catalog-tabs .button[aria-selected="true"] {
+  color: var(--color-accent-contrast);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.admin-catalog-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+.admin-catalog-panel {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.admin-catalog-panel[hidden] {
+  display: none;
+}
+
+.admin-catalog-table,
+.admin-catalog-form {
+  min-width: 0;
+  padding: 18px;
+  background: #fbfcfd;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+:root[data-theme="dark"] .admin-catalog-table,
+:root[data-theme="dark"] .admin-catalog-form {
+  background: var(--color-surface-muted);
+}
+
+.admin-catalog-table h2 {
+  margin: 0;
+  color: var(--color-graphite);
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.admin-catalog-table p,
+.admin-catalog-form p {
+  margin: 12px 0 0;
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+
+.admin-catalog-status {
+  min-width: 0;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
 .status-pill {
   display: inline-flex;
   min-height: 32px;
@@ -2019,6 +2120,7 @@ a {
   .auth-card,
   .account-grid,
   .request-detail__grid,
+  .admin-catalog-panel,
   .admin-request-detail__layout,
   .admin-request-detail__grid {
     grid-template-columns: 1fr;
@@ -2055,6 +2157,7 @@ a {
   .request-item__main,
   .request-list-section__header,
   .request-list-card__main,
+  .admin-catalog-toolbar,
   .admin-requests__header,
   .admin-request-card__head,
   .request-detail__head,
@@ -2110,6 +2213,8 @@ a {
   .auth-card,
   .account-intro,
   .account-section,
+  .admin-catalog-table,
+  .admin-catalog-form,
   .admin-request-detail__head {
     padding: 20px;
   }
@@ -2121,11 +2226,16 @@ a {
   .featured-products,
   .home-directions,
   .request-list-card__meta,
+  .admin-catalog-tabs,
   .admin-requests__filters,
   .admin-request-card__meta,
   .request-detail-item__meta,
   .admin-request-detail__timestamps {
     grid-template-columns: 1fr;
+  }
+
+  .admin-catalog-tabs .button {
+    width: 100%;
   }
 
   .home-hero h1,
@@ -2137,6 +2247,7 @@ a {
   .product-detail__summary h1,
   .auth-card h1,
   .account-intro h1,
+  .admin-catalog-toolbar h1,
   .admin-request-detail__head h1 {
     font-size: 34px;
     line-height: 1.05;
