@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { absoluteSiteUrl, getPublicSiteOrigin, normalizeSiteOrigin } from "./site";
+import { absoluteSiteUrl, getPublicSiteOrigin, normalizeSiteOrigin, siteMetadataBase } from "./site";
 
 const originalOrigin = process.env.LINECOM_PUBLIC_SITE_ORIGIN;
 
@@ -24,9 +24,21 @@ describe("site SEO URL helpers", () => {
     expect(getPublicSiteOrigin()).toBe("https://linecom.example.ru");
   });
 
+  it("normalizes configured public origin by omitting path query and hash", () => {
+    process.env.LINECOM_PUBLIC_SITE_ORIGIN = "https://linecom.example.ru/catalog?x=1#top";
+
+    expect(getPublicSiteOrigin()).toBe("https://linecom.example.ru");
+  });
+
   it("falls back when configured public origin is not an absolute http URL", () => {
     expect(normalizeSiteOrigin("linecom.example.ru")).toBe("http://127.0.0.1:3000");
     expect(normalizeSiteOrigin("ftp://linecom.example.ru")).toBe("http://127.0.0.1:3000");
+  });
+
+  it("builds metadata base from the normalized public origin", () => {
+    process.env.LINECOM_PUBLIC_SITE_ORIGIN = "https://linecom.example.ru/catalog?x=1#top";
+
+    expect(siteMetadataBase().origin).toBe("https://linecom.example.ru");
   });
 
   it("builds absolute URLs from relative public paths", () => {
