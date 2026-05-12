@@ -60,7 +60,7 @@ public sealed class AdminCatalogImagesDatabaseBehaviorTests
             """,
             new { ids.ProductId, ids.FileId }));
 
-        Assert.Equal(PostgresErrorCodes.RaiseException, exception.SqlState);
+        Assert.Equal(PostgresErrorCodes.CheckViolation, exception.SqlState);
     }
 
     [Fact]
@@ -82,7 +82,7 @@ public sealed class AdminCatalogImagesDatabaseBehaviorTests
             """,
             new { ids.BrandId, ids.FileId }));
 
-        Assert.Equal(PostgresErrorCodes.RaiseException, exception.SqlState);
+        Assert.Equal(PostgresErrorCodes.CheckViolation, exception.SqlState);
     }
 
     private async Task<NpgsqlConnection> OpenConnectionAsync()
