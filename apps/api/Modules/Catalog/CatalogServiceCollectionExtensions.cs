@@ -9,6 +9,8 @@ public static class CatalogServiceCollectionExtensions
     public static IServiceCollection AddCatalogModule(this IServiceCollection services)
     {
         services.AddScoped<IAdminHomepageQuery, DapperAdminHomepageQuery>();
+        services.AddScoped<IAdminHomepageRepository, DapperAdminHomepageRepository>();
+        services.AddScoped<IAdminHomepageService, AdminHomepageService>();
         services.AddScoped<IAdminCatalogStaffGuard, AdminCatalogStaffGuard>();
         services.AddScoped<IAdminCatalogCategoryRepository, DapperAdminCatalogCategoryRepository>();
         services.AddScoped<IAdminCatalogCategoryService, AdminCatalogCategoryService>();

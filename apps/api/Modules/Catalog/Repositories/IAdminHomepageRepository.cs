@@ -16,3 +16,11 @@ public interface IAdminHomepageRepository
 
     Task<bool> DeleteItemAsync(Guid sectionId, Guid itemId, CancellationToken cancellationToken = default);
 }
+
+internal sealed class InvalidAdminHomepageMutationException : Exception
+{
+    public InvalidAdminHomepageMutationException(Exception? innerException = null)
+        : base("Homepage mutation request is invalid.", innerException)
+    {
+    }
+}

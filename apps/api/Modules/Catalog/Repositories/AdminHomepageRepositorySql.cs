@@ -83,16 +83,27 @@ internal static class AdminHomepageRepositorySql
         """;
 
     public const string UpdateSectionItemOrder = """
-        WITH ordered_items AS (
+        WITH requested_items AS (
             SELECT item_id, sort_order
             FROM unnest(CAST(@ItemIds AS uuid[])) WITH ORDINALITY AS item_order(item_id, sort_order)
+        ),
+        valid_section_items AS (
+            SELECT requested_items.item_id, requested_items.sort_order
+            FROM requested_items
+            INNER JOIN homepage_section_items item ON item.id = requested_items.item_id
+                AND item.section_id = @SectionId
+        ),
+        updated AS (
+            UPDATE homepage_section_items item
+            SET sort_order = valid_section_items.sort_order::int
+            FROM valid_section_items
+            WHERE item.section_id = @SectionId
+                AND item.id = valid_section_items.item_id
+                AND (SELECT COUNT(*) FROM valid_section_items) = (SELECT COUNT(*) FROM requested_items)
+            RETURNING item.id
         )
-        UPDATE homepage_section_items
-        SET sort_order = ordered_items.sort_order::int
-        FROM ordered_items
-        WHERE section_id = @SectionId
-            AND id = ordered_items.item_id
-        RETURNING id;
+        SELECT id
+        FROM updated;
         """;
 
     public const string DeleteSectionItem = """

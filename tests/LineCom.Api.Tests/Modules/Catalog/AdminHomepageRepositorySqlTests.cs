@@ -65,8 +65,18 @@ public sealed class AdminHomepageRepositorySqlTests
 
         Assert.Contains("UPDATE homepage_section_items", AdminHomepageRepositorySql.UpdateSectionItemOrder);
         Assert.Contains("unnest(CAST(@ItemIds AS uuid[])) WITH ORDINALITY", AdminHomepageRepositorySql.UpdateSectionItemOrder);
-        Assert.Contains("WHERE section_id = @SectionId", AdminHomepageRepositorySql.UpdateSectionItemOrder);
-        Assert.Contains("RETURNING id", AdminHomepageRepositorySql.UpdateSectionItemOrder);
+        Assert.Contains("item.section_id = @SectionId", AdminHomepageRepositorySql.UpdateSectionItemOrder);
+        Assert.Contains("RETURNING item.id", AdminHomepageRepositorySql.UpdateSectionItemOrder);
+    }
+
+    [Fact]
+    public void UpdateSectionItemOrder_GuardsAgainstPartialUpdate()
+    {
+        Assert.Contains("requested_items AS", AdminHomepageRepositorySql.UpdateSectionItemOrder);
+        Assert.Contains("valid_section_items AS", AdminHomepageRepositorySql.UpdateSectionItemOrder);
+        Assert.Contains("SELECT COUNT(*) FROM valid_section_items", AdminHomepageRepositorySql.UpdateSectionItemOrder);
+        Assert.Contains("SELECT COUNT(*) FROM requested_items", AdminHomepageRepositorySql.UpdateSectionItemOrder);
+        Assert.Contains("UPDATE homepage_section_items item", AdminHomepageRepositorySql.UpdateSectionItemOrder);
     }
 
     [Fact]
