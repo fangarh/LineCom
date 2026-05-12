@@ -649,7 +649,7 @@ git commit -m "feat: add admin product attributes and images UI"
 - Verify all frontend files touched by Tasks 1-7.
 - Modify only if verification reveals a real issue.
 
-- [ ] **Step 1: Run focused frontend tests**
+- [x] **Step 1: Run focused frontend tests**
 
 ```powershell
 npm.cmd test -- admin-catalog
@@ -657,7 +657,7 @@ npm.cmd test -- admin-catalog
 
 Expected: all admin catalog tests pass.
 
-- [ ] **Step 2: Run full frontend tests**
+- [x] **Step 2: Run full frontend tests**
 
 ```powershell
 npm.cmd test
@@ -665,7 +665,7 @@ npm.cmd test
 
 Expected: PASS.
 
-- [ ] **Step 3: Run frontend lint/build**
+- [x] **Step 3: Run frontend lint/build**
 
 ```powershell
 npm.cmd run lint
@@ -674,7 +674,7 @@ npm.cmd run build
 
 Expected: PASS with 0 errors.
 
-- [ ] **Step 4: Run solution verification**
+- [x] **Step 4: Run solution verification**
 
 ```powershell
 dotnet test .\LineCom.sln
@@ -683,7 +683,7 @@ dotnet build .\LineCom.sln
 
 Expected: PASS with 0 failures and 0 errors. NU1900 warnings from unavailable NuGet vulnerability feed are acceptable if the commands succeed.
 
-- [ ] **Step 5: Browser QA**
+- [x] **Step 5: Browser QA**
 
 Start the frontend and API if needed, then use Browser Use / Playwright to inspect:
 
@@ -704,7 +704,7 @@ Expected:
 - no blank main panel;
 - no console errors from admin catalog interactions.
 
-- [ ] **Step 6: Hygiene checks**
+- [x] **Step 6: Hygiene checks**
 
 ```powershell
 git diff --check
@@ -720,7 +720,7 @@ Expected:
 - no EF/DbContext usage introduced;
 - no unresolved work markers in changed implementation files.
 
-- [ ] **Step 7: Commit verification fixes only if changed**
+- [x] **Step 7: Commit verification fixes only if changed**
 
 ```powershell
 git add apps/front
@@ -728,6 +728,22 @@ git commit -m "fix: polish admin catalog frontend"
 ```
 
 If no files changed, do not create an empty commit.
+
+Progress note 2026-05-12:
+
+- `npm.cmd test -- admin-catalog`: passed, 2 files, 9 tests.
+- `npm.cmd test`: passed, 36 files, 159 tests. Vitest printed the existing jsdom navigation limitation message after completion.
+- `npm.cmd run lint`: passed with 0 errors and 2 existing `@next/next/no-img-element` warnings for admin image/logo preview controls.
+- `npm.cmd run build`: passed.
+- `dotnet test .\LineCom.sln -m:1`: passed, 671 tests. NU1900 warnings were from unavailable NuGet vulnerability data.
+- `dotnet build .\LineCom.sln -m:1`: passed with 0 errors and NU1900 warnings only.
+- Browser QA used the local Next.js dev server on `http://127.0.0.1:3010` with mocked API responses to avoid mutating the configured database. Verified unauthenticated redirect to `/auth/login?returnTo=%2Fadmin%2Fcatalog`, customer forbidden state, staff product editor tabs, image panel preview rendering, brand logo panel layout, desktop width `1366`, and mobile width `390`.
+- Staff desktop and mobile QA had no console errors, no horizontal overflow, no blank main panel, and rendered the mocked product image preview.
+- The unauthenticated redirect check logged the expected browser resource error for the mocked `401` `/api/auth/me` response.
+- `git diff --check`: passed.
+- `git status --short --branch`: only the expected untracked `admin-catalog-homepage-slice.png`.
+- Marker scan found only documentation/check-command matches and the legitimate `temporaryPath` variable in `LocalStoredFileWriter`; no changed implementation files contain unresolved markers.
+- No verification fixes were needed, so no empty commit was created.
 
 ## Multi-Agent Execution Order
 
@@ -799,4 +815,3 @@ Use this prompt after compaction or in a new session:
 - TDD: сначала RED, затем implementation, затем GREEN;
 - не stage/commit admin-catalog-homepage-slice.png.
 ```
-
