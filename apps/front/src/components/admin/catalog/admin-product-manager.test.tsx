@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiClientError } from "@/lib/api/errors";
@@ -6,10 +6,14 @@ import { AdminProductManager } from "./admin-product-manager";
 import type {
   AdminBrandListItem,
   AdminBrandListResponse,
+  AdminCategoryAttribute,
+  AdminCategoryAttributesResponse,
   AdminCategoryListItem,
   AdminCategoryListResponse,
   AdminProductDetail,
   AdminProductDuplicateCandidatesResponse,
+  AdminProductImage,
+  AdminProductImagesResponse,
   AdminProductListItem,
   AdminProductListResponse,
 } from "@/lib/api/admin-catalog";
@@ -23,6 +27,14 @@ const adminCatalogApiMock = vi.hoisted(() => ({
   getAdminProductDuplicateCandidates: vi.fn(),
   getAdminCategories: vi.fn(),
   getAdminBrands: vi.fn(),
+  getAdminCategoryAttributes: vi.fn(),
+  updateAdminProductAttributes: vi.fn(),
+  getAdminProductImages: vi.fn(),
+  uploadAdminProductImages: vi.fn(),
+  updateAdminProductImage: vi.fn(),
+  updateAdminProductImageOrder: vi.fn(),
+  setAdminProductMainImage: vi.fn(),
+  deleteAdminProductImage: vi.fn(),
 }));
 
 vi.mock("@/lib/api/admin-catalog", async (importOriginal) => {
@@ -37,6 +49,14 @@ vi.mock("@/lib/api/admin-catalog", async (importOriginal) => {
     getAdminProductDuplicateCandidates: adminCatalogApiMock.getAdminProductDuplicateCandidates,
     getAdminCategories: adminCatalogApiMock.getAdminCategories,
     getAdminBrands: adminCatalogApiMock.getAdminBrands,
+    getAdminCategoryAttributes: adminCatalogApiMock.getAdminCategoryAttributes,
+    updateAdminProductAttributes: adminCatalogApiMock.updateAdminProductAttributes,
+    getAdminProductImages: adminCatalogApiMock.getAdminProductImages,
+    uploadAdminProductImages: adminCatalogApiMock.uploadAdminProductImages,
+    updateAdminProductImage: adminCatalogApiMock.updateAdminProductImage,
+    updateAdminProductImageOrder: adminCatalogApiMock.updateAdminProductImageOrder,
+    setAdminProductMainImage: adminCatalogApiMock.setAdminProductMainImage,
+    deleteAdminProductImage: adminCatalogApiMock.deleteAdminProductImage,
   };
 });
 
@@ -112,6 +132,110 @@ const publishedProduct: AdminProductListItem = {
   readiness: { canPublish: true, issues: [] },
 };
 
+const colorAttribute: AdminCategoryAttribute = {
+  id: "attr-color",
+  categoryId: "cat-cables",
+  name: "Цвет",
+  code: "color",
+  type: "text",
+  unit: null,
+  isRequired: false,
+  isFilterable: true,
+  isComparable: true,
+  isVisibleInProduct: true,
+  isSeoImportant: false,
+  isUsedInGeneratedName: false,
+  sortOrder: 10,
+  isActive: true,
+  productValuesCount: 3,
+  options: [],
+};
+
+const lengthAttribute: AdminCategoryAttribute = {
+  id: "attr-length",
+  categoryId: "cat-cables",
+  name: "Длина",
+  code: "length",
+  type: "number",
+  unit: "м",
+  isRequired: false,
+  isFilterable: true,
+  isComparable: true,
+  isVisibleInProduct: true,
+  isSeoImportant: false,
+  isUsedInGeneratedName: false,
+  sortOrder: 20,
+  isActive: true,
+  productValuesCount: 4,
+  options: [],
+};
+
+const kitAttribute: AdminCategoryAttribute = {
+  id: "attr-kit",
+  categoryId: "cat-cables",
+  name: "Монтажный комплект",
+  code: "kit",
+  type: "boolean",
+  unit: null,
+  isRequired: false,
+  isFilterable: true,
+  isComparable: true,
+  isVisibleInProduct: true,
+  isSeoImportant: false,
+  isUsedInGeneratedName: false,
+  sortOrder: 30,
+  isActive: true,
+  productValuesCount: 2,
+  options: [],
+};
+
+const materialAttribute: AdminCategoryAttribute = {
+  id: "attr-material",
+  categoryId: "cat-cables",
+  name: "Материал",
+  code: "material",
+  type: "select",
+  unit: null,
+  isRequired: false,
+  isFilterable: true,
+  isComparable: true,
+  isVisibleInProduct: true,
+  isSeoImportant: true,
+  isUsedInGeneratedName: false,
+  sortOrder: 40,
+  isActive: true,
+  productValuesCount: 5,
+  options: [
+    {
+      id: "option-copper",
+      value: "Медь",
+      slug: "copper",
+      normalizedValue: "медь",
+      sortOrder: 10,
+      isActive: true,
+      productValuesCount: 3,
+    },
+    {
+      id: "option-aluminium",
+      value: "Алюминий",
+      slug: "aluminium",
+      normalizedValue: "алюминий",
+      sortOrder: 20,
+      isActive: true,
+      productValuesCount: 2,
+    },
+    {
+      id: "option-inactive",
+      value: "Серебро",
+      slug: "silver",
+      normalizedValue: "серебро",
+      sortOrder: 30,
+      isActive: false,
+      productValuesCount: 0,
+    },
+  ],
+};
+
 const activeProductDetail: AdminProductDetail = {
   id: "product-active",
   categoryId: "cat-cables",
@@ -135,6 +259,81 @@ const activeProductDetail: AdminProductDetail = {
   sortOrder: 10,
   readiness: { canPublish: false, issues: [{ code: "missing_image", message: "Добавьте основное изображение." }] },
   images: { imagesCount: 0, mainImageFileId: null },
+  attributes: [
+    {
+      attributeId: "attr-color",
+      code: "color",
+      name: "Цвет",
+      type: "text",
+      unit: null,
+      valueText: "Черный",
+      valueNumber: null,
+      valueBoolean: null,
+      attributeOptionId: null,
+      optionValue: null,
+    },
+    {
+      attributeId: "attr-length",
+      code: "length",
+      name: "Длина",
+      type: "number",
+      unit: "м",
+      valueText: null,
+      valueNumber: 25,
+      valueBoolean: null,
+      attributeOptionId: null,
+      optionValue: null,
+    },
+    {
+      attributeId: "attr-kit",
+      code: "kit",
+      name: "Монтажный комплект",
+      type: "boolean",
+      unit: null,
+      valueText: null,
+      valueNumber: null,
+      valueBoolean: true,
+      attributeOptionId: null,
+      optionValue: null,
+    },
+    {
+      attributeId: "attr-material",
+      code: "material",
+      name: "Материал",
+      type: "select",
+      unit: null,
+      valueText: null,
+      valueNumber: null,
+      valueBoolean: null,
+      attributeOptionId: "option-copper",
+      optionValue: "Медь",
+    },
+  ],
+};
+
+const publishedProductDetail: AdminProductDetail = {
+  id: "product-published",
+  categoryId: "cat-connectors",
+  categoryName: "Разъемы",
+  brandId: "brand-prom",
+  brandName: "ПромСвет",
+  name: "Разъем силовой РС",
+  slug: "razem-silovoy-rs",
+  sku: "RS-1",
+  externalId: null,
+  description: "Разъем для силовой линии",
+  shortDescription: "Разъем силовой РС",
+  availabilityStatus: "preorder",
+  saleUnit: "шт",
+  unitQuantity: "1",
+  publishStatus: "published",
+  isActive: false,
+  seoTitle: "Разъем силовой РС купить",
+  seoDescription: "SEO описание разъема",
+  h1: "Разъем силовой РС",
+  sortOrder: 20,
+  readiness: { canPublish: true, issues: [] },
+  images: { imagesCount: 1, mainImageFileId: "file-main" },
   attributes: [],
 };
 
@@ -193,6 +392,33 @@ function duplicateResponse(): AdminProductDuplicateCandidatesResponse {
   };
 }
 
+const mainImage: AdminProductImage = {
+  id: "image-main",
+  storedFileId: "file-main",
+  url: "/uploads/main.jpg",
+  originalFileName: "main.jpg",
+  contentType: "image/jpeg",
+  sizeBytes: 1024,
+  checksum: "checksum-main",
+  alt: "Кабель на белом фоне",
+  title: "Кабель ВВГнг",
+  sortOrder: 10,
+  isMain: true,
+  createdAt: "2026-05-12T08:00:00Z",
+};
+
+function attributesResponse(): AdminCategoryAttributesResponse {
+  return {
+    items: [colorAttribute, lengthAttribute, kitAttribute, materialAttribute],
+  };
+}
+
+function imagesResponse(): AdminProductImagesResponse {
+  return {
+    items: [mainImage],
+  };
+}
+
 function mockDefaultApi() {
   adminCatalogApiMock.getAdminProducts.mockResolvedValue(productListResponse());
   adminCatalogApiMock.getAdminProduct.mockResolvedValue(activeProductDetail);
@@ -202,6 +428,14 @@ function mockDefaultApi() {
   adminCatalogApiMock.getAdminProductDuplicateCandidates.mockResolvedValue(duplicateResponse());
   adminCatalogApiMock.getAdminCategories.mockResolvedValue(categoryListResponse());
   adminCatalogApiMock.getAdminBrands.mockResolvedValue(brandListResponse());
+  adminCatalogApiMock.getAdminCategoryAttributes.mockResolvedValue(attributesResponse());
+  adminCatalogApiMock.updateAdminProductAttributes.mockResolvedValue(activeProductDetail);
+  adminCatalogApiMock.getAdminProductImages.mockResolvedValue(imagesResponse());
+  adminCatalogApiMock.uploadAdminProductImages.mockResolvedValue(imagesResponse());
+  adminCatalogApiMock.updateAdminProductImage.mockResolvedValue(mainImage);
+  adminCatalogApiMock.updateAdminProductImageOrder.mockResolvedValue(imagesResponse());
+  adminCatalogApiMock.setAdminProductMainImage.mockResolvedValue(mainImage);
+  adminCatalogApiMock.deleteAdminProductImage.mockResolvedValue(undefined);
 }
 
 function deferred<T>() {
@@ -351,6 +585,146 @@ describe("AdminProductManager", () => {
       }),
       "csrf-token",
     );
+  });
+
+  it("показывает во вкладке характеристик контролы по типам text, number, boolean и select", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: /Кабель ВВГнг 3x2.5/ }));
+    const editor = await screen.findByLabelText("Редактор товара");
+    await user.click(within(editor).getByRole("tab", { name: "Характеристики" }));
+
+    expect(adminCatalogApiMock.getAdminCategoryAttributes).toHaveBeenCalledWith("cat-cables");
+    expect(within(editor).getByLabelText("Цвет")).toHaveAttribute("type", "text");
+    expect(within(editor).getByLabelText("Цвет")).toHaveValue("Черный");
+    expect(within(editor).getByLabelText("Длина")).toHaveAttribute("type", "number");
+    expect(within(editor).getByLabelText("Длина")).toHaveValue(25);
+    expect(within(editor).getByLabelText("Монтажный комплект")).toHaveAttribute("type", "checkbox");
+    expect(within(editor).getByLabelText("Монтажный комплект")).toBeChecked();
+    expect(within(editor).getByLabelText("Материал")).toHaveDisplayValue("Медь");
+    expect(within(editor).getByRole("option", { name: "Алюминий" })).toBeInTheDocument();
+    expect(within(editor).queryByRole("option", { name: "Серебро" })).not.toBeInTheDocument();
+  });
+
+  it("сохраняет характеристики товара через updateAdminProductAttributes с CSRF-токеном", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: /Кабель ВВГнг 3x2.5/ }));
+    const editor = await screen.findByLabelText("Редактор товара");
+    await user.click(within(editor).getByRole("tab", { name: "Характеристики" }));
+
+    await user.clear(within(editor).getByLabelText("Цвет"));
+    await user.type(within(editor).getByLabelText("Цвет"), "Синий");
+    await user.clear(within(editor).getByLabelText("Длина"));
+    await user.type(within(editor).getByLabelText("Длина"), "50");
+    await user.click(within(editor).getByLabelText("Монтажный комплект"));
+    await user.selectOptions(within(editor).getByLabelText("Материал"), "option-aluminium");
+    await user.click(within(editor).getByRole("button", { name: "Сохранить характеристики" }));
+
+    expect(adminCatalogApiMock.updateAdminProductAttributes).toHaveBeenCalledWith(
+      "product-active",
+      {
+        values: [
+          { attributeId: "attr-color", valueText: "Синий" },
+          { attributeId: "attr-length", valueNumber: 50 },
+          { attributeId: "attr-kit", valueBoolean: false },
+          { attributeId: "attr-material", attributeOptionId: "option-aluminium" },
+        ],
+      },
+      "csrf-token",
+    );
+  });
+
+  it("позволяет добавить характеристики, когда у товара еще нет сохраненных значений", async () => {
+    const user = userEvent.setup();
+    adminCatalogApiMock.getAdminProduct.mockResolvedValueOnce({ ...activeProductDetail, attributes: [] });
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: /Кабель ВВГнг 3x2.5/ }));
+    const editor = await screen.findByLabelText("Редактор товара");
+    await user.click(within(editor).getByRole("tab", { name: "Характеристики" }));
+
+    expect(await within(editor).findByLabelText("Цвет")).toHaveValue("");
+    await user.type(within(editor).getByLabelText("Цвет"), "Белый");
+    await user.type(within(editor).getByLabelText("Длина"), "15");
+    await user.click(within(editor).getByLabelText("Монтажный комплект"));
+    await user.selectOptions(within(editor).getByLabelText("Материал"), "option-copper");
+    await user.click(within(editor).getByRole("button", { name: "Сохранить характеристики" }));
+
+    expect(adminCatalogApiMock.updateAdminProductAttributes).toHaveBeenCalledWith(
+      "product-active",
+      {
+        values: [
+          { attributeId: "attr-color", valueText: "Белый" },
+          { attributeId: "attr-length", valueNumber: 15 },
+          { attributeId: "attr-kit", valueBoolean: true },
+          { attributeId: "attr-material", attributeOptionId: "option-copper" },
+        ],
+      },
+      "csrf-token",
+    );
+  });
+
+  it("не отправляет очищенные text, number и select значения, но сохраняет boolean false", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: /Кабель ВВГнг 3x2.5/ }));
+    const editor = await screen.findByLabelText("Редактор товара");
+    await user.click(within(editor).getByRole("tab", { name: "Характеристики" }));
+
+    await user.clear(within(editor).getByLabelText("Цвет"));
+    await user.clear(within(editor).getByLabelText("Длина"));
+    await user.click(within(editor).getByLabelText("Монтажный комплект"));
+    await user.selectOptions(within(editor).getByLabelText("Материал"), "");
+    await user.click(within(editor).getByRole("button", { name: "Сохранить характеристики" }));
+
+    expect(adminCatalogApiMock.updateAdminProductAttributes).toHaveBeenCalledWith(
+      "product-active",
+      {
+        values: [{ attributeId: "attr-kit", valueBoolean: false }],
+      },
+      "csrf-token",
+    );
+  });
+
+  it("не перезаписывает выбранный товар устаревшим сохранением характеристик", async () => {
+    const user = userEvent.setup();
+    const attributesSave = deferred<AdminProductDetail>();
+    adminCatalogApiMock.getAdminProduct.mockImplementation((productId: string) =>
+      Promise.resolve(productId === "product-published" ? publishedProductDetail : activeProductDetail),
+    );
+    adminCatalogApiMock.updateAdminProductAttributes.mockReturnValueOnce(attributesSave.promise);
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: /Кабель ВВГнг 3x2.5/ }));
+    const editor = await screen.findByLabelText("Редактор товара");
+    await user.click(within(editor).getByRole("tab", { name: "Характеристики" }));
+    await within(editor).findByLabelText("Цвет");
+    await user.click(within(editor).getByRole("button", { name: "Сохранить характеристики" }));
+    await user.click(screen.getByRole("button", { name: /Разъем силовой РС/ }));
+    await waitFor(() => expect(within(editor).getByLabelText("Название")).toHaveValue("Разъем силовой РС"));
+
+    await act(async () => {
+      attributesSave.resolve(savedProductDetail);
+    });
+
+    expect(within(editor).getByLabelText("Название")).toHaveValue("Разъем силовой РС");
+    expect(within(editor).getByLabelText("Slug")).toHaveValue("razem-silovoy-rs");
+  });
+
+  it("загружает изображения во вкладке изображений выбранного товара", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: /Кабель ВВГнг 3x2.5/ }));
+    const editor = await screen.findByLabelText("Редактор товара");
+    await user.click(within(editor).getByRole("tab", { name: "Изображения" }));
+
+    expect(adminCatalogApiMock.getAdminProductImages).toHaveBeenCalledWith("product-active");
+    expect(await within(editor).findByRole("article", { name: /main\.jpg/ })).toBeInTheDocument();
   });
 
   it("показывает readiness issues из ответа backend", async () => {

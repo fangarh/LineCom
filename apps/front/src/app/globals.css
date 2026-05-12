@@ -2235,6 +2235,96 @@ a {
   font-weight: 700;
 }
 
+.admin-product-attributes,
+.admin-product-images {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.admin-product-attributes__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-product-attributes__check {
+  min-height: 44px;
+  align-self: end;
+  padding: 10px 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.admin-product-images__upload {
+  max-width: 420px;
+}
+
+.admin-product-images__grid {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-product-image-card {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.admin-product-image-card__preview {
+  display: grid;
+  place-items: center;
+  min-height: 118px;
+  padding: 8px;
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-sm);
+}
+
+.admin-product-image-card__preview img {
+  display: block;
+  width: 100%;
+  max-height: 118px;
+  object-fit: contain;
+}
+
+.admin-product-image-card__body,
+.admin-product-image-card__form {
+  min-width: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.admin-product-image-card__head {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.admin-product-image-card__head strong {
+  min-width: 0;
+  color: var(--color-graphite);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.admin-product-image-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-product-image-card__actions .button {
+  min-height: 36px;
+  padding-inline: 10px;
+}
+
 .status-pill {
   display: inline-flex;
   min-height: 32px;
@@ -2435,7 +2525,8 @@ a {
   .admin-attribute-manager,
   .admin-product-manager,
   .admin-request-detail__layout,
-  .admin-request-detail__grid {
+  .admin-request-detail__grid,
+  .admin-product-image-card {
     grid-template-columns: 1fr;
   }
 
@@ -2544,6 +2635,7 @@ a {
   .admin-brand-manager__filters,
   .admin-product-manager__filters,
   .admin-product-form__grid,
+  .admin-product-attributes__grid,
   .admin-requests__filters,
   .admin-request-card__meta,
   .request-detail-item__meta,
