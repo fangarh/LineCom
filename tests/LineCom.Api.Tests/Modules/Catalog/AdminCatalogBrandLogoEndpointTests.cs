@@ -19,33 +19,30 @@ using Microsoft.Extensions.Logging;
 
 namespace LineCom.Api.Tests.Modules.Catalog;
 
-public sealed class AdminCatalogBrandsEndpointTests
+public sealed class AdminCatalogBrandLogoEndpointTests
 {
     private static readonly Guid BrandId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
-    private static readonly Guid LogoFileId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+    private static readonly Guid StoredFileId = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
 
     [Fact]
-    public async Task GetBrands_WithoutAuth_ReturnsUnauthorizedError()
+    public async Task PutLogo_WithoutAuth_ReturnsUnauthorizedError()
     {
         await using var factory = CreateFactory(new ReturningAdminCatalogBrandService(), "seller");
         using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
 
-        using var response = await client.GetAsync("/api/admin/catalog/brands");
+        using var response = await client.SendAsync(CreateUploadRequest(csrfToken: "csrf-token"));
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-
-        var body = await ReadJsonAsync<ApiErrorResponse>(response);
-        Assert.Equal("auth.unauthorized", body.Code);
     }
 
     [Fact]
-    public async Task GetBrands_AsCustomer_ReturnsForbiddenError()
+    public async Task PutLogo_AsCustomer_ReturnsForbiddenError()
     {
         await using var factory = CreateFactory(new ReturningAdminCatalogBrandService(), "customer");
         using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
-        await LoginAsync(client);
+        var csrfToken = await LoginAsync(client);
 
-        using var response = await client.GetAsync("/api/admin/catalog/brands");
+        using var response = await client.SendAsync(CreateUploadRequest(csrfToken));
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 
@@ -54,91 +51,52 @@ public sealed class AdminCatalogBrandsEndpointTests
     }
 
     [Fact]
-    public async Task GetBrands_AsSeller_ReturnsFilteredBrands()
-    {
-        var brandService = new ReturningAdminCatalogBrandService();
-        await using var factory = CreateFactory(brandService, "seller");
-        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
-        await LoginAsync(client);
-
-        using var response = await client.GetAsync("/api/admin/catalog/brands?page=2&pageSize=10&search=cable&isActive=true");
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-        var body = await ReadJsonAsync<AdminBrandListResponse>(response);
-        Assert.Equal(2, body.Page);
-        Assert.Equal(10, body.PageSize);
-        var item = Assert.Single(body.Items);
-        Assert.Equal(BrandId, item.Id);
-        Assert.Equal("Cablex", item.Name);
-        Assert.NotNull(brandService.LastListQuery);
-        Assert.Equal(2, brandService.LastListQuery.Page);
-        Assert.Equal(10, brandService.LastListQuery.PageSize);
-        Assert.Equal("cable", brandService.LastListQuery.Search);
-        Assert.True(brandService.LastListQuery.IsActive);
-    }
-
-    [Theory]
-    [InlineData("seller")]
-    [InlineData("admin")]
-    public async Task GetBrand_AsStaff_ReturnsBrandDetail(string role)
-    {
-        await using var factory = CreateFactory(new ReturningAdminCatalogBrandService(), role);
-        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
-        await LoginAsync(client);
-
-        using var response = await client.GetAsync($"/api/admin/catalog/brands/{BrandId}");
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-        var body = await ReadJsonAsync<AdminBrandDetailDto>(response);
-        Assert.Equal(BrandId, body.Id);
-        Assert.Equal("Cablex", body.Name);
-        Assert.Equal(LogoFileId, body.LogoFileId);
-    }
-
-    [Fact]
-    public async Task PostBrand_WithCsrfToken_ReturnsCreatedBrand()
+    public async Task PutLogo_AsSellerWithCsrf_ReturnsLogoAndPassesFile()
     {
         var brandService = new ReturningAdminCatalogBrandService();
         await using var factory = CreateFactory(brandService, "seller");
         using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
         var csrfToken = await LoginAsync(client);
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/admin/catalog/brands")
-        {
-            Content = JsonContent.Create(new UpsertAdminBrandCommand(
-                "Cablex",
-                "cablex",
-                "Description",
-                "SEO title",
-                "SEO description",
-                LogoFileId,
-                true))
-        };
-        request.Headers.Add("X-CSRF-Token", csrfToken);
+        using var response = await client.SendAsync(CreateUploadRequest(csrfToken));
 
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var body = await ReadJsonAsync<AdminBrandLogoDto>(response);
+        Assert.Equal(StoredFileId, body.StoredFileId);
+        Assert.Equal(BrandId, brandService.LastLogoBrandId);
+        Assert.Equal("logo.png", brandService.LastFileName);
+        Assert.Equal("image/png", brandService.LastContentType);
+    }
+
+    [Fact]
+    public async Task DeleteLogo_AsSellerWithCsrf_ReturnsNoContent()
+    {
+        var brandService = new ReturningAdminCatalogBrandService();
+        await using var factory = CreateFactory(brandService, "seller");
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var csrfToken = await LoginAsync(client);
+
+        using var request = new HttpRequestMessage(HttpMethod.Delete, $"/api/admin/catalog/brands/{BrandId}/logo");
+        request.Headers.Add("X-CSRF-Token", csrfToken);
         using var response = await client.SendAsync(request);
 
-        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-        Assert.Equal($"/api/admin/catalog/brands/{BrandId}", response.Headers.Location?.AbsolutePath);
-
-        var body = await ReadJsonAsync<AdminBrandDetailDto>(response);
-        Assert.Equal(BrandId, body.Id);
-        Assert.Equal("Cablex", brandService.LastUpsertCommand?.Name);
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Equal(BrandId, brandService.LastDeletedLogoBrandId);
     }
 
     [Theory]
-    [InlineData("POST", "/api/admin/catalog/brands")]
-    [InlineData("PUT", "/api/admin/catalog/brands/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")]
-    [InlineData("DELETE", "/api/admin/catalog/brands/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")]
-    public async Task Mutations_WithoutCsrfToken_ReturnForbiddenError(string method, string path)
+    [InlineData("PUT")]
+    [InlineData("DELETE")]
+    public async Task LogoMutations_WithoutCsrfToken_ReturnForbiddenError(string method)
     {
         await using var factory = CreateFactory(new ReturningAdminCatalogBrandService(), "seller");
         using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
         await LoginAsync(client);
 
-        using var response = await client.SendAsync(CreateMutationRequest(method, path));
+        using var response = method == "PUT"
+            ? await client.SendAsync(CreateUploadRequest(csrfToken: null))
+            : await client.DeleteAsync($"/api/admin/catalog/brands/{BrandId}/logo");
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 
@@ -167,19 +125,24 @@ public sealed class AdminCatalogBrandsEndpointTests
             });
     }
 
-    private static HttpRequestMessage CreateMutationRequest(string method, string path)
+    private static HttpRequestMessage CreateUploadRequest(string? csrfToken)
     {
-        var request = new HttpRequestMessage(new HttpMethod(method), path);
-        if (method is not "DELETE")
+        var content = new MultipartFormDataContent();
+        content.Add(new ByteArrayContent("image-bytes"u8.ToArray())
         {
-            request.Content = JsonContent.Create(new UpsertAdminBrandCommand(
-                "Cablex",
-                "cablex",
-                null,
-                null,
-                null,
-                null,
-                null));
+            Headers =
+            {
+                ContentType = new("image/png")
+            }
+        }, "file", "logo.png");
+
+        var request = new HttpRequestMessage(HttpMethod.Put, $"/api/admin/catalog/brands/{BrandId}/logo")
+        {
+            Content = content
+        };
+        if (csrfToken is not null)
+        {
+            request.Headers.Add("X-CSRF-Token", csrfToken);
         }
 
         return request;
@@ -217,8 +180,10 @@ public sealed class AdminCatalogBrandsEndpointTests
 
     private sealed class ReturningAdminCatalogBrandService : IAdminCatalogBrandService
     {
-        public AdminBrandListQuery? LastListQuery { get; private set; }
-        public UpsertAdminBrandCommand? LastUpsertCommand { get; private set; }
+        public Guid? LastLogoBrandId { get; private set; }
+        public Guid? LastDeletedLogoBrandId { get; private set; }
+        public string? LastFileName { get; private set; }
+        public string? LastContentType { get; private set; }
 
         public Task<AdminBrandListResponse> GetBrandsAsync(
             HttpContext httpContext,
@@ -226,22 +191,7 @@ public sealed class AdminCatalogBrandsEndpointTests
             CancellationToken cancellationToken = default)
         {
             RequireStaff(httpContext);
-            LastListQuery = query;
-
-            return Task.FromResult(new AdminBrandListResponse(
-                new[]
-                {
-                    new AdminBrandListItemDto(
-                        BrandId,
-                        "Cablex",
-                        "cablex",
-                        true,
-                        ProductsCount: 3)
-                },
-                Page: query.Page ?? 1,
-                PageSize: query.PageSize ?? 20,
-                TotalItems: 1,
-                TotalPages: 1));
+            return Task.FromResult(new AdminBrandListResponse(Array.Empty<AdminBrandListItemDto>(), 1, 20, 0, 0));
         }
 
         public Task<AdminBrandDetailDto> GetBrandAsync(
@@ -259,7 +209,6 @@ public sealed class AdminCatalogBrandsEndpointTests
             CancellationToken cancellationToken = default)
         {
             RequireStaff(httpContext);
-            LastUpsertCommand = command;
             return Task.FromResult(Detail(BrandId));
         }
 
@@ -270,7 +219,6 @@ public sealed class AdminCatalogBrandsEndpointTests
             CancellationToken cancellationToken = default)
         {
             RequireStaff(httpContext);
-            LastUpsertCommand = command;
             return Task.FromResult(Detail(id));
         }
 
@@ -299,8 +247,11 @@ public sealed class AdminCatalogBrandsEndpointTests
             CancellationToken cancellationToken = default)
         {
             RequireStaff(httpContext);
+            LastLogoBrandId = brandId;
+            LastFileName = file.FileName;
+            LastContentType = file.ContentType;
             return Task.FromResult(new AdminBrandLogoDto(
-                LogoFileId,
+                StoredFileId,
                 "/storage/brands/admin/logo.png",
                 file.FileName,
                 file.ContentType,
@@ -314,6 +265,7 @@ public sealed class AdminCatalogBrandsEndpointTests
             CancellationToken cancellationToken = default)
         {
             RequireStaff(httpContext);
+            LastDeletedLogoBrandId = brandId;
             return Task.CompletedTask;
         }
 
@@ -335,7 +287,7 @@ public sealed class AdminCatalogBrandsEndpointTests
                 "Description",
                 "SEO title",
                 "SEO description",
-                LogoFileId,
+                StoredFileId,
                 true,
                 ProductsCount: 3);
         }

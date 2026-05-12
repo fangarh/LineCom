@@ -1,5 +1,6 @@
 using Dapper;
 using LineCom.Api.Infrastructure.Database;
+using LineCom.Api.Infrastructure.Storage;
 using Npgsql;
 
 namespace LineCom.Api.Modules.Catalog.Repositories;
@@ -179,6 +180,125 @@ public sealed class DapperAdminCatalogBrandRepository : IAdminCatalogBrandReposi
             await transaction.RollbackAsync(CancellationToken.None);
             throw;
         }
+    }
+
+    public async Task<AdminBrandLogoRecord?> UpdateBrandLogoAsync(
+        Guid brandId,
+        LocalStoredFileDraft file,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+
+        try
+        {
+            var previousLogoRows = (await connection.QueryAsync<Guid?>(
+                new CommandDefinition(
+                    AdminCatalogBrandSql.GetBrandLogoFileId,
+                    new { BrandId = brandId },
+                    transaction,
+                    cancellationToken: cancellationToken))).ToArray();
+            if (previousLogoRows.Length == 0)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return null;
+            }
+
+            var previousLogoFileId = previousLogoRows[0];
+
+            await connection.ExecuteAsync(new CommandDefinition(
+                AdminCatalogBrandSql.InsertStoredFile,
+                file,
+                transaction,
+                cancellationToken: cancellationToken));
+
+            await connection.QuerySingleAsync<Guid>(new CommandDefinition(
+                AdminCatalogBrandSql.UpdateBrandLogo,
+                new { BrandId = brandId, LogoFileId = file.Id },
+                transaction,
+                cancellationToken: cancellationToken));
+
+            if (previousLogoFileId is not null)
+            {
+                await connection.ExecuteAsync(new CommandDefinition(
+                    AdminCatalogBrandSql.MarkBrandLogoDeletedIfUnreferenced,
+                    new { StoredFileId = previousLogoFileId.Value },
+                    transaction,
+                    cancellationToken: cancellationToken));
+            }
+
+            await transaction.CommitAsync(cancellationToken);
+        }
+        catch
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            throw;
+        }
+
+        return await GetBrandLogoAsync(brandId, cancellationToken);
+    }
+
+    public async Task<bool> DeleteBrandLogoAsync(
+        Guid brandId,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+        await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+
+        try
+        {
+            var previousLogoRows = (await connection.QueryAsync<Guid?>(
+                new CommandDefinition(
+                    AdminCatalogBrandSql.GetBrandLogoFileId,
+                    new { BrandId = brandId },
+                    transaction,
+                    cancellationToken: cancellationToken))).ToArray();
+            if (previousLogoRows.Length == 0)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return false;
+            }
+
+            var previousLogoFileId = previousLogoRows[0];
+            if (previousLogoFileId is null)
+            {
+                await transaction.CommitAsync(cancellationToken);
+                return true;
+            }
+
+            await connection.QuerySingleAsync<Guid>(new CommandDefinition(
+                AdminCatalogBrandSql.ClearBrandLogo,
+                new { BrandId = brandId, PreviousLogoFileId = previousLogoFileId.Value },
+                transaction,
+                cancellationToken: cancellationToken));
+
+            await connection.ExecuteAsync(new CommandDefinition(
+                AdminCatalogBrandSql.MarkBrandLogoDeletedIfUnreferenced,
+                new { StoredFileId = previousLogoFileId.Value },
+                transaction,
+                cancellationToken: cancellationToken));
+
+            await transaction.CommitAsync(cancellationToken);
+            return true;
+        }
+        catch
+        {
+            await transaction.RollbackAsync(CancellationToken.None);
+            throw;
+        }
+    }
+
+    private async Task<AdminBrandLogoRecord?> GetBrandLogoAsync(
+        Guid brandId,
+        CancellationToken cancellationToken)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+
+        return await connection.QuerySingleOrDefaultAsync<AdminBrandLogoRecord>(
+            new CommandDefinition(
+                AdminCatalogBrandSql.GetBrandLogo,
+                new { BrandId = brandId },
+                cancellationToken: cancellationToken));
     }
 
     private static bool IsUniqueViolation(PostgresException exception)

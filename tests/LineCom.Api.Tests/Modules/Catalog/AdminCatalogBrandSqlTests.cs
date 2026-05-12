@@ -24,4 +24,22 @@ public sealed class AdminCatalogBrandSqlTests
         Assert.Contains("NOT EXISTS", AdminCatalogBrandSql.DeleteBrand);
         Assert.Contains("product.brand_id = brand.id", AdminCatalogBrandSql.DeleteBrand);
     }
+
+    [Fact]
+    public void BrandLogoSql_RegistersBrandLogoFileAndMarksPreviousLogoDeletedWhenUnreferenced()
+    {
+        Assert.Contains("INSERT INTO stored_files", AdminCatalogBrandSql.InsertStoredFile);
+        Assert.Contains("'active'", AdminCatalogBrandSql.InsertStoredFile);
+        Assert.Contains("UPDATE brands", AdminCatalogBrandSql.UpdateBrandLogo);
+        Assert.Contains("logo_file_id = @LogoFileId", AdminCatalogBrandSql.UpdateBrandLogo);
+        Assert.Contains("UPDATE stored_files", AdminCatalogBrandSql.MarkBrandLogoDeletedIfUnreferenced);
+        Assert.Contains("NOT EXISTS", AdminCatalogBrandSql.MarkBrandLogoDeletedIfUnreferenced);
+    }
+
+    [Fact]
+    public void DeleteBrandLogo_ClearsLogoFileId()
+    {
+        Assert.Contains("SET logo_file_id = NULL", AdminCatalogBrandSql.ClearBrandLogo);
+        Assert.Contains("WHERE id = @BrandId", AdminCatalogBrandSql.ClearBrandLogo);
+    }
 }

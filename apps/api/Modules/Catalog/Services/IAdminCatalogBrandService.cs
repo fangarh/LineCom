@@ -35,4 +35,15 @@ public interface IAdminCatalogBrandService
         HttpContext httpContext,
         Guid id,
         CancellationToken cancellationToken = default);
+
+    Task<AdminBrandLogoDto> UploadLogoAsync(
+        HttpContext httpContext,
+        Guid brandId,
+        IFormFile file,
+        CancellationToken cancellationToken = default);
+
+    Task DeleteLogoAsync(
+        HttpContext httpContext,
+        Guid brandId,
+        CancellationToken cancellationToken = default);
 }

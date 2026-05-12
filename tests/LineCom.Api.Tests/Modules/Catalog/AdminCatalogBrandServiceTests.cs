@@ -1,5 +1,6 @@
 using LineCom.Api.Modules.Auth.DTOs;
 using LineCom.Api.Modules.Auth.Services;
+using LineCom.Api.Infrastructure.Storage;
 using LineCom.Api.Modules.Catalog.DTOs;
 using LineCom.Api.Modules.Catalog.Repositories;
 using LineCom.Api.Modules.Catalog.Services;
@@ -10,6 +11,8 @@ namespace LineCom.Api.Tests.Modules.Catalog;
 
 public sealed class AdminCatalogBrandServiceTests
 {
+    private static readonly Guid BrandId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+
     [Theory]
     [InlineData("seller")]
     [InlineData("admin")]
@@ -128,13 +131,93 @@ public sealed class AdminCatalogBrandServiceTests
         Assert.Equal("Cablex", response.Name);
     }
 
+    [Fact]
+    public async Task UploadLogoAsync_StoresBrandLogoUnderBrandDirectory()
+    {
+        var repository = new CapturingAdminCatalogBrandRepository();
+        var writer = new CapturingLocalStoredFileWriter();
+        var service = CreateService("seller", repository, writer);
+
+        var response = await service.UploadLogoAsync(
+            new DefaultHttpContext(),
+            BrandId,
+            FormFile("logo.png", "image/png"),
+            CancellationToken.None);
+
+        Assert.Equal("brands/admin/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", writer.LastStorageDirectory);
+        Assert.Equal("brand_logo", writer.LastPurpose);
+        Assert.NotNull(repository.LastLogoDraft);
+        Assert.Equal(repository.LogoRecord.StoredFileId, response.StoredFileId);
+    }
+
+    [Fact]
+    public async Task UploadLogoAsync_MissingBrand_ThrowsBrandNotFound()
+    {
+        var repository = new CapturingAdminCatalogBrandRepository { Detail = null };
+        var writer = new CapturingLocalStoredFileWriter();
+        var service = CreateService("seller", repository, writer);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.UploadLogoAsync(new DefaultHttpContext(), BrandId, FormFile("logo.png", "image/png"), CancellationToken.None));
+
+        Assert.Equal("admin_catalog.brand_not_found", exception.Code);
+        Assert.False(writer.SaveCalled);
+    }
+
+    [Fact]
+    public async Task UploadLogoAsync_InvalidType_ThrowsInvalidImageType()
+    {
+        var writer = new CapturingLocalStoredFileWriter
+        {
+            SaveException = new InvalidLocalStoredFileException("Invalid image content type.")
+        };
+        var service = CreateService("seller", new CapturingAdminCatalogBrandRepository(), writer);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.UploadLogoAsync(new DefaultHttpContext(), BrandId, FormFile("logo.txt", "text/plain"), CancellationToken.None));
+
+        Assert.Equal("admin_catalog.invalid_image_type", exception.Code);
+    }
+
+    [Fact]
+    public async Task UploadLogoAsync_RepositoryFailure_CleansDraftAndPreservesError()
+    {
+        var repositoryException = new InvalidOperationException("database unavailable");
+        var repository = new CapturingAdminCatalogBrandRepository
+        {
+            UpdateLogoException = repositoryException
+        };
+        var writer = new CapturingLocalStoredFileWriter();
+        var service = CreateService("seller", repository, writer);
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.UploadLogoAsync(new DefaultHttpContext(), BrandId, FormFile("logo.png", "image/png"), CancellationToken.None));
+
+        Assert.Same(repositoryException, exception);
+        Assert.Equal(writer.Draft.StorageKey, writer.DeletedStorageKey);
+    }
+
+    [Fact]
+    public async Task DeleteLogoAsync_MissingBrand_ThrowsBrandNotFound()
+    {
+        var repository = new CapturingAdminCatalogBrandRepository { DeleteLogoResult = false };
+        var service = CreateService("admin", repository, new CapturingLocalStoredFileWriter());
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.DeleteLogoAsync(new DefaultHttpContext(), BrandId, CancellationToken.None));
+
+        Assert.Equal("admin_catalog.brand_not_found", exception.Code);
+    }
+
     private static AdminCatalogBrandService CreateService(
         string role,
-        CapturingAdminCatalogBrandRepository repository)
+        CapturingAdminCatalogBrandRepository repository,
+        CapturingLocalStoredFileWriter? writer = null)
     {
         return new AdminCatalogBrandService(
             new RoleAdminCatalogStaffGuard(role),
-            repository);
+            repository,
+            writer ?? new CapturingLocalStoredFileWriter());
     }
 
     private static AdminBrandRecord BrandRecord(
@@ -152,6 +235,16 @@ public sealed class AdminCatalogBrandServiceTests
             Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
             IsActive: true,
             productsCount);
+    }
+
+    private static IFormFile FormFile(string fileName, string contentType)
+    {
+        var bytes = "image-bytes"u8.ToArray();
+        return new FormFile(new MemoryStream(bytes), 0, bytes.Length, "file", fileName)
+        {
+            Headers = new HeaderDictionary(),
+            ContentType = contentType
+        };
     }
 
     private sealed class RoleAdminCatalogStaffGuard : IAdminCatalogStaffGuard
@@ -186,10 +279,20 @@ public sealed class AdminCatalogBrandServiceTests
         public AdminBrandReadListQuery? LastListQuery { get; private set; }
         public AdminBrandUpsert? LastUpsert { get; private set; }
         public AdminBrandQuickCreate? LastQuickCreate { get; private set; }
+        public LocalStoredFileDraft? LastLogoDraft { get; private set; }
         public bool DeleteCalled { get; private set; }
         public AdminBrandRecord? Detail { get; init; } = BrandRecord();
         public AdminBrandRecord? DetailAfterDelete { get; init; }
         public bool DeleteResult { get; init; } = true;
+        public AdminBrandLogoRecord LogoRecord { get; init; } = new(
+            Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+            "/storage/brands/admin/logo.png",
+            "logo.png",
+            "image/png",
+            11,
+            "checksum");
+        public Exception? UpdateLogoException { get; init; }
+        public bool DeleteLogoResult { get; init; } = true;
         private bool _deleteAttempted;
 
         public Task<AdminBrandListRecordResponse> GetBrandsAsync(
@@ -247,6 +350,70 @@ public sealed class AdminCatalogBrandServiceTests
             DeleteCalled = true;
             _deleteAttempted = true;
             return Task.FromResult(DeleteResult);
+        }
+
+        public Task<AdminBrandLogoRecord?> UpdateBrandLogoAsync(
+            Guid brandId,
+            LocalStoredFileDraft file,
+            CancellationToken cancellationToken = default)
+        {
+            LastLogoDraft = file;
+            if (UpdateLogoException is not null)
+            {
+                throw UpdateLogoException;
+            }
+
+            return Task.FromResult<AdminBrandLogoRecord?>(LogoRecord);
+        }
+
+        public Task<bool> DeleteBrandLogoAsync(
+            Guid brandId,
+            CancellationToken cancellationToken = default)
+        {
+            return Task.FromResult(DeleteLogoResult);
+        }
+    }
+
+    private sealed class CapturingLocalStoredFileWriter : ILocalStoredFileWriter
+    {
+        public bool SaveCalled { get; private set; }
+        public string? LastPurpose { get; private set; }
+        public string? LastStorageDirectory { get; private set; }
+        public string? DeletedStorageKey { get; private set; }
+        public Exception? SaveException { get; init; }
+        public LocalStoredFileDraft Draft { get; } = new(
+            Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+            "storage/brands/admin/logo.png",
+            "logo.png",
+            "image/png",
+            11,
+            "checksum",
+            "brand_logo",
+            Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"));
+
+        public Task<LocalStoredFileDraft> SaveAsync(
+            IFormFile file,
+            Guid fileId,
+            string purpose,
+            string storageDirectory,
+            Guid createdByUserId,
+            CancellationToken cancellationToken = default)
+        {
+            SaveCalled = true;
+            LastPurpose = purpose;
+            LastStorageDirectory = storageDirectory;
+            if (SaveException is not null)
+            {
+                throw SaveException;
+            }
+
+            return Task.FromResult(Draft);
+        }
+
+        public Task DeletePhysicalFileIfExistsAsync(string storageKey, CancellationToken cancellationToken = default)
+        {
+            DeletedStorageKey = storageKey;
+            return Task.CompletedTask;
         }
     }
 }

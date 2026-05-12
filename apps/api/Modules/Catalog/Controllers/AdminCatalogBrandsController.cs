@@ -94,6 +94,33 @@ public sealed class AdminCatalogBrandsController : ControllerBase
     }
 
     [RequireCsrfToken]
+    [HttpPut("{id:guid}/logo")]
+    [ProducesResponseType(typeof(AdminBrandLogoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<AdminBrandLogoDto>> UploadLogo(
+        Guid id,
+        [FromForm] IFormFile file,
+        CancellationToken cancellationToken)
+    {
+        return Ok(await _brandService.UploadLogoAsync(HttpContext, id, file, cancellationToken));
+    }
+
+    [RequireCsrfToken]
+    [HttpDelete("{id:guid}/logo")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteLogo(Guid id, CancellationToken cancellationToken)
+    {
+        await _brandService.DeleteLogoAsync(HttpContext, id, cancellationToken);
+        return NoContent();
+    }
+
+    [RequireCsrfToken]
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -1,3 +1,5 @@
+using LineCom.Api.Infrastructure.Storage;
+
 namespace LineCom.Api.Modules.Catalog.Repositories;
 
 public sealed record AdminBrandReadListQuery(int Page, int PageSize, string? Search, bool? IsActive);
@@ -25,6 +27,14 @@ public sealed record AdminBrandUpsert(
     bool IsActive);
 
 public sealed record AdminBrandQuickCreate(string Name, string Slug);
+
+public sealed record AdminBrandLogoRecord(
+    Guid StoredFileId,
+    string Url,
+    string OriginalFileName,
+    string ContentType,
+    long SizeBytes,
+    string Checksum);
 
 internal sealed class AdminBrandSlugAlreadyExistsException : Exception
 {
@@ -63,4 +73,11 @@ public interface IAdminCatalogBrandRepository
     Task<AdminBrandRecord> QuickCreateBrandAsync(AdminBrandQuickCreate command, CancellationToken cancellationToken = default);
 
     Task<bool> DeleteBrandAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<AdminBrandLogoRecord?> UpdateBrandLogoAsync(
+        Guid brandId,
+        LocalStoredFileDraft file,
+        CancellationToken cancellationToken = default);
+
+    Task<bool> DeleteBrandLogoAsync(Guid brandId, CancellationToken cancellationToken = default);
 }

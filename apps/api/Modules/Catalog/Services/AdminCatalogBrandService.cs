@@ -1,5 +1,8 @@
+using System.Runtime.ExceptionServices;
+using LineCom.Api.Infrastructure.Storage;
 using LineCom.Api.Modules.Catalog.DTOs;
 using LineCom.Api.Modules.Catalog.Repositories;
+using LineCom.Api.Shared.Errors;
 using Microsoft.AspNetCore.Http;
 
 namespace LineCom.Api.Modules.Catalog.Services;
@@ -7,16 +10,20 @@ namespace LineCom.Api.Modules.Catalog.Services;
 public sealed class AdminCatalogBrandService : IAdminCatalogBrandService
 {
     private const string BrandInUseMessage = "\u0411\u0440\u0435\u043d\u0434 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442\u0441\u044f \u0442\u043e\u0432\u0430\u0440\u0430\u043c\u0438.";
+    private const string BrandLogoPurpose = "brand_logo";
 
     private readonly IAdminCatalogStaffGuard _staffGuard;
     private readonly IAdminCatalogBrandRepository _repository;
+    private readonly ILocalStoredFileWriter _fileWriter;
 
     public AdminCatalogBrandService(
         IAdminCatalogStaffGuard staffGuard,
-        IAdminCatalogBrandRepository repository)
+        IAdminCatalogBrandRepository repository,
+        ILocalStoredFileWriter fileWriter)
     {
         _staffGuard = staffGuard;
         _repository = repository;
+        _fileWriter = fileWriter;
     }
 
     public async Task<AdminBrandListResponse> GetBrandsAsync(
@@ -179,6 +186,75 @@ public sealed class AdminCatalogBrandService : IAdminCatalogBrandService
         }
     }
 
+    public async Task<AdminBrandLogoDto> UploadLogoAsync(
+        HttpContext httpContext,
+        Guid brandId,
+        IFormFile file,
+        CancellationToken cancellationToken = default)
+    {
+        var user = await _staffGuard.RequireStaffAsync(httpContext, cancellationToken);
+
+        if (await _repository.GetBrandAsync(brandId, cancellationToken) is null)
+        {
+            throw AdminCatalogErrors.BrandNotFound();
+        }
+
+        LocalStoredFileDraft draft;
+        try
+        {
+            draft = await _fileWriter.SaveAsync(
+                file,
+                Guid.NewGuid(),
+                BrandLogoPurpose,
+                $"brands/admin/{brandId:N}",
+                user.Id,
+                cancellationToken);
+        }
+        catch (InvalidLocalStoredFileException exception)
+        {
+            throw MapInvalidStoredFileException(exception);
+        }
+
+        AdminBrandLogoRecord? logo;
+        try
+        {
+            logo = await _repository.UpdateBrandLogoAsync(brandId, draft, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            await DeleteDraftBestEffortAsync(draft);
+
+            if (exception is ApiException)
+            {
+                throw;
+            }
+
+            ExceptionDispatchInfo.Capture(exception).Throw();
+            throw;
+        }
+
+        if (logo is null)
+        {
+            await DeleteDraftBestEffortAsync(draft);
+            throw AdminCatalogErrors.BrandNotFound();
+        }
+
+        return ToLogoDto(logo);
+    }
+
+    public async Task DeleteLogoAsync(
+        HttpContext httpContext,
+        Guid brandId,
+        CancellationToken cancellationToken = default)
+    {
+        await _staffGuard.RequireStaffAsync(httpContext, cancellationToken);
+
+        if (!await _repository.DeleteBrandLogoAsync(brandId, cancellationToken))
+        {
+            throw AdminCatalogErrors.BrandNotFound();
+        }
+    }
+
     private static AdminBrandUpsert ToUpsert(UpsertAdminBrandCommand command)
     {
         return new AdminBrandUpsert(
@@ -218,5 +294,37 @@ public sealed class AdminCatalogBrandService : IAdminCatalogBrandService
             record.LogoFileId,
             record.IsActive,
             record.ProductsCount);
+    }
+
+    private async Task DeleteDraftBestEffortAsync(LocalStoredFileDraft draft)
+    {
+        try
+        {
+            await _fileWriter.DeletePhysicalFileIfExistsAsync(
+                draft.StorageKey,
+                CancellationToken.None);
+        }
+        catch
+        {
+            // Best-effort cleanup must not mask the original upload error.
+        }
+    }
+
+    private static ApiException MapInvalidStoredFileException(InvalidLocalStoredFileException exception)
+    {
+        return exception.Message.Contains("size", StringComparison.OrdinalIgnoreCase)
+            ? AdminCatalogErrors.ImageTooLarge()
+            : AdminCatalogErrors.InvalidImageType();
+    }
+
+    private static AdminBrandLogoDto ToLogoDto(AdminBrandLogoRecord record)
+    {
+        return new AdminBrandLogoDto(
+            record.StoredFileId,
+            record.Url,
+            record.OriginalFileName,
+            record.ContentType,
+            record.SizeBytes,
+            record.Checksum);
     }
 }

@@ -141,4 +141,77 @@ internal static class AdminCatalogBrandSql
                 WHERE product.brand_id = brand.id
             );
         """;
+
+    public const string InsertStoredFile = """
+        INSERT INTO stored_files (
+            id,
+            storage_key,
+            original_file_name,
+            content_type,
+            size_bytes,
+            checksum,
+            purpose,
+            status,
+            created_by_user_id
+        )
+        VALUES (
+            @Id,
+            @StorageKey,
+            @OriginalFileName,
+            @ContentType,
+            @SizeBytes,
+            @Checksum,
+            @Purpose,
+            'active',
+            @CreatedByUserId
+        );
+        """;
+
+    public const string GetBrandLogoFileId = """
+        SELECT logo_file_id
+        FROM brands
+        WHERE id = @BrandId
+        FOR UPDATE;
+        """;
+
+    public const string UpdateBrandLogo = """
+        UPDATE brands
+        SET logo_file_id = @LogoFileId
+        WHERE id = @BrandId
+        RETURNING logo_file_id;
+        """;
+
+    public const string ClearBrandLogo = """
+        UPDATE brands
+        SET logo_file_id = NULL
+        WHERE id = @BrandId
+        RETURNING @PreviousLogoFileId;
+        """;
+
+    public const string MarkBrandLogoDeletedIfUnreferenced = """
+        UPDATE stored_files stored_file
+        SET status = 'deleted'
+        WHERE stored_file.id = @StoredFileId
+            AND stored_file.purpose = 'brand_logo'
+            AND NOT EXISTS (
+                SELECT 1
+                FROM brands brand
+                WHERE brand.logo_file_id = stored_file.id
+            );
+        """;
+
+    public const string GetBrandLogo = """
+        SELECT
+            stored_file.id AS "StoredFileId",
+            '/' || stored_file.storage_key AS "Url",
+            stored_file.original_file_name AS "OriginalFileName",
+            stored_file.content_type AS "ContentType",
+            stored_file.size_bytes AS "SizeBytes",
+            stored_file.checksum AS "Checksum"
+        FROM brands brand
+        INNER JOIN stored_files stored_file ON stored_file.id = brand.logo_file_id
+            AND stored_file.status = 'active'
+            AND stored_file.purpose = 'brand_logo'
+        WHERE brand.id = @BrandId;
+        """;
 }
