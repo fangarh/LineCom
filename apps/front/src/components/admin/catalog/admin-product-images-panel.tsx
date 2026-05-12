@@ -11,17 +11,18 @@ import {
   type AdminProductImage,
 } from "@/lib/api/admin-catalog";
 import { normalizeApiError } from "@/lib/api/errors";
+import {
+  formsFromProductImages,
+  normalizeOptionalImageText,
+  reorderProductImages,
+  type ImageFormState,
+} from "./admin-product-image-helpers";
 
 const missingCsrfMessage = "Сессия не подтверждена. Обновите страницу и войдите снова.";
 
 type AdminProductImagesPanelProps = {
   productId: string | null;
   csrfToken?: string | null;
-};
-
-type ImageFormState = {
-  alt: string;
-  title: string;
 };
 
 type MutatingImageState = {
@@ -60,7 +61,7 @@ export function AdminProductImagesPanel({ productId, csrfToken = null }: AdminPr
       if (requestSeqRef.current !== requestSeq || !isCurrentOperation(targetProductId, operationSeq)) return;
       setImages(response.items);
       setImagesProductId(targetProductId);
-      setForms(formsFromImages(response.items));
+      setForms(formsFromProductImages(response.items));
     } catch (error) {
       if (requestSeqRef.current !== requestSeq || !isCurrentOperation(targetProductId, operationSeq)) return;
       setAlertMessage(normalizeApiError(error).message);
@@ -149,7 +150,7 @@ export function AdminProductImagesPanel({ productId, csrfToken = null }: AdminPr
       await updateAdminProductImage(
         operationProductId,
         imageId,
-        { alt: normalizeOptionalText(form.alt), title: normalizeOptionalText(form.title) },
+        { alt: normalizeOptionalImageText(form.alt), title: normalizeOptionalImageText(form.title) },
         csrfToken,
       );
       if (!isCurrentOperation(operationProductId, operationSeq)) return;
@@ -188,12 +189,8 @@ export function AdminProductImagesPanel({ productId, csrfToken = null }: AdminPr
       return;
     }
 
-    const index = images.findIndex((image) => image.id === imageId);
-    const targetIndex = index + direction;
-    if (index < 0 || targetIndex < 0 || targetIndex >= images.length) return;
-
-    const orderedImages = [...images];
-    [orderedImages[index], orderedImages[targetIndex]] = [orderedImages[targetIndex], orderedImages[index]];
+    const orderedImages = reorderProductImages(images, imageId, direction);
+    if (orderedImages === images) return;
 
     await mutateImage(operationProductId, operationSeq, imageId, "Порядок изображений обновлен.", async () => {
       await updateAdminProductImageOrder(
@@ -361,19 +358,4 @@ export function AdminProductImagesPanel({ productId, csrfToken = null }: AdminPr
       </div>
     </div>
   );
-}
-
-function formsFromImages(images: AdminProductImage[]) {
-  return images.reduce<Record<string, ImageFormState>>((forms, image) => {
-    forms[image.id] = {
-      alt: image.alt,
-      title: image.title ?? "",
-    };
-    return forms;
-  }, {});
-}
-
-function normalizeOptionalText(value: string) {
-  const normalized = value.trim();
-  return normalized || null;
 }
