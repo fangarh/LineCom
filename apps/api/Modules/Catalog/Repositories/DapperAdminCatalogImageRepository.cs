@@ -57,6 +57,7 @@ public sealed class DapperAdminCatalogImageRepository : IAdminCatalogImageReposi
     {
         await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+        IReadOnlyList<AdminProductImageRecord> images;
 
         try
         {
@@ -87,6 +88,13 @@ public sealed class DapperAdminCatalogImageRepository : IAdminCatalogImageReposi
                     cancellationToken: cancellationToken));
             }
 
+            images = (await connection.QueryAsync<AdminProductImageRecord>(
+                new CommandDefinition(
+                    AdminCatalogImageSql.ListProductImages,
+                    new { ProductId = productId },
+                    transaction,
+                    cancellationToken: cancellationToken))).ToArray();
+
             await transaction.CommitAsync(cancellationToken);
         }
         catch
@@ -95,7 +103,7 @@ public sealed class DapperAdminCatalogImageRepository : IAdminCatalogImageReposi
             throw;
         }
 
-        return await GetProductImagesAsync(productId, cancellationToken);
+        return images;
     }
 
     public async Task<AdminProductImageRecord?> UpdateProductImageAsync(

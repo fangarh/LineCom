@@ -154,20 +154,28 @@ internal static class AdminCatalogImageSql
             image.stored_file_id AS "StoredFileId",
             image.is_main AS "IsMain"
         FROM product_images image
+        INNER JOIN stored_files stored_file ON stored_file.id = image.stored_file_id
+            AND stored_file.status = 'active'
+            AND stored_file.purpose = 'product_image'
         WHERE image.id = @ImageId
             AND image.product_id = @ProductId;
         """;
 
     public const string DeleteProductImage = """
-        DELETE FROM product_images
-        WHERE id = @ImageId
-            AND product_id = @ProductId;
+        DELETE FROM product_images image
+        USING stored_files stored_file
+        WHERE image.id = @ImageId
+            AND image.product_id = @ProductId
+            AND stored_file.id = image.stored_file_id
+            AND stored_file.status = 'active'
+            AND stored_file.purpose = 'product_image';
         """;
 
     public const string MarkStoredFileDeletedIfUnreferenced = """
         UPDATE stored_files stored_file
         SET status = 'deleted'
         WHERE stored_file.id = @StoredFileId
+            AND stored_file.purpose = 'product_image'
             AND NOT EXISTS (
                 SELECT 1
                 FROM product_images image

@@ -37,9 +37,49 @@ public sealed class AdminCatalogBrandSqlTests
     }
 
     [Fact]
+    public void UpdateBrandLogoRepository_ReadsLogoBeforeCommitting()
+    {
+        var methodSource = ReadRepositoryMethod(
+            "public async Task<AdminBrandLogoRecord?> UpdateBrandLogoAsync",
+            "public async Task<bool> DeleteBrandLogoAsync");
+
+        var getLogoIndex = methodSource.IndexOf("AdminCatalogBrandSql.GetBrandLogo", StringComparison.Ordinal);
+        var commitIndex = methodSource.IndexOf("transaction.CommitAsync", StringComparison.Ordinal);
+
+        Assert.True(getLogoIndex >= 0);
+        Assert.True(commitIndex >= 0);
+        Assert.True(getLogoIndex < commitIndex);
+    }
+
+    [Fact]
     public void DeleteBrandLogo_ClearsLogoFileId()
     {
         Assert.Contains("SET logo_file_id = NULL", AdminCatalogBrandSql.ClearBrandLogo);
         Assert.Contains("WHERE id = @BrandId", AdminCatalogBrandSql.ClearBrandLogo);
+    }
+
+    private static string ReadRepositoryMethod(string startMarker, string endMarker)
+    {
+        var repositorySource = File.ReadAllText(
+            Path.Combine(
+                AppContext.BaseDirectory,
+                "..",
+                "..",
+                "..",
+                "..",
+                "..",
+                "apps",
+                "api",
+                "Modules",
+                "Catalog",
+                "Repositories",
+                "DapperAdminCatalogBrandRepository.cs"));
+        var startIndex = repositorySource.IndexOf(startMarker, StringComparison.Ordinal);
+        var endIndex = repositorySource.IndexOf(endMarker, StringComparison.Ordinal);
+
+        Assert.True(startIndex >= 0);
+        Assert.True(endIndex > startIndex);
+
+        return repositorySource[startIndex..endIndex];
     }
 }

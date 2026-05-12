@@ -72,10 +72,29 @@ public sealed class AdminCatalogImageSqlTests
     [Fact]
     public void DeleteProductImage_MarksFileDeletedOnlyWhenUnreferenced()
     {
+        Assert.Contains("INNER JOIN stored_files stored_file ON stored_file.id = image.stored_file_id", AdminCatalogImageSql.GetProductImageForDelete);
+        Assert.Contains("stored_file.status = 'active'", AdminCatalogImageSql.GetProductImageForDelete);
+        Assert.Contains("stored_file.purpose = 'product_image'", AdminCatalogImageSql.GetProductImageForDelete);
         Assert.Contains("DELETE FROM product_images", AdminCatalogImageSql.DeleteProductImage);
         Assert.Contains("UPDATE stored_files", AdminCatalogImageSql.MarkStoredFileDeletedIfUnreferenced);
+        Assert.Contains("stored_file.purpose = 'product_image'", AdminCatalogImageSql.MarkStoredFileDeletedIfUnreferenced);
         Assert.Contains("NOT EXISTS", AdminCatalogImageSql.MarkStoredFileDeletedIfUnreferenced);
         Assert.Contains("UPDATE product_images", AdminCatalogImageSql.PromoteFirstRemainingProductImage);
+    }
+
+    [Fact]
+    public void AddProductImagesRepository_ReadsInsertedImagesBeforeCommitting()
+    {
+        var methodSource = ReadRepositoryMethod(
+            "public async Task<IReadOnlyList<AdminProductImageRecord>> AddProductImagesAsync",
+            "public async Task<AdminProductImageRecord?> UpdateProductImageAsync");
+
+        var listIndex = methodSource.IndexOf("AdminCatalogImageSql.ListProductImages", StringComparison.Ordinal);
+        var commitIndex = methodSource.IndexOf("transaction.CommitAsync", StringComparison.Ordinal);
+
+        Assert.True(listIndex >= 0);
+        Assert.True(commitIndex >= 0);
+        Assert.True(listIndex < commitIndex);
     }
 
     [Fact]
@@ -86,5 +105,30 @@ public sealed class AdminCatalogImageSqlTests
             AdminCatalogImageSql.PromoteFirstRemainingProductImage);
         Assert.Contains("main_file.status = 'active'", AdminCatalogImageSql.PromoteFirstRemainingProductImage);
         Assert.Contains("main_file.purpose = 'product_image'", AdminCatalogImageSql.PromoteFirstRemainingProductImage);
+    }
+
+    private static string ReadRepositoryMethod(string startMarker, string endMarker)
+    {
+        var repositorySource = File.ReadAllText(
+            Path.Combine(
+                AppContext.BaseDirectory,
+                "..",
+                "..",
+                "..",
+                "..",
+                "..",
+                "apps",
+                "api",
+                "Modules",
+                "Catalog",
+                "Repositories",
+                "DapperAdminCatalogImageRepository.cs"));
+        var startIndex = repositorySource.IndexOf(startMarker, StringComparison.Ordinal);
+        var endIndex = repositorySource.IndexOf(endMarker, StringComparison.Ordinal);
+
+        Assert.True(startIndex >= 0);
+        Assert.True(endIndex > startIndex);
+
+        return repositorySource[startIndex..endIndex];
     }
 }

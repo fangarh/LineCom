@@ -189,6 +189,7 @@ public sealed class DapperAdminCatalogBrandRepository : IAdminCatalogBrandReposi
     {
         await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(cancellationToken);
+        AdminBrandLogoRecord? logo;
 
         try
         {
@@ -227,6 +228,13 @@ public sealed class DapperAdminCatalogBrandRepository : IAdminCatalogBrandReposi
                     cancellationToken: cancellationToken));
             }
 
+            logo = await connection.QuerySingleOrDefaultAsync<AdminBrandLogoRecord>(
+                new CommandDefinition(
+                    AdminCatalogBrandSql.GetBrandLogo,
+                    new { BrandId = brandId },
+                    transaction,
+                    cancellationToken: cancellationToken));
+
             await transaction.CommitAsync(cancellationToken);
         }
         catch
@@ -235,7 +243,7 @@ public sealed class DapperAdminCatalogBrandRepository : IAdminCatalogBrandReposi
             throw;
         }
 
-        return await GetBrandLogoAsync(brandId, cancellationToken);
+        return logo;
     }
 
     public async Task<bool> DeleteBrandLogoAsync(

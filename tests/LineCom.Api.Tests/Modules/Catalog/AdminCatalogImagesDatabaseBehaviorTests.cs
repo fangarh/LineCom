@@ -43,6 +43,47 @@ public sealed class AdminCatalogImagesDatabaseBehaviorTests
     }
 
     [Fact]
+    public async Task ProductImages_PreserveSortOrderAndRejectDuplicateStoredFileForSameProduct()
+    {
+        if (!_fixture.IsConfigured)
+        {
+            return;
+        }
+
+        await using var connection = await OpenConnectionAsync();
+        var ids = await SeedProductWithTwoStoredProductImagesAsync(connection);
+
+        await connection.ExecuteAsync(
+            """
+            INSERT INTO product_images (product_id, stored_file_id, alt, sort_order, is_main)
+            VALUES
+                (@ProductId, @FirstFileId, 'first', 20, TRUE),
+                (@ProductId, @SecondFileId, 'second', 10, FALSE);
+            """,
+            ids);
+
+        var orderedFileIds = (await connection.QueryAsync<Guid>(
+            """
+            SELECT stored_file_id
+            FROM product_images
+            WHERE product_id = @ProductId
+            ORDER BY sort_order, id;
+            """,
+            new { ids.ProductId })).ToArray();
+
+        Assert.Equal(new[] { ids.SecondFileId, ids.FirstFileId }, orderedFileIds);
+
+        var exception = await Assert.ThrowsAsync<PostgresException>(() => connection.ExecuteAsync(
+            """
+            INSERT INTO product_images (product_id, stored_file_id, alt)
+            VALUES (@ProductId, @FileId, 'duplicate');
+            """,
+            new { ids.ProductId, FileId = ids.FirstFileId }));
+
+        Assert.Equal(PostgresErrorCodes.UniqueViolation, exception.SqlState);
+    }
+
+    [Fact]
     public async Task ProductImages_RejectBrandLogoStoredFile()
     {
         if (!_fixture.IsConfigured)
@@ -61,6 +102,55 @@ public sealed class AdminCatalogImagesDatabaseBehaviorTests
             new { ids.ProductId, ids.FileId }));
 
         Assert.Equal(PostgresErrorCodes.CheckViolation, exception.SqlState);
+    }
+
+    [Fact]
+    public async Task BrandLogo_AllowsValidReplaceAndRejectsInvalidReplaceWithoutChangingBrand()
+    {
+        if (!_fixture.IsConfigured)
+        {
+            return;
+        }
+
+        await using var connection = await OpenConnectionAsync();
+        var brandId = await SeedBrandAsync(connection);
+        var firstLogoFileId = await SeedStoredFileAsync(connection, "brand_logo");
+        var secondLogoFileId = await SeedStoredFileAsync(connection, "brand_logo");
+        var productImageFileId = await SeedStoredFileAsync(connection, "product_image");
+
+        await connection.ExecuteAsync(
+            """
+            UPDATE brands
+            SET logo_file_id = @FileId
+            WHERE id = @BrandId;
+            """,
+            new { BrandId = brandId, FileId = firstLogoFileId });
+        await connection.ExecuteAsync(
+            """
+            UPDATE brands
+            SET logo_file_id = @FileId
+            WHERE id = @BrandId;
+            """,
+            new { BrandId = brandId, FileId = secondLogoFileId });
+
+        var exception = await Assert.ThrowsAsync<PostgresException>(() => connection.ExecuteAsync(
+            """
+            UPDATE brands
+            SET logo_file_id = @FileId
+            WHERE id = @BrandId;
+            """,
+            new { BrandId = brandId, FileId = productImageFileId }));
+
+        var currentLogoFileId = await connection.QuerySingleAsync<Guid?>(
+            """
+            SELECT logo_file_id
+            FROM brands
+            WHERE id = @BrandId;
+            """,
+            new { BrandId = brandId });
+
+        Assert.Equal(PostgresErrorCodes.CheckViolation, exception.SqlState);
+        Assert.Equal(secondLogoFileId, currentLogoFileId);
     }
 
     [Fact]
@@ -116,9 +206,16 @@ public sealed class AdminCatalogImagesDatabaseBehaviorTests
         NpgsqlConnection connection,
         string filePurpose)
     {
+        var brandId = await SeedBrandAsync(connection);
+        var fileId = await SeedStoredFileAsync(connection, filePurpose);
+
+        return new BrandWithStoredFileSeed(brandId, fileId);
+    }
+
+    private static async Task<Guid> SeedBrandAsync(NpgsqlConnection connection)
+    {
         var brandId = Guid.NewGuid();
         var brandSlug = UniqueSlug("image-safety-brand");
-        var fileId = await SeedStoredFileAsync(connection, filePurpose);
 
         await connection.ExecuteAsync(
             """
@@ -127,7 +224,7 @@ public sealed class AdminCatalogImagesDatabaseBehaviorTests
             """,
             new { BrandId = brandId, BrandSlug = brandSlug });
 
-        return new BrandWithStoredFileSeed(brandId, fileId);
+        return brandId;
     }
 
     private static async Task<ProductSeed> SeedProductAsync(NpgsqlConnection connection)
