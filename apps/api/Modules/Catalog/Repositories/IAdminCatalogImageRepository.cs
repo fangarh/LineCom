@@ -14,7 +14,7 @@ public sealed record AdminProductImageRecord(
     string? Title,
     int SortOrder,
     bool IsMain,
-    DateTimeOffset CreatedAt);
+    DateTime CreatedAt);
 
 public sealed record AdminProductImageMetadataUpdate(string Alt, string? Title);
 

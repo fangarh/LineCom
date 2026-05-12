@@ -88,7 +88,10 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
 
     return params;
   }, [activeFilter, parentFilter, search]);
-  latestListParamsRef.current = listParams;
+
+  useEffect(() => {
+    latestListParamsRef.current = listParams;
+  }, [listParams]);
 
   const loadCategoriesForParams = useCallback(async (params: AdminCategoryListParams) => {
     const requestSeq = listRequestSeqRef.current + 1;
@@ -136,11 +139,29 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
   }, []);
 
   useEffect(() => {
-    loadAllCategories();
+    let isCancelled = false;
+    queueMicrotask(() => {
+      if (!isCancelled) {
+        void loadAllCategories();
+      }
+    });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [loadAllCategories]);
 
   useEffect(() => {
-    loadCategoriesForParams(listParams);
+    let isCancelled = false;
+    queueMicrotask(() => {
+      if (!isCancelled) {
+        void loadCategoriesForParams(listParams);
+      }
+    });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [listParams, loadCategoriesForParams]);
 
   const parentOptions = useMemo(

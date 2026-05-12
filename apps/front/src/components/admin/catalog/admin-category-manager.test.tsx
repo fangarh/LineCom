@@ -97,14 +97,6 @@ const childDetail: AdminCategoryDetail = {
   seoDescription: "Описание SEO силовых кабелей",
 };
 
-const connectorDetail: AdminCategoryDetail = {
-  ...connectorCategory,
-  description: "Описание разъемов",
-  h1: "Разъемы",
-  seoTitle: "Разъемы SEO",
-  seoDescription: "SEO описание разъемов",
-};
-
 function listResponse(items: AdminCategoryListItem[] = [rootCategory, childCategory]): AdminCategoryListResponse {
   return {
     items,

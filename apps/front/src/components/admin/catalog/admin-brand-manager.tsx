@@ -67,7 +67,6 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
   const brandEditorSessionRef = useRef(0);
   const selectedBrandIdRef = useRef<string | null>(null);
   const latestListParamsRef = useRef<AdminBrandListParams>({});
-  selectedBrandIdRef.current = selectedBrand?.id ?? null;
 
   const listParams = useMemo<AdminBrandListParams>(() => {
     const params: AdminBrandListParams = {};
@@ -85,7 +84,14 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
 
     return params;
   }, [activeFilter, search]);
-  latestListParamsRef.current = listParams;
+
+  useEffect(() => {
+    selectedBrandIdRef.current = selectedBrand?.id ?? null;
+  }, [selectedBrand?.id]);
+
+  useEffect(() => {
+    latestListParamsRef.current = listParams;
+  }, [listParams]);
 
   const loadBrandsForParams = useCallback(async (params: AdminBrandListParams) => {
     const requestSeq = listRequestSeqRef.current + 1;
@@ -109,7 +115,16 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
   }, []);
 
   useEffect(() => {
-    loadBrandsForParams(listParams);
+    let isCancelled = false;
+    queueMicrotask(() => {
+      if (!isCancelled) {
+        void loadBrandsForParams(listParams);
+      }
+    });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [listParams, loadBrandsForParams]);
 
   const refreshBrandList = useCallback(async () => {

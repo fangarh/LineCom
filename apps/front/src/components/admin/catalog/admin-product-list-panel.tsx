@@ -112,11 +112,11 @@ export function AdminProductListPanel({
                 <strong>{product.name}</strong>
                 <small>
                   {product.slug}
-                  {product.sku ? ` В· ${product.sku}` : ""}
+                  {product.sku ? ` · ${product.sku}` : ""}
                 </small>
               </span>
               <span className="admin-product-row__meta">
-                {product.categoryName} В· {product.brandName ?? "Без бренда"} В· {product.publishStatus} В· {product.isActive ? "активен" : "неактивен"}
+                {product.categoryName} · {product.brandName ?? "Без бренда"} · {product.publishStatus} · {product.isActive ? "активен" : "неактивен"}
               </span>
             </button>
           ))

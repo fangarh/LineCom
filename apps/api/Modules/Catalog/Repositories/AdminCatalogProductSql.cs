@@ -106,7 +106,7 @@ internal static class AdminCatalogProductSql
         LEFT JOIN LATERAL (
             SELECT
                 COUNT(image.id)::int AS "ImagesCount",
-                MAX(image.stored_file_id) FILTER (WHERE image.is_main) AS "MainImageFileId"
+                (ARRAY_AGG(image.stored_file_id) FILTER (WHERE image.is_main))[1] AS "MainImageFileId"
             FROM product_images image
             INNER JOIN stored_files stored_file ON stored_file.id = image.stored_file_id
                 AND stored_file.status = 'active'

@@ -110,12 +110,18 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
   const selectedAttributeId = selectedAttribute?.id ?? null;
   const selectedOptionId = selectedOption?.id ?? null;
   const isPersistedSelectAttribute = selectedAttribute?.type === "select";
-  const isMutatingAttribute = mutatingAttributeSession === attributeEditorSessionRef.current;
-  const isMutatingOption = mutatingOptionSession === optionEditorSessionRef.current;
-  attributesRef.current = attributes;
-  selectedCategoryIdRef.current = selectedCategoryId;
-  selectedAttributeIdRef.current = selectedAttributeId;
-  selectedOptionIdRef.current = selectedOptionId;
+  const isMutatingAttribute = mutatingAttributeSession !== null;
+  const isMutatingOption = mutatingOptionSession !== null;
+
+  useEffect(() => {
+    attributesRef.current = attributes;
+  }, [attributes]);
+
+  useEffect(() => {
+    selectedCategoryIdRef.current = selectedCategoryId;
+    selectedAttributeIdRef.current = selectedAttributeId;
+    selectedOptionIdRef.current = selectedOptionId;
+  }, [selectedAttributeId, selectedCategoryId, selectedOptionId]);
 
   const loadCategories = useCallback(async () => {
     const requestSeq = categoriesRequestSeqRef.current + 1;
@@ -175,26 +181,44 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
   }, []);
 
   useEffect(() => {
-    loadCategories();
+    let isCancelled = false;
+    queueMicrotask(() => {
+      if (!isCancelled) {
+        void loadCategories();
+      }
+    });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [loadCategories]);
 
   useEffect(() => {
-    if (selectedCategoryId) {
-      setMutatingAttributeSession(null);
-      setMutatingOptionSession(null);
-      loadAttributes(selectedCategoryId);
-    } else {
-      attributesRequestSeqRef.current += 1;
-      attributeEditorSessionRef.current += 1;
-      optionEditorSessionRef.current += 1;
-      setMutatingAttributeSession(null);
-      setMutatingOptionSession(null);
-      setAttributes([]);
-      setSelectedAttribute(null);
-      setSelectedOption(null);
-      setAttributeForm(emptyAttributeForm);
-      setOptionForm(emptyOptionForm);
-    }
+    let isCancelled = false;
+    queueMicrotask(() => {
+      if (isCancelled) return;
+
+      if (selectedCategoryId) {
+        setMutatingAttributeSession(null);
+        setMutatingOptionSession(null);
+        void loadAttributes(selectedCategoryId);
+      } else {
+        attributesRequestSeqRef.current += 1;
+        attributeEditorSessionRef.current += 1;
+        optionEditorSessionRef.current += 1;
+        setMutatingAttributeSession(null);
+        setMutatingOptionSession(null);
+        setAttributes([]);
+        setSelectedAttribute(null);
+        setSelectedOption(null);
+        setAttributeForm(emptyAttributeForm);
+        setOptionForm(emptyOptionForm);
+      }
+    });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [loadAttributes, selectedCategoryId]);
 
   function selectAttribute(attribute: AdminCategoryAttribute) {
@@ -331,7 +355,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
       if (!isCurrentCategoryMutation(capturedCategoryId, capturedAttributeSession)) return;
       setAlertMessage(normalizeApiError(error).message);
     } finally {
-      if (isCurrentCategoryMutation(capturedCategoryId, capturedAttributeSession)) {
+      if (selectedCategoryIdRef.current === capturedCategoryId) {
         setMutatingAttributeSession(null);
       }
     }

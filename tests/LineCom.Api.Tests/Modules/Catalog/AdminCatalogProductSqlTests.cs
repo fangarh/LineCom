@@ -25,6 +25,7 @@ public sealed class AdminCatalogProductSqlTests
         Assert.Contains("category.name AS \"CategoryName\"", AdminCatalogProductSql.GetProduct);
         Assert.Contains("brand.name AS \"BrandName\"", AdminCatalogProductSql.GetProduct);
         Assert.Contains("image_summary.\"ImagesCount\"", AdminCatalogProductSql.GetProduct);
+        Assert.Contains("(ARRAY_AGG(image.stored_file_id) FILTER (WHERE image.is_main))[1] AS \"MainImageFileId\"", AdminCatalogProductSql.GetProduct);
         Assert.Contains("FROM product_attribute_values value", AdminCatalogProductSql.GetProductAttributes);
         Assert.Contains("INNER JOIN category_attributes attribute", AdminCatalogProductSql.GetProductAttributes);
         Assert.Contains("LEFT JOIN attribute_options option", AdminCatalogProductSql.GetProductAttributes);

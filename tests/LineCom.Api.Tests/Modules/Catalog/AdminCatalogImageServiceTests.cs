@@ -36,6 +36,17 @@ public sealed class AdminCatalogImageServiceTests
     }
 
     [Fact]
+    public async Task GetProductImagesAsync_ConvertsRepositoryUtcDateTimeToDateTimeOffset()
+    {
+        var service = CreateService(new CapturingAdminCatalogImageRepository(), new CapturingLocalStoredFileWriter());
+
+        var response = await service.GetProductImagesAsync(new DefaultHttpContext(), ProductId, CancellationToken.None);
+
+        var image = Assert.Single(response.Items);
+        Assert.Equal(DateTimeOffset.Parse("2026-05-11T10:00:00Z"), image.CreatedAt);
+    }
+
+    [Fact]
     public async Task UploadProductImagesAsync_ProductMissing_ThrowsProductNotFound()
     {
         var repository = new CapturingAdminCatalogImageRepository { ProductName = null };
@@ -271,7 +282,7 @@ public sealed class AdminCatalogImageServiceTests
             "Title",
             10,
             true,
-            DateTimeOffset.Parse("2026-05-11T10:00:00Z"));
+            DateTime.SpecifyKind(DateTime.Parse("2026-05-11T10:00:00"), DateTimeKind.Utc));
     }
 
     private sealed class RoleAdminCatalogStaffGuard : IAdminCatalogStaffGuard

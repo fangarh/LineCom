@@ -197,6 +197,15 @@ async function renderManager(csrfToken = "csrf-token") {
   await screen.findByLabelText("Категория");
 }
 
+async function selectCategory(user: ReturnType<typeof userEvent.setup>, categoryId: string) {
+  await waitFor(() => {
+    const categorySelect = screen.getByLabelText("Категория") as HTMLSelectElement;
+    expect(Array.from(categorySelect.options).some((option) => option.value === categoryId)).toBe(true);
+  });
+
+  await user.selectOptions(screen.getByLabelText("Категория"), categoryId);
+}
+
 describe("AdminAttributeManager", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -208,12 +217,12 @@ describe("AdminAttributeManager", () => {
     await renderManager();
 
     expect(adminCatalogApiMock.getAdminCategories).toHaveBeenCalledWith({ page: 1, pageSize: 60 });
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
 
     expect(adminCatalogApiMock.getAdminCategoryAttributes).toHaveBeenCalledWith("cat-cables");
     expect(await screen.findByRole("button", { name: /Цвет/ })).toBeInTheDocument();
 
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-connectors");
+    await selectCategory(user, "cat-connectors");
 
     expect(adminCatalogApiMock.getAdminCategoryAttributes).toHaveBeenCalledWith("cat-connectors");
     expect(await screen.findByRole("button", { name: /Материал/ })).toBeInTheDocument();
@@ -249,7 +258,7 @@ describe("AdminAttributeManager", () => {
   it("creates and updates attributes with boolean flags, sort order and CSRF token", async () => {
     const user = userEvent.setup();
     await renderManager();
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
     await screen.findByRole("button", { name: /Цвет/ });
 
     await user.click(screen.getByRole("button", { name: "Новая характеристика" }));
@@ -321,7 +330,7 @@ describe("AdminAttributeManager", () => {
   it("shows option editor for select attributes", async () => {
     const user = userEvent.setup();
     await renderManager();
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
 
     await user.click(await screen.findByRole("button", { name: /Цвет/ }));
 
@@ -338,7 +347,7 @@ describe("AdminAttributeManager", () => {
   it("does not show option editor until the select type is saved", async () => {
     const user = userEvent.setup();
     await renderManager();
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
 
     await user.click(await screen.findByRole("button", { name: /Длина/ }));
     await screen.findByDisplayValue("Длина");
@@ -355,7 +364,7 @@ describe("AdminAttributeManager", () => {
       options: [],
     });
     await renderManager();
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
     await user.click(await screen.findByRole("button", { name: /Цвет/ }));
     await screen.findByRole("button", { name: /Красный/ });
 
@@ -370,7 +379,7 @@ describe("AdminAttributeManager", () => {
   it("creates, updates and deletes options through nested routes", async () => {
     const user = userEvent.setup();
     await renderManager();
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
     await user.click(await screen.findByRole("button", { name: /Цвет/ }));
 
     const optionEditor = await screen.findByLabelText("Редактор значения");
@@ -427,7 +436,7 @@ describe("AdminAttributeManager", () => {
   it("shows inherit-from-parent result", async () => {
     const user = userEvent.setup();
     await renderManager();
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
     await screen.findByRole("button", { name: /Цвет/ });
 
     await user.click(screen.getByRole("button", { name: "Унаследовать от родителя" }));
@@ -442,7 +451,7 @@ describe("AdminAttributeManager", () => {
     const optionRequest = deferred<AdminAttributeOption>();
     adminCatalogApiMock.createAdminAttributeOption.mockReturnValueOnce(optionRequest.promise);
     await renderManager();
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
     await user.click(await screen.findByRole("button", { name: /Цвет/ }));
 
     const optionEditor = await screen.findByLabelText("Редактор значения");
@@ -480,7 +489,7 @@ describe("AdminAttributeManager", () => {
       .mockReturnValueOnce(firstCreateRequest.promise)
       .mockReturnValueOnce(secondCreateRequest.promise);
     await renderManager();
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
     await screen.findByRole("button", { name: /Цвет/ });
 
     await user.click(screen.getByRole("button", { name: "Новая характеристика" }));
@@ -521,7 +530,7 @@ describe("AdminAttributeManager", () => {
     const firstCreateRequest = deferred<AdminCategoryAttribute>();
     adminCatalogApiMock.createAdminCategoryAttribute.mockReturnValueOnce(firstCreateRequest.promise);
     await renderManager();
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
     await screen.findByRole("button", { name: /Цвет/ });
 
     await user.click(screen.getByRole("button", { name: "Новая характеристика" }));
@@ -547,13 +556,13 @@ describe("AdminAttributeManager", () => {
     const inheritRequest = deferred<{ added: number; skipped: number }>();
     adminCatalogApiMock.inheritAdminCategoryAttributesFromParent.mockReturnValueOnce(inheritRequest.promise);
     await renderManager();
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
     await screen.findByRole("button", { name: /Цвет/ });
 
     await user.click(screen.getByRole("button", { name: "Унаследовать от родителя" }));
     await waitFor(() => expect(adminCatalogApiMock.inheritAdminCategoryAttributesFromParent).toHaveBeenCalledWith("cat-cables", "csrf-token"));
 
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-connectors");
+    await selectCategory(user, "cat-connectors");
     expect(await screen.findByRole("button", { name: /Материал/ })).toBeInTheDocument();
 
     await act(async () => {
@@ -580,7 +589,7 @@ describe("AdminAttributeManager", () => {
       }),
     );
     await renderManager();
-    await user.selectOptions(screen.getByLabelText("Категория"), "cat-cables");
+    await selectCategory(user, "cat-cables");
     await user.click(await screen.findByRole("button", { name: /Цвет/ }));
 
     expect(screen.getByText(/3 значений в товарах/)).toBeInTheDocument();

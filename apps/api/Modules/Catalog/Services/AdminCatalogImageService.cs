@@ -255,6 +255,18 @@ public sealed class AdminCatalogImageService : IAdminCatalogImageService
             record.Title,
             record.SortOrder,
             record.IsMain,
-            record.CreatedAt);
+            ToUtcDateTimeOffset(record.CreatedAt));
+    }
+
+    private static DateTimeOffset ToUtcDateTimeOffset(DateTime value)
+    {
+        var utcValue = value.Kind switch
+        {
+            DateTimeKind.Utc => value,
+            DateTimeKind.Local => value.ToUniversalTime(),
+            _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
+        };
+
+        return new DateTimeOffset(utcValue);
     }
 }
