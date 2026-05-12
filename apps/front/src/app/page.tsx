@@ -1,55 +1,13 @@
 import Link from "next/link";
-import type { PublicCategoryTreeItem, PublicProductListItem } from "@/lib/api/catalog";
+import type { PublicProductListItem } from "@/lib/api/catalog";
 import { getCategoryTree, getProducts } from "@/lib/api/catalog";
-import { selectFeaturedProducts } from "@/lib/homepage/featured-products";
+import { getHomepageSections } from "@/lib/api/homepage";
+import { applyCuratedHomepageSections } from "@/lib/homepage/curated-homepage";
 import { formatSku } from "@/lib/format";
 import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
 import { routes } from "@/lib/routes";
 import { HomeHeroProducts } from "@/components/home/home-hero-products";
 import { AddToRequestButton } from "@/components/request/add-to-request-button";
-
-function flattenCategories(items: PublicCategoryTreeItem[]) {
-  const result: PublicCategoryTreeItem[] = [];
-  const visit = (item: PublicCategoryTreeItem) => {
-    result.push(item);
-    item.children.forEach(visit);
-  };
-
-  items.forEach(visit);
-  return result;
-}
-
-function categoryHighlights(categories: PublicCategoryTreeItem[]) {
-  const flattened = flattenCategories(categories).filter((category) => category.isVisibleInMenu);
-  const preferred = ["кабель", "опт", "скс", "шкаф", "кросс", "инструмент", "расход"];
-  const selected: PublicCategoryTreeItem[] = [];
-  const seen = new Set<string>();
-
-  for (const keyword of preferred) {
-    const match = flattened.find((category) => {
-      const text = `${category.name} ${category.description ?? ""}`.toLowerCase();
-      return !seen.has(category.id) && text.includes(keyword);
-    });
-
-    if (match) {
-      seen.add(match.id);
-      selected.push(match);
-    }
-  }
-
-  for (const category of flattened) {
-    if (selected.length >= 4) {
-      break;
-    }
-
-    if (!seen.has(category.id)) {
-      seen.add(category.id);
-      selected.push(category);
-    }
-  }
-
-  return selected.slice(0, 4);
-}
 
 function requestProduct(product: PublicProductListItem) {
   return {
@@ -63,16 +21,20 @@ function requestProduct(product: PublicProductListItem) {
 }
 
 export default async function Home() {
-  const [categoryResult, productResult] = await Promise.allSettled([
+  const [categoryResult, productResult, homepageResult] = await Promise.allSettled([
     getCategoryTree(),
     getProducts({ pageSize: 60, sort: "category" }),
+    getHomepageSections(),
   ]);
 
   const categories = categoryResult.status === "fulfilled" ? categoryResult.value.items : [];
   const products = productResult.status === "fulfilled" ? productResult.value.items : [];
-  const featuredProducts = selectFeaturedProducts(products);
-  const heroProducts = featuredProducts.slice(0, 3);
-  const highlights = categoryHighlights(categories);
+  const homepageSections = homepageResult.status === "fulfilled" ? homepageResult.value : null;
+  const { heroProducts, featuredProducts, highlights } = applyCuratedHomepageSections({
+    products,
+    categories,
+    sections: homepageSections,
+  });
 
   return (
     <div className="home-page">
