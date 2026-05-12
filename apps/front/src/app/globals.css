@@ -1927,7 +1927,8 @@ a {
 }
 
 .admin-category-manager,
-.admin-brand-manager {
+.admin-brand-manager,
+.admin-attribute-manager {
   grid-column: 1 / -1;
   min-width: 0;
   display: grid;
@@ -1937,7 +1938,8 @@ a {
 }
 
 .admin-category-manager__head,
-.admin-brand-manager__head {
+.admin-brand-manager__head,
+.admin-attribute-manager__head {
   display: flex;
   gap: 12px;
   align-items: flex-start;
@@ -1945,7 +1947,8 @@ a {
 }
 
 .admin-category-manager__head h2,
-.admin-brand-manager__head h2 {
+.admin-brand-manager__head h2,
+.admin-attribute-manager__head h2 {
   margin: 0;
   color: var(--color-graphite);
   font-size: 22px;
@@ -1968,15 +1971,23 @@ a {
   align-items: end;
 }
 
+.admin-attribute-manager__category {
+  margin-top: 14px;
+}
+
 .admin-category-manager__rows,
-.admin-brand-manager__rows {
+.admin-brand-manager__rows,
+.admin-attribute-manager__rows,
+.admin-attribute-manager__option-rows {
   display: grid;
   gap: 8px;
   margin-top: 14px;
 }
 
 .admin-category-row,
-.admin-brand-row {
+.admin-brand-row,
+.admin-attribute-row,
+.admin-attribute-option-row {
   width: 100%;
   min-width: 0;
   display: grid;
@@ -1996,7 +2007,11 @@ a {
 .admin-category-row:hover,
 .admin-category-row[aria-pressed="true"],
 .admin-brand-row:hover,
-.admin-brand-row[aria-pressed="true"] {
+.admin-brand-row[aria-pressed="true"],
+.admin-attribute-row:hover,
+.admin-attribute-row[aria-pressed="true"],
+.admin-attribute-option-row:hover,
+.admin-attribute-option-row[aria-pressed="true"] {
   border-color: var(--color-accent-strong);
 }
 
@@ -2005,14 +2020,21 @@ a {
 .admin-category-row__meta,
 .admin-brand-row strong,
 .admin-brand-row small,
-.admin-brand-row__meta {
+.admin-brand-row__meta,
+.admin-attribute-row strong,
+.admin-attribute-row small,
+.admin-attribute-row__meta,
+.admin-attribute-option-row strong,
+.admin-attribute-option-row small {
   display: block;
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
 .admin-category-row strong,
-.admin-brand-row strong {
+.admin-brand-row strong,
+.admin-attribute-row strong,
+.admin-attribute-option-row strong {
   color: var(--color-graphite);
   font-size: 14px;
   line-height: 1.25;
@@ -2021,7 +2043,10 @@ a {
 .admin-category-row small,
 .admin-category-row__meta,
 .admin-brand-row small,
-.admin-brand-row__meta {
+.admin-brand-row__meta,
+.admin-attribute-row small,
+.admin-attribute-row__meta,
+.admin-attribute-option-row small {
   margin-top: 4px;
   color: var(--color-muted);
   font-size: 12px;
@@ -2029,7 +2054,8 @@ a {
 }
 
 .admin-category-row__meta,
-.admin-brand-row__meta {
+.admin-brand-row__meta,
+.admin-attribute-row__meta {
   margin-top: 0;
   text-align: right;
 }
@@ -2037,7 +2063,10 @@ a {
 .admin-category-form,
 .admin-category-manager__move,
 .admin-brand-form,
-.admin-brand-manager__logo {
+.admin-brand-manager__logo,
+.admin-attribute-form,
+.admin-attribute-option-form,
+.admin-attribute-manager__options {
   display: grid;
   gap: 12px;
   margin-top: 14px;
@@ -2045,7 +2074,8 @@ a {
 
 .admin-category-form .form-field select,
 .admin-category-manager__move .form-field select,
-.admin-brand-form .form-field select {
+.admin-brand-form .form-field select,
+.admin-attribute-form .form-field select {
   width: 100%;
   min-height: 44px;
   padding: 10px 12px;
@@ -2056,7 +2086,8 @@ a {
 }
 
 .admin-category-manager__check,
-.admin-brand-manager__check {
+.admin-brand-manager__check,
+.admin-attribute-manager__check {
   display: inline-flex;
   gap: 10px;
   align-items: center;
@@ -2066,21 +2097,25 @@ a {
 }
 
 .admin-category-manager__check input,
-.admin-brand-manager__check input {
+.admin-brand-manager__check input,
+.admin-attribute-manager__check input {
   width: 18px;
   height: 18px;
   accent-color: var(--color-accent);
 }
 
 .admin-category-manager__actions,
-.admin-brand-manager__actions {
+.admin-brand-manager__actions,
+.admin-attribute-manager__actions,
+.admin-attribute-manager__checks {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
 .admin-category-manager__move,
-.admin-brand-manager__logo {
+.admin-brand-manager__logo,
+.admin-attribute-manager__options {
   padding-top: 14px;
   border-top: 1px solid var(--color-border);
 }
@@ -2298,6 +2333,7 @@ a {
   .admin-catalog-panel,
   .admin-category-manager,
   .admin-brand-manager,
+  .admin-attribute-manager,
   .admin-request-detail__layout,
   .admin-request-detail__grid {
     grid-template-columns: 1fr;
