@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AdminBrandManager } from "./admin-brand-manager";
 import { AdminCategoryManager } from "./admin-category-manager";
 
 export type AdminCatalogSection = "products" | "categories" | "brands" | "attributes";
@@ -90,6 +91,8 @@ export function AdminCatalogShell({ csrfToken = null }: AdminCatalogShellProps) 
             >
               {tab.id === "categories" && isActive ? (
                 <AdminCategoryManager csrfToken={csrfToken} />
+              ) : tab.id === "brands" && isActive ? (
+                <AdminBrandManager csrfToken={csrfToken} />
               ) : (
                 <>
                   <div className="admin-catalog-table">

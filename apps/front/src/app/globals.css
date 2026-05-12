@@ -1926,7 +1926,8 @@ a {
   overflow-wrap: anywhere;
 }
 
-.admin-category-manager {
+.admin-category-manager,
+.admin-brand-manager {
   grid-column: 1 / -1;
   min-width: 0;
   display: grid;
@@ -1935,14 +1936,16 @@ a {
   align-items: start;
 }
 
-.admin-category-manager__head {
+.admin-category-manager__head,
+.admin-brand-manager__head {
   display: flex;
   gap: 12px;
   align-items: flex-start;
   justify-content: space-between;
 }
 
-.admin-category-manager__head h2 {
+.admin-category-manager__head h2,
+.admin-brand-manager__head h2 {
   margin: 0;
   color: var(--color-graphite);
   font-size: 22px;
@@ -1957,13 +1960,23 @@ a {
   align-items: end;
 }
 
-.admin-category-manager__rows {
+.admin-brand-manager__filters {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) minmax(140px, 0.6fr);
+  gap: 10px;
+  margin-top: 14px;
+  align-items: end;
+}
+
+.admin-category-manager__rows,
+.admin-brand-manager__rows {
   display: grid;
   gap: 8px;
   margin-top: 14px;
 }
 
-.admin-category-row {
+.admin-category-row,
+.admin-brand-row {
   width: 100%;
   min-width: 0;
   display: grid;
@@ -1981,46 +1994,58 @@ a {
 }
 
 .admin-category-row:hover,
-.admin-category-row[aria-pressed="true"] {
+.admin-category-row[aria-pressed="true"],
+.admin-brand-row:hover,
+.admin-brand-row[aria-pressed="true"] {
   border-color: var(--color-accent-strong);
 }
 
 .admin-category-row strong,
 .admin-category-row small,
-.admin-category-row__meta {
+.admin-category-row__meta,
+.admin-brand-row strong,
+.admin-brand-row small,
+.admin-brand-row__meta {
   display: block;
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
-.admin-category-row strong {
+.admin-category-row strong,
+.admin-brand-row strong {
   color: var(--color-graphite);
   font-size: 14px;
   line-height: 1.25;
 }
 
 .admin-category-row small,
-.admin-category-row__meta {
+.admin-category-row__meta,
+.admin-brand-row small,
+.admin-brand-row__meta {
   margin-top: 4px;
   color: var(--color-muted);
   font-size: 12px;
   font-weight: 700;
 }
 
-.admin-category-row__meta {
+.admin-category-row__meta,
+.admin-brand-row__meta {
   margin-top: 0;
   text-align: right;
 }
 
 .admin-category-form,
-.admin-category-manager__move {
+.admin-category-manager__move,
+.admin-brand-form,
+.admin-brand-manager__logo {
   display: grid;
   gap: 12px;
   margin-top: 14px;
 }
 
 .admin-category-form .form-field select,
-.admin-category-manager__move .form-field select {
+.admin-category-manager__move .form-field select,
+.admin-brand-form .form-field select {
   width: 100%;
   min-height: 44px;
   padding: 10px 12px;
@@ -2030,7 +2055,8 @@ a {
   border-radius: var(--radius-sm);
 }
 
-.admin-category-manager__check {
+.admin-category-manager__check,
+.admin-brand-manager__check {
   display: inline-flex;
   gap: 10px;
   align-items: center;
@@ -2039,21 +2065,40 @@ a {
   font-weight: 700;
 }
 
-.admin-category-manager__check input {
+.admin-category-manager__check input,
+.admin-brand-manager__check input {
   width: 18px;
   height: 18px;
   accent-color: var(--color-accent);
 }
 
-.admin-category-manager__actions {
+.admin-category-manager__actions,
+.admin-brand-manager__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.admin-category-manager__move {
+.admin-category-manager__move,
+.admin-brand-manager__logo {
   padding-top: 14px;
   border-top: 1px solid var(--color-border);
+}
+
+.admin-brand-manager__logo-preview {
+  min-height: 116px;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.admin-brand-manager__logo-preview img {
+  max-width: 100%;
+  max-height: 96px;
+  object-fit: contain;
 }
 
 .status-pill {
@@ -2252,6 +2297,7 @@ a {
   .request-detail__grid,
   .admin-catalog-panel,
   .admin-category-manager,
+  .admin-brand-manager,
   .admin-request-detail__layout,
   .admin-request-detail__grid {
     grid-template-columns: 1fr;
@@ -2359,6 +2405,7 @@ a {
   .request-list-card__meta,
   .admin-catalog-tabs,
   .admin-category-manager__filters,
+  .admin-brand-manager__filters,
   .admin-requests__filters,
   .admin-request-card__meta,
   .request-detail-item__meta,
