@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { SiteShell } from "@/components/layout/site-shell";
 import { RequestDraftProvider } from "@/components/request/request-draft-provider";
+import { indexablePageMetadata } from "@/lib/seo/metadata";
+import { siteMetadataBase } from "@/lib/seo/site";
 import "./globals.css";
 
 const themeScript = `
@@ -20,8 +22,13 @@ const themeScript = `
 `;
 
 export const metadata: Metadata = {
-  title: "LineCom - каталог кабеля и компонентов",
-  description: "Каталог кабеля, СКС, ВОЛС и сопутствующих компонентов с заявками по запросу.",
+  ...indexablePageMetadata({
+    title: "LineCom - каталог кабеля и компонентов",
+    description: "Каталог кабеля, СКС, ВОЛС и сопутствующих компонентов с заявками по запросу.",
+    canonicalPath: "/",
+  }),
+  applicationName: "LineCom",
+  metadataBase: siteMetadataBase(),
   icons: {
     icon: [
       {

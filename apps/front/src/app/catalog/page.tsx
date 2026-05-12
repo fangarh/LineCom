@@ -1,14 +1,17 @@
+import type { Metadata } from "next";
 import { CatalogFilters } from "@/components/catalog/catalog-filters";
 import { CategoryNav } from "@/components/catalog/category-nav";
 import { ProductCard } from "@/components/catalog/product-card";
 import { getCatalogFilters, getCategoryTree, getProducts } from "@/lib/api/catalog";
 import { parseCatalogFilters, toProductListParams, type CatalogSearchParams } from "@/lib/catalog/filtering";
 import { routes } from "@/lib/routes";
+import { indexablePageMetadata } from "@/lib/seo/metadata";
 
-export const metadata = {
+export const metadata: Metadata = indexablePageMetadata({
   title: "Каталог кабеля и компонентов LineCom",
   description: "Каталог кабеля, СКС, ВОЛС и компонентов LineCom для заявок по запросу.",
-};
+  canonicalPath: "/catalog",
+});
 
 type CatalogPageProps = {
   searchParams?: Promise<CatalogSearchParams>;

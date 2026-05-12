@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ProductDetail } from "@/components/catalog/product-detail";
 import { ApiClientError } from "@/lib/api/errors";
 import { getProduct } from "@/lib/api/catalog";
+import { indexablePageMetadata, noindexPageMetadata } from "@/lib/seo/metadata";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
@@ -14,17 +15,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   try {
     const product = await getProduct(slug);
 
-    return {
+    return indexablePageMetadata({
       title: product.seo.title ?? product.h1 ?? product.name,
-      description: product.seo.description ?? product.shortDescription ?? product.description ?? undefined,
-      alternates: {
-        canonical: product.seo.canonicalPath,
-      },
-    };
+      description: product.seo.description ?? product.shortDescription ?? product.description,
+      canonicalPath: product.seo.canonicalPath,
+    });
   } catch {
-    return {
-      title: "Товар каталога LineCom",
-    };
+    return noindexPageMetadata("Товар каталога LineCom");
   }
 }
 

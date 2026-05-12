@@ -1,10 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { routes } from "@/lib/routes";
+import { indexablePageMetadata } from "@/lib/seo/metadata";
 
-export const metadata = {
+export const metadata: Metadata = indexablePageMetadata({
   title: "Доставка LineCom",
   description: "Доставка и получение кабеля, оптических и сетевых компонентов LineCom уточняются в процессе заявки.",
-};
+  canonicalPath: "/delivery",
+});
 
 export default function DeliveryPage() {
   return (

@@ -8,6 +8,7 @@ import { ApiClientError } from "@/lib/api/errors";
 import { getCategory, getCategoryFilters, getCategoryTree, getProducts } from "@/lib/api/catalog";
 import { parseCatalogFilters, toProductListParams, type CatalogSearchParams } from "@/lib/catalog/filtering";
 import { routes } from "@/lib/routes";
+import { indexablePageMetadata, noindexPageMetadata } from "@/lib/seo/metadata";
 
 type CategoryPageProps = {
   params: Promise<{ categorySlug: string }>;
@@ -20,17 +21,13 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   try {
     const category = await getCategory(categorySlug);
 
-    return {
+    return indexablePageMetadata({
       title: category.seo.title ?? category.h1 ?? category.name,
-      description: category.seo.description ?? category.description ?? undefined,
-      alternates: {
-        canonical: category.seo.canonicalPath,
-      },
-    };
+      description: category.seo.description ?? category.description,
+      canonicalPath: category.seo.canonicalPath,
+    });
   } catch {
-    return {
-      title: "Категория каталога LineCom",
-    };
+    return noindexPageMetadata("Категория каталога LineCom");
   }
 }
 

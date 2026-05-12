@@ -1,10 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { routes } from "@/lib/routes";
+import { indexablePageMetadata } from "@/lib/seo/metadata";
 
-export const metadata = {
+export const metadata: Metadata = indexablePageMetadata({
   title: "О LineCom",
   description: "LineCom помогает организациям подбирать кабель, оптические и сетевые компоненты под монтажные задачи.",
-};
+  canonicalPath: "/about",
+});
 
 export default function AboutPage() {
   return (

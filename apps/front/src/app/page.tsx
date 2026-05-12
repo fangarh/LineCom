@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import type { PublicProductListItem } from "@/lib/api/catalog";
 import { getCategoryTree, getProducts } from "@/lib/api/catalog";
 import { getHomepageSections } from "@/lib/api/homepage";
@@ -6,8 +7,15 @@ import { applyCuratedHomepageSections } from "@/lib/homepage/curated-homepage";
 import { formatSku } from "@/lib/format";
 import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
 import { routes } from "@/lib/routes";
+import { indexablePageMetadata } from "@/lib/seo/metadata";
 import { HomeHeroProducts } from "@/components/home/home-hero-products";
 import { AddToRequestButton } from "@/components/request/add-to-request-button";
+
+export const metadata: Metadata = indexablePageMetadata({
+  title: "LineCom - кабель и сетевые компоненты по заявке",
+  description: "Подбор кабеля, СКС, ВОЛС и сетевых компонентов для заявок без публичных цен и онлайн-оплаты.",
+  canonicalPath: "/",
+});
 
 function requestProduct(product: PublicProductListItem) {
   return {
