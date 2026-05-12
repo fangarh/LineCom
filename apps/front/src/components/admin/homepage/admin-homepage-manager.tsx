@@ -91,8 +91,36 @@ export function AdminHomepageManager({ csrfToken = null }: AdminHomepageManagerP
   }, [syncSectionDraft]);
 
   useEffect(() => {
-    loadSections();
-  }, [loadSections]);
+    let isActive = true;
+
+    getAdminHomepageSections()
+      .then((response) => {
+        if (!isActive) return;
+
+        setSections(response.sections);
+        setActiveSectionId((currentId) => {
+          const nextSection =
+            (currentId ? response.sections.find((section) => section.id === currentId) : null) ?? response.sections[0] ?? null;
+          syncSectionDraft(nextSection);
+
+          return nextSection?.id ?? null;
+        });
+      })
+      .catch((error) => {
+        if (isActive) {
+          setErrorMessage(normalizeApiError(error).message);
+        }
+      })
+      .finally(() => {
+        if (isActive) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [syncSectionDraft]);
 
   const updateDraftField = (event: ChangeEvent<HTMLInputElement>) => {
     const { checked, name, type, value } = event.target;

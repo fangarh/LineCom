@@ -24,6 +24,7 @@
 - Дизайн этапа `Auth + Request Core` зафиксирован в заметке `Auth Request Core design.md`.
 - План маленьких итераций этапа `Auth + Request Core` зафиксирован в заметке `Auth Request Core iterations.md`.
 - План маленьких итераций frontend-среза `Frontend Auth + Request Flow` зафиксирован в заметке `Frontend Auth Request Flow iterations.md`.
+- Контракт управления подборками главной страницы зафиксирован в заметке `Admin Homepage Management API.md`.
 - SEO/GEO - обязательное сквозное требование для всех продуктовых и технических решений.
 - Приложения проекта хранятся в папке `apps`.
 - Все артефакты моего тестирования и вспомогательных систем складываются в папку `temp`.
