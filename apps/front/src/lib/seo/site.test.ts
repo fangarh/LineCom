@@ -4,7 +4,11 @@ import { absoluteSiteUrl, getPublicSiteOrigin, normalizeSiteOrigin } from "./sit
 const originalOrigin = process.env.LINECOM_PUBLIC_SITE_ORIGIN;
 
 afterEach(() => {
-  process.env.LINECOM_PUBLIC_SITE_ORIGIN = originalOrigin;
+  if (originalOrigin === undefined) {
+    delete process.env.LINECOM_PUBLIC_SITE_ORIGIN;
+  } else {
+    process.env.LINECOM_PUBLIC_SITE_ORIGIN = originalOrigin;
+  }
 });
 
 describe("site SEO URL helpers", () => {
