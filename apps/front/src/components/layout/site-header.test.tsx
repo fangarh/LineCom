@@ -20,6 +20,8 @@ describe("SiteHeader", () => {
     expect(screen.getByRole("link", { name: "Доставка" })).toHaveAttribute("href", "/delivery");
     expect(screen.getByRole("link", { name: "Заявка" })).toHaveAttribute("href", "/request");
     expect(screen.getByRole("link", { name: "Мои заявки" })).toHaveAttribute("href", "/account/requests");
+    expect(screen.queryByRole("link", { name: "Главная админки" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Каталог админки" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Включить темную тему" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Войти" })).toHaveAttribute("href", "/auth/login");
   });

@@ -1,0 +1,192 @@
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { AdminHomepageManager } from "./admin-homepage-manager";
+import type { AdminHomepageSectionsResponse } from "@/lib/api/admin-homepage";
+
+const adminHomepageApiMock = vi.hoisted(() => ({
+  getAdminHomepageSections: vi.fn(),
+  updateAdminHomepageSection: vi.fn(),
+  addAdminHomepageSectionItem: vi.fn(),
+  updateAdminHomepageSectionItemOrder: vi.fn(),
+  updateAdminHomepageSectionItem: vi.fn(),
+  deleteAdminHomepageSectionItem: vi.fn(),
+}));
+
+vi.mock("@/lib/api/admin-homepage", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/api/admin-homepage")>();
+  return {
+    ...actual,
+    getAdminHomepageSections: adminHomepageApiMock.getAdminHomepageSections,
+    updateAdminHomepageSection: adminHomepageApiMock.updateAdminHomepageSection,
+    addAdminHomepageSectionItem: adminHomepageApiMock.addAdminHomepageSectionItem,
+    updateAdminHomepageSectionItemOrder: adminHomepageApiMock.updateAdminHomepageSectionItemOrder,
+    updateAdminHomepageSectionItem: adminHomepageApiMock.updateAdminHomepageSectionItem,
+    deleteAdminHomepageSectionItem: adminHomepageApiMock.deleteAdminHomepageSectionItem,
+  };
+});
+
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  let reject!: (reason?: unknown) => void;
+  const promise = new Promise<T>((promiseResolve, promiseReject) => {
+    resolve = promiseResolve;
+    reject = promiseReject;
+  });
+
+  return { promise, resolve, reject };
+}
+
+function homepageSectionsResponse(): AdminHomepageSectionsResponse {
+  return {
+    sections: [
+      {
+        id: "section-products",
+        code: "hero_products",
+        title: "Главные товары",
+        type: "product_list",
+        itemLimit: 4,
+        sortOrder: 10,
+        isActive: true,
+        items: [
+          {
+            id: "item-product-1",
+            productId: "product-1",
+            categoryId: null,
+            name: "product_unpublished",
+            slug: "product-unpublished",
+            secondaryText: "Артикул LC-001",
+            sortOrder: 20,
+            isActive: true,
+            visibilityStatus: "product_unpublished",
+          },
+        ],
+      },
+      {
+        id: "section-categories",
+        code: "popular_categories",
+        title: "Популярные категории",
+        type: "category_list",
+        itemLimit: 6,
+        sortOrder: 20,
+        isActive: false,
+        items: [],
+      },
+    ],
+  };
+}
+
+describe("AdminHomepageManager", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    adminHomepageApiMock.getAdminHomepageSections.mockResolvedValue(homepageSectionsResponse());
+    adminHomepageApiMock.updateAdminHomepageSection.mockImplementation((sectionId: string) =>
+      Promise.resolve(homepageSectionsResponse().sections.find((section) => section.id === sectionId)),
+    );
+    adminHomepageApiMock.addAdminHomepageSectionItem.mockResolvedValue({
+      id: "item-product-2",
+      productId: "product-2",
+      categoryId: null,
+      name: "Новый товар",
+      slug: "new-product",
+      secondaryText: null,
+      sortOrder: 30,
+      isActive: true,
+      visibilityStatus: "visible",
+    });
+    adminHomepageApiMock.updateAdminHomepageSectionItemOrder.mockResolvedValue(homepageSectionsResponse());
+    adminHomepageApiMock.updateAdminHomepageSectionItem.mockResolvedValue({
+      ...homepageSectionsResponse().sections[0].items[0],
+      isActive: false,
+    });
+    adminHomepageApiMock.deleteAdminHomepageSectionItem.mockResolvedValue(undefined);
+  });
+
+  it("renders sections, item visibility statuses, and mutation controls", async () => {
+    render(<AdminHomepageManager csrfToken="csrf" />);
+
+    expect(await screen.findByRole("heading", { name: "Главная страница" })).toBeInTheDocument();
+    expect(screen.getByText("hero_products")).toBeInTheDocument();
+    expect(screen.getByText("product_unpublished")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Добавить товар" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Сохранить секцию" })).toBeEnabled();
+  });
+
+  it("saves section changes with csrf token", async () => {
+    const user = userEvent.setup();
+    render(<AdminHomepageManager csrfToken="csrf" />);
+
+    const titleInput = await screen.findByLabelText("Заголовок секции");
+    await user.clear(titleInput);
+    await user.type(titleInput, "Подборка кабеля");
+    await user.click(screen.getByLabelText("Секция активна"));
+    await user.click(screen.getByRole("button", { name: "Сохранить секцию" }));
+
+    await waitFor(() =>
+      expect(adminHomepageApiMock.updateAdminHomepageSection).toHaveBeenCalledWith(
+        "section-products",
+        {
+          title: "Подборка кабеля",
+          itemLimit: 4,
+          sortOrder: 10,
+          isActive: false,
+        },
+        "csrf",
+      ),
+    );
+    expect(adminHomepageApiMock.getAdminHomepageSections).toHaveBeenCalledTimes(2);
+  });
+
+  it("adds product item with csrf token", async () => {
+    const user = userEvent.setup();
+    render(<AdminHomepageManager csrfToken="csrf" />);
+
+    await user.type(await screen.findByLabelText("UUID товара"), "product-2");
+    await user.click(screen.getByRole("button", { name: "Добавить товар" }));
+
+    await waitFor(() =>
+      expect(adminHomepageApiMock.addAdminHomepageSectionItem).toHaveBeenCalledWith(
+        "section-products",
+        { productId: "product-2", categoryId: null, sortOrder: null, isActive: true },
+        "csrf",
+      ),
+    );
+    expect(adminHomepageApiMock.getAdminHomepageSections).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not submit duplicate section saves while a mutation is pending", async () => {
+    const updateRequest = deferred<ReturnType<typeof homepageSectionsResponse>["sections"][number]>();
+    adminHomepageApiMock.updateAdminHomepageSection.mockReturnValueOnce(updateRequest.promise);
+    render(<AdminHomepageManager csrfToken="csrf" />);
+
+    const saveButton = await screen.findByRole("button", { name: "Сохранить секцию" });
+    const form = saveButton.closest("form");
+    expect(form).not.toBeNull();
+
+    fireEvent.submit(form!);
+    await waitFor(() => expect(adminHomepageApiMock.updateAdminHomepageSection).toHaveBeenCalledTimes(1));
+    fireEvent.submit(form!);
+
+    expect(adminHomepageApiMock.updateAdminHomepageSection).toHaveBeenCalledTimes(1);
+    updateRequest.resolve(homepageSectionsResponse().sections[0]);
+  });
+
+  it("does not submit duplicate item adds while a mutation is pending", async () => {
+    const user = userEvent.setup();
+    const addRequest = deferred<ReturnType<typeof homepageSectionsResponse>["sections"][number]["items"][number]>();
+    adminHomepageApiMock.addAdminHomepageSectionItem.mockReturnValueOnce(addRequest.promise);
+    render(<AdminHomepageManager csrfToken="csrf" />);
+
+    await user.type(await screen.findByLabelText("UUID товара"), "product-2");
+    const addButton = screen.getByRole("button", { name: "Добавить товар" });
+    const form = addButton.closest("form");
+    expect(form).not.toBeNull();
+
+    fireEvent.submit(form!);
+    await waitFor(() => expect(adminHomepageApiMock.addAdminHomepageSectionItem).toHaveBeenCalledTimes(1));
+    fireEvent.submit(form!);
+
+    expect(adminHomepageApiMock.addAdminHomepageSectionItem).toHaveBeenCalledTimes(1);
+    addRequest.resolve(homepageSectionsResponse().sections[0].items[0]);
+  });
+});
