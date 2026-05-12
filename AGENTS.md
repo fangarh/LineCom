@@ -12,6 +12,14 @@
 - SEO and GEO requirements must be considered when changing catalog, landing pages, routing, metadata, or public content.
 - Showing visual material in the browser does not require separate approval in this project. Browser-based mockups, diagrams, UI previews, and visual QA are always preferred when they can make the discussion or verification clearer.
 
+# Decomposition Rules
+
+- When a frontend implementation file grows beyond roughly 300-400 lines, check whether it mixes orchestration, data mapping, and UI rendering. Split before adding more behavior.
+- Keep stateful containers focused on loading, mutations, async guards, and data flow. Move presentational panels, field groups, tables, and tab bodies into sibling components.
+- Move pure mapping, payload building, reorder, merge, and normalization logic into helper modules with focused unit tests.
+- Do not add new features to an already-large file unless the first step is a narrow behavior-preserving decomposition.
+- Large test files may keep scenario coverage, but extract shared fixtures/builders when setup starts obscuring the behavior under test.
+
 # Context7
 
 Use Context7 MCP to fetch current documentation whenever the user asks about a library, framework, SDK, API, CLI tool, or cloud service, even well-known ones like React, Next.js, Prisma, Express, Tailwind, Django, or Spring Boot. This includes API syntax, configuration, version migration, library-specific debugging, setup instructions, and CLI tool usage. Use it even when you think you know the answer, because training data may not reflect recent changes. Prefer Context7 over web search for library docs.
