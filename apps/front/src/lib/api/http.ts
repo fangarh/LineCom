@@ -8,6 +8,12 @@ type JsonRequestOptions = {
   next?: NextFetchRequestConfig;
 };
 
+type FormRequestOptions = {
+  method?: "POST" | "PUT" | "PATCH" | "DELETE";
+  body: FormData;
+  csrfToken?: string | null;
+};
+
 export async function apiJson<T>(path: string, options: JsonRequestOptions = {}): Promise<T> {
   const headers = new Headers();
   headers.set("Accept", "application/json");
@@ -27,6 +33,38 @@ export async function apiJson<T>(path: string, options: JsonRequestOptions = {})
     credentials: "include",
     cache: options.cache,
     next: options.next,
+  });
+
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  const text = await response.text();
+  const payload = text ? (JSON.parse(text) as unknown) : null;
+
+  if (!response.ok) {
+    const apiError: ApiErrorResponse = isApiErrorResponse(payload)
+      ? payload
+      : { code: "internal_error", message: "Внутренняя ошибка сервера." };
+    throw new ApiClientError(response.status, apiError);
+  }
+
+  return payload as T;
+}
+
+export async function apiForm<T>(path: string, options: FormRequestOptions): Promise<T> {
+  const headers = new Headers();
+  headers.set("Accept", "application/json");
+
+  if (options.csrfToken) {
+    headers.set("X-CSRF-Token", options.csrfToken);
+  }
+
+  const response = await fetch(resolveApiPath(path), {
+    method: options.method ?? "POST",
+    headers,
+    body: options.body,
+    credentials: "include",
   });
 
   if (response.status === 204) {
