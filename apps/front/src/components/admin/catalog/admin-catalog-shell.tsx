@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AdminAttributeManager } from "./admin-attribute-manager";
 import { AdminBrandManager } from "./admin-brand-manager";
 import { AdminCategoryManager } from "./admin-category-manager";
+import { AdminProductManager } from "./admin-product-manager";
 
 export type AdminCatalogSection = "products" | "categories" | "brands" | "attributes";
 
@@ -90,7 +91,9 @@ export function AdminCatalogShell({ csrfToken = null }: AdminCatalogShellProps) 
               key={tab.id}
               role="tabpanel"
             >
-              {tab.id === "categories" && isActive ? (
+              {tab.id === "products" && isActive ? (
+                <AdminProductManager csrfToken={csrfToken} />
+              ) : tab.id === "categories" && isActive ? (
                 <AdminCategoryManager csrfToken={csrfToken} />
               ) : tab.id === "brands" && isActive ? (
                 <AdminBrandManager csrfToken={csrfToken} />

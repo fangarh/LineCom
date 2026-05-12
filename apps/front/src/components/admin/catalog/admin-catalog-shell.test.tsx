@@ -22,10 +22,11 @@ describe("AdminCatalogShell", () => {
     render(<AdminCatalogShell />);
 
     const shell = screen.getByRole("region", { name: "Администрирование каталога" });
-    const productsTab = screen.getByRole("tab", { name: "Товары" });
-    const categoriesTab = screen.getByRole("tab", { name: "Категории" });
-    const brandsTab = screen.getByRole("tab", { name: "Бренды" });
-    const attributesTab = screen.getByRole("tab", { name: "Характеристики" });
+    const tablist = screen.getByRole("tablist", { name: "Разделы каталога" });
+    const productsTab = within(tablist).getByRole("tab", { name: "Товары" });
+    const categoriesTab = within(tablist).getByRole("tab", { name: "Категории" });
+    const brandsTab = within(tablist).getByRole("tab", { name: "Бренды" });
+    const attributesTab = within(tablist).getByRole("tab", { name: "Характеристики" });
 
     await user.click(categoriesTab);
     expect(screen.getByRole("region", { name: "Администрирование каталога" })).toBe(shell);

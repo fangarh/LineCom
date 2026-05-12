@@ -1928,7 +1928,8 @@ a {
 
 .admin-category-manager,
 .admin-brand-manager,
-.admin-attribute-manager {
+.admin-attribute-manager,
+.admin-product-manager {
   grid-column: 1 / -1;
   min-width: 0;
   display: grid;
@@ -1939,7 +1940,8 @@ a {
 
 .admin-category-manager__head,
 .admin-brand-manager__head,
-.admin-attribute-manager__head {
+.admin-attribute-manager__head,
+.admin-product-manager__head {
   display: flex;
   gap: 12px;
   align-items: flex-start;
@@ -1948,7 +1950,8 @@ a {
 
 .admin-category-manager__head h2,
 .admin-brand-manager__head h2,
-.admin-attribute-manager__head h2 {
+.admin-attribute-manager__head h2,
+.admin-product-manager__head h2 {
   margin: 0;
   color: var(--color-graphite);
   font-size: 22px;
@@ -1971,6 +1974,14 @@ a {
   align-items: end;
 }
 
+.admin-product-manager__filters {
+  display: grid;
+  grid-template-columns: minmax(160px, 1.2fr) repeat(4, minmax(120px, 0.8fr));
+  gap: 10px;
+  margin-top: 14px;
+  align-items: end;
+}
+
 .admin-attribute-manager__category {
   margin-top: 14px;
 }
@@ -1978,7 +1989,8 @@ a {
 .admin-category-manager__rows,
 .admin-brand-manager__rows,
 .admin-attribute-manager__rows,
-.admin-attribute-manager__option-rows {
+.admin-attribute-manager__option-rows,
+.admin-product-manager__rows {
   display: grid;
   gap: 8px;
   margin-top: 14px;
@@ -1987,7 +1999,8 @@ a {
 .admin-category-row,
 .admin-brand-row,
 .admin-attribute-row,
-.admin-attribute-option-row {
+.admin-attribute-option-row,
+.admin-product-row {
   width: 100%;
   min-width: 0;
   display: grid;
@@ -2011,7 +2024,9 @@ a {
 .admin-attribute-row:hover,
 .admin-attribute-row[aria-pressed="true"],
 .admin-attribute-option-row:hover,
-.admin-attribute-option-row[aria-pressed="true"] {
+.admin-attribute-option-row[aria-pressed="true"],
+.admin-product-row:hover,
+.admin-product-row[aria-pressed="true"] {
   border-color: var(--color-accent-strong);
 }
 
@@ -2025,7 +2040,10 @@ a {
 .admin-attribute-row small,
 .admin-attribute-row__meta,
 .admin-attribute-option-row strong,
-.admin-attribute-option-row small {
+.admin-attribute-option-row small,
+.admin-product-row strong,
+.admin-product-row small,
+.admin-product-row__meta {
   display: block;
   min-width: 0;
   overflow-wrap: anywhere;
@@ -2034,7 +2052,8 @@ a {
 .admin-category-row strong,
 .admin-brand-row strong,
 .admin-attribute-row strong,
-.admin-attribute-option-row strong {
+.admin-attribute-option-row strong,
+.admin-product-row strong {
   color: var(--color-graphite);
   font-size: 14px;
   line-height: 1.25;
@@ -2046,7 +2065,9 @@ a {
 .admin-brand-row__meta,
 .admin-attribute-row small,
 .admin-attribute-row__meta,
-.admin-attribute-option-row small {
+.admin-attribute-option-row small,
+.admin-product-row small,
+.admin-product-row__meta {
   margin-top: 4px;
   color: var(--color-muted);
   font-size: 12px;
@@ -2055,7 +2076,8 @@ a {
 
 .admin-category-row__meta,
 .admin-brand-row__meta,
-.admin-attribute-row__meta {
+.admin-attribute-row__meta,
+.admin-product-row__meta {
   margin-top: 0;
   text-align: right;
 }
@@ -2066,7 +2088,10 @@ a {
 .admin-brand-manager__logo,
 .admin-attribute-form,
 .admin-attribute-option-form,
-.admin-attribute-manager__options {
+.admin-attribute-manager__options,
+.admin-product-form,
+.admin-product-form__grid,
+.admin-product-manager__duplicates {
   display: grid;
   gap: 12px;
   margin-top: 14px;
@@ -2075,7 +2100,8 @@ a {
 .admin-category-form .form-field select,
 .admin-category-manager__move .form-field select,
 .admin-brand-form .form-field select,
-.admin-attribute-form .form-field select {
+.admin-attribute-form .form-field select,
+.admin-product-form .form-field select {
   width: 100%;
   min-height: 44px;
   padding: 10px 12px;
@@ -2087,7 +2113,8 @@ a {
 
 .admin-category-manager__check,
 .admin-brand-manager__check,
-.admin-attribute-manager__check {
+.admin-attribute-manager__check,
+.admin-product-manager__check {
   display: inline-flex;
   gap: 10px;
   align-items: center;
@@ -2098,7 +2125,8 @@ a {
 
 .admin-category-manager__check input,
 .admin-brand-manager__check input,
-.admin-attribute-manager__check input {
+.admin-attribute-manager__check input,
+.admin-product-manager__check input {
   width: 18px;
   height: 18px;
   accent-color: var(--color-accent);
@@ -2107,7 +2135,9 @@ a {
 .admin-category-manager__actions,
 .admin-brand-manager__actions,
 .admin-attribute-manager__actions,
-.admin-attribute-manager__checks {
+.admin-attribute-manager__checks,
+.admin-product-manager__actions,
+.admin-product-manager__tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -2115,7 +2145,8 @@ a {
 
 .admin-category-manager__move,
 .admin-brand-manager__logo,
-.admin-attribute-manager__options {
+.admin-attribute-manager__options,
+.admin-product-manager__duplicates {
   padding-top: 14px;
   border-top: 1px solid var(--color-border);
 }
@@ -2134,6 +2165,74 @@ a {
   max-width: 100%;
   max-height: 96px;
   object-fit: contain;
+}
+
+.admin-product-manager__tabs {
+  padding-bottom: 4px;
+}
+
+.admin-product-manager__tabs .button {
+  min-height: 36px;
+  padding-inline: 12px;
+}
+
+.admin-product-manager__tabs .button[aria-selected="true"] {
+  color: var(--color-accent-contrast);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.admin-product-form__grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-product-manager__readiness {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.admin-product-manager__readiness strong {
+  color: var(--color-graphite);
+  font-size: 14px;
+}
+
+.admin-product-manager__readiness ul {
+  display: grid;
+  gap: 6px;
+  padding-left: 18px;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-product-manager__duplicate-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--color-text);
+  font-size: 13px;
+}
+
+.admin-product-manager__duplicate-table td {
+  padding: 8px;
+  border-top: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+.admin-product-manager__duplicate-table strong,
+.admin-product-manager__duplicate-table small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.admin-product-manager__duplicate-table small {
+  margin-top: 3px;
+  color: var(--color-muted);
+  font-weight: 700;
 }
 
 .status-pill {
@@ -2334,6 +2433,7 @@ a {
   .admin-category-manager,
   .admin-brand-manager,
   .admin-attribute-manager,
+  .admin-product-manager,
   .admin-request-detail__layout,
   .admin-request-detail__grid {
     grid-template-columns: 1fr;
@@ -2442,6 +2542,8 @@ a {
   .admin-catalog-tabs,
   .admin-category-manager__filters,
   .admin-brand-manager__filters,
+  .admin-product-manager__filters,
+  .admin-product-form__grid,
   .admin-requests__filters,
   .admin-request-card__meta,
   .request-detail-item__meta,

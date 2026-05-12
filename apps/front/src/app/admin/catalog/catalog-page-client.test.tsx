@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { ApiClientError } from "@/lib/api/errors";
@@ -70,18 +70,23 @@ describe("Admin CatalogPageClient", () => {
       },
       csrfToken: "csrf",
     });
+    adminCatalogApiMock.getAdminProducts.mockResolvedValue({ items: [], page: 1, pageSize: 50, totalItems: 0, totalPages: 1 });
+    adminCatalogApiMock.getAdminCategories.mockResolvedValue({ items: [], page: 1, pageSize: 60, totalItems: 0, totalPages: 1 });
+    adminCatalogApiMock.getAdminBrands.mockResolvedValue({ items: [], page: 1, pageSize: 60, totalItems: 0, totalPages: 1 });
+    adminCatalogApiMock.getAdminCategoryAttributes.mockResolvedValue({ items: [] });
   });
 
   it("loads catalog shell for seller", async () => {
     renderPage();
 
     expect(await screen.findByRole("heading", { name: "Каталог" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Товары" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Категории" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Бренды" })).toBeInTheDocument();
-    expect(screen.getByRole("tab", { name: "Характеристики" })).toBeInTheDocument();
+    const tablist = screen.getByRole("tablist", { name: "Разделы каталога" });
+    expect(within(tablist).getByRole("tab", { name: "Товары" })).toBeInTheDocument();
+    expect(within(tablist).getByRole("tab", { name: "Категории" })).toBeInTheDocument();
+    expect(within(tablist).getByRole("tab", { name: "Бренды" })).toBeInTheDocument();
+    expect(within(tablist).getByRole("tab", { name: "Характеристики" })).toBeInTheDocument();
     expect(authApiMock.getMe).toHaveBeenCalledTimes(1);
-    expectNoCatalogListCalls();
+    expect(adminCatalogApiMock.getAdminProducts).toHaveBeenCalledWith({});
   });
 
   it("shows forbidden state for customer without catalog list calls", async () => {
