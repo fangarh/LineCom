@@ -15,6 +15,7 @@ export function CatalogPageClient() {
   const [pageError, setPageError] = useState<string | null>(null);
   const [isForbidden, setIsForbidden] = useState(false);
   const [canManageCatalog, setCanManageCatalog] = useState(false);
+  const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
   const redirectToLogin = useCallback(() => {
     router.push(routes.login(routes.adminCatalog()));
@@ -28,11 +29,13 @@ export function CatalogPageClient() {
       setPageError(null);
       setIsForbidden(false);
       setCanManageCatalog(false);
+      setCsrfToken(null);
 
       try {
         const session = await getMe();
         if (!isActive) return;
         setSession(session);
+        setCsrfToken(session.csrfToken);
 
         if (session.user.role !== "seller" && session.user.role !== "admin") {
           setIsForbidden(true);
@@ -89,7 +92,9 @@ export function CatalogPageClient() {
         </p>
       ) : null}
 
-      {!isInitialLoading && !pageError && !isForbidden && canManageCatalog ? <AdminCatalogShell /> : null}
+      {!isInitialLoading && !pageError && !isForbidden && canManageCatalog ? (
+        <AdminCatalogShell csrfToken={csrfToken} />
+      ) : null}
     </div>
   );
 }

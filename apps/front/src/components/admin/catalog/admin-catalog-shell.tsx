@@ -1,8 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { AdminCategoryManager } from "./admin-category-manager";
 
 export type AdminCatalogSection = "products" | "categories" | "brands" | "attributes";
+
+type AdminCatalogShellProps = {
+  csrfToken?: string | null;
+};
 
 type CatalogTab = {
   id: AdminCatalogSection;
@@ -19,7 +24,7 @@ const catalogTabs: CatalogTab[] = [
   {
     id: "categories",
     label: "Категории",
-    description: "Дерево категорий и настройки SEO будут добавлены в следующих задачах.",
+    description: "Дерево категорий, видимость и SEO-настройки.",
   },
   {
     id: "brands",
@@ -33,7 +38,7 @@ const catalogTabs: CatalogTab[] = [
   },
 ];
 
-export function AdminCatalogShell() {
+export function AdminCatalogShell({ csrfToken = null }: AdminCatalogShellProps) {
   const [activeSection, setActiveSection] = useState<AdminCatalogSection>("products");
   const activeTab = catalogTabs.find((tab) => tab.id === activeSection) ?? catalogTabs[0];
 
@@ -83,13 +88,21 @@ export function AdminCatalogShell() {
               key={tab.id}
               role="tabpanel"
             >
-              <div className="admin-catalog-table">
-                <h2>{tab.label}</h2>
-                <p>{tab.description}</p>
-              </div>
-              <div className="admin-catalog-form" aria-label={`Параметры раздела ${tab.label}`}>
-                <p className="admin-catalog-status">Данные не загружались. Менеджер раздела появится позже.</p>
-              </div>
+              {tab.id === "categories" && isActive ? (
+                <AdminCategoryManager csrfToken={csrfToken} />
+              ) : (
+                <>
+                  <div className="admin-catalog-table">
+                    <h2>{tab.label}</h2>
+                    <p>{tab.description}</p>
+                  </div>
+                  <div className="admin-catalog-form" aria-label={`Параметры раздела ${tab.label}`}>
+                    <p className="admin-catalog-status">
+                      Данные не загружались. Менеджер раздела появится позже.
+                    </p>
+                  </div>
+                </>
+              )}
             </section>
           );
         })}
