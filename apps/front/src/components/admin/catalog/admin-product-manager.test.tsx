@@ -342,13 +342,16 @@ const savedProductDetail: AdminProductDetail = {
   name: "Кабель ВВГнг 3x2.5 обновленный",
 };
 
-function productListResponse(items: AdminProductListItem[] = [activeProduct, publishedProduct]): AdminProductListResponse {
+function productListResponse(
+  items: AdminProductListItem[] = [activeProduct, publishedProduct],
+  meta: Partial<Omit<AdminProductListResponse, "items">> = {},
+): AdminProductListResponse {
   return {
     items,
-    page: 1,
-    pageSize: 50,
-    totalItems: items.length,
-    totalPages: 1,
+    page: meta.page ?? 1,
+    pageSize: meta.pageSize ?? 60,
+    totalItems: meta.totalItems ?? items.length,
+    totalPages: meta.totalPages ?? 1,
   };
 }
 
@@ -461,11 +464,90 @@ describe("AdminProductManager", () => {
     mockDefaultApi();
   });
 
+  it("запрашивает первую страницу товаров с pageSize 60 по умолчанию", async () => {
+    await renderManager();
+
+    expect(adminCatalogApiMock.getAdminProducts).toHaveBeenCalledWith({ page: 1, pageSize: 60 });
+  });
+
+  it("показывает компактную таблицу товаров со статусами и диапазоном пагинации", async () => {
+    adminCatalogApiMock.getAdminProducts.mockResolvedValue(productListResponse([activeProduct, publishedProduct], { totalItems: 135, totalPages: 3 }));
+    await renderManager();
+
+    const list = screen.getByLabelText("Список товаров");
+    const table = within(list).getByRole("table");
+    expect(within(list).getByRole("columnheader", { name: "Товар" })).toBeInTheDocument();
+    expect(within(list).getByRole("columnheader", { name: "SKU / External ID" })).toBeInTheDocument();
+    expect(within(list).getByRole("columnheader", { name: "Категория" })).toBeInTheDocument();
+    expect(within(list).getByRole("columnheader", { name: "Бренд" })).toBeInTheDocument();
+    expect(within(list).getByRole("columnheader", { name: "Статусы" })).toBeInTheDocument();
+    expect(within(list).getByRole("columnheader", { name: "Проблемы" })).toBeInTheDocument();
+    expect(within(list).getByText("1-60 из 135")).toBeInTheDocument();
+    expect(within(table).getByText("Активен")).toBeInTheDocument();
+    expect(within(table).getByText("Черновик")).toBeInTheDocument();
+    expect(within(table).getByText("Нельзя публиковать")).toBeInTheDocument();
+    expect(within(table).getByText("Неактивен")).toBeInTheDocument();
+    expect(within(table).getByText("Опубликован")).toBeInTheDocument();
+    expect(within(table).getByText("Готов к публикации")).toBeInTheDocument();
+    expect(within(table).getByText("Добавьте основное изображение.")).toBeInTheDocument();
+  });
+
+  it("переходит вперед и назад по страницам, сохраняя фильтры", async () => {
+    const user = userEvent.setup();
+    adminCatalogApiMock.getAdminProducts.mockImplementation((params = {}) =>
+      Promise.resolve(productListResponse([activeProduct, publishedProduct], { page: params.page ?? 1, totalItems: 135, totalPages: 3 })),
+    );
+    await renderManager();
+
+    const list = screen.getByLabelText("Список товаров");
+    await user.type(within(list).getByLabelText("Поиск"), "кабель");
+    await user.click(within(list).getByRole("button", { name: "Дальше" }));
+
+    await waitFor(() =>
+      expect(adminCatalogApiMock.getAdminProducts).toHaveBeenLastCalledWith({
+        page: 2,
+        pageSize: 60,
+        search: "кабель",
+      }),
+    );
+
+    await user.click(within(list).getByRole("button", { name: "Назад" }));
+
+    await waitFor(() =>
+      expect(adminCatalogApiMock.getAdminProducts).toHaveBeenLastCalledWith({
+        page: 1,
+        pageSize: 60,
+        search: "кабель",
+      }),
+    );
+  });
+
+  it("сбрасывает страницу на первую при изменении фильтра", async () => {
+    const user = userEvent.setup();
+    adminCatalogApiMock.getAdminProducts.mockResolvedValue(productListResponse([activeProduct], { page: 1, totalItems: 120, totalPages: 2 }));
+    await renderManager();
+
+    const list = screen.getByLabelText("Список товаров");
+    await user.click(within(list).getByRole("button", { name: "Дальше" }));
+
+    await waitFor(() => expect(adminCatalogApiMock.getAdminProducts).toHaveBeenLastCalledWith({ page: 2, pageSize: 60 }));
+
+    await user.selectOptions(within(list).getByLabelText("Публикация"), "published");
+
+    await waitFor(() =>
+      expect(adminCatalogApiMock.getAdminProducts).toHaveBeenLastCalledWith({
+        page: 1,
+        pageSize: 60,
+        publishStatus: "published",
+      }),
+    );
+  });
+
   it("фильтрует список товаров по поиску, категории, бренду, активности и публикации", async () => {
     const user = userEvent.setup();
     await renderManager();
 
-    expect(adminCatalogApiMock.getAdminProducts).toHaveBeenCalledWith({});
+    expect(adminCatalogApiMock.getAdminProducts).toHaveBeenCalledWith({ page: 1, pageSize: 60 });
 
     const list = screen.getByLabelText("Список товаров");
     await user.type(within(list).getByLabelText("Поиск"), "кабель");
@@ -475,6 +557,8 @@ describe("AdminProductManager", () => {
     await user.selectOptions(within(list).getByLabelText("Публикация"), "published");
 
     expect(adminCatalogApiMock.getAdminProducts).toHaveBeenLastCalledWith({
+      page: 1,
+      pageSize: 60,
       search: "кабель",
       categoryId: "cat-cables",
       brandId: "brand-cable",

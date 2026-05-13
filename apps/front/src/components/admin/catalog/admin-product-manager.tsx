@@ -28,8 +28,10 @@ import {
   type ProductFormState,
 } from "./admin-product-editor-helpers";
 import { AdminProductListPanel } from "./admin-product-list-panel";
+import type { ProductListPageMeta } from "./admin-product-list-helpers";
 
 const allCatalogOptionsPageSize = 60;
+const defaultProductPageSize = 60;
 const missingCsrfMessage = "Сессия не подтверждена. Обновите страницу и войдите снова.";
 
 type AdminProductManagerProps = {
@@ -49,6 +51,14 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
   const [brandFilter, setBrandFilter] = useState("");
   const [activeFilter, setActiveFilter] = useState("");
   const [publishStatusFilter, setPublishStatusFilter] = useState("");
+  const [productPage, setProductPage] = useState(1);
+  const [productPageSize, setProductPageSize] = useState(defaultProductPageSize);
+  const [productPageMeta, setProductPageMeta] = useState<ProductListPageMeta>({
+    page: 1,
+    pageSize: defaultProductPageSize,
+    totalItems: 0,
+    totalPages: 0,
+  });
   const [isLoadingList, setIsLoadingList] = useState(false);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [isMutating, setIsMutating] = useState(false);
@@ -65,7 +75,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
   const latestListParamsRef = useRef<AdminProductListParams>({});
 
   const listParams = useMemo<AdminProductListParams>(() => {
-    const params: AdminProductListParams = {};
+    const params: AdminProductListParams = { page: productPage, pageSize: productPageSize };
     const normalizedSearch = search.trim();
 
     if (normalizedSearch) params.search = normalizedSearch;
@@ -76,7 +86,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
     if (publishStatusFilter) params.publishStatus = publishStatusFilter;
 
     return params;
-  }, [activeFilter, brandFilter, categoryFilter, publishStatusFilter, search]);
+  }, [activeFilter, brandFilter, categoryFilter, productPage, productPageSize, publishStatusFilter, search]);
 
   useEffect(() => {
     selectedProductIdRef.current = selectedProduct?.id ?? null;
@@ -96,6 +106,12 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
       const response = await getAdminProducts(params);
       if (listRequestSeqRef.current !== requestSeq) return;
       setProducts(response.items);
+      setProductPageMeta({
+        page: response.page,
+        pageSize: response.pageSize,
+        totalItems: response.totalItems,
+        totalPages: response.totalPages,
+      });
     } catch (error) {
       if (listRequestSeqRef.current !== requestSeq) return;
       setAlertMessage(normalizeApiError(error).message);
@@ -180,6 +196,55 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
   const refreshProductList = useCallback(async () => {
     await loadProductsForParams(latestListParamsRef.current);
   }, [loadProductsForParams]);
+
+  const resetProductPage = useCallback(() => {
+    setProductPage(1);
+  }, []);
+
+  const changeSearch = useCallback(
+    (value: string) => {
+      resetProductPage();
+      setSearch(value);
+    },
+    [resetProductPage],
+  );
+
+  const changeCategoryFilter = useCallback(
+    (value: string) => {
+      resetProductPage();
+      setCategoryFilter(value);
+    },
+    [resetProductPage],
+  );
+
+  const changeBrandFilter = useCallback(
+    (value: string) => {
+      resetProductPage();
+      setBrandFilter(value);
+    },
+    [resetProductPage],
+  );
+
+  const changeActiveFilter = useCallback(
+    (value: string) => {
+      resetProductPage();
+      setActiveFilter(value);
+    },
+    [resetProductPage],
+  );
+
+  const changePublishStatusFilter = useCallback(
+    (value: string) => {
+      resetProductPage();
+      setPublishStatusFilter(value);
+    },
+    [resetProductPage],
+  );
+
+  const changeProductPageSize = useCallback((pageSize: number) => {
+    setProductPage(1);
+    setProductPageSize(pageSize);
+  }, []);
 
   async function selectProduct(productId: string) {
     const requestSeq = detailRequestSeqRef.current + 1;
@@ -332,13 +397,17 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
         categories={categories}
         categoryFilter={categoryFilter}
         isLoadingList={isLoadingList}
-        onActiveFilterChange={setActiveFilter}
-        onBrandFilterChange={setBrandFilter}
-        onCategoryFilterChange={setCategoryFilter}
+        onActiveFilterChange={changeActiveFilter}
+        onBrandFilterChange={changeBrandFilter}
+        onCategoryFilterChange={changeCategoryFilter}
+        onPageChange={setProductPage}
+        onPageSizeChange={changeProductPageSize}
         onProductSelect={selectProduct}
-        onPublishStatusFilterChange={setPublishStatusFilter}
-        onSearchChange={setSearch}
+        onPublishStatusFilterChange={changePublishStatusFilter}
+        onSearchChange={changeSearch}
         onStartCreate={startCreate}
+        pageMeta={productPageMeta}
+        pageSize={productPageSize}
         products={products}
         publishStatusFilter={publishStatusFilter}
         search={search}

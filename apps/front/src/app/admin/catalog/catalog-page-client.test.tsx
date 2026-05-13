@@ -86,7 +86,7 @@ describe("Admin CatalogPageClient", () => {
     expect(within(tablist).getByRole("tab", { name: "Бренды" })).toBeInTheDocument();
     expect(within(tablist).getByRole("tab", { name: "Характеристики" })).toBeInTheDocument();
     expect(authApiMock.getMe).toHaveBeenCalledTimes(1);
-    expect(adminCatalogApiMock.getAdminProducts).toHaveBeenCalledWith({});
+    expect(adminCatalogApiMock.getAdminProducts).toHaveBeenCalledWith({ page: 1, pageSize: 60 });
   });
 
   it("shows forbidden state for customer without catalog list calls", async () => {
