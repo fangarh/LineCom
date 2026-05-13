@@ -42,4 +42,14 @@ public sealed class AccountProfileController : ControllerBase
     {
         return Ok(await _profileService.UpsertOrganizationAsync(HttpContext, request, cancellationToken));
     }
+
+    [RequireCsrfToken]
+    [HttpPut("password")]
+    public async Task<IActionResult> ChangePassword(
+        ChangeAccountPasswordRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _profileService.ChangePasswordAsync(HttpContext, request, cancellationToken);
+        return NoContent();
+    }
 }

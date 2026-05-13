@@ -30,6 +30,11 @@ export type UpsertOrganizationPayload = {
   comment: string | null;
 };
 
+export type ChangePasswordPayload = {
+  currentPassword: string;
+  newPassword: string;
+};
+
 export function getAccountProfile() {
   return apiJson<AccountProfile>("/api/account/profile", {
     cache: "no-store",
@@ -46,6 +51,14 @@ export function updateAccountProfile(payload: UpdateAccountProfilePayload, csrfT
 
 export function upsertOrganization(payload: UpsertOrganizationPayload, csrfToken: string) {
   return apiJson<AccountOrganization>("/api/account/organization", {
+    method: "PUT",
+    body: payload,
+    csrfToken,
+  });
+}
+
+export function changePassword(payload: ChangePasswordPayload, csrfToken: string) {
+  return apiJson<void>("/api/account/password", {
     method: "PUT",
     body: payload,
     csrfToken,

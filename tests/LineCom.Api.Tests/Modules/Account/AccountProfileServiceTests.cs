@@ -12,6 +12,83 @@ namespace LineCom.Api.Tests.Modules.Account;
 public sealed class AccountProfileServiceTests
 {
     [Fact]
+    public async Task ChangePasswordAsync_VerifiesCurrentPasswordAndStoresNewHash()
+    {
+        var user = TestUser();
+        var repository = new CapturingAccountProfileRepository { PasswordHash = "old-hash" };
+        var hasher = new CapturingPasswordHasher(verified: true, hash: "new-hash");
+        var service = new AccountProfileService(new ReturningCurrentUserService(user), repository, hasher);
+
+        await service.ChangePasswordAsync(
+            new DefaultHttpContext(),
+            new ChangeAccountPasswordRequest("old-password", "new-password"),
+            CancellationToken.None);
+
+        Assert.Equal(user.Id, repository.LastPasswordUserId);
+        Assert.Equal("old-hash", hasher.LastVerifiedHash);
+        Assert.Equal("old-password", hasher.LastVerifiedPassword);
+        Assert.Equal("new-password", hasher.LastHashedPassword);
+        Assert.Equal("new-hash", repository.LastPasswordHash);
+    }
+
+    [Fact]
+    public async Task ChangePasswordAsync_RejectsInvalidCurrentPassword()
+    {
+        var repository = new CapturingAccountProfileRepository { PasswordHash = "old-hash" };
+        var hasher = new CapturingPasswordHasher(verified: false, hash: "new-hash");
+        var service = new AccountProfileService(new ReturningCurrentUserService(TestUser()), repository, hasher);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.ChangePasswordAsync(
+                new DefaultHttpContext(),
+                new ChangeAccountPasswordRequest("wrong-password", "new-password"),
+                CancellationToken.None));
+
+        Assert.Equal("account.invalid_current_password", exception.Code);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        Assert.Null(repository.LastPasswordHash);
+    }
+
+    [Fact]
+    public async Task ChangePasswordAsync_RequiresCurrentPassword()
+    {
+        var repository = new CapturingAccountProfileRepository { PasswordHash = "old-hash" };
+        var hasher = new CapturingPasswordHasher(verified: true, hash: "new-hash");
+        var service = new AccountProfileService(new ReturningCurrentUserService(TestUser()), repository, hasher);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.ChangePasswordAsync(
+                new DefaultHttpContext(),
+                new ChangeAccountPasswordRequest("", "new-password"),
+                CancellationToken.None));
+
+        Assert.Equal("auth.invalid_password", exception.Code);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        Assert.Null(hasher.LastVerifiedPassword);
+        Assert.Null(repository.LastPasswordHash);
+    }
+
+    [Theory]
+    [InlineData("short")]
+    [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")]
+    public async Task ChangePasswordAsync_RequiresNewPasswordLengthBetween8And128(string newPassword)
+    {
+        var repository = new CapturingAccountProfileRepository { PasswordHash = "old-hash" };
+        var hasher = new CapturingPasswordHasher(verified: true, hash: "new-hash");
+        var service = new AccountProfileService(new ReturningCurrentUserService(TestUser()), repository, hasher);
+
+        var exception = await Assert.ThrowsAsync<ApiException>(() =>
+            service.ChangePasswordAsync(
+                new DefaultHttpContext(),
+                new ChangeAccountPasswordRequest("old-password", newPassword),
+                CancellationToken.None));
+
+        Assert.Equal("auth.invalid_password", exception.Code);
+        Assert.Equal(StatusCodes.Status400BadRequest, exception.StatusCode);
+        Assert.Null(repository.LastPasswordHash);
+    }
+
+    [Fact]
     public async Task GetProfileAsync_ReturnsCurrentUserAndOrganization()
     {
         var user = TestUser();
@@ -25,7 +102,7 @@ public sealed class AccountProfileServiceTests
                 "sales@example.com",
                 "Main organization")
         };
-        var service = new AccountProfileService(new ReturningCurrentUserService(user), repository);
+        var service = new AccountProfileService(new ReturningCurrentUserService(user), repository, TestPasswordHasher());
 
         var profile = await service.GetProfileAsync(new DefaultHttpContext(), CancellationToken.None);
 
@@ -45,7 +122,7 @@ public sealed class AccountProfileServiceTests
     {
         var user = TestUser();
         var repository = new CapturingAccountProfileRepository();
-        var service = new AccountProfileService(new ReturningCurrentUserService(user), repository);
+        var service = new AccountProfileService(new ReturningCurrentUserService(user), repository, TestPasswordHasher());
 
         var updated = await service.UpdateProfileAsync(
             new DefaultHttpContext(),
@@ -68,7 +145,8 @@ public sealed class AccountProfileServiceTests
     {
         var service = new AccountProfileService(
             new ReturningCurrentUserService(TestUser()),
-            new DuplicateContactAccountProfileRepository());
+            new DuplicateContactAccountProfileRepository(),
+            TestPasswordHasher());
 
         var exception = await Assert.ThrowsAsync<ApiException>(() =>
             service.UpdateProfileAsync(
@@ -85,7 +163,8 @@ public sealed class AccountProfileServiceTests
     {
         var service = new AccountProfileService(
             new ReturningCurrentUserService(TestUser()),
-            new CapturingAccountProfileRepository());
+            new CapturingAccountProfileRepository(),
+            TestPasswordHasher());
 
         var exception = await Assert.ThrowsAsync<ApiException>(() =>
             service.UpdateProfileAsync(
@@ -102,7 +181,7 @@ public sealed class AccountProfileServiceTests
     {
         var user = TestUser();
         var repository = new CapturingAccountProfileRepository();
-        var service = new AccountProfileService(new ReturningCurrentUserService(user), repository);
+        var service = new AccountProfileService(new ReturningCurrentUserService(user), repository, TestPasswordHasher());
 
         var organization = await service.UpsertOrganizationAsync(
             new DefaultHttpContext(),
@@ -132,7 +211,8 @@ public sealed class AccountProfileServiceTests
     {
         var service = new AccountProfileService(
             new ReturningCurrentUserService(TestUser()),
-            new CapturingAccountProfileRepository());
+            new CapturingAccountProfileRepository(),
+            TestPasswordHasher());
 
         var exception = await Assert.ThrowsAsync<ApiException>(() =>
             service.UpsertOrganizationAsync(
@@ -152,6 +232,11 @@ public sealed class AccountProfileServiceTests
             "ivan@example.com",
             "+79000000000",
             "customer");
+    }
+
+    private static CapturingPasswordHasher TestPasswordHasher()
+    {
+        return new CapturingPasswordHasher(verified: true, hash: "unused-hash");
     }
 
     private sealed class ReturningCurrentUserService : IAuthCurrentUserService
@@ -174,11 +259,14 @@ public sealed class AccountProfileServiceTests
     private sealed class CapturingAccountProfileRepository : IAccountProfileRepository
     {
         public AccountOrganizationRecord? Organization { get; init; }
+        public string? PasswordHash { get; init; }
         public Guid? LastFindOrganizationUserId { get; private set; }
         public Guid? LastUpdateUserId { get; private set; }
         public AccountProfileUpdate? LastProfileUpdate { get; private set; }
         public Guid? LastUpsertOrganizationUserId { get; private set; }
         public AccountOrganizationUpsert? LastOrganizationUpsert { get; private set; }
+        public Guid? LastPasswordUserId { get; private set; }
+        public string? LastPasswordHash { get; private set; }
 
         public Task<AccountOrganizationRecord?> FindOrganizationAsync(
             Guid userId,
@@ -215,6 +303,24 @@ public sealed class AccountProfileServiceTests
                 organization.Email,
                 organization.Comment));
         }
+
+        public Task<string?> FindPasswordHashAsync(
+            Guid userId,
+            CancellationToken cancellationToken = default)
+        {
+            LastPasswordUserId = userId;
+            return Task.FromResult(PasswordHash);
+        }
+
+        public Task UpdatePasswordHashAsync(
+            Guid userId,
+            string passwordHash,
+            CancellationToken cancellationToken = default)
+        {
+            LastPasswordUserId = userId;
+            LastPasswordHash = passwordHash;
+            return Task.CompletedTask;
+        }
     }
 
     private sealed class DuplicateContactAccountProfileRepository : IAccountProfileRepository
@@ -240,6 +346,50 @@ public sealed class AccountProfileServiceTests
             CancellationToken cancellationToken = default)
         {
             throw new NotSupportedException();
+        }
+
+        public Task<string?> FindPasswordHashAsync(
+            Guid userId,
+            CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task UpdatePasswordHashAsync(
+            Guid userId,
+            string passwordHash,
+            CancellationToken cancellationToken = default)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    private sealed class CapturingPasswordHasher : IPasswordHasher
+    {
+        private readonly bool _verified;
+        private readonly string _hash;
+
+        public CapturingPasswordHasher(bool verified, string hash)
+        {
+            _verified = verified;
+            _hash = hash;
+        }
+
+        public string? LastHashedPassword { get; private set; }
+        public string? LastVerifiedHash { get; private set; }
+        public string? LastVerifiedPassword { get; private set; }
+
+        public string HashPassword(string password)
+        {
+            LastHashedPassword = password;
+            return _hash;
+        }
+
+        public bool VerifyPassword(string passwordHash, string password)
+        {
+            LastVerifiedHash = passwordHash;
+            LastVerifiedPassword = password;
+            return _verified;
         }
     }
 }

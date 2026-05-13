@@ -3,13 +3,16 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { OrganizationForm } from "@/components/account/organization-form";
+import { PasswordForm } from "@/components/account/password-form";
 import { ProfileForm } from "@/components/account/profile-form";
 import { useAuth } from "@/components/auth/auth-provider";
 import {
+  changePassword,
   getAccountProfile,
   updateAccountProfile,
   upsertOrganization,
   type AccountProfile,
+  type ChangePasswordPayload,
   type UpdateAccountProfilePayload,
   type UpsertOrganizationPayload,
 } from "@/lib/api/account";
@@ -27,6 +30,7 @@ export function ProfilePageClient() {
   const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
   const [organizationError, setOrganizationError] = useState<string | null>(null);
   const [organizationSuccess, setOrganizationSuccess] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   const redirectToLogin = useCallback(() => {
     router.push(routes.login(routes.accountProfile()));
@@ -129,6 +133,28 @@ export function ProfilePageClient() {
     }
   }
 
+  async function handlePasswordSubmit(payload: ChangePasswordPayload) {
+    setPasswordError(null);
+
+    if (!csrfToken) {
+      setPasswordError("Сессия не готова. Войдите в аккаунт повторно.");
+      throw new Error("CSRF token is not ready.");
+    }
+
+    try {
+      await changePassword(payload, csrfToken);
+    } catch (error) {
+      const apiError = normalizeApiError(error);
+      if (apiError.code === "auth.unauthorized") {
+        redirectToLogin();
+        throw error;
+      }
+
+      setPasswordError(apiError.message);
+      throw error;
+    }
+  }
+
   return (
     <div className="account-page">
       <section className="account-intro" aria-labelledby="profile-title">
@@ -177,6 +203,11 @@ export function ProfilePageClient() {
               errorMessage={organizationError}
               successMessage={organizationSuccess}
             />
+          </section>
+
+          <section className="account-section" aria-labelledby="password-form-title">
+            <h2 id="password-form-title">Пароль</h2>
+            <PasswordForm onSubmit={handlePasswordSubmit} errorMessage={passwordError} />
           </section>
         </div>
       ) : null}

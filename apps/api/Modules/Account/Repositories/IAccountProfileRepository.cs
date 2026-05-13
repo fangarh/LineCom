@@ -38,4 +38,13 @@ public interface IAccountProfileRepository
         Guid userId,
         AccountOrganizationUpsert organization,
         CancellationToken cancellationToken = default);
+
+    Task<string?> FindPasswordHashAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default);
+
+    Task UpdatePasswordHashAsync(
+        Guid userId,
+        string passwordHash,
+        CancellationToken cancellationToken = default);
 }

@@ -26,3 +26,7 @@ public sealed record UpsertAccountOrganizationRequest(
     string? Phone,
     string? Email,
     string? Comment);
+
+public sealed record ChangeAccountPasswordRequest(
+    string? CurrentPassword,
+    string? NewPassword);

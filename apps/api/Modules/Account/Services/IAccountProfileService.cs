@@ -18,4 +18,9 @@ public interface IAccountProfileService
         HttpContext httpContext,
         UpsertAccountOrganizationRequest request,
         CancellationToken cancellationToken = default);
+
+    Task ChangePasswordAsync(
+        HttpContext httpContext,
+        ChangeAccountPasswordRequest request,
+        CancellationToken cancellationToken = default);
 }

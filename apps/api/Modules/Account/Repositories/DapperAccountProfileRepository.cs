@@ -74,6 +74,19 @@ public sealed class DapperAccountProfileRepository : IAccountProfileRepository
             comment AS Comment;
         """;
 
+    private const string FindPasswordHashSql = """
+        SELECT password_hash
+        FROM users
+        WHERE id = @UserId AND is_active = TRUE
+        LIMIT 1;
+        """;
+
+    private const string UpdatePasswordHashSql = """
+        UPDATE users
+        SET password_hash = @PasswordHash
+        WHERE id = @UserId AND is_active = TRUE;
+        """;
+
     private readonly IDbConnectionFactory _connectionFactory;
 
     public DapperAccountProfileRepository(IDbConnectionFactory connectionFactory)
@@ -141,6 +154,33 @@ public sealed class DapperAccountProfileRepository : IAccountProfileRepository
                     organization.Email,
                     organization.Comment
                 },
+                    cancellationToken: cancellationToken));
+    }
+
+    public async Task<string?> FindPasswordHashAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+
+        return await connection.QuerySingleOrDefaultAsync<string>(
+            new CommandDefinition(
+                FindPasswordHashSql,
+                new { UserId = userId },
+                cancellationToken: cancellationToken));
+    }
+
+    public async Task UpdatePasswordHashAsync(
+        Guid userId,
+        string passwordHash,
+        CancellationToken cancellationToken = default)
+    {
+        await using var connection = await _connectionFactory.OpenConnectionAsync(cancellationToken);
+
+        await connection.ExecuteAsync(
+            new CommandDefinition(
+                UpdatePasswordHashSql,
+                new { UserId = userId, PasswordHash = passwordHash },
                 cancellationToken: cancellationToken));
     }
 }

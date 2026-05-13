@@ -97,6 +97,61 @@ public sealed class AccountProfileEndpointTests
     }
 
     [Fact]
+    public async Task PutPassword_WithCsrfToken_ReturnsNoContent()
+    {
+        await using var factory = CreateFactory(new ReturningAccountProfileService(TestUser()));
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        var csrfToken = await LoginAsync(client);
+
+        using var request = new HttpRequestMessage(HttpMethod.Put, "/api/account/password")
+        {
+            Content = JsonContent.Create(new ChangeAccountPasswordRequest("old-password", "new-password"))
+        };
+        request.Headers.Add("X-CSRF-Token", csrfToken);
+
+        using var response = await client.SendAsync(request);
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task PutPassword_WithoutCsrfToken_ReturnsForbiddenError()
+    {
+        await using var factory = CreateFactory(new ReturningAccountProfileService(TestUser()));
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        await LoginAsync(client);
+
+        using var response = await client.PutAsJsonAsync(
+            "/api/account/password",
+            new ChangeAccountPasswordRequest("old-password", "new-password"));
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+
+        var body = await ReadJsonAsync<ApiErrorResponse>(response);
+        Assert.Equal("auth.forbidden", body.Code);
+    }
+
+    [Fact]
+    public async Task PutPassword_WithoutAuth_ReturnsUnauthorizedError()
+    {
+        await using var factory = CreateFactory(new ReturningAccountProfileService(TestUser()));
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+
+        using var request = new HttpRequestMessage(HttpMethod.Put, "/api/account/password")
+        {
+            Content = JsonContent.Create(new ChangeAccountPasswordRequest("old-password", "new-password"))
+        };
+        request.Headers.Add("X-CSRF-Token", "csrf-token");
+
+        using var response = await client.SendAsync(request);
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+
+        var body = await ReadJsonAsync<ApiErrorResponse>(response);
+        Assert.Equal("auth.unauthorized", body.Code);
+    }
+
+    [Fact]
     public async Task PutOrganization_ReturnsUpsertedOrganization()
     {
         await using var factory = CreateFactory(new ReturningAccountProfileService(TestUser()));
@@ -236,6 +291,14 @@ public sealed class AccountProfileEndpointTests
         {
             return Task.FromResult(_organization);
         }
+
+        public Task ChangePasswordAsync(
+            HttpContext httpContext,
+            ChangeAccountPasswordRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
     }
 
     private sealed class ThrowingAccountProfileService : IAccountProfileService
@@ -265,6 +328,14 @@ public sealed class AccountProfileEndpointTests
         public Task<AccountOrganizationDto> UpsertOrganizationAsync(
             HttpContext httpContext,
             UpsertAccountOrganizationRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            throw _exception;
+        }
+
+        public Task ChangePasswordAsync(
+            HttpContext httpContext,
+            ChangeAccountPasswordRequest request,
             CancellationToken cancellationToken = default)
         {
             throw _exception;
