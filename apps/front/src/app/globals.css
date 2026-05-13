@@ -234,6 +234,45 @@ a {
   display: none;
 }
 
+.site-header__badge {
+  min-width: 22px;
+  min-height: 22px;
+  display: inline-grid;
+  place-items: center;
+  margin-left: 8px;
+  padding: 0 7px;
+  color: #11171d;
+  background: var(--color-accent);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.site-header__link--account {
+  color: var(--color-header-text);
+}
+
+.site-header__link--admin {
+  color: var(--color-accent);
+}
+
+.site-header__user {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.site-header__user-name {
+  max-width: 180px;
+  overflow: hidden;
+  color: var(--color-header-text);
+  font-size: 14px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .theme-toggle {
   position: relative;
   width: 66px;
@@ -287,12 +326,14 @@ a {
   opacity: 1;
 }
 
-.site-header__login.button--ghost {
+.site-header__login.button--ghost,
+.site-header__logout.button--ghost {
   color: var(--color-header-text);
   border-color: rgba(255, 255, 255, 0.22);
 }
 
-.site-header__login.button--ghost:hover {
+.site-header__login.button--ghost:hover,
+.site-header__logout.button--ghost:hover {
   color: var(--color-header-text);
   background: var(--color-header-hover);
   border-color: rgba(255, 208, 0, 0.5);
@@ -1718,7 +1759,139 @@ a {
   line-height: 1.6;
 }
 
-.request-list-card__link {
+.request-list-card__actions,
+.admin-request-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.request-list-card__link,
+.admin-request-card__link,
+.request-list-card__preview,
+.admin-request-card__preview {
+  width: fit-content;
+}
+
+.request-preview-drawer,
+.admin-request-preview-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(17, 23, 29, 0.28);
+}
+
+.request-preview-drawer__backdrop {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.request-preview-drawer__panel,
+.admin-request-preview-drawer__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 540px);
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 18px;
+  overflow-y: auto;
+  padding: 24px;
+  background: var(--color-surface);
+  border-left: 1px solid var(--color-border);
+  box-shadow: -18px 0 48px rgba(17, 23, 29, 0.22);
+}
+
+.request-preview-drawer__header,
+.admin-request-preview-drawer__header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.request-preview-drawer__header h2,
+.admin-request-preview-drawer__header h2 {
+  margin: 0;
+  color: var(--color-graphite);
+  font-size: 26px;
+  line-height: 1.15;
+}
+
+.request-preview-drawer__content,
+.admin-request-preview-drawer__body {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.request-preview-drawer__summary,
+.admin-request-preview-drawer__summary {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px;
+  background: #fbfcfd;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.request-preview-drawer__summary h3 {
+  margin: 0;
+  color: var(--color-graphite);
+}
+
+.request-preview-drawer__section,
+.admin-request-preview-drawer__section {
+  display: grid;
+  gap: 12px;
+}
+
+.request-preview-drawer__section h3,
+.admin-request-preview-drawer__section h3,
+.request-preview-drawer__item h4,
+.admin-request-preview-drawer__items h4 {
+  margin: 0;
+  color: var(--color-graphite);
+}
+
+.request-preview-drawer__section p,
+.request-preview-drawer__item p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.request-preview-drawer__items,
+.admin-request-preview-drawer__items {
+  display: grid;
+  gap: 12px;
+}
+
+.request-preview-drawer__item {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: #fbfcfd;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.request-preview-drawer__history,
+.admin-request-preview-drawer__history {
+  margin: 0;
+}
+
+.request-preview-drawer__link,
+.admin-request-preview-drawer__action {
   width: fit-content;
 }
 
@@ -2571,6 +2744,11 @@ a {
     justify-content: flex-start;
   }
 
+  .site-header__user {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .home-hero,
   .home-task,
   .home-why,
@@ -2620,10 +2798,12 @@ a {
   .section-heading,
   .product-card__footer,
   .request-item__main,
+  .request-preview-drawer__header,
   .request-list-section__header,
   .request-list-card__main,
   .admin-catalog-toolbar,
   .admin-requests__header,
+  .admin-request-preview-drawer__header,
   .admin-request-card__head,
   .request-detail__head,
   .admin-request-detail__head {
@@ -2633,6 +2813,11 @@ a {
 
   .admin-request-processing {
     position: static;
+  }
+
+  .request-preview-drawer__panel,
+  .admin-request-preview-drawer__panel {
+    width: min(100%, 620px);
   }
 
   .catalog-filters__summary {
@@ -2659,6 +2844,15 @@ a {
     min-width: 76px;
   }
 
+  .site-header__user,
+  .site-header__logout {
+    width: 100%;
+  }
+
+  .site-header__user-name {
+    max-width: 100%;
+  }
+
   .home-page {
     padding-top: 24px;
   }
@@ -2678,6 +2872,8 @@ a {
   .auth-card,
   .account-intro,
   .account-section,
+  .request-preview-drawer__panel,
+  .admin-request-preview-drawer__panel,
   .admin-catalog-table,
   .admin-catalog-form,
   .admin-request-detail__head {
@@ -2691,6 +2887,7 @@ a {
   .featured-products,
   .home-directions,
   .request-list-card__meta,
+  .request-preview-drawer__item .summary-grid,
   .admin-catalog-tabs,
   .admin-category-manager__filters,
   .admin-brand-manager__filters,
@@ -2699,9 +2896,18 @@ a {
   .admin-product-attributes__grid,
   .admin-requests__filters,
   .admin-request-card__meta,
+  .admin-request-preview-drawer__timestamps,
+  .admin-request-preview-drawer__section .summary-grid,
   .request-detail-item__meta,
   .admin-request-detail__timestamps {
     grid-template-columns: 1fr;
+  }
+
+  .request-list-card__actions,
+  .admin-request-card__actions,
+  .request-preview-drawer__link,
+  .admin-request-preview-drawer__action {
+    width: 100%;
   }
 
   .admin-catalog-tabs .button {

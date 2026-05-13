@@ -71,6 +71,7 @@ export function RequestsPageClient() {
       return;
     }
 
+    const number = previewNumber;
     let isActive = true;
 
     async function loadPreview() {
@@ -79,7 +80,7 @@ export function RequestsPageClient() {
       setPreviewRequest(null);
 
       try {
-        const response = await getCustomerRequest(previewNumber);
+        const response = await getCustomerRequest(number);
         if (isActive) {
           setPreviewRequest(response);
         }
