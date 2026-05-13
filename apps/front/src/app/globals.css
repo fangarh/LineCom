@@ -218,6 +218,7 @@ a {
   min-height: 40px;
   display: inline-flex;
   align-items: center;
+  gap: 7px;
   padding: 0 14px;
   border-radius: var(--radius-sm);
   color: var(--color-header-muted);
@@ -232,6 +233,21 @@ a {
 
 .site-header__link--mobile-only {
   display: none;
+}
+
+.site-header__badge {
+  min-width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  color: var(--color-accent-contrast);
+  background: var(--color-accent);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .theme-toggle {

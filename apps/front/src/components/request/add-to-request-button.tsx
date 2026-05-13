@@ -9,7 +9,9 @@ type AddToRequestButtonProps = {
 };
 
 export function AddToRequestButton({ product, className }: AddToRequestButtonProps) {
-  const { dispatch } = useRequestDraft();
+  const { state, dispatch } = useRequestDraft();
+  const quantity = state.items.find((item) => item.productId === product.productId)?.quantity ?? 0;
+  const label = quantity > 0 ? `В заявке: ${quantity}` : "Добавить в заявку";
 
   return (
     <button
@@ -17,7 +19,7 @@ export function AddToRequestButton({ product, className }: AddToRequestButtonPro
       type="button"
       onClick={() => dispatch({ type: "addProduct", product })}
     >
-      Добавить в заявку
+      <span aria-live="polite">{label}</span>
     </button>
   );
 }

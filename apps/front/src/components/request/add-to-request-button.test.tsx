@@ -1,10 +1,14 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { RequestDraftProvider } from "./request-draft-provider";
 import { AddToRequestButton } from "./add-to-request-button";
 
 describe("AddToRequestButton", () => {
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   it("adds the product to the request draft", async () => {
     const user = userEvent.setup();
 
@@ -37,5 +41,32 @@ describe("AddToRequestButton", () => {
         quantity: 1,
       });
     });
+  });
+
+  it("shows the current product quantity after adding it", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <RequestDraftProvider>
+        <AddToRequestButton
+          product={{
+            productId: "11111111-1111-1111-1111-111111111111",
+            slug: "u-utp-cat-5e",
+            productName: "Кабель U/UTP Cat 5e",
+            productSku: "LC-UTP5E",
+            saleUnit: { code: "coil", label: "бухта" },
+            unitQuantity: "305 м",
+          }}
+        />
+      </RequestDraftProvider>,
+    );
+
+    const button = screen.getByRole("button", { name: "Добавить в заявку" });
+
+    await user.click(button);
+    expect(await screen.findByRole("button", { name: "В заявке: 1" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "В заявке: 1" }));
+    expect(await screen.findByRole("button", { name: "В заявке: 2" })).toBeInTheDocument();
   });
 });

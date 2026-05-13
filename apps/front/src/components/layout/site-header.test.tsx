@@ -1,16 +1,26 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { RequestDraftProvider } from "@/components/request/request-draft-provider";
 import { SiteHeader } from "./site-header";
+
+function renderHeader() {
+  return render(
+    <RequestDraftProvider>
+      <SiteHeader />
+    </RequestDraftProvider>,
+  );
+}
 
 describe("SiteHeader", () => {
   afterEach(() => {
+    localStorage.clear();
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
   });
 
   it("renders request-oriented navigation", () => {
-    render(<SiteHeader />);
+    renderHeader();
 
     expect(screen.getByRole("link", { name: "LineCom" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("img", { name: "LineCom - кабель и оптоволокно" })).toBeInTheDocument();
@@ -39,7 +49,7 @@ describe("SiteHeader", () => {
     }));
 
     const user = userEvent.setup();
-    render(<SiteHeader />);
+    renderHeader();
 
     const brand = screen.getByRole("link", { name: "LineCom" });
     expect(brand).toHaveAttribute("aria-expanded", "false");
@@ -50,5 +60,30 @@ describe("SiteHeader", () => {
 
     await user.click(screen.getByRole("link", { name: "Каталог" }));
     expect(brand).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("shows the request draft items count", async () => {
+    localStorage.setItem(
+      "linecom.requestDraft.v1",
+      JSON.stringify({
+        customerComment: "",
+        items: [
+          {
+            productId: "11111111-1111-1111-1111-111111111111",
+            slug: "u-utp-cat-5e",
+            productName: "Кабель U/UTP Cat 5e",
+            productSku: "LC-UTP5E",
+            saleUnit: { code: "coil", label: "бухта" },
+            unitQuantity: "305 м",
+            quantity: 2,
+            customerComment: "",
+          },
+        ],
+      }),
+    );
+
+    renderHeader();
+
+    expect(await screen.findByRole("link", { name: /2/ })).toHaveAttribute("href", "/request");
   });
 });

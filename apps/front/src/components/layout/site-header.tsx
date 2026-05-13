@@ -3,6 +3,8 @@
 import { useState, type MouseEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRequestDraft } from "@/components/request/request-draft-provider";
+import { getDraftItemsCount } from "@/lib/request-draft/selectors";
 import { routes } from "@/lib/routes";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -19,6 +21,8 @@ const navItems = [
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { state } = useRequestDraft();
+  const draftItemsCount = getDraftItemsCount(state);
 
   const handleBrandClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (typeof window === "undefined" || !window.matchMedia(MOBILE_MENU_QUERY).matches) {
@@ -60,17 +64,24 @@ export function SiteHeader() {
           className={`site-header__menu${isMenuOpen ? " site-header__menu--open" : ""}`}
         >
           <nav className="site-header__nav" aria-label="Основная навигация">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                className={`site-header__link${item.mobileOnly ? " site-header__link--mobile-only" : ""}`}
-                href={item.href}
-                prefetch={item.href === routes.home() ? false : undefined}
-                onClick={closeMenu}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isRequestLink = item.href === routes.request();
+
+              return (
+                <Link
+                  key={item.href}
+                  className={`site-header__link${item.mobileOnly ? " site-header__link--mobile-only" : ""}`}
+                  href={item.href}
+                  prefetch={item.href === routes.home() ? false : undefined}
+                  onClick={closeMenu}
+                >
+                  <span>{item.label}</span>
+                  {isRequestLink && draftItemsCount > 0 ? (
+                    <span className="site-header__badge">{draftItemsCount}</span>
+                  ) : null}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="site-header__actions">
