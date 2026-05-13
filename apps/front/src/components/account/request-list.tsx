@@ -9,6 +9,7 @@ type RequestListProps = {
   requests: CustomerRequestListItem[];
   status: string;
   onStatusChange: (status: string) => void;
+  onPreviewRequest: (number: string) => void;
 };
 
 const statusOptions = [
@@ -19,7 +20,7 @@ const statusOptions = [
   { value: "cancelled", label: "Отмененные" },
 ];
 
-export function RequestList({ requests, status, onStatusChange }: RequestListProps) {
+export function RequestList({ requests, status, onStatusChange, onPreviewRequest }: RequestListProps) {
   return (
     <section className="account-section request-list-section" aria-labelledby="request-list-title">
       <div className="request-list-section__header">
@@ -67,9 +68,18 @@ export function RequestList({ requests, status, onStatusChange }: RequestListPro
 
               {request.customerComment ? <p className="request-list-card__comment">{request.customerComment}</p> : null}
 
-              <Link className="button button--ghost request-list-card__link" href={routes.accountRequest(request.number)}>
-                Открыть заявку {request.number}
-              </Link>
+              <div className="request-list-card__actions">
+                <button
+                  className="button button--ghost request-list-card__preview"
+                  type="button"
+                  onClick={() => onPreviewRequest(request.number)}
+                >
+                  Быстрый просмотр {request.number}
+                </button>
+                <Link className="button button--ghost request-list-card__link" href={routes.accountRequest(request.number)}>
+                  Открыть заявку {request.number}
+                </Link>
+              </div>
             </article>
           ))}
         </div>

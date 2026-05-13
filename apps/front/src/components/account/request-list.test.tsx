@@ -25,7 +25,7 @@ const requests: CustomerRequestListItem[] = [
 
 describe("RequestList", () => {
   it("renders request summaries with public numbers and detail links", () => {
-    render(<RequestList requests={requests} status="all" onStatusChange={vi.fn()} />);
+    render(<RequestList requests={requests} status="all" onStatusChange={vi.fn()} onPreviewRequest={vi.fn()} />);
 
     expect(screen.getByRole("heading", { name: "ЗК26-0001" })).toBeInTheDocument();
     expect(screen.getByText("Новая")).toBeInTheDocument();
@@ -42,18 +42,36 @@ describe("RequestList", () => {
     const user = userEvent.setup();
     const onStatusChange = vi.fn();
 
-    render(<RequestList requests={requests} status="all" onStatusChange={onStatusChange} />);
+    render(<RequestList requests={requests} status="all" onStatusChange={onStatusChange} onPreviewRequest={vi.fn()} />);
 
     await user.selectOptions(screen.getByLabelText("Статус заявок"), "completed");
 
     expect(onStatusChange).toHaveBeenCalledWith("completed");
   });
 
+  it("notifies when quick preview is requested", async () => {
+    const user = userEvent.setup();
+    const onPreviewRequest = vi.fn();
+
+    render(
+      <RequestList
+        requests={requests}
+        status="all"
+        onStatusChange={vi.fn()}
+        onPreviewRequest={onPreviewRequest}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Быстрый просмотр ЗК26-0001" }));
+
+    expect(onPreviewRequest).toHaveBeenCalledWith("ЗК26-0001");
+  });
+
   it("uses the release cancellation status code", async () => {
     const user = userEvent.setup();
     const onStatusChange = vi.fn();
 
-    render(<RequestList requests={requests} status="all" onStatusChange={onStatusChange} />);
+    render(<RequestList requests={requests} status="all" onStatusChange={onStatusChange} onPreviewRequest={vi.fn()} />);
 
     await user.selectOptions(screen.getByRole("combobox"), "cancelled");
 
@@ -63,7 +81,7 @@ describe("RequestList", () => {
   it("shows an empty state without order wording", () => {
     const forbiddenOrderText = ["Оформить", "заказ"].join(" ");
 
-    render(<RequestList requests={[]} status="all" onStatusChange={vi.fn()} />);
+    render(<RequestList requests={[]} status="all" onStatusChange={vi.fn()} onPreviewRequest={vi.fn()} />);
 
     expect(screen.getByText("У вас пока нет заявок")).toBeInTheDocument();
     expect(screen.queryByText(forbiddenOrderText)).not.toBeInTheDocument();
