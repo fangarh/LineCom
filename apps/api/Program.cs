@@ -5,6 +5,7 @@ using LineCom.Api.Modules.Auth;
 using LineCom.Api.Modules.Catalog;
 using LineCom.Api.Modules.Requests;
 using LineCom.Api.Shared.Errors;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ if (DevelopmentLoggingPolicy.ShouldUseDevelopmentConsoleLogging(builder.Environm
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.Configure<ForwardedHeadersOptions>(ReverseProxyForwardingPolicy.Configure);
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddAuthModule(builder.Environment);
 builder.Services.AddAccountModule();
@@ -35,6 +37,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ApiExceptionMiddleware>();
+app.UseForwardedHeaders();
 
 if (HttpsRedirectionPolicy.ShouldUseHttpsRedirection(app.Environment))
 {
