@@ -18,6 +18,7 @@ import {
   type UpsertAdminCategoryAttributeCommand,
 } from "@/lib/api/admin-catalog";
 import { normalizeApiError } from "@/lib/api/errors";
+import { generateSlug } from "@/lib/catalog/slug";
 
 const allCategoriesPageSize = 60;
 const missingCsrfMessage = "Сессия не подтверждена. Обновите страницу и войдите снова.";
@@ -87,6 +88,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
   const [selectedOption, setSelectedOption] = useState<AdminAttributeOption | null>(null);
   const [attributeForm, setAttributeForm] = useState<AttributeFormState>(emptyAttributeForm);
   const [optionForm, setOptionForm] = useState<OptionFormState>(emptyOptionForm);
+  const [isOptionSlugManual, setIsOptionSlugManual] = useState(false);
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
   const [isLoadingAttributes, setIsLoadingAttributes] = useState(false);
   const [mutatingAttributeSession, setMutatingAttributeSession] = useState<number | null>(null);
@@ -170,6 +172,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
       setSelectedOption(null);
       setAttributeForm(emptyAttributeForm);
       setOptionForm(emptyOptionForm);
+      setIsOptionSlugManual(false);
     } catch (error) {
       if (attributesRequestSeqRef.current !== requestSeq) return;
       setAlertMessage(normalizeApiError(error).message);
@@ -213,6 +216,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
         setSelectedOption(null);
         setAttributeForm(emptyAttributeForm);
         setOptionForm(emptyOptionForm);
+        setIsOptionSlugManual(false);
       }
     });
 
@@ -230,6 +234,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
     setSelectedOption(null);
     setAttributeForm(attributeFormFromDetail(attribute));
     setOptionForm(emptyOptionForm);
+    setIsOptionSlugManual(false);
     setAlertMessage(null);
     setStatusMessage(null);
   }
@@ -243,6 +248,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
     setSelectedOption(null);
     setAttributeForm(emptyAttributeForm);
     setOptionForm(emptyOptionForm);
+    setIsOptionSlugManual(false);
     setAlertMessage(null);
     setStatusMessage(null);
   }
@@ -281,6 +287,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
       setAttributeForm(attributeFormFromDetail(normalizedAttribute));
       setSelectedOption(null);
       setOptionForm(emptyOptionForm);
+      setIsOptionSlugManual(false);
       setStatusMessage(selectedAttribute ? "Характеристика сохранена." : "Характеристика создана.");
     } catch (error) {
       if (!isCurrentAttributeMutation(capturedCategoryId, capturedAttributeId, capturedAttributeSession)) return;
@@ -366,6 +373,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
     setMutatingOptionSession(null);
     setSelectedOption(option);
     setOptionForm(optionFormFromDetail(option));
+    setIsOptionSlugManual(true);
     setAlertMessage(null);
     setStatusMessage(null);
   }
@@ -375,6 +383,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
     setMutatingOptionSession(null);
     setSelectedOption(null);
     setOptionForm(emptyOptionForm);
+    setIsOptionSlugManual(false);
     setAlertMessage(null);
     setStatusMessage(null);
   }
@@ -408,6 +417,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
       updateSelectedAttributeOptions(capturedAttributeId, (options) => upsertOption(options, savedOption));
       setSelectedOption(savedOption);
       setOptionForm(optionFormFromDetail(savedOption));
+      setIsOptionSlugManual(true);
       setStatusMessage(selectedOption ? "Значение сохранено." : "Значение создано.");
     } catch (error) {
       if (!isCurrentOptionMutation(capturedCategoryId, capturedAttributeId, capturedOptionId, capturedOptionSession)) return;
@@ -442,6 +452,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
       updateSelectedAttributeOptions(capturedAttributeId, (options) => options.filter((option) => option.id !== capturedOptionId));
       setSelectedOption(null);
       setOptionForm(emptyOptionForm);
+      setIsOptionSlugManual(false);
       setStatusMessage("Значение удалено.");
     } catch (error) {
       if (!isCurrentOptionMutation(capturedCategoryId, capturedAttributeId, capturedOptionId, capturedOptionSession)) return;
@@ -462,6 +473,24 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
     const updatedAttribute = { ...currentAttribute, options: update(currentAttribute.options) };
     setSelectedAttribute(updatedAttribute);
     setAttributes((items) => upsertAttribute(items, updatedAttribute));
+  }
+
+  function changeOptionValue(value: string) {
+    setOptionForm((current) => ({
+      ...current,
+      value,
+      slug: isOptionSlugManual ? current.slug : generateSlug(value),
+    }));
+  }
+
+  function changeOptionSlug(slug: string) {
+    setIsOptionSlugManual(true);
+    setOptionForm((current) => ({ ...current, slug }));
+  }
+
+  function regenerateOptionSlug() {
+    setIsOptionSlugManual(true);
+    setOptionForm((current) => ({ ...current, slug: generateSlug(current.value) }));
   }
 
   function isCurrentCategoryMutation(capturedCategoryId: string, capturedAttributeSession: number) {
@@ -602,6 +631,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
                 setAttributeForm((current) => ({ ...current, type: event.target.value }));
                 setSelectedOption(null);
                 setOptionForm(emptyOptionForm);
+                setIsOptionSlugManual(false);
               }}
               value={attributeForm.type}
             >
@@ -749,7 +779,7 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
               <label className="form-field">
                 <span>Значение</span>
                 <input
-                  onChange={(event) => setOptionForm((current) => ({ ...current, value: event.target.value }))}
+                  onChange={(event) => changeOptionValue(event.target.value)}
                   required
                   value={optionForm.value}
                 />
@@ -757,11 +787,15 @@ export function AdminAttributeManager({ csrfToken = null }: AdminAttributeManage
               <label className="form-field">
                 <span>Slug</span>
                 <input
-                  onChange={(event) => setOptionForm((current) => ({ ...current, slug: event.target.value }))}
+                  onChange={(event) => changeOptionSlug(event.target.value)}
+                  onFocus={(event) => event.currentTarget.select()}
                   required
                   value={optionForm.slug}
                 />
               </label>
+              <button className="button button--ghost" onClick={regenerateOptionSlug} type="button">
+                Сгенерировать заново
+              </button>
               <label className="form-field">
                 <span>Нормализованное значение</span>
                 <input

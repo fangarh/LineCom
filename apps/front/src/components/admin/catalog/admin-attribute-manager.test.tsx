@@ -433,6 +433,33 @@ describe("AdminAttributeManager", () => {
     );
   });
 
+  it("автозаполняет slug для нового значения select-атрибута и не меняет slug выбранного значения без явного действия", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+    await selectCategory(user, "cat-cables");
+    await user.click(await screen.findByRole("button", { name: /Цвет/ }));
+
+    const optionEditor = await screen.findByLabelText("Редактор значения");
+    await user.click(within(optionEditor).getByRole("button", { name: "Новое значение" }));
+    await user.type(within(optionEditor).getByLabelText("Значение"), "Синий");
+    expect(within(optionEditor).getByLabelText("Slug")).toHaveValue("siniy");
+
+    await user.clear(within(optionEditor).getByLabelText("Slug"));
+    await user.type(within(optionEditor).getByLabelText("Slug"), "manual-option");
+    await user.clear(within(optionEditor).getByLabelText("Значение"));
+    await user.type(within(optionEditor).getByLabelText("Значение"), "Темно-синий");
+    expect(within(optionEditor).getByLabelText("Slug")).toHaveValue("manual-option");
+
+    await user.click(within(optionEditor).getByRole("button", { name: "Сгенерировать заново" }));
+    expect(within(optionEditor).getByLabelText("Slug")).toHaveValue("temno-siniy");
+
+    await user.click(screen.getByRole("button", { name: /Красный/ }));
+    await waitFor(() => expect(within(optionEditor).getByLabelText("Значение")).toHaveValue("Красный"));
+    await user.clear(within(optionEditor).getByLabelText("Значение"));
+    await user.type(within(optionEditor).getByLabelText("Значение"), "Красный RAL");
+    expect(within(optionEditor).getByLabelText("Slug")).toHaveValue("krasnyy");
+  });
+
   it("shows inherit-from-parent result", async () => {
     const user = userEvent.setup();
     await renderManager();

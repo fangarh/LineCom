@@ -29,6 +29,7 @@ import {
 } from "./admin-product-editor-helpers";
 import { AdminProductListPanel } from "./admin-product-list-panel";
 import type { ProductListPageMeta } from "./admin-product-list-helpers";
+import { generateSlug } from "@/lib/catalog/slug";
 
 const allCatalogOptionsPageSize = 60;
 const defaultProductPageSize = 60;
@@ -44,6 +45,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
   const [brands, setBrands] = useState<AdminBrandListItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<AdminProductDetail | null>(null);
   const [form, setForm] = useState<ProductFormState>(emptyProductForm);
+  const [isSlugManual, setIsSlugManual] = useState(false);
   const [activeEditorTab, setActiveEditorTab] = useState<ProductEditorTab>("main");
   const [duplicateCandidates, setDuplicateCandidates] = useState<AdminProductDuplicateCandidate[]>([]);
   const [search, setSearch] = useState("");
@@ -263,6 +265,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
 
       setSelectedProduct(detail);
       setForm(formFromAdminProductDetail(detail));
+      setIsSlugManual(true);
     } catch (error) {
       if (detailRequestSeqRef.current !== requestSeq) return;
       setAlertMessage(normalizeApiError(error).message);
@@ -280,6 +283,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
     setIsLoadingDetail(false);
     setSelectedProduct(null);
     setForm(emptyProductForm);
+    setIsSlugManual(false);
     setDuplicateCandidates([]);
     setIsCheckingDuplicates(false);
     setActiveEditorTab("main");
@@ -312,6 +316,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
 
       setSelectedProduct(savedProduct);
       setForm(formFromAdminProductDetail(savedProduct));
+      setIsSlugManual(true);
       setStatusMessage(selectedProduct ? "Товар сохранен." : "Товар создан.");
       await refreshProductList();
     } catch (error) {
@@ -343,6 +348,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
 
       setSelectedProduct(null);
       setForm(emptyProductForm);
+      setIsSlugManual(false);
       setDuplicateCandidates([]);
       setStatusMessage("Товар удален.");
       await refreshProductList();
@@ -388,6 +394,24 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
     return editorSessionRef.current === capturedEditorSession && selectedProductIdRef.current === capturedProductId;
   }
 
+  function changeProductName(name: string) {
+    setForm((current) => ({
+      ...current,
+      name,
+      slug: isSlugManual ? current.slug : generateSlug(name),
+    }));
+  }
+
+  function changeProductSlug(slug: string) {
+    setIsSlugManual(true);
+    setForm((current) => ({ ...current, slug }));
+  }
+
+  function regenerateProductSlug() {
+    setIsSlugManual(true);
+    setForm((current) => ({ ...current, slug: generateSlug(current.name) }));
+  }
+
   return (
     <div className="admin-product-manager">
       <AdminProductListPanel
@@ -427,8 +451,14 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
         isMutating={isMutating}
         onCheckDuplicateCandidates={checkDuplicateCandidates}
         onDeleteSelectedProduct={deleteSelectedProduct}
-        onProductUpdated={setSelectedProduct}
+        onNameChange={changeProductName}
+        onProductUpdated={(product) => {
+          setSelectedProduct(product);
+          setIsSlugManual(true);
+        }}
+        onRegenerateSlug={regenerateProductSlug}
         onSetActiveEditorTab={setActiveEditorTab}
+        onSlugChange={changeProductSlug}
         onSubmitProduct={submitProduct}
         selectedProduct={selectedProduct}
         setForm={setForm}

@@ -16,6 +16,7 @@ import {
   type UpsertAdminBrandCommand,
 } from "@/lib/api/admin-catalog";
 import { normalizeApiError } from "@/lib/api/errors";
+import { generateSlug } from "@/lib/catalog/slug";
 
 type AdminBrandManagerProps = {
   csrfToken?: string | null;
@@ -50,6 +51,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
   const [brands, setBrands] = useState<AdminBrandListItem[]>([]);
   const [selectedBrand, setSelectedBrand] = useState<AdminBrandDetail | null>(null);
   const [form, setForm] = useState<BrandFormState>(emptyForm);
+  const [isSlugManual, setIsSlugManual] = useState(false);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -146,6 +148,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
 
       setSelectedBrand(detail);
       setForm(formFromDetail(detail));
+      setIsSlugManual(true);
       setLogoFile(null);
       setLogoPreview(null);
       clearLogoFileInput();
@@ -164,6 +167,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
     brandEditorSessionRef.current += 1;
     setSelectedBrand(null);
     setForm(emptyForm);
+    setIsSlugManual(false);
     setLogoFile(null);
     setLogoPreview(null);
     clearLogoFileInput();
@@ -196,6 +200,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
 
       setSelectedBrand(savedBrand);
       setForm(formFromDetail(savedBrand));
+      setIsSlugManual(true);
       setStatusMessage(selectedBrand ? "Бренд сохранен." : "Бренд создан.");
       await refreshBrandList();
     } catch (error) {
@@ -226,6 +231,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
 
       setSelectedBrand(null);
       setForm(emptyForm);
+      setIsSlugManual(false);
       setLogoFile(null);
       setLogoPreview(null);
       clearLogoFileInput();
@@ -319,6 +325,24 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
     }
   }
 
+  function changeBrandName(name: string) {
+    setForm((current) => ({
+      ...current,
+      name,
+      slug: isSlugManual ? current.slug : generateSlug(name),
+    }));
+  }
+
+  function changeBrandSlug(slug: string) {
+    setIsSlugManual(true);
+    setForm((current) => ({ ...current, slug }));
+  }
+
+  function regenerateBrandSlug() {
+    setIsSlugManual(true);
+    setForm((current) => ({ ...current, slug: generateSlug(current.name) }));
+  }
+
   return (
     <div className="admin-brand-manager">
       <section className="admin-catalog-table admin-brand-manager__list" aria-labelledby="admin-brand-list-title">
@@ -398,7 +422,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
           <label className="form-field">
             <span>Название</span>
             <input
-              onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
+              onChange={(event) => changeBrandName(event.target.value)}
               required
               value={form.name}
             />
@@ -406,11 +430,15 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
           <label className="form-field">
             <span>Слаг</span>
             <input
-              onChange={(event) => setForm((current) => ({ ...current, slug: event.target.value }))}
+              onChange={(event) => changeBrandSlug(event.target.value)}
+              onFocus={(event) => event.currentTarget.select()}
               required
               value={form.slug}
             />
           </label>
+          <button className="button button--ghost" onClick={regenerateBrandSlug} type="button">
+            Сгенерировать заново
+          </button>
           <label className="form-field">
             <span>Описание</span>
             <textarea

@@ -23,6 +23,9 @@ type AdminCategoryFormProps = {
   parentCategories: AdminCategoryListItem[];
   blockedParentIds: Set<string>;
   onFormChange: (form: CategoryFormState) => void;
+  onNameChange: (name: string) => void;
+  onRegenerateSlug: () => void;
+  onSlugChange: (slug: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onDelete: () => void;
 };
@@ -35,6 +38,9 @@ export function AdminCategoryForm({
   parentCategories,
   blockedParentIds,
   onFormChange,
+  onNameChange,
+  onRegenerateSlug,
+  onSlugChange,
   onSubmit,
   onDelete,
 }: AdminCategoryFormProps) {
@@ -56,12 +62,15 @@ export function AdminCategoryForm({
       <form className="admin-category-form" onSubmit={onSubmit}>
         <label className="form-field">
           <span>Название</span>
-          <input onChange={(event) => updateForm({ name: event.target.value })} required value={form.name} />
+          <input onChange={(event) => onNameChange(event.target.value)} required value={form.name} />
         </label>
         <label className="form-field">
           <span>Slug</span>
-          <input onChange={(event) => updateForm({ slug: event.target.value })} required value={form.slug} />
+          <input onChange={(event) => onSlugChange(event.target.value)} onFocus={(event) => event.currentTarget.select()} required value={form.slug} />
         </label>
+        <button className="button button--ghost" onClick={onRegenerateSlug} type="button">
+          Сгенерировать заново
+        </button>
         <AdminCategoryParentPicker
           blockedParentIds={blockedParentIds}
           buttonLabel="Выбрать родителя"

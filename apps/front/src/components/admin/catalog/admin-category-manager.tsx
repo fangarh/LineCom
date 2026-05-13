@@ -15,6 +15,7 @@ import {
   type UpsertAdminCategoryCommand,
 } from "@/lib/api/admin-catalog";
 import { normalizeApiError } from "@/lib/api/errors";
+import { generateSlug } from "@/lib/catalog/slug";
 import { AdminCategoryForm, type CategoryFormState } from "./admin-category-form";
 import { AdminCategoryParentPicker } from "./admin-category-parent-picker";
 import { AdminCategoryTree } from "./admin-category-tree";
@@ -44,6 +45,7 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
   const [allCategories, setAllCategories] = useState<AdminCategoryListItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<AdminCategoryDetail | null>(null);
   const [form, setForm] = useState<CategoryFormState>(emptyForm);
+  const [isSlugManual, setIsSlugManual] = useState(false);
   const [search, setSearch] = useState("");
   const [parentFilter, setParentFilter] = useState("");
   const [activeFilter, setActiveFilter] = useState("");
@@ -182,6 +184,7 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
 
       setSelectedCategory(detail);
       setForm(formFromDetail(detail));
+      setIsSlugManual(true);
       setMoveParentId(detail.parentId ?? "");
       setNewSortOrder(String(detail.sortOrder));
     } catch (error) {
@@ -198,6 +201,7 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
     detailRequestSeqRef.current += 1;
     setSelectedCategory(null);
     setForm(emptyForm);
+    setIsSlugManual(false);
     setMoveParentId("");
     setNewSortOrder("0");
     setAlertMessage(null);
@@ -224,6 +228,7 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
 
       setSelectedCategory(savedCategory);
       setForm(formFromDetail(savedCategory));
+      setIsSlugManual(true);
       setMoveParentId(savedCategory.parentId ?? "");
       setNewSortOrder(String(savedCategory.sortOrder));
       setStatusMessage(selectedCategory ? "Категория сохранена." : "Категория создана.");
@@ -251,6 +256,7 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
       await deleteAdminCategory(selectedCategory.id, csrfToken);
       setSelectedCategory(null);
       setForm(emptyForm);
+      setIsSlugManual(false);
       setStatusMessage("Категория удалена.");
       await refreshCategoryLists();
     } catch (error) {
@@ -276,6 +282,7 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
       const movedCategory = await moveAdminCategory(selectedCategory.id, moveParentId || null, csrfToken);
       setSelectedCategory(movedCategory);
       setForm(formFromDetail(movedCategory));
+      setIsSlugManual(true);
       setMoveParentId(movedCategory.parentId ?? "");
       setStatusMessage("Родитель категории обновлен.");
       await refreshCategoryLists();
@@ -302,6 +309,7 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
       const sortedCategory = await sortAdminCategory(selectedCategory.id, parseSortOrder(newSortOrder), csrfToken);
       setSelectedCategory(sortedCategory);
       setForm(formFromDetail(sortedCategory));
+      setIsSlugManual(true);
       setMoveParentId(sortedCategory.parentId ?? "");
       setNewSortOrder(String(sortedCategory.sortOrder));
       setStatusMessage("Порядок категории обновлен.");
@@ -314,6 +322,24 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
   }
 
   const selectedId = selectedCategory?.id ?? null;
+
+  function changeCategoryName(name: string) {
+    setForm((current) => ({
+      ...current,
+      name,
+      slug: isSlugManual ? current.slug : generateSlug(name),
+    }));
+  }
+
+  function changeCategorySlug(slug: string) {
+    setIsSlugManual(true);
+    setForm((current) => ({ ...current, slug }));
+  }
+
+  function regenerateCategorySlug() {
+    setIsSlugManual(true);
+    setForm((current) => ({ ...current, slug: generateSlug(current.name) }));
+  }
 
   return (
     <div className="admin-category-manager">
@@ -382,6 +408,9 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
           isMutating={isMutating}
           onDelete={deleteSelectedCategory}
           onFormChange={setForm}
+          onNameChange={changeCategoryName}
+          onRegenerateSlug={regenerateCategorySlug}
+          onSlugChange={changeCategorySlug}
           onSubmit={submitCategory}
           parentCategories={allCategories}
           selectedCategory={selectedCategory}

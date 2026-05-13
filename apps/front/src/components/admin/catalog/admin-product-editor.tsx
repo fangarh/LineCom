@@ -35,8 +35,11 @@ type AdminProductEditorProps = {
   isMutating: boolean;
   onCheckDuplicateCandidates: () => void;
   onDeleteSelectedProduct: () => void;
+  onNameChange: (name: string) => void;
   onProductUpdated: (product: AdminProductDetail) => void;
+  onRegenerateSlug: () => void;
   onSetActiveEditorTab: (tab: ProductEditorTab) => void;
+  onSlugChange: (slug: string) => void;
   onSubmitProduct: (event: FormEvent<HTMLFormElement>) => void;
   selectedProduct: AdminProductDetail | null;
   setForm: (update: (current: ProductFormState) => ProductFormState) => void;
@@ -56,8 +59,11 @@ export function AdminProductEditor({
   isMutating,
   onCheckDuplicateCandidates,
   onDeleteSelectedProduct,
+  onNameChange,
   onProductUpdated,
+  onRegenerateSlug,
   onSetActiveEditorTab,
+  onSlugChange,
   onSubmitProduct,
   selectedProduct,
   setForm,
@@ -107,7 +113,15 @@ export function AdminProductEditor({
           id={getProductEditorPanelId("main")}
           role="tabpanel"
         >
-          <AdminProductMainFields categories={categories} brands={brands} form={form} setForm={setForm} />
+          <AdminProductMainFields
+            categories={categories}
+            brands={brands}
+            form={form}
+            onNameChange={onNameChange}
+            onRegenerateSlug={onRegenerateSlug}
+            onSlugChange={onSlugChange}
+            setForm={setForm}
+          />
         </section>
 
         <section

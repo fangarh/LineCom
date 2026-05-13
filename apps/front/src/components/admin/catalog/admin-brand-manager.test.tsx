@@ -168,6 +168,31 @@ describe("AdminBrandManager", () => {
     );
   });
 
+  it("автозаполняет слаг для нового бренда и не меняет слаг выбранного бренда без явного действия", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: "Новый бренд" }));
+    await user.type(screen.getByLabelText("Название"), "ЭлектроКомплект");
+    expect(screen.getByLabelText("Слаг")).toHaveValue("elektrokomplekt");
+
+    await user.clear(screen.getByLabelText("Слаг"));
+    await user.type(screen.getByLabelText("Слаг"), "manual-brand");
+    await user.clear(screen.getByLabelText("Название"));
+    await user.type(screen.getByLabelText("Название"), "ПромСвет новый");
+    expect(screen.getByLabelText("Слаг")).toHaveValue("manual-brand");
+
+    await user.click(screen.getByRole("button", { name: "Сгенерировать заново" }));
+    expect(screen.getByLabelText("Слаг")).toHaveValue("promsvet-novyy");
+
+    adminCatalogApiMock.getAdminBrand.mockResolvedValueOnce(inactiveBrandDetail);
+    await user.click(screen.getByRole("button", { name: /ПромСвет/ }));
+    await screen.findByDisplayValue("ПромСвет");
+    await user.clear(screen.getByLabelText("Название"));
+    await user.type(screen.getByLabelText("Название"), "ПромСвет обновленный");
+    expect(screen.getByLabelText("Слаг")).toHaveValue("promsvet");
+  });
+
   it("обновляет выбранный бренд с описанием, SEO-полями, активностью и CSRF-токеном", async () => {
     const user = userEvent.setup();
     adminCatalogApiMock.getAdminBrand.mockResolvedValueOnce(inactiveBrandDetail);

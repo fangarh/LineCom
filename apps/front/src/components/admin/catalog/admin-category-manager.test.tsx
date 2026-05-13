@@ -477,6 +477,31 @@ describe("AdminCategoryManager", () => {
     );
   });
 
+  it("автозаполняет slug для новой категории и не меняет slug выбранной категории без явного действия", async () => {
+    const user = userEvent.setup();
+    adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(childDetail);
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: "Новая категория" }));
+    await user.type(screen.getByLabelText("Название"), "Муфта кабельная 1кВ");
+    expect(screen.getByLabelText("Slug")).toHaveValue("mufta-kabelnaya-1kv");
+
+    await user.clear(screen.getByLabelText("Slug"));
+    await user.type(screen.getByLabelText("Slug"), "manual-category");
+    await user.clear(screen.getByLabelText("Название"));
+    await user.type(screen.getByLabelText("Название"), "Другое название");
+    expect(screen.getByLabelText("Slug")).toHaveValue("manual-category");
+
+    await user.click(screen.getByRole("button", { name: "Сгенерировать заново" }));
+    expect(screen.getByLabelText("Slug")).toHaveValue("drugoe-nazvanie");
+
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
+    await screen.findByDisplayValue("Силовые кабели");
+    await user.clear(screen.getByLabelText("Название"));
+    await user.type(screen.getByLabelText("Название"), "Новое имя существующей категории");
+    expect(screen.getByLabelText("Slug")).toHaveValue("silovye-kabeli");
+  });
+
   it("updates a selected category with full catalog and SEO payload plus CSRF token", async () => {
     const user = userEvent.setup();
     adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(childDetail);

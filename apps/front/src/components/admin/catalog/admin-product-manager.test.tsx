@@ -880,6 +880,30 @@ describe("AdminProductManager", () => {
     expect(adminCatalogApiMock.deleteAdminProduct).not.toHaveBeenCalled();
   });
 
+  it("автозаполняет slug для нового товара и уважает ручное переопределение", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: "Новый товар" }));
+    const editor = screen.getByLabelText("Редактор товара");
+
+    await user.type(within(editor).getByLabelText("Название"), "Муфта кабельная 1кВ");
+    expect(within(editor).getByLabelText("Slug")).toHaveValue("mufta-kabelnaya-1kv");
+
+    await user.clear(within(editor).getByLabelText("Slug"));
+    await user.type(within(editor).getByLabelText("Slug"), "manual-slug");
+    await user.clear(within(editor).getByLabelText("Название"));
+    await user.type(within(editor).getByLabelText("Название"), "Другое название");
+    expect(within(editor).getByLabelText("Slug")).toHaveValue("manual-slug");
+
+    await user.click(within(editor).getByRole("button", { name: "Сгенерировать заново" }));
+    expect(within(editor).getByLabelText("Slug")).toHaveValue("drugoe-nazvanie");
+
+    await user.clear(within(editor).getByLabelText("Название"));
+    await user.type(within(editor).getByLabelText("Название"), "Не перезатирать");
+    expect(within(editor).getByLabelText("Slug")).toHaveValue("drugoe-nazvanie");
+  });
+
   it("сбрасывает состояние проверки дублей при переходе к новому товару", async () => {
     const user = userEvent.setup();
     const duplicateRequest = deferred<AdminProductDuplicateCandidatesResponse>();

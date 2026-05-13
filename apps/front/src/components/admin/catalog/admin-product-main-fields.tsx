@@ -5,10 +5,21 @@ type AdminProductMainFieldsProps = {
   brands: AdminBrandListItem[];
   categories: AdminCategoryListItem[];
   form: ProductFormState;
+  onNameChange: (name: string) => void;
+  onRegenerateSlug: () => void;
+  onSlugChange: (slug: string) => void;
   setForm: (update: (current: ProductFormState) => ProductFormState) => void;
 };
 
-export function AdminProductMainFields({ brands, categories, form, setForm }: AdminProductMainFieldsProps) {
+export function AdminProductMainFields({
+  brands,
+  categories,
+  form,
+  onNameChange,
+  onRegenerateSlug,
+  onSlugChange,
+  setForm,
+}: AdminProductMainFieldsProps) {
   return (
     <div className="admin-product-form__grid">
       <label className="form-field">
@@ -35,12 +46,15 @@ export function AdminProductMainFields({ brands, categories, form, setForm }: Ad
       </label>
       <label className="form-field">
         <span>Название</span>
-        <input onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))} required value={form.name} />
+        <input onChange={(event) => onNameChange(event.target.value)} required value={form.name} />
       </label>
       <label className="form-field">
         <span>Slug</span>
-        <input onChange={(event) => setForm((current) => ({ ...current, slug: event.target.value }))} required value={form.slug} />
+        <input onChange={(event) => onSlugChange(event.target.value)} onFocus={(event) => event.currentTarget.select()} required value={form.slug} />
       </label>
+      <button className="button button--ghost" onClick={onRegenerateSlug} type="button">
+        Сгенерировать заново
+      </button>
       <label className="form-field">
         <span>SKU</span>
         <input onChange={(event) => setForm((current) => ({ ...current, sku: event.target.value }))} value={form.sku} />
