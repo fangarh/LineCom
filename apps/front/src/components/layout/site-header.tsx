@@ -3,6 +3,7 @@
 import { useState, type MouseEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "@/components/auth/auth-provider";
 import { useRequestDraft } from "@/components/request/request-draft-provider";
 import { getDraftItemsCount } from "@/lib/request-draft/selectors";
 import { routes } from "@/lib/routes";
@@ -16,13 +17,26 @@ const navItems = [
   { href: routes.about(), label: "О нас" },
   { href: routes.delivery(), label: "Доставка" },
   { href: routes.request(), label: "Заявка" },
+];
+
+const accountItems = [
+  { href: routes.accountProfile(), label: "Профиль" },
   { href: routes.accountRequests(), label: "Мои заявки" },
+];
+
+const adminItems = [
+  { href: routes.adminRequests(), label: "Заявки клиентов" },
+  { href: routes.adminCatalog(), label: "Каталог админки" },
+  { href: routes.adminHomepage(), label: "Главная админки" },
 ];
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
+  const { user } = useAuth();
   const { state } = useRequestDraft();
   const draftItemsCount = getDraftItemsCount(state);
+  const isStaff = user?.role === "seller" || user?.role === "admin";
 
   const handleBrandClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (typeof window === "undefined" || !window.matchMedia(MOBILE_MENU_QUERY).matches) {
@@ -35,6 +49,11 @@ export function SiteHeader() {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
+    setIsAdminMenuOpen(false);
+  };
+
+  const toggleAdminMenu = () => {
+    setIsAdminMenuOpen((isOpen) => !isOpen);
   };
 
   return (
@@ -82,13 +101,44 @@ export function SiteHeader() {
                 </Link>
               );
             })}
+            {user
+              ? accountItems.map((item) => (
+                  <Link key={item.href} className="site-header__link" href={item.href} onClick={closeMenu}>
+                    <span>{item.label}</span>
+                  </Link>
+                ))
+              : null}
+            {isStaff ? (
+              <div className="site-header__dropdown">
+                <button
+                  className="site-header__link site-header__dropdown-button"
+                  type="button"
+                  aria-expanded={isAdminMenuOpen}
+                  aria-controls="site-header-admin-menu"
+                  onClick={toggleAdminMenu}
+                >
+                  Администрирование
+                </button>
+                {isAdminMenuOpen ? (
+                  <div id="site-header-admin-menu" className="site-header__dropdown-menu">
+                    {adminItems.map((item) => (
+                      <Link key={item.href} className="site-header__dropdown-link" href={item.href} onClick={closeMenu}>
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
           </nav>
 
           <div className="site-header__actions">
             <ThemeToggle />
-            <Link className="button button--ghost site-header__login" href={routes.login()} onClick={closeMenu}>
-              Войти
-            </Link>
+            {user ? null : (
+              <Link className="button button--ghost site-header__login" href={routes.login()} onClick={closeMenu}>
+                Войти
+              </Link>
+            )}
           </div>
         </div>
       </div>

@@ -1,14 +1,28 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { AuthProvider } from "@/components/auth/auth-provider";
 import { RequestDraftProvider } from "@/components/request/request-draft-provider";
+import type { AuthSession, CurrentUser } from "@/lib/api/auth";
 import { SiteHeader } from "./site-header";
 
-function renderHeader() {
+function buildUser(role: string): CurrentUser {
+  return {
+    id: `${role}-user`,
+    name: `${role} user`,
+    email: `${role}@linecom.test`,
+    phone: null,
+    role,
+  };
+}
+
+function renderHeader(session: AuthSession | null = null) {
   return render(
-    <RequestDraftProvider>
-      <SiteHeader />
-    </RequestDraftProvider>,
+    <AuthProvider initialSession={session}>
+      <RequestDraftProvider>
+        <SiteHeader />
+      </RequestDraftProvider>
+    </AuthProvider>,
   );
 }
 
@@ -29,7 +43,9 @@ describe("SiteHeader", () => {
     expect(screen.getByRole("link", { name: "О нас" })).toHaveAttribute("href", "/about");
     expect(screen.getByRole("link", { name: "Доставка" })).toHaveAttribute("href", "/delivery");
     expect(screen.getByRole("link", { name: "Заявка" })).toHaveAttribute("href", "/request");
-    expect(screen.getByRole("link", { name: "Мои заявки" })).toHaveAttribute("href", "/account/requests");
+    expect(screen.queryByRole("link", { name: "Мои заявки" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Профиль" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Администрирование" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Главная админки" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Каталог админки" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Включить темную тему" })).toBeInTheDocument();
@@ -85,5 +101,33 @@ describe("SiteHeader", () => {
     renderHeader();
 
     expect(await screen.findByRole("link", { name: /2/ })).toHaveAttribute("href", "/request");
+  });
+
+  it("shows account links without admin links for customers", () => {
+    renderHeader({ user: buildUser("customer"), csrfToken: "csrf" });
+
+    expect(screen.getByRole("link", { name: "Профиль" })).toHaveAttribute("href", "/account/profile");
+    expect(screen.getByRole("link", { name: "Мои заявки" })).toHaveAttribute("href", "/account/requests");
+    expect(screen.queryByRole("button", { name: "Администрирование" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Заявки клиентов" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Каталог админки" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Главная админки" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Войти" })).not.toBeInTheDocument();
+  });
+
+  it.each(["seller", "admin"])("shows one admin navigation group for %s users", async (role) => {
+    const user = userEvent.setup();
+    renderHeader({ user: buildUser(role), csrfToken: "csrf" });
+
+    const adminGroup = screen.getByRole("button", { name: "Администрирование" });
+    expect(screen.getAllByRole("button", { name: "Администрирование" })).toHaveLength(1);
+
+    await user.click(adminGroup);
+
+    expect(screen.getByRole("link", { name: "Заявки клиентов" })).toHaveAttribute("href", "/admin/requests");
+    expect(screen.getByRole("link", { name: "Каталог админки" })).toHaveAttribute("href", "/admin/catalog");
+    expect(screen.getByRole("link", { name: "Главная админки" })).toHaveAttribute("href", "/admin/homepage");
+    expect(screen.getByRole("link", { name: "Профиль" })).toHaveAttribute("href", "/account/profile");
+    expect(screen.getByRole("link", { name: "Мои заявки" })).toHaveAttribute("href", "/account/requests");
   });
 });
