@@ -142,6 +142,68 @@ public sealed class AuthLoginEndpointTests
         Assert.Equal("auth.unauthorized", body.Code);
     }
 
+    [Fact]
+    public async Task Logout_WithCsrfToken_ReturnsNoContentAndClearsAuthCookie()
+    {
+        var user = new CurrentUserDto(
+            Guid.Parse("1f0d787f-10a4-4f4b-b5bd-df2d5fa28df6"),
+            "Ivan Petrov",
+            "ivan@example.com",
+            "+79000000000",
+            "customer");
+
+        await using var factory = CreateFactory(new ReturningCustomerLoginService(user));
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false
+        });
+
+        using var loginResponse = await client.PostAsJsonAsync(
+            "/api/auth/login",
+            new LoginRequest("ivan@example.com", "secure-password"));
+        Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
+        var session = await ReadAuthSessionAsync(loginResponse);
+
+        using var logoutRequest = new HttpRequestMessage(HttpMethod.Post, "/api/auth/logout");
+        logoutRequest.Headers.Add(RequireCsrfTokenAttribute.HeaderName, session.CsrfToken);
+
+        using var response = await client.SendAsync(logoutRequest);
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.True(response.Headers.TryGetValues("Set-Cookie", out var setCookieHeaders));
+        Assert.Contains(setCookieHeaders, header =>
+            header.StartsWith("linecom_auth=", StringComparison.Ordinal) &&
+            header.Contains("expires=", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public async Task Logout_WithoutCsrfToken_ReturnsForbidden()
+    {
+        var user = new CurrentUserDto(
+            Guid.Parse("1f0d787f-10a4-4f4b-b5bd-df2d5fa28df6"),
+            "Ivan Petrov",
+            "ivan@example.com",
+            "+79000000000",
+            "customer");
+
+        await using var factory = CreateFactory(new ReturningCustomerLoginService(user));
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false
+        });
+
+        using var loginResponse = await client.PostAsJsonAsync(
+            "/api/auth/login",
+            new LoginRequest("ivan@example.com", "secure-password"));
+        Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
+
+        using var response = await client.PostAsync("/api/auth/logout", content: null);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        var body = await ReadErrorAsync(response);
+        Assert.Equal("auth.forbidden", body.Code);
+    }
+
     private static WebApplicationFactory<Program> CreateFactory(ICustomerLoginService loginService)
     {
         return new LineComWebApplicationFactory()

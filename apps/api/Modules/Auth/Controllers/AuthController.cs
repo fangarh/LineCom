@@ -1,5 +1,7 @@
 using LineCom.Api.Modules.Auth.DTOs;
 using LineCom.Api.Modules.Auth.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,5 +55,15 @@ public sealed class AuthController : ControllerBase
     public async Task<ActionResult<AuthSessionDto>> Me(CancellationToken cancellationToken)
     {
         return Ok(await _currentUserService.GetCurrentSessionAsync(HttpContext, cancellationToken));
+    }
+
+    [Authorize]
+    [RequireCsrfToken]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        return NoContent();
     }
 }
