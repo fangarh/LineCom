@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import type { AdminRequestListItem } from "@/lib/api/admin-requests";
 import { AdminRequestList } from "./admin-request-list";
@@ -33,6 +34,7 @@ describe("AdminRequestList", () => {
         filters={{ status: "all", number: "", contact: "", organization: "" }}
         requests={requests}
         onFiltersChange={vi.fn()}
+        onPreviewRequest={vi.fn()}
       />,
     );
 
@@ -53,7 +55,26 @@ describe("AdminRequestList", () => {
       "href",
       "/admin/requests/%D0%97%D0%9A26-0001",
     );
+    expect(screen.getByRole("button", { name: "Быстрый просмотр ЗК26-0001" })).toBeInTheDocument();
     expect(screen.queryByRole("option", { name: /quoted/i })).not.toBeInTheDocument();
+  });
+
+  it("calls onPreviewRequest from the quick preview button", async () => {
+    const user = userEvent.setup();
+    const onPreviewRequest = vi.fn();
+
+    render(
+      <AdminRequestList
+        filters={{ status: "all", number: "", contact: "", organization: "" }}
+        requests={requests}
+        onFiltersChange={vi.fn()}
+        onPreviewRequest={onPreviewRequest}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Быстрый просмотр ЗК26-0001" }));
+
+    expect(onPreviewRequest).toHaveBeenCalledWith("ЗК26-0001");
   });
 
   it("emits filter changes", () => {
@@ -64,6 +85,7 @@ describe("AdminRequestList", () => {
         filters={{ status: "all", number: "", contact: "", organization: "" }}
         requests={requests}
         onFiltersChange={onFiltersChange}
+        onPreviewRequest={vi.fn()}
       />,
     );
 
@@ -84,6 +106,7 @@ describe("AdminRequestList", () => {
         filters={{ status: "all", number: "", contact: "", organization: "" }}
         requests={[]}
         onFiltersChange={vi.fn()}
+        onPreviewRequest={vi.fn()}
       />,
     );
 
