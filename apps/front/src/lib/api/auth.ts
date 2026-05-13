@@ -44,3 +44,10 @@ export function getMe() {
     cache: "no-store",
   });
 }
+
+export function logout(csrfToken: string | null) {
+  return apiJson<void>("/api/auth/logout", {
+    method: "POST",
+    csrfToken,
+  });
+}

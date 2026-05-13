@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "@/components/auth/auth-provider";
 import { routes } from "@/lib/routes";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -14,11 +15,28 @@ const navItems = [
   { href: routes.about(), label: "О нас" },
   { href: routes.delivery(), label: "Доставка" },
   { href: routes.request(), label: "Заявка" },
+];
+
+const accountNavItems = [
   { href: routes.accountRequests(), label: "Мои заявки" },
+  { href: routes.accountProfile(), label: "Профиль" },
+];
+
+const adminNavItems = [
+  { href: routes.adminRequests(), label: "Заявки клиентов" },
+  { href: routes.adminCatalog(), label: "Каталог админки" },
+  { href: routes.adminHomepage(), label: "Главная админки" },
 ];
 
 export function SiteHeader() {
+  const { user, isRestoringSession, restoreSession, logoutSession } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const canUseAdminNavigation = user?.role === "seller" || user?.role === "admin";
+
+  useEffect(() => {
+    restoreSession();
+  }, [restoreSession]);
 
   const handleBrandClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (typeof window === "undefined" || !window.matchMedia(MOBILE_MENU_QUERY).matches) {
@@ -31,6 +49,17 @@ export function SiteHeader() {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+
+    try {
+      await logoutSession();
+      closeMenu();
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -58,6 +87,7 @@ export function SiteHeader() {
         <div
           id="site-header-menu"
           className={`site-header__menu${isMenuOpen ? " site-header__menu--open" : ""}`}
+          aria-busy={isRestoringSession}
         >
           <nav className="site-header__nav" aria-label="Основная навигация">
             {navItems.map((item) => (
@@ -71,13 +101,51 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            {user
+              ? accountNavItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    className="site-header__link site-header__link--account"
+                    href={item.href}
+                    onClick={closeMenu}
+                  >
+                    {item.label}
+                  </Link>
+                ))
+              : null}
+            {canUseAdminNavigation
+              ? adminNavItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    className="site-header__link site-header__link--admin"
+                    href={item.href}
+                    onClick={closeMenu}
+                  >
+                    {item.label}
+                  </Link>
+                ))
+              : null}
           </nav>
 
           <div className="site-header__actions">
             <ThemeToggle />
-            <Link className="button button--ghost site-header__login" href={routes.login()} onClick={closeMenu}>
-              Войти
-            </Link>
+            {user ? (
+              <div className="site-header__user">
+                <span className="site-header__user-name">{user.name}</span>
+                <button
+                  className="button button--ghost site-header__logout"
+                  disabled={isLoggingOut}
+                  type="button"
+                  onClick={handleLogout}
+                >
+                  Выйти
+                </button>
+              </div>
+            ) : isRestoringSession ? null : (
+              <Link className="button button--ghost site-header__login" href={routes.login()} onClick={closeMenu}>
+                Войти
+              </Link>
+            )}
           </div>
         </div>
       </div>
