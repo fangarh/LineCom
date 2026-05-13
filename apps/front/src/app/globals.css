@@ -2353,6 +2353,167 @@ a {
   font-weight: 700;
 }
 
+.admin-category-tree {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.admin-category-tree__button {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) auto minmax(120px, 0.75fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  padding-left: calc(12px + var(--category-depth, 0) * 18px);
+  color: var(--color-text);
+  text-align: left;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.admin-category-tree__button:hover,
+.admin-category-tree__button[data-selected="true"] {
+  border-color: color-mix(in srgb, var(--color-accent) 42%, var(--color-border));
+  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
+}
+
+.admin-category-tree__main,
+.admin-category-tree__meta,
+.admin-category-tree__badges {
+  min-width: 0;
+}
+
+.admin-category-tree__main strong,
+.admin-category-tree__main small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.admin-category-tree__main small,
+.admin-category-tree__meta {
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-category-tree__badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.admin-category-tree__badge {
+  padding: 3px 6px;
+  color: var(--color-graphite);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  background: var(--color-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.admin-category-parent-picker {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.admin-category-parent-picker__label {
+  color: var(--color-graphite);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.admin-category-parent-picker__trigger {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 10px;
+  color: var(--color-text);
+  text-align: left;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.admin-category-parent-picker__trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.admin-category-parent-picker__trigger strong,
+.admin-category-parent-picker__trigger small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.admin-category-parent-picker__trigger small {
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-category-parent-picker__options {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  max-height: 320px;
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+  overflow: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-soft);
+}
+
+.admin-category-parent-picker__option {
+  display: grid;
+  gap: 4px;
+  padding: 8px 9px;
+  padding-left: calc(9px + var(--category-depth, 0) * 18px);
+  color: var(--color-text);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.admin-category-parent-picker__option:hover,
+.admin-category-parent-picker__option[aria-selected="true"] {
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+}
+
+.admin-category-parent-picker__option strong,
+.admin-category-parent-picker__option small,
+.admin-category-parent-picker__meta {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.admin-category-parent-picker__option small,
+.admin-category-parent-picker__meta {
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .admin-category-form,
 .admin-category-manager__move,
 .admin-brand-form,
@@ -2980,6 +3141,21 @@ a {
     font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
+  }
+
+  .admin-category-tree__button {
+    grid-template-columns: minmax(0, 1fr);
+    padding-left: calc(10px + var(--category-depth, 0) * 14px);
+  }
+
+  .admin-category-tree__badges {
+    justify-content: flex-start;
+  }
+
+  .admin-category-parent-picker__options {
+    position: static;
+    max-height: 260px;
+    box-shadow: none;
   }
 
   .home-hero h1,

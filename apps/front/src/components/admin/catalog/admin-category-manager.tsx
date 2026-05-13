@@ -15,24 +15,15 @@ import {
   type UpsertAdminCategoryCommand,
 } from "@/lib/api/admin-catalog";
 import { normalizeApiError } from "@/lib/api/errors";
+import { AdminCategoryForm, type CategoryFormState } from "./admin-category-form";
+import { AdminCategoryParentPicker } from "./admin-category-parent-picker";
+import { AdminCategoryTree } from "./admin-category-tree";
+import { buildCategoryTree, getBlockedParentIds } from "./admin-category-tree-helpers";
 
 const allCategoriesPageSize = 60;
 
 type AdminCategoryManagerProps = {
   csrfToken?: string | null;
-};
-
-type CategoryFormState = {
-  name: string;
-  slug: string;
-  parentId: string;
-  description: string;
-  h1: string;
-  seoTitle: string;
-  seoDescription: string;
-  sortOrder: string;
-  isActive: boolean;
-  isVisibleInMenu: boolean;
 };
 
 const emptyForm: CategoryFormState = {
@@ -164,9 +155,12 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
     };
   }, [listParams, loadCategoriesForParams]);
 
-  const parentOptions = useMemo(
-    () => allCategories.filter((category) => category.id !== selectedCategory?.id),
-    [allCategories, selectedCategory?.id],
+  const hasActiveListFilters = Boolean(search.trim() || parentFilter || activeFilter);
+  const treeCategories = hasActiveListFilters ? categories : allCategories;
+  const allCategoriesTree = useMemo(() => buildCategoryTree(allCategories), [allCategories]);
+  const blockedParentIds = useMemo(
+    () => getBlockedParentIds(allCategoriesTree, selectedCategory?.id ?? null),
+    [allCategoriesTree, selectedCategory?.id],
   );
 
   const refreshCategoryLists = useCallback(async () => {
@@ -365,41 +359,15 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
           </label>
         </div>
 
-        <div className="admin-category-manager__rows" aria-busy={isLoadingList}>
-          {categories.length ? (
-            categories.map((category) => (
-              <button
-                className="admin-category-row"
-                aria-pressed={selectedId === category.id}
-                key={category.id}
-                onClick={() => selectCategory(category.id)}
-                type="button"
-              >
-                <span>
-                  <strong>{category.name}</strong>
-                  <small>{category.slug}</small>
-                </span>
-                <span className="admin-category-row__meta">
-                  {category.isActive ? "Активна" : "Неактивна"} · {category.productsCount} товаров · {category.sortOrder}
-                </span>
-              </button>
-            ))
-          ) : (
-            <p className="empty-state">Категории не найдены.</p>
-          )}
-        </div>
+        <AdminCategoryTree
+          categories={treeCategories}
+          isLoading={isLoadingList}
+          onCategorySelect={selectCategory}
+          selectedCategoryId={selectedId}
+        />
       </section>
 
       <section className="admin-catalog-form admin-category-manager__editor" aria-label="Редактор категории">
-        <div className="admin-category-manager__head">
-          <div>
-            <h2>{selectedCategory ? "Редактирование категории" : "Новая категория"}</h2>
-            <p className="admin-catalog-status">
-              {isLoadingDetail ? "Загружаем карточку..." : selectedCategory ? selectedCategory.slug : "Заполните поля."}
-            </p>
-          </div>
-        </div>
-
         {alertMessage ? (
           <p className="form-alert" role="alert">
             {alertMessage}
@@ -407,121 +375,28 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
         ) : null}
         {statusMessage ? <p className="form-success">{statusMessage}</p> : null}
 
-        <form className="admin-category-form" onSubmit={submitCategory}>
-          <label className="form-field">
-            <span>Название</span>
-            <input
-              onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-              required
-              value={form.name}
-            />
-          </label>
-          <label className="form-field">
-            <span>Slug</span>
-            <input
-              onChange={(event) => setForm((current) => ({ ...current, slug: event.target.value }))}
-              required
-              value={form.slug}
-            />
-          </label>
-          <label className="form-field">
-            <span>Родительская категория</span>
-            <select
-              onChange={(event) => setForm((current) => ({ ...current, parentId: event.target.value }))}
-              value={form.parentId}
-            >
-              <option value="">Без родителя</option>
-              {parentOptions.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="form-field">
-            <span>Описание</span>
-            <textarea
-              onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
-              rows={4}
-              value={form.description}
-            />
-          </label>
-          <label className="form-field">
-            <span>H1</span>
-            <input onChange={(event) => setForm((current) => ({ ...current, h1: event.target.value }))} value={form.h1} />
-          </label>
-          <label className="form-field">
-            <span>SEO title</span>
-            <input
-              onChange={(event) => setForm((current) => ({ ...current, seoTitle: event.target.value }))}
-              value={form.seoTitle}
-            />
-          </label>
-          <label className="form-field">
-            <span>SEO description</span>
-            <textarea
-              onChange={(event) => setForm((current) => ({ ...current, seoDescription: event.target.value }))}
-              rows={3}
-              value={form.seoDescription}
-            />
-          </label>
-          <label className="form-field">
-            <span>Сортировка</span>
-            <input
-              inputMode="numeric"
-              onChange={(event) => setForm((current) => ({ ...current, sortOrder: event.target.value }))}
-              type="number"
-              value={form.sortOrder}
-            />
-          </label>
-          <label className="admin-category-manager__check">
-            <input
-              checked={form.isActive}
-              onChange={(event) => setForm((current) => ({ ...current, isActive: event.target.checked }))}
-              type="checkbox"
-            />
-            <span>Активна</span>
-          </label>
-          <label className="admin-category-manager__check">
-            <input
-              checked={form.isVisibleInMenu}
-              onChange={(event) => setForm((current) => ({ ...current, isVisibleInMenu: event.target.checked }))}
-              type="checkbox"
-            />
-            <span>Показывать в меню</span>
-          </label>
-
-          <div className="admin-category-manager__actions">
-            <button className="button button--primary" disabled={isMutating} type="submit">
-              {selectedCategory ? "Сохранить" : "Создать"}
-            </button>
-            <button
-              className="button button--ghost"
-              disabled={!selectedCategory || isMutating}
-              onClick={deleteSelectedCategory}
-              type="button"
-            >
-              Удалить
-            </button>
-          </div>
-        </form>
+        <AdminCategoryForm
+          blockedParentIds={blockedParentIds}
+          form={form}
+          isLoadingDetail={isLoadingDetail}
+          isMutating={isMutating}
+          onDelete={deleteSelectedCategory}
+          onFormChange={setForm}
+          onSubmit={submitCategory}
+          parentCategories={allCategories}
+          selectedCategory={selectedCategory}
+        />
 
         <div className="admin-category-manager__move" aria-label="Перемещение и сортировка">
-          <label className="form-field">
-            <span>Новый родитель</span>
-            <select
-              disabled={!selectedCategory}
-              onChange={(event) => setMoveParentId(event.target.value)}
-              value={moveParentId}
-            >
-              <option value="">Без родителя</option>
-              {parentOptions.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </label>
+          <AdminCategoryParentPicker
+            blockedParentIds={blockedParentIds}
+            buttonLabel="Выбрать нового родителя"
+            categories={allCategories}
+            disabled={!selectedCategory}
+            label="Новый родитель"
+            onChange={setMoveParentId}
+            value={moveParentId}
+          />
           <button
             className="button button--secondary"
             disabled={!selectedCategory || isMutating}

@@ -129,7 +129,34 @@ function mockDefaultApi() {
 async function renderManager(csrfToken = "csrf-token") {
   render(<AdminCategoryManager csrfToken={csrfToken} />);
 
-  await screen.findByRole("button", { name: /Кабели/ });
+  await findCategoryTreeItem(/Кабели/);
+}
+
+function findCategoryTreeItem(name: RegExp | string) {
+  return screen.findByRole("treeitem", { name });
+}
+
+function getCategoryTreeItem(name: RegExp | string) {
+  return screen.getByRole("treeitem", { name });
+}
+
+function queryCategoryTreeItem(name: RegExp | string) {
+  return screen.queryByRole("treeitem", { name });
+}
+
+async function chooseParentOption(user: ReturnType<typeof userEvent.setup>, triggerName: string, optionName: string) {
+  await user.click(screen.getByRole("button", { name: triggerName }));
+  const listbox = screen.getByRole("listbox", { name: pickerListboxName(triggerName) });
+  await user.click(within(listbox).getByRole("option", { name: optionName }));
+}
+
+async function openParentPicker(user: ReturnType<typeof userEvent.setup>, triggerName: string) {
+  await user.click(screen.getByRole("button", { name: triggerName }));
+  return screen.getByRole("listbox", { name: pickerListboxName(triggerName) });
+}
+
+function pickerListboxName(triggerName: string) {
+  return triggerName === "Выбрать нового родителя" ? "Новый родитель" : "Родительская категория";
 }
 
 describe("AdminCategoryManager", () => {
@@ -144,6 +171,38 @@ describe("AdminCategoryManager", () => {
     await waitFor(() => expect(adminCatalogApiMock.getAdminCategories).toHaveBeenCalledTimes(2));
     expect(adminCatalogApiMock.getAdminCategories).toHaveBeenNthCalledWith(1, { page: 1, pageSize: 60 });
     expect(adminCatalogApiMock.getAdminCategories).toHaveBeenNthCalledWith(2, {});
+  });
+
+  it("renders a nested category tree built from all categories", async () => {
+    adminCatalogApiMock.getAdminCategories.mockResolvedValue(listResponse([rootCategory, childCategory, connectorCategory]));
+
+    render(<AdminCategoryManager csrfToken="csrf-token" />);
+
+    expect(await screen.findByRole("tree", { name: "Дерево категорий" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("treeitem", { name: /Кабели.*kabeli.*активна.*в меню.*4 товара.*1 подкатегория/ }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("treeitem", { name: /Силовые кабели.*2 товара/ })).toHaveAttribute(
+      "aria-level",
+      "2",
+    );
+  });
+
+  it("selects a category from the tree and excludes self and descendants from parent picker", async () => {
+    const user = userEvent.setup();
+    adminCatalogApiMock.getAdminCategories.mockResolvedValue(listResponse([rootCategory, childCategory, connectorCategory]));
+    adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(rootDetail);
+
+    render(<AdminCategoryManager csrfToken="csrf-token" />);
+
+    await user.click(await screen.findByRole("treeitem", { name: /Кабели/ }));
+    expect(adminCatalogApiMock.getAdminCategory).toHaveBeenCalledWith("cat-root");
+    expect(await screen.findByDisplayValue("Кабели")).toBeInTheDocument();
+
+    const parentListbox = await openParentPicker(user, "Выбрать родителя");
+    expect(within(parentListbox).queryByRole("option", { name: "Кабели" })).not.toBeInTheDocument();
+    expect(within(parentListbox).queryByRole("option", { name: "Силовые кабели" })).not.toBeInTheDocument();
+    expect(within(parentListbox).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
   });
 
   it("filters categories by search, parent and active state", async () => {
@@ -184,13 +243,13 @@ describe("AdminCategoryManager", () => {
     await act(async () => {
       filteredList.resolve(listResponse([childCategory]));
     });
-    expect(await screen.findByRole("button", { name: /Силовые кабели/ })).toBeInTheDocument();
+    expect(await findCategoryTreeItem(/Силовые кабели/)).toBeInTheDocument();
 
     await act(async () => {
       initialList.resolve(listResponse([rootCategory]));
     });
-    expect(screen.getByRole("button", { name: /Силовые кабели/ })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /^Кабели.*kabeli/ })).not.toBeInTheDocument();
+    expect(getCategoryTreeItem(/Силовые кабели/)).toBeInTheDocument();
+    expect(queryCategoryTreeItem(/^Кабели.*kabeli/)).not.toBeInTheDocument();
   });
 
   it("ignores stale category detail responses", async () => {
@@ -203,8 +262,8 @@ describe("AdminCategoryManager", () => {
       .mockReturnValueOnce(rootDetailRequest.promise)
       .mockReturnValueOnce(childDetailRequest.promise);
 
-    await user.click(screen.getByRole("button", { name: /^Кабели.*kabeli/ }));
-    await user.click(screen.getByRole("button", { name: /Силовые кабели/ }));
+    await user.click(getCategoryTreeItem(/^Кабели.*kabeli/));
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
 
     await act(async () => {
       childDetailRequest.resolve(childDetail);
@@ -229,8 +288,8 @@ describe("AdminCategoryManager", () => {
 
     render(<AdminCategoryManager csrfToken="csrf-token" />);
 
-    await screen.findByRole("button", { name: /Разъемы/ });
-    await user.click(screen.getByRole("button", { name: /Силовые кабели/ }));
+    await findCategoryTreeItem(/Разъемы/);
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
     await screen.findByDisplayValue("Силовые кабели");
     await user.click(screen.getByRole("button", { name: "Сохранить" }));
     await user.selectOptions(screen.getByLabelText("Активность"), "false");
@@ -238,7 +297,7 @@ describe("AdminCategoryManager", () => {
     await waitFor(() =>
       expect(adminCatalogApiMock.getAdminCategories).toHaveBeenCalledWith({ isActive: false }),
     );
-    expect(await screen.findByRole("button", { name: /Силовые кабели/ })).toBeInTheDocument();
+    expect(await findCategoryTreeItem(/Силовые кабели/)).toBeInTheDocument();
 
     await act(async () => {
       updateRequest.resolve(childDetail);
@@ -247,9 +306,9 @@ describe("AdminCategoryManager", () => {
     await waitFor(() =>
       expect(adminCatalogApiMock.getAdminCategories).toHaveBeenLastCalledWith({ isActive: false }),
     );
-    expect(screen.getByRole("button", { name: /Силовые кабели/ })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /^Кабели.*kabeli/ })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Разъемы/ })).not.toBeInTheDocument();
+    expect(getCategoryTreeItem(/Силовые кабели/)).toBeInTheDocument();
+    expect(queryCategoryTreeItem(/^Кабели.*kabeli/)).not.toBeInTheDocument();
+    expect(queryCategoryTreeItem(/Разъемы/)).not.toBeInTheDocument();
   });
 
   it("keeps unfiltered parent options when filters change before initial unfiltered response resolves", async () => {
@@ -279,22 +338,23 @@ describe("AdminCategoryManager", () => {
     await act(async () => {
       filteredRowsRequest.resolve(listResponse([childCategory]));
     });
-    expect(await screen.findByRole("button", { name: /Силовые кабели/ })).toBeInTheDocument();
+    expect(await findCategoryTreeItem(/Силовые кабели/)).toBeInTheDocument();
 
     await act(async () => {
       initialRowsRequest.resolve(listResponse([rootCategory, childCategory, connectorCategory]));
       allOptionsRequest.resolve(listResponse([rootCategory, childCategory, connectorCategory]));
     });
 
-    await user.click(screen.getByRole("button", { name: /Силовые кабели/ }));
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
     await screen.findByDisplayValue("Силовые кабели");
 
-    const parentSelect = screen.getByLabelText("Родительская категория");
-    const moveSelect = screen.getByLabelText("Новый родитель");
-    expect(within(parentSelect).getByRole("option", { name: "Кабели" })).toBeInTheDocument();
-    expect(within(parentSelect).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
-    expect(within(moveSelect).getByRole("option", { name: "Кабели" })).toBeInTheDocument();
-    expect(within(moveSelect).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
+    const parentListbox = await openParentPicker(user, "Выбрать родителя");
+    expect(within(parentListbox).getByRole("option", { name: "Кабели" })).toBeInTheDocument();
+    expect(within(parentListbox).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Выбрать родителя" }));
+    const moveListbox = await openParentPicker(user, "Выбрать нового родителя");
+    expect(within(moveListbox).getByRole("option", { name: "Кабели" })).toBeInTheDocument();
+    expect(within(moveListbox).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
   });
 
   it("loads every page for unfiltered parent options", async () => {
@@ -326,15 +386,16 @@ describe("AdminCategoryManager", () => {
 
     render(<AdminCategoryManager csrfToken="csrf-token" />);
 
-    expect(await screen.findByRole("button", { name: /Силовые кабели/ })).toBeInTheDocument();
+    expect(await findCategoryTreeItem(/Силовые кабели/)).toBeInTheDocument();
     await waitFor(() => expect(adminCatalogApiMock.getAdminCategories).toHaveBeenCalledWith({ page: 2, pageSize: 60 }));
-    await user.click(screen.getByRole("button", { name: /Силовые кабели/ }));
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
     await screen.findByDisplayValue("Силовые кабели");
 
-    const parentSelect = screen.getByLabelText("Родительская категория");
-    const moveSelect = screen.getByLabelText("Новый родитель");
-    expect(within(parentSelect).getByRole("option", { name: "Категория со второй страницы" })).toBeInTheDocument();
-    expect(within(moveSelect).getByRole("option", { name: "Категория со второй страницы" })).toBeInTheDocument();
+    const parentListbox = await openParentPicker(user, "Выбрать родителя");
+    expect(within(parentListbox).getByRole("option", { name: "Категория со второй страницы" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Выбрать родителя" }));
+    const moveListbox = await openParentPicker(user, "Выбрать нового родителя");
+    expect(within(moveListbox).getByRole("option", { name: "Категория со второй страницы" })).toBeInTheDocument();
   });
 
   it("keeps unfiltered parent options available while category rows are filtered", async () => {
@@ -346,24 +407,25 @@ describe("AdminCategoryManager", () => {
 
     render(<AdminCategoryManager csrfToken="csrf-token" />);
 
-    await screen.findByRole("button", { name: /Разъемы/ });
+    await findCategoryTreeItem(/Разъемы/);
     await user.selectOptions(screen.getByLabelText("Активность"), "false");
     await waitFor(() =>
       expect(adminCatalogApiMock.getAdminCategories).toHaveBeenLastCalledWith({ isActive: false }),
     );
-    expect(await screen.findByRole("button", { name: /Силовые кабели/ })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Разъемы/ })).not.toBeInTheDocument();
+    expect(await findCategoryTreeItem(/Силовые кабели/)).toBeInTheDocument();
+    expect(queryCategoryTreeItem(/Разъемы/)).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /Силовые кабели/ }));
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
     await screen.findByDisplayValue("Силовые кабели");
 
-    const parentSelect = screen.getByLabelText("Родительская категория");
-    const moveSelect = screen.getByLabelText("Новый родитель");
-    expect(within(parentSelect).getByRole("option", { name: "Кабели" })).toBeInTheDocument();
-    expect(within(parentSelect).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
-    expect(within(moveSelect).getByRole("option", { name: "Кабели" })).toBeInTheDocument();
-    expect(within(moveSelect).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
-    expect(within(parentSelect).queryByRole("option", { name: "Силовые кабели" })).not.toBeInTheDocument();
+    const parentListbox = await openParentPicker(user, "Выбрать родителя");
+    expect(within(parentListbox).getByRole("option", { name: "Кабели" })).toBeInTheDocument();
+    expect(within(parentListbox).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
+    expect(within(parentListbox).queryByRole("option", { name: "Силовые кабели" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Выбрать родителя" }));
+    const moveListbox = await openParentPicker(user, "Выбрать нового родителя");
+    expect(within(moveListbox).getByRole("option", { name: "Кабели" })).toBeInTheDocument();
+    expect(within(moveListbox).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
   });
 
   it("loads selected category details into the form", async () => {
@@ -371,7 +433,7 @@ describe("AdminCategoryManager", () => {
     adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(childDetail);
     await renderManager();
 
-    await user.click(screen.getByRole("button", { name: /Силовые кабели/ }));
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
 
     expect(adminCatalogApiMock.getAdminCategory).toHaveBeenCalledWith("cat-child");
     expect(await screen.findByDisplayValue("Силовые кабели")).toBeInTheDocument();
@@ -387,7 +449,7 @@ describe("AdminCategoryManager", () => {
     await user.click(screen.getByRole("button", { name: "Новая категория" }));
     await user.type(screen.getByLabelText("Название"), "Муфты");
     await user.type(screen.getByLabelText("Slug"), "mufty");
-    await user.selectOptions(screen.getByLabelText("Родительская категория"), "cat-root");
+    await chooseParentOption(user, "Выбрать родителя", "Кабели");
     await user.type(screen.getByLabelText("Описание"), "Описание муфт");
     await user.type(screen.getByLabelText("H1"), "Муфты для кабеля");
     await user.type(screen.getByLabelText("SEO title"), "Муфты SEO");
@@ -420,11 +482,11 @@ describe("AdminCategoryManager", () => {
     adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(childDetail);
     await renderManager();
 
-    await user.click(screen.getByRole("button", { name: /Силовые кабели/ }));
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
     await screen.findByDisplayValue("Силовые кабели");
     await user.clear(screen.getByLabelText("Название"));
     await user.type(screen.getByLabelText("Название"), "Кабели силовые обновленные");
-    await user.selectOptions(screen.getByLabelText("Родительская категория"), "");
+    await chooseParentOption(user, "Выбрать родителя", "Без родителя");
     await user.click(screen.getByLabelText("Активна"));
     await user.click(screen.getByRole("button", { name: "Сохранить" }));
 
@@ -451,7 +513,7 @@ describe("AdminCategoryManager", () => {
     adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(childDetail);
     await renderManager();
 
-    await user.click(screen.getByRole("button", { name: /Силовые кабели/ }));
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
     await screen.findByDisplayValue("Силовые кабели");
     await user.click(screen.getByRole("button", { name: "Удалить" }));
 
@@ -466,9 +528,9 @@ describe("AdminCategoryManager", () => {
     adminCatalogApiMock.sortAdminCategory.mockResolvedValueOnce({ ...childDetail, sortOrder: 5 });
     await renderManager();
 
-    await user.click(screen.getByRole("button", { name: /Силовые кабели/ }));
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
     await screen.findByDisplayValue("Силовые кабели");
-    await user.selectOptions(screen.getByLabelText("Новый родитель"), "");
+    await chooseParentOption(user, "Выбрать нового родителя", "Без родителя");
     await user.click(screen.getByRole("button", { name: "Переместить" }));
     await user.clear(screen.getByLabelText("Новый порядок"));
     await user.type(screen.getByLabelText("Новый порядок"), "5");
