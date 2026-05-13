@@ -11,20 +11,14 @@ import {
   type AdminHomepageSection,
 } from "@/lib/api/admin-homepage";
 import { normalizeApiError } from "@/lib/api/errors";
-import { AdminHomepageItemList } from "./admin-homepage-item-list";
+import { AdminHomepageSectionEditor, type AdminHomepageSectionDraft } from "./admin-homepage-section-editor";
+import { AdminHomepageSectionList } from "./admin-homepage-section-list";
 
 type AdminHomepageManagerProps = {
   csrfToken?: string | null;
 };
 
-type SectionDraft = {
-  title: string;
-  itemLimit: string;
-  sortOrder: string;
-  isActive: boolean;
-};
-
-const emptyDraft: SectionDraft = {
+const emptyDraft: AdminHomepageSectionDraft = {
   title: "",
   itemLimit: "",
   sortOrder: "",
@@ -34,9 +28,8 @@ const emptyDraft: SectionDraft = {
 export function AdminHomepageManager({ csrfToken = null }: AdminHomepageManagerProps) {
   const [sections, setSections] = useState<AdminHomepageSection[]>([]);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
-  const [draft, setDraft] = useState<SectionDraft>(emptyDraft);
+  const [draft, setDraft] = useState<AdminHomepageSectionDraft>(emptyDraft);
   const [itemSortOrders, setItemSortOrders] = useState<Record<string, string>>({});
-  const [newTargetId, setNewTargetId] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -51,7 +44,6 @@ export function AdminHomepageManager({ csrfToken = null }: AdminHomepageManagerP
     if (!section) {
       setDraft(emptyDraft);
       setItemSortOrders({});
-      setNewTargetId("");
       return;
     }
 
@@ -62,7 +54,6 @@ export function AdminHomepageManager({ csrfToken = null }: AdminHomepageManagerP
       isActive: section.isActive,
     });
     setItemSortOrders(Object.fromEntries(section.items.map((item) => [item.id, String(item.sortOrder)])));
-    setNewTargetId("");
   }, []);
 
   const loadSections = useCallback(async () => {
@@ -182,12 +173,10 @@ export function AdminHomepageManager({ csrfToken = null }: AdminHomepageManagerP
     }
   };
 
-  const addItem = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const addItem = async (targetId: string) => {
     if (!activeSection) return;
     const token = requireCsrf();
-    const targetId = newTargetId.trim();
-    if (!token || !targetId) return;
+    if (!token) return;
     if (!beginPendingAction("add-item")) return;
 
     setErrorMessage(null);
@@ -269,8 +258,6 @@ export function AdminHomepageManager({ csrfToken = null }: AdminHomepageManagerP
   };
 
   const isMutating = pendingAction !== null;
-  const addButtonLabel = activeSection?.type === "category_list" ? "Добавить категорию" : "Добавить товар";
-  const targetLabel = activeSection?.type === "category_list" ? "UUID категории" : "UUID товара";
 
   return (
     <section className="admin-catalog-shell account-section" aria-label="Управление главной страницей">
@@ -289,102 +276,36 @@ export function AdminHomepageManager({ csrfToken = null }: AdminHomepageManagerP
       ) : null}
 
       <div className="admin-homepage-manager" aria-busy={isLoading || isMutating}>
-        <section className="admin-catalog-table admin-homepage-section" aria-label="Секции главной страницы">
-          <div className="admin-category-manager__head">
-            <h2>Секции</h2>
-            {isLoading ? <p className="admin-catalog-status">Загрузка...</p> : null}
-          </div>
+        <AdminHomepageSectionList
+          activeSectionId={activeSection?.id ?? null}
+          isLoading={isLoading}
+          onSelect={(section) => {
+            setActiveSectionId(section.id);
+            syncSectionDraft(section);
+          }}
+          sections={sections}
+        />
 
-          <div className="admin-category-manager__rows">
-            {sections.map((section) => (
-              <button
-                aria-pressed={activeSection?.id === section.id}
-                className="admin-category-row"
-                key={section.id}
-                onClick={() => {
-                  setActiveSectionId(section.id);
-                  syncSectionDraft(section);
-                }}
-                type="button"
-              >
-                <span>
-                  <strong>{section.title}</strong>
-                  <small>{section.code}</small>
-                </span>
-                <span className="admin-category-row__meta">
-                  {section.isActive ? "Активна" : "Скрыта"} · {section.items.length}/{section.itemLimit}
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <section className="admin-catalog-form admin-homepage-section" aria-label="Редактор секции">
-          {activeSection ? (
-            <>
-              <form className="admin-homepage-section" onSubmit={saveSection}>
-                <div className="admin-category-manager__head">
-                  <div>
-                    <h2>{activeSection.title}</h2>
-                    <p className="admin-catalog-status">{activeSection.type}</p>
-                  </div>
-                  <button className="button" disabled={isMutating} type="submit">
-                    Сохранить секцию
-                  </button>
-                </div>
-
-                <label className="admin-filter-field">
-                  <span>Заголовок секции</span>
-                  <input name="title" onChange={updateDraftField} value={draft.title} />
-                </label>
-
-                <div className="admin-homepage-section__grid">
-                  <label className="admin-filter-field">
-                    <span>Лимит</span>
-                    <input min="0" name="itemLimit" onChange={updateDraftField} type="number" value={draft.itemLimit} />
-                  </label>
-                  <label className="admin-filter-field">
-                    <span>Сортировка</span>
-                    <input min="0" name="sortOrder" onChange={updateDraftField} type="number" value={draft.sortOrder} />
-                  </label>
-                </div>
-
-                <label className="admin-homepage-manager__check">
-                  <input checked={draft.isActive} name="isActive" onChange={updateDraftField} type="checkbox" />
-                  <span>Секция активна</span>
-                </label>
-              </form>
-
-              <form className="admin-homepage-section" onSubmit={addItem}>
-                <label className="admin-filter-field">
-                  <span>{targetLabel}</span>
-                  <input onChange={(event) => setNewTargetId(event.target.value)} value={newTargetId} />
-                </label>
-                <button className="button button--ghost" disabled={isMutating} type="submit">
-                  {addButtonLabel}
-                </button>
-              </form>
-
-              <AdminHomepageItemList
-                isLoading={isLoading}
-                isMutating={isMutating}
-                itemSortOrders={itemSortOrders}
-                items={activeSection.items}
-                onRemove={removeItem}
-                onSaveOrder={saveItemOrder}
-                onSortOrderChange={(itemId, sortOrder) =>
-                  setItemSortOrders((current) => ({
-                    ...current,
-                    [itemId]: sortOrder,
-                  }))
-                }
-                onToggleActive={toggleItemActive}
-              />
-            </>
-          ) : (
-            <p className="admin-catalog-status">Секции не найдены.</p>
-          )}
-        </section>
+        <AdminHomepageSectionEditor
+          activeSection={activeSection}
+          draft={draft}
+          isLoading={isLoading}
+          isMutating={isMutating}
+          itemSortOrders={itemSortOrders}
+          onAddCategory={addItem}
+          onAddProduct={addItem}
+          onDraftFieldChange={updateDraftField}
+          onRemove={removeItem}
+          onSaveItemOrder={saveItemOrder}
+          onSaveSection={saveSection}
+          onSortOrderChange={(itemId, sortOrder) =>
+            setItemSortOrders((current) => ({
+              ...current,
+              [itemId]: sortOrder,
+            }))
+          }
+          onToggleActive={toggleItemActive}
+        />
       </div>
     </section>
   );
