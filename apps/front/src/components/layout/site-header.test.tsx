@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import type { ReactElement } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AuthProvider } from "@/components/auth/auth-provider";
+import { RequestDraftProvider } from "@/components/request/request-draft-provider";
 import type { AuthSession } from "@/lib/api/auth";
 import { SiteHeader } from "./site-header";
 
@@ -55,13 +56,18 @@ const adminSession: AuthSession = {
 };
 
 function renderWithProviders(ui: ReactElement) {
-  return render(<AuthProvider>{ui}</AuthProvider>);
+  return render(
+    <AuthProvider>
+      <RequestDraftProvider>{ui}</RequestDraftProvider>
+    </AuthProvider>,
+  );
 }
 
 describe("SiteHeader", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
+    localStorage.clear();
   });
 
   it("renders anonymous request-oriented navigation", async () => {
@@ -133,6 +139,46 @@ describe("SiteHeader", () => {
     expect(await screen.findByRole("link", { name: "Войти" })).toBeInTheDocument();
     expect(screen.queryByText("Иван Петров")).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Мои заявки" })).not.toBeInTheDocument();
+  });
+
+  it("clears restored user when logout reports an expired session", async () => {
+    authApiMock.getMe.mockResolvedValue(customerSession);
+    authApiMock.logout.mockRejectedValue({ code: "auth.unauthorized", message: "Требуется вход в аккаунт." });
+    const user = userEvent.setup();
+
+    renderWithProviders(<SiteHeader />);
+
+    await screen.findByText("Иван Петров");
+    await user.click(screen.getByRole("button", { name: "Выйти" }));
+
+    expect(await screen.findByRole("link", { name: "Войти" })).toBeInTheDocument();
+    expect(screen.queryByText("Иван Петров")).not.toBeInTheDocument();
+  });
+
+  it("keeps the request draft badge in the header", async () => {
+    authApiMock.getMe.mockRejectedValue({ code: "auth.unauthorized", message: "Unauthorized" });
+    localStorage.setItem(
+      "linecom.requestDraft.v1",
+      JSON.stringify({
+        customerComment: "",
+        items: [
+          {
+            productId: "11111111-1111-1111-1111-111111111111",
+            slug: "u-utp-cat-5e",
+            productName: "Кабель U/UTP Cat 5e",
+            productSku: "LC-UTP5E",
+            saleUnit: { code: "coil", label: "бухта" },
+            unitQuantity: "305 м",
+            quantity: 2,
+            customerComment: "",
+          },
+        ],
+      }),
+    );
+
+    renderWithProviders(<SiteHeader />);
+
+    expect(await screen.findByText("2")).toHaveClass("site-header__badge");
   });
 
   it("toggles the mobile menu from the logo", async () => {

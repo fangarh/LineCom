@@ -4,6 +4,8 @@ import { useEffect, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/components/auth/auth-provider";
+import { useRequestDraft } from "@/components/request/request-draft-provider";
+import { getDraftItemsCount } from "@/lib/request-draft/selectors";
 import { routes } from "@/lib/routes";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -30,9 +32,11 @@ const adminNavItems = [
 
 export function SiteHeader() {
   const { user, isRestoringSession, restoreSession, logoutSession } = useAuth();
+  const { state } = useRequestDraft();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const canUseAdminNavigation = user?.role === "seller" || user?.role === "admin";
+  const draftItemsCount = getDraftItemsCount(state);
 
   useEffect(() => {
     restoreSession();
@@ -57,6 +61,8 @@ export function SiteHeader() {
     try {
       await logoutSession();
       closeMenu();
+    } catch {
+      // Keep the current session visible when logout fails for a non-auth reason.
     } finally {
       setIsLoggingOut(false);
     }
@@ -98,7 +104,10 @@ export function SiteHeader() {
                 prefetch={item.href === routes.home() ? false : undefined}
                 onClick={closeMenu}
               >
-                {item.label}
+                <span>{item.label}</span>
+                {item.href === routes.request() && draftItemsCount > 0 ? (
+                  <span className="site-header__badge">{draftItemsCount}</span>
+                ) : null}
               </Link>
             ))}
             {user

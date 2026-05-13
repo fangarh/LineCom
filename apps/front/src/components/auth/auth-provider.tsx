@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
     } catch (error) {
       const apiError = normalizeApiError(error);
-      if (apiError.code === "auth.unauthorized") {
+      if (apiError.code === "auth.unauthorized" || apiError.code === "auth.user_inactive") {
         clearSession();
       }
     } finally {
@@ -44,8 +44,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [clearSession, setSession]);
   const logoutSession = useCallback(async () => {
-    await logout(csrfToken);
-    clearSession();
+    try {
+      await logout(csrfToken);
+      clearSession();
+    } catch (error) {
+      const apiError = normalizeApiError(error);
+      if (apiError.code === "auth.unauthorized" || apiError.code === "auth.user_inactive") {
+        clearSession();
+        return;
+      }
+
+      throw error;
+    }
   }, [clearSession, csrfToken]);
 
   const value = useMemo<AuthContextValue>(
