@@ -88,6 +88,7 @@ export function RequestsPageClient() {
         const apiError = normalizeApiError(error);
 
         if (apiError.code === "auth.unauthorized") {
+          if (!isActive) return;
           redirectToLogin();
           return;
         }

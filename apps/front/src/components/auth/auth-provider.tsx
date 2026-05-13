@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from "react";
 import { getMe, logout, type AuthSession, type CurrentUser } from "@/lib/api/auth";
 import { normalizeApiError } from "@/lib/api/errors";
 
@@ -20,43 +20,76 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
   const [isRestoringSession, setIsRestoringSession] = useState(false);
-  const setSession = useCallback((session: AuthSession) => {
+  const authGenerationRef = useRef(0);
+  const restoreRequestIdRef = useRef(0);
+
+  const applySession = useCallback((session: AuthSession) => {
     setUser(session.user);
     setCsrfToken(session.csrfToken);
   }, []);
-  const clearSession = useCallback(() => {
+
+  const applyAnonymousSession = useCallback(() => {
     setUser(null);
     setCsrfToken(null);
   }, []);
+
+  const invalidateRestore = useCallback(() => {
+    authGenerationRef.current += 1;
+  }, []);
+
+  const setSession = useCallback((session: AuthSession) => {
+    invalidateRestore();
+    applySession(session);
+  }, [applySession, invalidateRestore]);
+
+  const clearSession = useCallback(() => {
+    invalidateRestore();
+    applyAnonymousSession();
+  }, [applyAnonymousSession, invalidateRestore]);
+
   const restoreSession = useCallback(async () => {
+    const requestId = restoreRequestIdRef.current + 1;
+    restoreRequestIdRef.current = requestId;
+    const authGeneration = authGenerationRef.current;
     setIsRestoringSession(true);
 
     try {
       const session = await getMe();
-      setSession(session);
+      if (requestId === restoreRequestIdRef.current && authGeneration === authGenerationRef.current) {
+        applySession(session);
+      }
     } catch (error) {
       const apiError = normalizeApiError(error);
-      if (apiError.code === "auth.unauthorized" || apiError.code === "auth.user_inactive") {
-        clearSession();
+      if (
+        requestId === restoreRequestIdRef.current &&
+        authGeneration === authGenerationRef.current &&
+        (apiError.code === "auth.unauthorized" || apiError.code === "auth.user_inactive")
+      ) {
+        applyAnonymousSession();
       }
     } finally {
-      setIsRestoringSession(false);
+      if (requestId === restoreRequestIdRef.current) {
+        setIsRestoringSession(false);
+      }
     }
-  }, [clearSession, setSession]);
+  }, [applyAnonymousSession, applySession]);
+
   const logoutSession = useCallback(async () => {
+    invalidateRestore();
+
     try {
       await logout(csrfToken);
-      clearSession();
+      applyAnonymousSession();
     } catch (error) {
       const apiError = normalizeApiError(error);
       if (apiError.code === "auth.unauthorized" || apiError.code === "auth.user_inactive") {
-        clearSession();
+        applyAnonymousSession();
         return;
       }
 
       throw error;
     }
-  }, [clearSession, csrfToken]);
+  }, [applyAnonymousSession, csrfToken, invalidateRestore]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
