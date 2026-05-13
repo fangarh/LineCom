@@ -26,6 +26,28 @@ const session: AuthSession = {
   csrfToken: "csrf-1",
 };
 
+const newSession: AuthSession = {
+  user: {
+    id: "user-2",
+    name: "Новый пользователь",
+    email: "new@linecom.test",
+    phone: null,
+    role: "seller",
+  },
+  csrfToken: "csrf-2",
+};
+
+function createDeferred<T>() {
+  let resolve!: (value: T) => void;
+  let reject!: (reason?: unknown) => void;
+  const promise = new Promise<T>((promiseResolve, promiseReject) => {
+    resolve = promiseResolve;
+    reject = promiseReject;
+  });
+
+  return { promise, resolve, reject };
+}
+
 function AuthProbe() {
   const auth = useAuth();
 
@@ -39,6 +61,9 @@ function AuthProbe() {
       </button>
       <button type="button" onClick={() => auth.clearSession()}>
         Clear
+      </button>
+      <button type="button" onClick={() => auth.setSession(newSession)}>
+        Set session
       </button>
     </section>
   );
@@ -79,6 +104,40 @@ describe("AuthProvider", () => {
     await waitFor(() => expect(screen.getByTestId("status")).toHaveTextContent("anonymous"));
     expect(screen.getByTestId("user")).toHaveTextContent("anonymous");
     expect(screen.getByTestId("csrf")).toHaveTextContent("none");
+  });
+
+  it("does not let an outdated restore rejection clear a newer explicit session", async () => {
+    const pendingRestore = createDeferred<AuthSession>();
+    getMeMock.mockReturnValue(pendingRestore.promise);
+
+    render(
+      <AuthProvider>
+        <AuthProbe />
+      </AuthProvider>,
+    );
+
+    await waitFor(() => expect(getMeMock).toHaveBeenCalledTimes(1));
+
+    await act(async () => {
+      screen.getByRole("button", { name: "Set session" }).click();
+    });
+
+    expect(screen.getByTestId("status")).toHaveTextContent("authenticated");
+    expect(screen.getByTestId("user")).toHaveTextContent("Новый пользователь");
+    expect(screen.getByTestId("csrf")).toHaveTextContent("csrf-2");
+
+    await act(async () => {
+      pendingRestore.reject(
+        new ApiClientError(401, {
+          code: "auth.unauthorized",
+          message: "Требуется вход.",
+        }),
+      );
+    });
+
+    expect(screen.getByTestId("status")).toHaveTextContent("authenticated");
+    expect(screen.getByTestId("user")).toHaveTextContent("Новый пользователь");
+    expect(screen.getByTestId("csrf")).toHaveTextContent("csrf-2");
   });
 
   it("keeps setSession and clearSession behavior for explicit auth flows", async () => {

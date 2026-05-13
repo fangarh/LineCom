@@ -30,8 +30,11 @@ export function AuthProvider({ children, initialSession }: AuthProviderProps) {
     initialSession ? "authenticated" : hasInitialSession ? "anonymous" : "restoring",
   );
   const sessionRef = useRef<AuthSession | null>(initialSession ?? null);
+  const authVersionRef = useRef(0);
+  const restoreRequestRef = useRef(0);
 
   const setSession = useCallback((session: AuthSession) => {
+    authVersionRef.current += 1;
     sessionRef.current = session;
     setUser(session.user);
     setCsrfToken(session.csrfToken);
@@ -39,6 +42,7 @@ export function AuthProvider({ children, initialSession }: AuthProviderProps) {
   }, []);
 
   const clearSession = useCallback(() => {
+    authVersionRef.current += 1;
     sessionRef.current = null;
     setUser(null);
     setCsrfToken(null);
@@ -46,12 +50,25 @@ export function AuthProvider({ children, initialSession }: AuthProviderProps) {
   }, []);
 
   const restoreSession = useCallback(async () => {
+    const restoreRequest = restoreRequestRef.current + 1;
+    restoreRequestRef.current = restoreRequest;
+    const startedAuthVersion = authVersionRef.current;
+
     setStatus("restoring");
 
     try {
       const session = await getMe();
+
+      if (restoreRequestRef.current !== restoreRequest || authVersionRef.current !== startedAuthVersion) {
+        return;
+      }
+
       setSession(session);
     } catch (error) {
+      if (restoreRequestRef.current !== restoreRequest || authVersionRef.current !== startedAuthVersion) {
+        return;
+      }
+
       if (error instanceof ApiClientError && error.code === "auth.unauthorized") {
         clearSession();
         return;
