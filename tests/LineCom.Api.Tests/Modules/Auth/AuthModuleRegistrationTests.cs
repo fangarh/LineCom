@@ -1,7 +1,13 @@
 using LineCom.Api.Modules.Auth;
 using LineCom.Api.Modules.Auth.Repositories;
 using LineCom.Api.Modules.Auth.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace LineCom.Api.Tests.Modules.Auth;
 
@@ -120,5 +126,56 @@ public sealed class AuthModuleRegistrationTests
 
         Assert.Equal(ServiceLifetime.Scoped, descriptor.Lifetime);
         Assert.Equal(typeof(AuthCurrentUserService), descriptor.ImplementationType);
+    }
+
+    [Fact]
+    public void AddAuthModule_UsesSecureCookiePolicyInProduction()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+
+        services.AddAuthModule(new TestWebHostEnvironment { EnvironmentName = Environments.Production });
+
+        using var provider = services.BuildServiceProvider();
+        var options = provider
+            .GetRequiredService<IOptionsMonitor<CookieAuthenticationOptions>>()
+            .Get(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        Assert.True(options.Cookie.HttpOnly);
+        Assert.Equal(SameSiteMode.Lax, options.Cookie.SameSite);
+        Assert.Equal(CookieSecurePolicy.Always, options.Cookie.SecurePolicy);
+    }
+
+    [Fact]
+    public void AddAuthModule_KeepsSameAsRequestCookiePolicyOutsideProduction()
+    {
+        var services = new ServiceCollection();
+        services.AddLogging();
+
+        services.AddAuthModule(new TestWebHostEnvironment { EnvironmentName = Environments.Development });
+
+        using var provider = services.BuildServiceProvider();
+        var options = provider
+            .GetRequiredService<IOptionsMonitor<CookieAuthenticationOptions>>()
+            .Get(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        Assert.True(options.Cookie.HttpOnly);
+        Assert.Equal(SameSiteMode.Lax, options.Cookie.SameSite);
+        Assert.Equal(CookieSecurePolicy.SameAsRequest, options.Cookie.SecurePolicy);
+    }
+
+    private sealed class TestWebHostEnvironment : IWebHostEnvironment
+    {
+        public string EnvironmentName { get; set; } = Environments.Development;
+
+        public string ApplicationName { get; set; } = "LineCom.Api.Tests";
+
+        public string WebRootPath { get; set; } = Directory.GetCurrentDirectory();
+
+        public IFileProvider WebRootFileProvider { get; set; } = new NullFileProvider();
+
+        public string ContentRootPath { get; set; } = Directory.GetCurrentDirectory();
+
+        public IFileProvider ContentRootFileProvider { get; set; } = new NullFileProvider();
     }
 }

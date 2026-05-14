@@ -92,6 +92,42 @@ public sealed class AuthLoginEndpointTests
     }
 
     [Fact]
+    public async Task Login_RateLimitsRepeatedAttemptsFromSameClient()
+    {
+        var user = new CurrentUserDto(
+            Guid.Parse("1f0d787f-10a4-4f4b-b5bd-df2d5fa28df6"),
+            "Ivan Petrov",
+            "ivan@example.com",
+            "+79000000000",
+            "customer");
+
+        await using var factory = CreateFactory(new ReturningCustomerLoginService(user));
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false
+        });
+
+        for (var attempt = 0; attempt < 5; attempt++)
+        {
+            using var allowedResponse = await client.PostAsJsonAsync(
+                "/api/auth/login",
+                new LoginRequest("ivan@example.com", "secure-password"));
+
+            Assert.Equal(HttpStatusCode.OK, allowedResponse.StatusCode);
+        }
+
+        using var response = await client.PostAsJsonAsync(
+            "/api/auth/login",
+            new LoginRequest("ivan@example.com", "secure-password"));
+
+        Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+        var body = await ReadErrorAsync(response);
+        Assert.Equal("auth.rate_limited", body.Code);
+        Assert.Equal("Слишком много попыток. Попробуйте позже.", body.Message);
+    }
+
+    [Fact]
     public async Task Me_AfterLogin_ReturnsCurrentAuthenticatedUser()
     {
         var user = new CurrentUserDto(

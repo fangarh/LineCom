@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace LineCom.Api.Modules.Auth.Controllers;
 
@@ -28,6 +29,7 @@ public sealed class AuthController : ControllerBase
         _currentUserService = currentUserService;
     }
 
+    [EnableRateLimiting(AuthRateLimiting.PolicyName)]
     [HttpPost("register")]
     public async Task<ActionResult<AuthSessionDto>> Register(
         RegisterRequest request,
@@ -39,6 +41,7 @@ public sealed class AuthController : ControllerBase
         return Created("/api/auth/me", session);
     }
 
+    [EnableRateLimiting(AuthRateLimiting.PolicyName)]
     [HttpPost("login")]
     public async Task<ActionResult<AuthSessionDto>> Login(
         LoginRequest request,

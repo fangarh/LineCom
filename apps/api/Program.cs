@@ -23,6 +23,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<ForwardedHeadersOptions>(ReverseProxyForwardingPolicy.Configure);
 builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddAuthRateLimiting();
 builder.Services.AddAuthModule(builder.Environment);
 builder.Services.AddAccountModule();
 builder.Services.AddCatalogModule();
@@ -46,6 +47,8 @@ if (HttpsRedirectionPolicy.ShouldUseHttpsRedirection(app.Environment))
 
 app.UseLocalStorageStaticFiles(builder.Configuration);
 
+app.UseRouting();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 

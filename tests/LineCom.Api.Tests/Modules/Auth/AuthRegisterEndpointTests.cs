@@ -92,6 +92,50 @@ public sealed class AuthRegisterEndpointTests
         Assert.Equal("auth.user_already_exists", body.Code);
     }
 
+    [Fact]
+    public async Task Register_RateLimitsRepeatedAttemptsFromSameClient()
+    {
+        var user = new CurrentUserDto(
+            Guid.Parse("1f0d787f-10a4-4f4b-b5bd-df2d5fa28df6"),
+            "Ivan Petrov",
+            "ivan@example.com",
+            "+79000000000",
+            "customer");
+
+        await using var factory = CreateFactory(new ReturningCustomerRegistrationService(user));
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false
+        });
+
+        for (var attempt = 0; attempt < 5; attempt++)
+        {
+            using var allowedResponse = await client.PostAsJsonAsync(
+                "/api/auth/register",
+                new RegisterRequest(
+                    "Ivan Petrov",
+                    $"ivan-{attempt}@example.com",
+                    "+7 900 000-00-00",
+                    "secure-password"));
+
+            Assert.Equal(HttpStatusCode.Created, allowedResponse.StatusCode);
+        }
+
+        using var response = await client.PostAsJsonAsync(
+            "/api/auth/register",
+            new RegisterRequest(
+                "Ivan Petrov",
+                "ivan-final@example.com",
+                "+7 900 000-00-00",
+                "secure-password"));
+
+        Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
+
+        var body = await ReadErrorAsync(response);
+        Assert.Equal("auth.rate_limited", body.Code);
+        Assert.Equal("Слишком много попыток. Попробуйте позже.", body.Message);
+    }
+
     private static WebApplicationFactory<Program> CreateFactory(ICustomerRegistrationService registrationService)
     {
         return new LineComWebApplicationFactory()
