@@ -137,7 +137,7 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
 
             return await QueryRequiredProductAsync(connection, id, cancellationToken);
         }
-        catch (PostgresException exception) when (TryGetDuplicateField(exception, out var field))
+        catch (PostgresException exception) when (AdminProductPostgresExceptionMapper.TryGetDuplicateField(exception, out var field))
         {
             throw new AdminProductDuplicateIdentityException(field, exception);
         }
@@ -171,7 +171,7 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
 
             await transaction.CommitAsync(cancellationToken);
         }
-        catch (PostgresException exception) when (TryGetDuplicateField(exception, out var field))
+        catch (PostgresException exception) when (AdminProductPostgresExceptionMapper.TryGetDuplicateField(exception, out var field))
         {
             await transaction.RollbackAsync(CancellationToken.None);
             throw new AdminProductDuplicateIdentityException(field, exception);
@@ -374,23 +374,6 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
             command.ValueBoolean,
             command.AttributeOptionId
         };
-    }
-
-    private static bool TryGetDuplicateField(PostgresException exception, out string field)
-    {
-        if (exception.SqlState != PostgresErrorCodes.UniqueViolation)
-        {
-            field = string.Empty;
-            return false;
-        }
-
-        field = exception.ConstraintName switch
-        {
-            "ux_products_sku" => "sku",
-            "ux_products_external_id" => "external_id",
-            _ => "slug"
-        };
-        return true;
     }
 
     private static bool IsInvalidRequest(PostgresException exception)
