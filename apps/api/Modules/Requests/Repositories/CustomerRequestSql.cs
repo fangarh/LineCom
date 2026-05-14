@@ -197,7 +197,7 @@ internal static class CustomerRequestSql
         SELECT
             history.event_type AS "Event",
             CASE history.event_type
-                WHEN 'created' THEN 'Р—Р°СЏРІРєР° СЃРѕР·РґР°РЅР°.'
+                WHEN 'created' THEN 'Заявка создана.'
                 ELSE history.event_type
             END AS "Message",
             history.created_at AS "CreatedAt"

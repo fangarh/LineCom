@@ -19,4 +19,10 @@ public sealed class CustomerRequestSqlTests
         Assert.Contains("history.event_type IN ('created', 'status_changed')", CustomerRequestSql.FindRequestHistory);
         Assert.DoesNotContain("comment_added", CustomerRequestSql.FindRequestHistory);
     }
+
+    [Fact]
+    public void FindRequestHistory_MapsCreatedEventToRussianMessage()
+    {
+        Assert.Contains("WHEN 'created' THEN 'Заявка создана.'", CustomerRequestSql.FindRequestHistory);
+    }
 }
