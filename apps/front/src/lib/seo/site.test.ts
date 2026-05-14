@@ -1,9 +1,13 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { absoluteSiteUrl, getPublicSiteOrigin, normalizeSiteOrigin, siteMetadataBase } from "./site";
 
 const originalOrigin = process.env.LINECOM_PUBLIC_SITE_ORIGIN;
+const productionError =
+  "LINECOM_PUBLIC_SITE_ORIGIN must be an absolute non-localhost URL in production, e.g. https://line-com.ru";
 
 afterEach(() => {
+  vi.unstubAllEnvs();
+
   if (originalOrigin === undefined) {
     delete process.env.LINECOM_PUBLIC_SITE_ORIGIN;
   } else {
@@ -33,6 +37,30 @@ describe("site SEO URL helpers", () => {
   it("falls back when configured public origin is not an absolute http URL", () => {
     expect(normalizeSiteOrigin("linecom.example.ru")).toBe("http://127.0.0.1:3000");
     expect(normalizeSiteOrigin("ftp://linecom.example.ru")).toBe("http://127.0.0.1:3000");
+  });
+
+  it("rejects missing or invalid public origins in production", () => {
+    expect(() => normalizeSiteOrigin(undefined, "production")).toThrow(productionError);
+    expect(() => normalizeSiteOrigin("linecom.example.ru", "production")).toThrow(productionError);
+    expect(() => normalizeSiteOrigin("ftp://linecom.example.ru", "production")).toThrow(productionError);
+  });
+
+  it("rejects localhost public origins in production", () => {
+    expect(() => normalizeSiteOrigin("http://localhost:3000", "production")).toThrow(productionError);
+    expect(() => normalizeSiteOrigin("http://127.0.0.1:3000", "production")).toThrow(productionError);
+    expect(() => normalizeSiteOrigin("http://[::1]:3000", "production")).toThrow(productionError);
+  });
+
+  it("accepts absolute non-localhost public origins in production", () => {
+    expect(normalizeSiteOrigin("https://line-com.ru/catalog?x=1#top", "production")).toBe("https://line-com.ru");
+    expect(normalizeSiteOrigin("https://preview.example.ru/", "production")).toBe("https://preview.example.ru");
+  });
+
+  it("getPublicSiteOrigin fails fast in production when env is missing", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("LINECOM_PUBLIC_SITE_ORIGIN", "");
+
+    expect(() => getPublicSiteOrigin()).toThrow(productionError);
   });
 
   it("builds metadata base from the normalized public origin", () => {

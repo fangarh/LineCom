@@ -22,6 +22,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<ForwardedHeadersOptions>(ReverseProxyForwardingPolicy.Configure);
+ProductionConfigurationGuard.Validate(builder.Configuration, builder.Environment);
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddAuthRateLimiting();
 builder.Services.AddAuthModule(builder.Environment);
