@@ -18,6 +18,20 @@ type AdminHomepageTargetSearchProps = {
   onAddProduct: (productId: string) => void;
 };
 
+type SearchState = {
+  categories: AdminCategoryListItem[];
+  error: string | null;
+  key: string;
+  products: AdminProductListItem[];
+};
+
+const emptySearchState: SearchState = {
+  categories: [],
+  error: null,
+  key: "",
+  products: [],
+};
+
 const publishStatusLabels: Record<string, string> = {
   archived: "Архив",
   draft: "Черновик",
@@ -32,63 +46,62 @@ export function AdminHomepageTargetSearch({
   onAddProduct,
 }: AdminHomepageTargetSearchProps) {
   const [query, setQuery] = useState("");
-  const [products, setProducts] = useState<AdminProductListItem[]>([]);
-  const [categories, setCategories] = useState<AdminCategoryListItem[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchError, setSearchError] = useState<string | null>(null);
+  const [searchState, setSearchState] = useState<SearchState>(emptySearchState);
   const requestIdRef = useRef(0);
 
   const trimmedQuery = query.trim();
   const isProductList = sectionType === "product_list";
+  const searchKey = `${sectionType}:${trimmedQuery}`;
+  const hasSearchQuery = trimmedQuery.length > 0;
+  const hasCurrentSearchState = searchState.key === searchKey;
+  const products = hasCurrentSearchState && isProductList ? searchState.products : [];
+  const categories = hasCurrentSearchState && !isProductList ? searchState.categories : [];
+  const searchError = hasCurrentSearchState ? searchState.error : null;
+  const isSearching = hasSearchQuery && !hasCurrentSearchState;
   const label = isProductList ? "Поиск товара" : "Поиск категории";
 
   useEffect(() => {
     const requestId = requestIdRef.current + 1;
     requestIdRef.current = requestId;
-    setSearchError(null);
 
     if (!trimmedQuery) {
-      setProducts([]);
-      setCategories([]);
-      setIsSearching(false);
       return;
-    }
-
-    setIsSearching(true);
-    if (isProductList) {
-      setCategories([]);
-    } else {
-      setProducts([]);
     }
 
     const searchPromise = isProductList
       ? getAdminProducts({ search: trimmedQuery, page: 1, pageSize: 10 }).then((response) => {
           if (requestIdRef.current === requestId) {
-            setProducts(response.items);
-            setCategories([]);
+            setSearchState({
+              categories: [],
+              error: null,
+              key: searchKey,
+              products: response.items,
+            });
           }
         })
       : getAdminCategories({ search: trimmedQuery, page: 1, pageSize: 10 }).then((response) => {
           if (requestIdRef.current === requestId) {
-            setCategories(response.items);
-            setProducts([]);
+            setSearchState({
+              categories: response.items,
+              error: null,
+              key: searchKey,
+              products: [],
+            });
           }
         });
 
     searchPromise
       .catch((error) => {
         if (requestIdRef.current === requestId) {
-          setSearchError(normalizeApiError(error).message);
-          setProducts([]);
-          setCategories([]);
-        }
-      })
-      .finally(() => {
-        if (requestIdRef.current === requestId) {
-          setIsSearching(false);
+          setSearchState({
+            categories: [],
+            error: normalizeApiError(error).message,
+            key: searchKey,
+            products: [],
+          });
         }
       });
-  }, [isProductList, trimmedQuery]);
+  }, [isProductList, searchKey, trimmedQuery]);
 
   return (
     <section className="admin-homepage-section admin-homepage-target-search" aria-label="Добавление элемента секции">

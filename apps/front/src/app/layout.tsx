@@ -5,6 +5,13 @@ import { RequestDraftProvider } from "@/components/request/request-draft-provide
 import { indexablePageMetadata } from "@/lib/seo/metadata";
 import { siteMetadataBase } from "@/lib/seo/site";
 import "./globals.css";
+import "../styles/layout.css";
+import "../styles/public.css";
+import "../styles/account.css";
+import "../styles/admin-requests.css";
+import "../styles/admin-catalog.css";
+import "../styles/admin-homepage.css";
+import "../styles/responsive.css";
 
 const themeScript = `
 (() => {

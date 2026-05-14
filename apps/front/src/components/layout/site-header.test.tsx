@@ -3,8 +3,19 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { RequestDraftProvider } from "@/components/request/request-draft-provider";
+import { logout } from "@/lib/api/auth";
 import type { AuthSession, CurrentUser } from "@/lib/api/auth";
 import { SiteHeader } from "./site-header";
+
+vi.mock("@/lib/api/auth", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/api/auth")>();
+  return {
+    ...actual,
+    logout: vi.fn(),
+  };
+});
+
+const logoutMock = vi.mocked(logout);
 
 function buildUser(role: string): CurrentUser {
   return {
@@ -108,11 +119,25 @@ describe("SiteHeader", () => {
 
     expect(screen.getByRole("link", { name: "Профиль" })).toHaveAttribute("href", "/account/profile");
     expect(screen.getByRole("link", { name: "Мои заявки" })).toHaveAttribute("href", "/account/requests");
+    expect(screen.getByText("customer user")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Выйти" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Администрирование" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Заявки клиентов" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Каталог админки" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Главная админки" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Войти" })).not.toBeInTheDocument();
+  });
+
+  it("logs out from the header and returns to anonymous actions", async () => {
+    logoutMock.mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    renderHeader({ user: buildUser("customer"), csrfToken: "csrf" });
+
+    await user.click(screen.getByRole("button", { name: "Выйти" }));
+
+    expect(logoutMock).toHaveBeenCalledWith("csrf");
+    expect(screen.queryByText("customer user")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Войти" })).toHaveAttribute("href", "/auth/login");
   });
 
   it.each(["seller", "admin"])("shows one admin navigation group for %s users", async (role) => {

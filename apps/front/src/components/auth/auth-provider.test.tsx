@@ -2,7 +2,7 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ApiClientError } from "@/lib/api/errors";
 import { AuthProvider, useAuth } from "./auth-provider";
-import { getMe } from "@/lib/api/auth";
+import { getMe, logout } from "@/lib/api/auth";
 import type { AuthSession } from "@/lib/api/auth";
 
 vi.mock("@/lib/api/auth", async (importOriginal) => {
@@ -10,10 +10,12 @@ vi.mock("@/lib/api/auth", async (importOriginal) => {
   return {
     ...actual,
     getMe: vi.fn(),
+    logout: vi.fn(),
   };
 });
 
 const getMeMock = vi.mocked(getMe);
+const logoutMock = vi.mocked(logout);
 
 const session: AuthSession = {
   user: {
@@ -61,6 +63,9 @@ function AuthProbe() {
       </button>
       <button type="button" onClick={() => auth.clearSession()}>
         Clear
+      </button>
+      <button type="button" onClick={() => void auth.logoutSession()}>
+        Logout
       </button>
       <button type="button" onClick={() => auth.setSession(newSession)}>
         Set session
@@ -160,5 +165,46 @@ describe("AuthProvider", () => {
     expect(screen.getByTestId("status")).toHaveTextContent("anonymous");
     expect(screen.getByTestId("user")).toHaveTextContent("anonymous");
     expect(screen.getByTestId("csrf")).toHaveTextContent("none");
+  });
+
+  it("logs out with the current csrf token and clears the local session", async () => {
+    logoutMock.mockResolvedValue(undefined);
+
+    render(
+      <AuthProvider initialSession={session}>
+        <AuthProbe />
+      </AuthProvider>,
+    );
+
+    await act(async () => {
+      screen.getByRole("button", { name: "Logout" }).click();
+    });
+
+    expect(logoutMock).toHaveBeenCalledWith("csrf-1");
+    expect(screen.getByTestId("status")).toHaveTextContent("anonymous");
+    expect(screen.getByTestId("user")).toHaveTextContent("anonymous");
+    expect(screen.getByTestId("csrf")).toHaveTextContent("none");
+  });
+
+  it("treats an already expired logout session as anonymous", async () => {
+    logoutMock.mockRejectedValue(
+      new ApiClientError(401, {
+        code: "auth.unauthorized",
+        message: "РўСЂРµР±СѓРµС‚СЃСЏ РІС…РѕРґ.",
+      }),
+    );
+
+    render(
+      <AuthProvider initialSession={session}>
+        <AuthProbe />
+      </AuthProvider>,
+    );
+
+    await act(async () => {
+      screen.getByRole("button", { name: "Logout" }).click();
+    });
+
+    expect(screen.getByTestId("status")).toHaveTextContent("anonymous");
+    expect(screen.getByTestId("user")).toHaveTextContent("anonymous");
   });
 });

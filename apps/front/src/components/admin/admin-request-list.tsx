@@ -16,6 +16,7 @@ type AdminRequestListProps = {
   requests: AdminRequestListItem[];
   filters: AdminRequestListFilters;
   onFiltersChange: (filters: AdminRequestListFilters) => void;
+  onPreviewRequest: (number: string) => void;
 };
 
 const statusOptions: Array<{ value: AdminRequestListFilters["status"]; label: string }> = [
@@ -26,7 +27,7 @@ const statusOptions: Array<{ value: AdminRequestListFilters["status"]; label: st
   { value: "cancelled", label: "Отмененные" },
 ];
 
-export function AdminRequestList({ requests, filters, onFiltersChange }: AdminRequestListProps) {
+export function AdminRequestList({ requests, filters, onFiltersChange, onPreviewRequest }: AdminRequestListProps) {
   const updateFilter = (patch: Partial<AdminRequestListFilters>) => {
     onFiltersChange({ ...filters, ...patch });
   };
@@ -133,9 +134,18 @@ export function AdminRequestList({ requests, filters, onFiltersChange }: AdminRe
                 </p>
               ) : null}
 
-              <Link className="button button--ghost admin-request-card__link" href={routes.adminRequest(request.number)}>
-                Открыть заявку {request.number}
-              </Link>
+              <div className="admin-request-card__actions">
+                <button
+                  className="button button--secondary admin-request-card__preview"
+                  type="button"
+                  onClick={() => onPreviewRequest(request.number)}
+                >
+                  Быстрый просмотр {request.number}
+                </button>
+                <Link className="button button--ghost admin-request-card__link" href={routes.adminRequest(request.number)}>
+                  Открыть заявку {request.number}
+                </Link>
+              </div>
             </article>
           ))}
         </div>

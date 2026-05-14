@@ -12,37 +12,22 @@ import {
   type AdminBrandDetail,
   type AdminBrandListItem,
   type AdminBrandListParams,
-  type AdminBrandLogo,
-  type UpsertAdminBrandCommand,
 } from "@/lib/api/admin-catalog";
 import { normalizeApiError } from "@/lib/api/errors";
 import { generateSlug } from "@/lib/catalog/slug";
+import { AdminBrandListPanel } from "./admin-brand-list-panel";
+import {
+  brandFormFromDetail,
+  buildBrandCommand,
+  buildBrandListParams,
+  emptyBrandForm,
+  logoPreviewFromUpload,
+  type BrandFormState,
+  type LogoPreviewState,
+} from "./admin-brand-manager-helpers";
 
 type AdminBrandManagerProps = {
   csrfToken?: string | null;
-};
-
-type BrandFormState = {
-  name: string;
-  slug: string;
-  description: string;
-  seoTitle: string;
-  seoDescription: string;
-  isActive: boolean;
-};
-
-type LogoPreviewState = {
-  url: string;
-  originalFileName: string;
-};
-
-const emptyForm: BrandFormState = {
-  name: "",
-  slug: "",
-  description: "",
-  seoTitle: "",
-  seoDescription: "",
-  isActive: true,
 };
 
 const missingCsrfMessage = "Сессия не подтверждена. Обновите страницу и войдите снова.";
@@ -50,7 +35,7 @@ const missingCsrfMessage = "Сессия не подтверждена. Обно
 export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) {
   const [brands, setBrands] = useState<AdminBrandListItem[]>([]);
   const [selectedBrand, setSelectedBrand] = useState<AdminBrandDetail | null>(null);
-  const [form, setForm] = useState<BrandFormState>(emptyForm);
+  const [form, setForm] = useState<BrandFormState>(emptyBrandForm);
   const [isSlugManual, setIsSlugManual] = useState(false);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("");
@@ -70,22 +55,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
   const selectedBrandIdRef = useRef<string | null>(null);
   const latestListParamsRef = useRef<AdminBrandListParams>({});
 
-  const listParams = useMemo<AdminBrandListParams>(() => {
-    const params: AdminBrandListParams = {};
-    const normalizedSearch = search.trim();
-
-    if (normalizedSearch) {
-      params.search = normalizedSearch;
-    }
-
-    if (activeFilter === "true") {
-      params.isActive = true;
-    } else if (activeFilter === "false") {
-      params.isActive = false;
-    }
-
-    return params;
-  }, [activeFilter, search]);
+  const listParams = useMemo<AdminBrandListParams>(() => buildBrandListParams(search, activeFilter), [activeFilter, search]);
 
   useEffect(() => {
     selectedBrandIdRef.current = selectedBrand?.id ?? null;
@@ -147,7 +117,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
       if (detailRequestSeqRef.current !== requestSeq) return;
 
       setSelectedBrand(detail);
-      setForm(formFromDetail(detail));
+      setForm(brandFormFromDetail(detail));
       setIsSlugManual(true);
       setLogoFile(null);
       setLogoPreview(null);
@@ -166,7 +136,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
     detailRequestSeqRef.current += 1;
     brandEditorSessionRef.current += 1;
     setSelectedBrand(null);
-    setForm(emptyForm);
+    setForm(emptyBrandForm);
     setIsSlugManual(false);
     setLogoFile(null);
     setLogoPreview(null);
@@ -191,7 +161,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
     setStatusMessage(null);
 
     try {
-      const command = buildCommand(form);
+      const command = buildBrandCommand(form);
       const savedBrand = selectedBrand
         ? await updateAdminBrand(selectedBrand.id, command, csrfToken)
         : await createAdminBrand(command, csrfToken);
@@ -199,7 +169,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
       if (!isCurrentBrandMutation(capturedBrandId, capturedEditorSession)) return;
 
       setSelectedBrand(savedBrand);
-      setForm(formFromDetail(savedBrand));
+      setForm(brandFormFromDetail(savedBrand));
       setIsSlugManual(true);
       setStatusMessage(selectedBrand ? "Бренд сохранен." : "Бренд создан.");
       await refreshBrandList();
@@ -230,7 +200,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
       if (!isCurrentBrandMutation(capturedBrandId, capturedEditorSession)) return;
 
       setSelectedBrand(null);
-      setForm(emptyForm);
+      setForm(emptyBrandForm);
       setIsSlugManual(false);
       setLogoFile(null);
       setLogoPreview(null);
@@ -345,61 +315,17 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
 
   return (
     <div className="admin-brand-manager">
-      <section className="admin-catalog-table admin-brand-manager__list" aria-labelledby="admin-brand-list-title">
-        <div className="admin-brand-manager__head">
-          <div>
-            <h2 id="admin-brand-list-title">Бренды</h2>
-            <p>Фильтры, статус и быстрый выбор бренда.</p>
-          </div>
-          <button className="button button--primary" onClick={startCreate} type="button">
-            Новый бренд
-          </button>
-        </div>
-
-        <div className="admin-brand-manager__filters">
-          <label className="admin-filter-field">
-            <span>Поиск</span>
-            <input
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Название или слаг"
-              type="search"
-              value={search}
-            />
-          </label>
-          <label className="admin-filter-field">
-            <span>Активность</span>
-            <select onChange={(event) => setActiveFilter(event.target.value)} value={activeFilter}>
-              <option value="">Все</option>
-              <option value="true">Активные</option>
-              <option value="false">Неактивные</option>
-            </select>
-          </label>
-        </div>
-
-        <div className="admin-brand-manager__rows" aria-busy={isLoadingList}>
-          {brands.length ? (
-            brands.map((brand) => (
-              <button
-                aria-pressed={selectedId === brand.id}
-                className="admin-brand-row"
-                key={brand.id}
-                onClick={() => selectBrand(brand.id)}
-                type="button"
-              >
-                <span>
-                  <strong>{brand.name}</strong>
-                  <small>{brand.slug}</small>
-                </span>
-                <span className="admin-brand-row__meta">
-                  {brand.isActive ? "Активен" : "Неактивен"} · {brand.productsCount} товаров
-                </span>
-              </button>
-            ))
-          ) : (
-            <p className="empty-state">Бренды не найдены.</p>
-          )}
-        </div>
-      </section>
+      <AdminBrandListPanel
+        activeFilter={activeFilter}
+        brands={brands}
+        isLoadingList={isLoadingList}
+        onActiveFilterChange={setActiveFilter}
+        onCreateBrand={startCreate}
+        onSearchChange={setSearch}
+        onSelectBrand={selectBrand}
+        search={search}
+        selectedBrandId={selectedId}
+      />
 
       <section className="admin-catalog-form admin-brand-manager__editor" aria-label="Редактор бренда">
         <div className="admin-brand-manager__head">
@@ -527,38 +453,4 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
       </section>
     </div>
   );
-}
-
-function formFromDetail(brand: AdminBrandDetail): BrandFormState {
-  return {
-    name: brand.name,
-    slug: brand.slug,
-    description: brand.description ?? "",
-    seoTitle: brand.seoTitle ?? "",
-    seoDescription: brand.seoDescription ?? "",
-    isActive: brand.isActive,
-  };
-}
-
-function buildCommand(form: BrandFormState): UpsertAdminBrandCommand {
-  return {
-    name: form.name.trim(),
-    slug: form.slug.trim(),
-    description: normalizeOptionalText(form.description),
-    seoTitle: normalizeOptionalText(form.seoTitle),
-    seoDescription: normalizeOptionalText(form.seoDescription),
-    isActive: form.isActive,
-  };
-}
-
-function logoPreviewFromUpload(logo: AdminBrandLogo): LogoPreviewState {
-  return {
-    url: logo.url,
-    originalFileName: logo.originalFileName,
-  };
-}
-
-function normalizeOptionalText(value: string) {
-  const normalized = value.trim();
-  return normalized || null;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { getMe, type AuthSession, type CurrentUser } from "@/lib/api/auth";
+import { getMe, logout, type AuthSession, type CurrentUser } from "@/lib/api/auth";
 import { ApiClientError } from "@/lib/api/errors";
 
 type AuthStatus = "idle" | "restoring" | "authenticated" | "anonymous";
@@ -13,6 +13,7 @@ type AuthContextValue = {
   setSession: (session: AuthSession) => void;
   clearSession: () => void;
   restoreSession: () => Promise<void>;
+  logoutSession: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -78,6 +79,28 @@ export function AuthProvider({ children, initialSession }: AuthProviderProps) {
     }
   }, [clearSession, setSession]);
 
+  const logoutSession = useCallback(async () => {
+    authVersionRef.current += 1;
+
+    try {
+      await logout(sessionRef.current?.csrfToken ?? csrfToken);
+      sessionRef.current = null;
+      setUser(null);
+      setCsrfToken(null);
+      setStatus("anonymous");
+    } catch (error) {
+      if (error instanceof ApiClientError && error.code === "auth.unauthorized") {
+        sessionRef.current = null;
+        setUser(null);
+        setCsrfToken(null);
+        setStatus("anonymous");
+        return;
+      }
+
+      throw error;
+    }
+  }, [csrfToken]);
+
   useEffect(() => {
     if (hasInitialSession) {
       return;
@@ -102,8 +125,9 @@ export function AuthProvider({ children, initialSession }: AuthProviderProps) {
       setSession,
       clearSession,
       restoreSession,
+      logoutSession,
     }),
-    [clearSession, csrfToken, restoreSession, setSession, status, user],
+    [clearSession, csrfToken, logoutSession, restoreSession, setSession, status, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

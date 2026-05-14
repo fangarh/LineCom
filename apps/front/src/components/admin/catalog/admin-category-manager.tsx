@@ -12,13 +12,20 @@ import {
   type AdminCategoryDetail,
   type AdminCategoryListItem,
   type AdminCategoryListParams,
-  type UpsertAdminCategoryCommand,
 } from "@/lib/api/admin-catalog";
 import { normalizeApiError } from "@/lib/api/errors";
 import { generateSlug } from "@/lib/catalog/slug";
-import { AdminCategoryForm, type CategoryFormState } from "./admin-category-form";
+import { AdminCategoryForm } from "./admin-category-form";
+import { AdminCategoryListPanel } from "./admin-category-list-panel";
+import {
+  buildCategoryCommand,
+  buildCategoryListParams,
+  categoryFormFromDetail,
+  emptyCategoryForm,
+  parseCategorySortOrder,
+  type CategoryFormState,
+} from "./admin-category-manager-helpers";
 import { AdminCategoryParentPicker } from "./admin-category-parent-picker";
-import { AdminCategoryTree } from "./admin-category-tree";
 import { buildCategoryTree, getBlockedParentIds } from "./admin-category-tree-helpers";
 
 const allCategoriesPageSize = 60;
@@ -27,24 +34,11 @@ type AdminCategoryManagerProps = {
   csrfToken?: string | null;
 };
 
-const emptyForm: CategoryFormState = {
-  name: "",
-  slug: "",
-  parentId: "",
-  description: "",
-  h1: "",
-  seoTitle: "",
-  seoDescription: "",
-  sortOrder: "0",
-  isActive: true,
-  isVisibleInMenu: true,
-};
-
 export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerProps) {
   const [categories, setCategories] = useState<AdminCategoryListItem[]>([]);
   const [allCategories, setAllCategories] = useState<AdminCategoryListItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<AdminCategoryDetail | null>(null);
-  const [form, setForm] = useState<CategoryFormState>(emptyForm);
+  const [form, setForm] = useState<CategoryFormState>(emptyCategoryForm);
   const [isSlugManual, setIsSlugManual] = useState(false);
   const [search, setSearch] = useState("");
   const [parentFilter, setParentFilter] = useState("");
@@ -61,26 +55,10 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
   const detailRequestSeqRef = useRef(0);
   const latestListParamsRef = useRef<AdminCategoryListParams>({});
 
-  const listParams = useMemo<AdminCategoryListParams>(() => {
-    const params: AdminCategoryListParams = {};
-    const normalizedSearch = search.trim();
-
-    if (normalizedSearch) {
-      params.search = normalizedSearch;
-    }
-
-    if (parentFilter) {
-      params.parentId = parentFilter;
-    }
-
-    if (activeFilter === "true") {
-      params.isActive = true;
-    } else if (activeFilter === "false") {
-      params.isActive = false;
-    }
-
-    return params;
-  }, [activeFilter, parentFilter, search]);
+  const listParams = useMemo<AdminCategoryListParams>(
+    () => buildCategoryListParams(search, parentFilter, activeFilter),
+    [activeFilter, parentFilter, search],
+  );
 
   useEffect(() => {
     latestListParamsRef.current = listParams;
@@ -183,7 +161,7 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
       if (detailRequestSeqRef.current !== requestSeq) return;
 
       setSelectedCategory(detail);
-      setForm(formFromDetail(detail));
+      setForm(categoryFormFromDetail(detail));
       setIsSlugManual(true);
       setMoveParentId(detail.parentId ?? "");
       setNewSortOrder(String(detail.sortOrder));
@@ -200,7 +178,7 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
   function startCreate() {
     detailRequestSeqRef.current += 1;
     setSelectedCategory(null);
-    setForm(emptyForm);
+    setForm(emptyCategoryForm);
     setIsSlugManual(false);
     setMoveParentId("");
     setNewSortOrder("0");
@@ -221,13 +199,13 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
     setStatusMessage(null);
 
     try {
-      const command = buildCommand(form);
+      const command = buildCategoryCommand(form);
       const savedCategory = selectedCategory
         ? await updateAdminCategory(selectedCategory.id, command, csrfToken)
         : await createAdminCategory(command, csrfToken);
 
       setSelectedCategory(savedCategory);
-      setForm(formFromDetail(savedCategory));
+      setForm(categoryFormFromDetail(savedCategory));
       setIsSlugManual(true);
       setMoveParentId(savedCategory.parentId ?? "");
       setNewSortOrder(String(savedCategory.sortOrder));
@@ -255,7 +233,7 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
     try {
       await deleteAdminCategory(selectedCategory.id, csrfToken);
       setSelectedCategory(null);
-      setForm(emptyForm);
+      setForm(emptyCategoryForm);
       setIsSlugManual(false);
       setStatusMessage("Категория удалена.");
       await refreshCategoryLists();
@@ -281,7 +259,7 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
     try {
       const movedCategory = await moveAdminCategory(selectedCategory.id, moveParentId || null, csrfToken);
       setSelectedCategory(movedCategory);
-      setForm(formFromDetail(movedCategory));
+      setForm(categoryFormFromDetail(movedCategory));
       setIsSlugManual(true);
       setMoveParentId(movedCategory.parentId ?? "");
       setStatusMessage("Родитель категории обновлен.");
@@ -306,9 +284,9 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
     setStatusMessage(null);
 
     try {
-      const sortedCategory = await sortAdminCategory(selectedCategory.id, parseSortOrder(newSortOrder), csrfToken);
+      const sortedCategory = await sortAdminCategory(selectedCategory.id, parseCategorySortOrder(newSortOrder), csrfToken);
       setSelectedCategory(sortedCategory);
-      setForm(formFromDetail(sortedCategory));
+      setForm(categoryFormFromDetail(sortedCategory));
       setIsSlugManual(true);
       setMoveParentId(sortedCategory.parentId ?? "");
       setNewSortOrder(String(sortedCategory.sortOrder));
@@ -343,55 +321,20 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
 
   return (
     <div className="admin-category-manager">
-      <section className="admin-catalog-table admin-category-manager__list" aria-labelledby="admin-category-list-title">
-        <div className="admin-category-manager__head">
-          <div>
-            <h2 id="admin-category-list-title">Категории</h2>
-            <p>Фильтры, структура и быстрый выбор категории.</p>
-          </div>
-          <button className="button button--primary" onClick={startCreate} type="button">
-            Новая категория
-          </button>
-        </div>
-
-        <div className="admin-category-manager__filters">
-          <label className="admin-filter-field">
-            <span>Поиск</span>
-            <input
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Название или slug"
-              type="search"
-              value={search}
-            />
-          </label>
-          <label className="admin-filter-field">
-            <span>Родитель</span>
-            <select onChange={(event) => setParentFilter(event.target.value)} value={parentFilter}>
-              <option value="">Все</option>
-              {allCategories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="admin-filter-field">
-            <span>Активность</span>
-            <select onChange={(event) => setActiveFilter(event.target.value)} value={activeFilter}>
-              <option value="">Все</option>
-              <option value="true">Активные</option>
-              <option value="false">Неактивные</option>
-            </select>
-          </label>
-        </div>
-
-        <AdminCategoryTree
-          categories={treeCategories}
-          isLoading={isLoadingList}
-          onCategorySelect={selectCategory}
-          selectedCategoryId={selectedId}
-        />
-      </section>
+      <AdminCategoryListPanel
+        activeFilter={activeFilter}
+        allCategories={allCategories}
+        isLoadingList={isLoadingList}
+        onActiveFilterChange={setActiveFilter}
+        onCategorySelect={selectCategory}
+        onCreateCategory={startCreate}
+        onParentFilterChange={setParentFilter}
+        onSearchChange={setSearch}
+        parentFilter={parentFilter}
+        search={search}
+        selectedCategoryId={selectedId}
+        treeCategories={treeCategories}
+      />
 
       <section className="admin-catalog-form admin-category-manager__editor" aria-label="Редактор категории">
         {alertMessage ? (
@@ -456,44 +399,4 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
       </section>
     </div>
   );
-}
-
-function formFromDetail(category: AdminCategoryDetail): CategoryFormState {
-  return {
-    name: category.name,
-    slug: category.slug,
-    parentId: category.parentId ?? "",
-    description: category.description ?? "",
-    h1: category.h1 ?? "",
-    seoTitle: category.seoTitle ?? "",
-    seoDescription: category.seoDescription ?? "",
-    sortOrder: String(category.sortOrder),
-    isActive: category.isActive,
-    isVisibleInMenu: category.isVisibleInMenu,
-  };
-}
-
-function buildCommand(form: CategoryFormState): UpsertAdminCategoryCommand {
-  return {
-    name: form.name.trim(),
-    slug: form.slug.trim(),
-    parentId: form.parentId || null,
-    description: normalizeOptionalText(form.description),
-    h1: normalizeOptionalText(form.h1),
-    seoTitle: normalizeOptionalText(form.seoTitle),
-    seoDescription: normalizeOptionalText(form.seoDescription),
-    sortOrder: parseSortOrder(form.sortOrder),
-    isActive: form.isActive,
-    isVisibleInMenu: form.isVisibleInMenu,
-  };
-}
-
-function normalizeOptionalText(value: string) {
-  const normalized = value.trim();
-  return normalized || null;
-}
-
-function parseSortOrder(value: string) {
-  const parsed = Number.parseInt(value, 10);
-  return Number.isFinite(parsed) ? parsed : 0;
 }

@@ -18,18 +18,23 @@ import {
   type AdminProductListParams,
 } from "@/lib/api/admin-catalog";
 import { normalizeApiError } from "@/lib/api/errors";
+import { generateSlug } from "@/lib/catalog/slug";
 import { AdminProductEditor } from "./admin-product-editor";
 import {
   buildAdminProductCommand,
   emptyProductForm,
   formFromAdminProductDetail,
-  normalizeOptionalText,
   type ProductEditorTab,
   type ProductFormState,
 } from "./admin-product-editor-helpers";
 import { AdminProductListPanel } from "./admin-product-list-panel";
 import type { ProductListPageMeta } from "./admin-product-list-helpers";
-import { generateSlug } from "@/lib/catalog/slug";
+import {
+  buildDuplicateCandidateParams,
+  buildProductListParams,
+  loadCatalogOptionPages,
+  productPageMetaFromResponse,
+} from "./admin-product-manager-helpers";
 
 const allCatalogOptionsPageSize = 60;
 const defaultProductPageSize = 60;
@@ -76,19 +81,19 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
   const selectedProductIdRef = useRef<string | null>(null);
   const latestListParamsRef = useRef<AdminProductListParams>({});
 
-  const listParams = useMemo<AdminProductListParams>(() => {
-    const params: AdminProductListParams = { page: productPage, pageSize: productPageSize };
-    const normalizedSearch = search.trim();
-
-    if (normalizedSearch) params.search = normalizedSearch;
-    if (categoryFilter) params.categoryId = categoryFilter;
-    if (brandFilter) params.brandId = brandFilter;
-    if (activeFilter === "true") params.isActive = true;
-    if (activeFilter === "false") params.isActive = false;
-    if (publishStatusFilter) params.publishStatus = publishStatusFilter;
-
-    return params;
-  }, [activeFilter, brandFilter, categoryFilter, productPage, productPageSize, publishStatusFilter, search]);
+  const listParams = useMemo<AdminProductListParams>(
+    () =>
+      buildProductListParams({
+        activeFilter,
+        brandFilter,
+        categoryFilter,
+        page: productPage,
+        pageSize: productPageSize,
+        publishStatusFilter,
+        search,
+      }),
+    [activeFilter, brandFilter, categoryFilter, productPage, productPageSize, publishStatusFilter, search],
+  );
 
   useEffect(() => {
     selectedProductIdRef.current = selectedProduct?.id ?? null;
@@ -108,12 +113,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
       const response = await getAdminProducts(params);
       if (listRequestSeqRef.current !== requestSeq) return;
       setProducts(response.items);
-      setProductPageMeta({
-        page: response.page,
-        pageSize: response.pageSize,
-        totalItems: response.totalItems,
-        totalPages: response.totalPages,
-      });
+      setProductPageMeta(productPageMetaFromResponse(response));
     } catch (error) {
       if (listRequestSeqRef.current !== requestSeq) return;
       setAlertMessage(normalizeApiError(error).message);
@@ -129,16 +129,12 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
     categoriesRequestSeqRef.current = requestSeq;
 
     try {
-      const response = await getAdminCategories({ page: 1, pageSize: allCatalogOptionsPageSize });
-      if (categoriesRequestSeqRef.current !== requestSeq) return;
-      const items = [...response.items];
-
-      for (let page = 2; page <= response.totalPages; page += 1) {
-        const pageResponse = await getAdminCategories({ page, pageSize: allCatalogOptionsPageSize });
-        if (categoriesRequestSeqRef.current !== requestSeq) return;
-        items.push(...pageResponse.items);
-      }
-
+      const items = await loadCatalogOptionPages(
+        (page, pageSize) => getAdminCategories({ page, pageSize }),
+        () => categoriesRequestSeqRef.current === requestSeq,
+        allCatalogOptionsPageSize,
+      );
+      if (!items) return;
       setCategories(items);
     } catch (error) {
       if (categoriesRequestSeqRef.current !== requestSeq) return;
@@ -151,16 +147,12 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
     brandsRequestSeqRef.current = requestSeq;
 
     try {
-      const response = await getAdminBrands({ page: 1, pageSize: allCatalogOptionsPageSize });
-      if (brandsRequestSeqRef.current !== requestSeq) return;
-      const items = [...response.items];
-
-      for (let page = 2; page <= response.totalPages; page += 1) {
-        const pageResponse = await getAdminBrands({ page, pageSize: allCatalogOptionsPageSize });
-        if (brandsRequestSeqRef.current !== requestSeq) return;
-        items.push(...pageResponse.items);
-      }
-
+      const items = await loadCatalogOptionPages(
+        (page, pageSize) => getAdminBrands({ page, pageSize }),
+        () => brandsRequestSeqRef.current === requestSeq,
+        allCatalogOptionsPageSize,
+      );
+      if (!items) return;
       setBrands(items);
     } catch (error) {
       if (brandsRequestSeqRef.current !== requestSeq) return;
@@ -368,16 +360,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
     setAlertMessage(null);
 
     try {
-      const response = await getAdminProductDuplicateCandidates({
-        name: normalizeOptionalText(form.name),
-        categoryId: form.categoryId || null,
-        brandId: form.brandId || null,
-        sku: normalizeOptionalText(form.sku),
-        externalId: normalizeOptionalText(form.externalId),
-        slug: normalizeOptionalText(form.slug),
-        excludeProductId: selectedProduct?.id ?? null,
-        limit: 5,
-      });
+      const response = await getAdminProductDuplicateCandidates(buildDuplicateCandidateParams(form, selectedProduct?.id ?? null));
       if (duplicateRequestSeqRef.current !== requestSeq || editorSessionRef.current !== capturedEditorSession) return;
       setDuplicateCandidates(response.items);
     } catch (error) {

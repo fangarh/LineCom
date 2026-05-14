@@ -33,7 +33,8 @@ const adminItems = [
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
-  const { user } = useAuth();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { user, logoutSession } = useAuth();
   const { state } = useRequestDraft();
   const draftItemsCount = getDraftItemsCount(state);
   const isStaff = user?.role === "seller" || user?.role === "admin";
@@ -54,6 +55,19 @@ export function SiteHeader() {
 
   const toggleAdminMenu = () => {
     setIsAdminMenuOpen((isOpen) => !isOpen);
+  };
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+
+    try {
+      await logoutSession();
+      closeMenu();
+    } catch {
+      // Keep the current session visible when logout fails for a non-auth reason.
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -134,7 +148,19 @@ export function SiteHeader() {
 
           <div className="site-header__actions">
             <ThemeToggle />
-            {user ? null : (
+            {user ? (
+              <div className="site-header__user">
+                <span className="site-header__user-name">{user.name}</span>
+                <button
+                  className="button button--ghost site-header__logout"
+                  disabled={isLoggingOut}
+                  type="button"
+                  onClick={handleLogout}
+                >
+                  Выйти
+                </button>
+              </div>
+            ) : (
               <Link className="button button--ghost site-header__login" href={routes.login()} onClick={closeMenu}>
                 Войти
               </Link>
