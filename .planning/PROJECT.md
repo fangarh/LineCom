@@ -23,10 +23,11 @@ LineCom - B2B/B2C каталог-заявочная система для про
 - Existing Local FileStorage is implemented and intentionally remains the target storage approach: `apps/api/Infrastructure/Storage`, `apps/api/Infrastructure/Hosting`.
 - Existing backend and frontend regression coverage exists through xUnit and Vitest: `tests/LineCom.Api.Tests`, `apps/front/src/**/*.test.*`.
 - Phase 1 validated release-critical auth throttling, production public origin/configuration guardrails, and frontend API transport error normalization: `.planning/phases/01-release-safety-baseline/01-VERIFICATION.md`.
+- Phase 2 validated Local FileStorage public/private static boundaries and read-only DB/disk diagnostics: `.planning/phases/02-storage-access-and-diagnostics/02-VERIFICATION.md`.
 
 ### Active
 
-- [ ] Make Local FileStorage lifecycle explicit: public/private boundaries, integrity diagnostics, cleanup and import DB/disk consistency.
+- [ ] Continue Local FileStorage lifecycle hardening: import DB/disk consistency, cleanup/retention decisions, and backup/restore posture.
 - [ ] Preserve SEO/GEO correctness for public catalog routes, metadata, robots and sitemap behavior under production configuration.
 - [ ] Reduce fragility of large admin catalog/homepage frontend containers before adding more behavior.
 - [ ] Add verification gates for security, storage, SEO/GEO and frontend/backend contract drift.
@@ -47,8 +48,8 @@ The codebase map created during GSD initialization lives in `.planning/codebase/
 
 Important current concerns from the codebase map:
 
-- `/storage` currently serves the configured storage root broadly; future non-public import/export/temp files need explicit access boundaries.
-- Stored file status supports lifecycle concepts, but cleanup/integrity diagnostics are not yet a complete operational contour.
+- Phase 2 restricts anonymous static storage access to public product/brand image paths and adds read-only DB/disk diagnostics.
+- Stored file status supports lifecycle concepts, but cleanup/retention and import DB/disk consistency remain future work.
 - Catalog import can desynchronize database rows and physical files if failure happens around file copy and transaction boundaries.
 - Auth endpoints do not yet have rate limiting or account/IP throttling.
 - Production SEO origin can silently fall back to localhost if `LINECOM_PUBLIC_SITE_ORIGIN` is missing.
@@ -73,7 +74,7 @@ Important current concerns from the codebase map:
 |----------|-----------|---------|
 | Use GSD for this brownfield project | Existing codebase is large enough to benefit from persistent planning, roadmap and verification artifacts. | Pending |
 | Start with `$gsd-map-codebase` | Brownfield initialization needs architecture/stack/risk map before project roadmap. | Good |
-| Roadmap focus: release stabilization first | Security, storage, SEO/GEO and production readiness risks block safe expansion of product scope. | Good - Phase 1 release safety baseline verified 2026-05-14 |
+| Roadmap focus: release stabilization first | Security, storage, SEO/GEO and production readiness risks block safe expansion of product scope. | Good - Phase 1 and Phase 2 release-stabilization work verified 2026-05-14 |
 | Granularity: Standard | 5-8 phases gives useful control without excessive planning overhead. | Pending |
 | Execution: Parallel where safe | Independent plans can run in parallel, while migrations/security/storage remain dependency-driven. | Pending |
 | Research: Full, but source-of-truth constrained | External/current docs inform best practices; `vault` and codebase map remain authoritative for project intent. | Pending |
@@ -98,4 +99,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-05-14 after Phase 1 verification*
+*Last updated: 2026-05-14 after Phase 2 verification*
