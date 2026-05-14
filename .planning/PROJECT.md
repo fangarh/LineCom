@@ -22,10 +22,10 @@ LineCom - B2B/B2C каталог-заявочная система для про
 - Existing catalog import tooling exists through `apps/catalog-import.core` and `apps/catalog-import.winforms`.
 - Existing Local FileStorage is implemented and intentionally remains the target storage approach: `apps/api/Infrastructure/Storage`, `apps/api/Infrastructure/Hosting`.
 - Existing backend and frontend regression coverage exists through xUnit and Vitest: `tests/LineCom.Api.Tests`, `apps/front/src/**/*.test.*`.
+- Phase 1 validated release-critical auth throttling, production public origin/configuration guardrails, and frontend API transport error normalization: `.planning/phases/01-release-safety-baseline/01-VERIFICATION.md`.
 
 ### Active
 
-- [ ] Harden release-critical auth, production configuration and API error behavior before expanding product scope.
 - [ ] Make Local FileStorage lifecycle explicit: public/private boundaries, integrity diagnostics, cleanup and import DB/disk consistency.
 - [ ] Preserve SEO/GEO correctness for public catalog routes, metadata, robots and sitemap behavior under production configuration.
 - [ ] Reduce fragility of large admin catalog/homepage frontend containers before adding more behavior.
@@ -73,7 +73,7 @@ Important current concerns from the codebase map:
 |----------|-----------|---------|
 | Use GSD for this brownfield project | Existing codebase is large enough to benefit from persistent planning, roadmap and verification artifacts. | Pending |
 | Start with `$gsd-map-codebase` | Brownfield initialization needs architecture/stack/risk map before project roadmap. | Good |
-| Roadmap focus: release stabilization first | Security, storage, SEO/GEO and production readiness risks block safe expansion of product scope. | Pending |
+| Roadmap focus: release stabilization first | Security, storage, SEO/GEO and production readiness risks block safe expansion of product scope. | Good - Phase 1 release safety baseline verified 2026-05-14 |
 | Granularity: Standard | 5-8 phases gives useful control without excessive planning overhead. | Pending |
 | Execution: Parallel where safe | Independent plans can run in parallel, while migrations/security/storage remain dependency-driven. | Pending |
 | Research: Full, but source-of-truth constrained | External/current docs inform best practices; `vault` and codebase map remain authoritative for project intent. | Pending |
@@ -98,4 +98,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-05-14 after GSD initialization*
+*Last updated: 2026-05-14 after Phase 1 verification*

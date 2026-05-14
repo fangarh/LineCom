@@ -10,7 +10,7 @@ The first GSD milestone stabilizes the existing LineCom release before adding ne
 - Integer phases (1, 2, 3): Planned milestone work.
 - Decimal phases (2.1, 2.2): Urgent insertions marked as INSERTED.
 
-- [ ] **Phase 1: Release Safety Baseline** - harden auth, production origin checks and frontend API error normalization.
+- [x] **Phase 1: Release Safety Baseline** - harden auth, production origin checks and frontend API error normalization. Completed: 2026-05-14.
 - [ ] **Phase 2: Storage Access And Diagnostics** - define public/private storage boundaries and integrity reporting.
 - [ ] **Phase 3: Import Storage Consistency** - make catalog import DB/file behavior recoverable and testable.
 - [ ] **Phase 4: Public SEO/GEO Reliability** - verify canonical, robots, sitemap and scalable public route behavior.
@@ -134,7 +134,7 @@ Phases execute in dependency order: 1 -> 2 -> 3 -> 4 -> 5 -> 6. Phases 4 and 5 c
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Release Safety Baseline | 0/3 | Not started | - |
+| 1. Release Safety Baseline | 3/3 | Complete | 2026-05-14 |
 | 2. Storage Access And Diagnostics | 0/3 | Not started | - |
 | 3. Import Storage Consistency | 0/2 | Not started | - |
 | 4. Public SEO/GEO Reliability | 0/3 | Not started | - |

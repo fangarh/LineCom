@@ -36,25 +36,22 @@
 
 ## Known Bugs
 
-**Frontend HTTP wrapper выбрасывает raw JSON parse errors на non-JSON responses:**
-- Symptoms: если backend/proxy возвращает HTML, plain text или битый JSON при non-204 status, `JSON.parse(text)` падает до нормализации ответа в `ApiClientError`.
-- Files: `apps/front/src/lib/api/http.ts`
-- Trigger: любой `/api/...` или multipart request, получивший non-JSON error content от nginx, Next rewrite, ASP.NET startup failure или upstream 502/504 page.
-- Workaround: caller-level `normalizeApiError` обрабатывает `ApiClientError`, но не все raw `SyntaxError` с ожидаемым backend-сообщением.
+**Resolved in Phase 1 - frontend API transport invalid responses normalize to controlled errors:**
+- Status: fixed by `.planning/phases/01-release-safety-baseline/01-03-SUMMARY.md`.
+- Files: `apps/front/src/lib/api/http.ts`, `apps/front/src/lib/api/errors.ts`, `apps/front/src/lib/api/http.test.ts`.
+- Current behavior: non-JSON, empty and malformed non-204 responses throw `ApiClientError` with `transport.invalid_response`; diagnostics are retained without exposing raw upstream body or parser messages to users.
 
-**Production SEO origin молча падает на localhost при отсутствующем env:**
-- Symptoms: canonical URLs, `metadataBase`, robots host и sitemap URLs используют `http://127.0.0.1:3000`, если `LINECOM_PUBLIC_SITE_ORIGIN` отсутствует или невалиден.
-- Files: `apps/front/src/lib/seo/site.ts`, `apps/front/src/app/robots.ts`, `apps/front/src/app/sitemap.ts`, `vault/Человекочитаемое/SEO GEO Public Catalog.md`
-- Trigger: frontend service в production запущен без `LINECOM_PUBLIC_SITE_ORIGIN=https://line-com.ru`.
-- Workaround: production docs требуют `/etc/linecom/front.env`; startup/build checks должны падать в production, если public origin не задан.
+**Resolved in Phase 1 - production SEO origin no longer silently falls back to localhost:**
+- Status: fixed by `.planning/phases/01-release-safety-baseline/01-02-SUMMARY.md`.
+- Files: `apps/front/src/lib/seo/site.ts`, `apps/front/src/lib/seo/site.test.ts`, `apps/front/.env.example`.
+- Current behavior: production build/startup paths reject missing, invalid and localhost public site origins with a clear `LINECOM_PUBLIC_SITE_ORIGIN` error; development/test fallback remains available.
 
 ## Security Considerations
 
-**Auth endpoints не имеют rate limiting или lockout:**
-- Risk: `/api/auth/login` и `/api/auth/register` публичные и используют PBKDF2, но ASP.NET rate limiter, account lockout, captcha или failed-attempt tracking не зарегистрированы.
-- Files: `apps/api/Modules/Auth/Controllers/AuthController.cs`, `apps/api/Modules/Auth/Services/Pbkdf2PasswordHasher.cs`, `apps/api/Program.cs`
-- Current mitigation: пароли хэшируются через PBKDF2-SHA256 с 210,000 iterations; auth cookies HttpOnly и Secure в production.
-- Recommendations: добавить IP/account based throttling для login/register и тесты на 429 behavior без ослабления password hashing.
+**Resolved in Phase 1 - auth login/register now have endpoint throttling:**
+- Status: fixed by `.planning/phases/01-release-safety-baseline/01-01-SUMMARY.md`.
+- Files: `apps/api/Modules/Auth/AuthRateLimiting.cs`, `apps/api/Modules/Auth/Controllers/AuthController.cs`, `tests/LineCom.Api.Tests/Modules/Auth`.
+- Current mitigation: `/api/auth/login` and `/api/auth/register` use ASP.NET Core endpoint-specific fixed-window rate limiting keyed by remote IP plus endpoint path, with tested 429 `auth.rate_limited` behavior. Account lockout/captcha remain outside the Phase 1 scope.
 
 **Public static storage может обойти authorization для будущих non-image files:**
 - Risk: import source files, export results, temp files или internal reports под `Storage:RootPath` станут доступными через `/storage`.
@@ -134,11 +131,10 @@
 
 ## Test Coverage Gaps
 
-**Frontend API transport error handling:**
-- What's not tested: non-JSON response bodies, empty non-204 error responses и malformed JSON в `apiJson`/`apiForm`.
-- Files: `apps/front/src/lib/api/http.ts`, `apps/front/src/lib/api/errors.test.ts`
-- Risk: infrastructure failures показываются как raw parse errors вместо стандартной API error model.
-- Priority: Medium
+**Resolved in Phase 1 - frontend API transport error handling:**
+- Status: covered by `.planning/phases/01-release-safety-baseline/01-03-SUMMARY.md`.
+- Files: `apps/front/src/lib/api/http.ts`, `apps/front/src/lib/api/errors.test.ts`, `apps/front/src/lib/api/http.test.ts`, `apps/front/src/lib/api/admin-catalog.test.ts`.
+- Current coverage: non-JSON response bodies, empty non-204 responses, malformed JSON, valid backend API errors, 204 responses and multipart invalid responses.
 
 **Storage serving policy и cleanup jobs:**
 - What's not tested: public/private storage access boundaries, stale `deleted`/`orphaned` cleanup, DB row без disk file и disk file без DB row.
@@ -146,11 +142,10 @@
 - Risk: private artifacts могут быть раскрыты позже, а storage drift останется невидимым.
 - Priority: High
 
-**Rate limiting для auth endpoints:**
-- What's not tested: repeated login/register attempts и throttled responses.
-- Files: `apps/api/Modules/Auth/Controllers/AuthController.cs`, `tests/LineCom.Api.Tests/Modules/Auth`
-- Risk: brute-force и signup abuse доходят до password verification и account creation без application-level throttling.
-- Priority: High
+**Resolved in Phase 1 - rate limiting для auth endpoints:**
+- Status: covered by `.planning/phases/01-release-safety-baseline/01-01-SUMMARY.md`.
+- Files: `apps/api/Modules/Auth/AuthRateLimiting.cs`, `apps/api/Modules/Auth/Controllers/AuthController.cs`, `tests/LineCom.Api.Tests/Modules/Auth/AuthLoginEndpointTests.cs`, `tests/LineCom.Api.Tests/Modules/Auth/AuthRegisterEndpointTests.cs`.
+- Current coverage: repeated login/register attempts from the same client reach tested 429 behavior with JSON code `auth.rate_limited`.
 
 **Catalog import DB/disk atomicity:**
 - What's not tested: DB failure after image copy, reset cleanup of physical files и recovery from storage metadata conflicts.

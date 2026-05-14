@@ -130,9 +130,9 @@
 - Used by: Services and controllers for public query endpoints.
 
 **Infrastructure:**
-- Purpose: Cross-module technical services.
+- Purpose: Cross-module technical services and production configuration guardrails.
 - Location: `apps/api/Infrastructure`
-- Contains: database connection factory, hosting/reverse proxy/HTTPS/logging policies, local storage writer/static file serving.
+- Contains: database connection factory, hosting/reverse proxy/HTTPS/logging policies, production configuration guard, local storage writer/static file serving.
 - Depends on: ASP.NET Core hosting, Npgsql, filesystem.
 - Used by: `apps/api/Program.cs` and module services.
 
