@@ -17,6 +17,7 @@
 **Run Commands:**
 ```bash
 dotnet test LineCom.sln                         # Run backend/.NET tests
+dotnet test tests/LineCom.Api.Tests/LineCom.Api.Tests.csproj --filter "FullyQualifiedName~StorageDiagnostics|FullyQualifiedName~LocalStorageStaticFiles"  # Phase 2 storage boundary/diagnostics
 npm --prefix apps/front test                    # Run frontend Vitest suite once
 npm --prefix apps/front run test:watch          # Run frontend Vitest in watch mode
 npm --prefix apps/front run lint                # Run frontend ESLint checks
@@ -178,6 +179,8 @@ npm --prefix apps/front test -- --coverage               # Possible Vitest mode;
 
 **Integration Tests:**
 - ASP.NET endpoint tests use `WebApplicationFactory<Program>`, real middleware/routing/auth plumbing, and replaced domain services: `tests/LineCom.Api.Tests/Modules/Catalog/AdminCatalogProductsEndpointTests.cs`, `tests/LineCom.Api.Tests/Modules/Auth/AuthLoginEndpointTests.cs`.
+- Local storage static serving tests verify current public image prefixes and denied internal prefixes through the test host: `tests/LineCom.Api.Tests/Infrastructure/Hosting/LocalStorageStaticFilesTests.cs`.
+- Admin storage diagnostics endpoint tests verify authentication/staff access and read-only response behavior with replaced diagnostics services: `tests/LineCom.Api.Tests/Modules/Catalog/StorageDiagnosticsEndpointTests.cs`.
 - Database migration behavior tests run against PostgreSQL only when `LINECOM_TEST_CONNECTION_STRING` is configured; otherwise they return early: `tests/LineCom.Api.Tests/Infrastructure/Database/AdminCatalogFoundationDatabaseBehaviorTests.cs`.
 - Repository/query database tests share the `PostgresMigration` collection and use Dapper/Npgsql against the migrated schema: `tests/LineCom.Api.Tests/Modules/Catalog/DapperPublicProductQueryDatabaseTests.cs`, `tests/LineCom.Api.Tests/Modules/Catalog/AdminCatalogProductAttributeRepositoryDatabaseTests.cs`.
 
@@ -217,6 +220,7 @@ await expect(uploadAdminBrandLogo("brand-id", logo, "csrf-token")).rejects.toThr
 
 **SQL and Migration Testing:**
 - Assert critical SQL text for filters, joins, locks, transactions, and constraints: `tests/LineCom.Api.Tests/Modules/Catalog/AdminCatalogProductSqlTests.cs`, `tests/LineCom.Api.Tests/Modules/Requests/RequestNumberSqlTests.cs`.
+- Assert storage diagnostics SQL remains read-only and reports expected row categories: `tests/LineCom.Api.Tests/Modules/Catalog/StorageDiagnosticsSqlTests.cs`.
 - Assert migration files contain expected tables, constraints, indexes, triggers, and forbidden schema choices such as public price columns or JSONB product model usage: `tests/LineCom.Api.Tests/Infrastructure/Database/CatalogFoundationMigrationTests.cs`.
 - Use live PostgreSQL tests for behavior that string assertions cannot prove: trigger violations, check constraints, repository mappings, and migrated seed defaults in `tests/LineCom.Api.Tests/Infrastructure/Database/AdminCatalogFoundationDatabaseBehaviorTests.cs`.
 

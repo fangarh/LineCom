@@ -4,17 +4,17 @@
 
 ## Tech Debt
 
-**Local FileStorage смонтирован как публичный static root:**
-- Issue: `UseLocalStorageStaticFiles` открывает весь настроенный `Storage:RootPath` через `/storage`, хотя релизная модель `stored_files.purpose` уже допускает не только публичные изображения, но и `import_source`, `export_result`, `temp`.
-- Files: `apps/api/Infrastructure/Hosting/LocalStorageStaticFilesExtensions.cs`, `apps/dbmigrator/Migrations/002_catalog_foundation.sql`, `vault/Человекочитаемое/Архитектура backend и БД.md`
-- Impact: будущие файлы импорта, экспорта и временные артефакты могут стать публично доступными, если окажутся в том же storage root; политика доступа сейчас задается путем, а не назначением файла и статусом.
-- Fix approach: отдавать статикой только публичные префиксы изображений (`products/`, `brands/`) или перевести чтение storage в controller, который проверяет `stored_files.purpose`, `status` и права доступа.
+**Resolved in Phase 2 - Local FileStorage no longer exposes the whole root anonymously:**
+- Status: fixed by `.planning/phases/02-storage-access-and-diagnostics/02-01-SUMMARY.md`.
+- Files: `apps/api/Infrastructure/Hosting/LocalStorageStaticFilesExtensions.cs`, `apps/api/Infrastructure/Hosting/LocalStoragePathPolicy.cs`, `tests/LineCom.Api.Tests/Infrastructure/Hosting/LocalStorageStaticFilesTests.cs`.
+- Current behavior: anonymous static serving is limited to `/storage/products` and `/storage/brands`; internal prefixes such as `import_source`, `export_result` and `temp` are not mapped as public static file roots.
+- Remaining work: future non-public file purposes still need explicit controller authorization or a separate access policy before they are exposed through web workflows.
 
-**Жизненный цикл StoredFile описан в БД, но нет cleanup/diagnostic контура:**
-- Issue: `stored_files.status` поддерживает `active`, `deleted`, `orphaned`, а документы требуют диагностику расхождения БД и диска; реализация только помечает часть файлов как deleted и выполняет best-effort физическую очистку при ошибках загрузки.
-- Files: `apps/dbmigrator/Migrations/002_catalog_foundation.sql`, `apps/api/Modules/Catalog/Repositories/AdminCatalogImageSql.cs`, `apps/api/Modules/Catalog/Repositories/AdminCatalogBrandSql.cs`, `apps/api/Infrastructure/Storage/LocalStoredFileWriter.cs`, `vault/Человекочитаемое/Архитектура backend и БД.md`
-- Impact: удаленные и orphaned-файлы могут накапливаться на диске; активная запись в БД без файла на диске не выявляется приложением.
-- Fix approach: добавить service/command обслуживания storage, который строит отчет по missing files, untracked files, stale `deleted`/`orphaned` rows и выполняет физическое удаление только после retention-срока.
+**Storage lifecycle has read-only diagnostics, but no cleanup command yet:**
+- Status: diagnostics added by `.planning/phases/02-storage-access-and-diagnostics/02-02-SUMMARY.md`; cleanup remains out of Phase 2 scope.
+- Files: `apps/api/Modules/Catalog/Controllers/AdminStorageDiagnosticsController.cs`, `apps/api/Modules/Catalog/Services/StorageDiagnosticsService.cs`, `apps/api/Modules/Catalog/Repositories/StorageDiagnosticsSql.cs`, `tests/LineCom.Api.Tests/Modules/Catalog/StorageDiagnostics*Tests.cs`.
+- Current behavior: staff-only diagnostics report missing active files, untracked disk files, stale deleted rows and orphaned rows without mutating disk or database state and without exposing absolute paths.
+- Remaining work: retention-based physical cleanup and import staging/promotion consistency are still future phases.
 
 **Импорт каталога может рассинхронизировать БД и диск:**
 - Issue: `CatalogImportDatabase.ApplyAsync` открывает DB transaction, затем копирует подготовленные изображения в local storage до вставки DB rows и до commit. `ResetCatalog` удаляет строки каталога и catalog-import `stored_files`, но не удаляет физические файлы.
@@ -53,11 +53,11 @@
 - Files: `apps/api/Modules/Auth/AuthRateLimiting.cs`, `apps/api/Modules/Auth/Controllers/AuthController.cs`, `tests/LineCom.Api.Tests/Modules/Auth`.
 - Current mitigation: `/api/auth/login` and `/api/auth/register` use ASP.NET Core endpoint-specific fixed-window rate limiting keyed by remote IP plus endpoint path, with tested 429 `auth.rate_limited` behavior. Account lockout/captcha remain outside the Phase 1 scope.
 
-**Public static storage может обойти authorization для будущих non-image files:**
-- Risk: import source files, export results, temp files или internal reports под `Storage:RootPath` станут доступными через `/storage`.
-- Files: `apps/api/Infrastructure/Hosting/LocalStorageStaticFilesExtensions.cs`, `apps/dbmigrator/Migrations/002_catalog_foundation.sql`
-- Current mitigation: текущие image writers ограничивают admin uploads JPEG/PNG/WebP, а catalog import пишет PNG product images.
-- Recommendations: ограничить static serving публичными image directories и требовать controller authorization для non-public file purposes до реализации import/export uploads.
+**Resolved in Phase 2 - public static storage boundary is directory-limited:**
+- Status: fixed by `.planning/phases/02-storage-access-and-diagnostics/02-01-SUMMARY.md`.
+- Files: `apps/api/Infrastructure/Hosting/LocalStorageStaticFilesExtensions.cs`, `apps/api/Infrastructure/Hosting/LocalStoragePathPolicy.cs`, `tests/LineCom.Api.Tests/Infrastructure/Hosting/LocalStorageStaticFilesTests.cs`.
+- Current mitigation: only `/storage/products` and `/storage/brands` are served as anonymous static files, preserving current catalog image URLs while excluding future non-image purposes from static mapping.
+- Remaining risk: future import/export/temp downloads must use explicit authorization before any new public path is introduced.
 
 ## Performance Bottlenecks
 
@@ -136,11 +136,16 @@
 - Files: `apps/front/src/lib/api/http.ts`, `apps/front/src/lib/api/errors.test.ts`, `apps/front/src/lib/api/http.test.ts`, `apps/front/src/lib/api/admin-catalog.test.ts`.
 - Current coverage: non-JSON response bodies, empty non-204 responses, malformed JSON, valid backend API errors, 204 responses and multipart invalid responses.
 
-**Storage serving policy и cleanup jobs:**
-- What's not tested: public/private storage access boundaries, stale `deleted`/`orphaned` cleanup, DB row без disk file и disk file без DB row.
-- Files: `apps/api/Infrastructure/Hosting/LocalStorageStaticFilesExtensions.cs`, `apps/api/Infrastructure/Storage/LocalStoredFileWriter.cs`, `apps/dbmigrator/Migrations/002_catalog_foundation.sql`
-- Risk: private artifacts могут быть раскрыты позже, а storage drift останется невидимым.
+**Storage cleanup jobs and import DB/disk consistency:**
+- What's not tested: retention-based cleanup execution, import staging/promotion, reset cleanup of physical files and recovery from storage metadata conflicts.
+- Files: `apps/catalog-import.core/Database/CatalogImportDatabase.cs`, `apps/api/Infrastructure/Storage/LocalStoredFileWriter.cs`, `apps/dbmigrator/Migrations/002_catalog_foundation.sql`
+- Risk: imports can still leave persistent storage drift even though Phase 2 now detects drift through read-only diagnostics.
 - Priority: High
+
+**Resolved in Phase 2 - storage access boundary and diagnostics coverage:**
+- Status: covered by `.planning/phases/02-storage-access-and-diagnostics/02-03-SUMMARY.md`.
+- Files: `tests/LineCom.Api.Tests/Infrastructure/Hosting/LocalStorageStaticFilesTests.cs`, `tests/LineCom.Api.Tests/Modules/Catalog/StorageDiagnosticsServiceTests.cs`, `tests/LineCom.Api.Tests/Modules/Catalog/StorageDiagnosticsEndpointTests.cs`, `tests/LineCom.Api.Tests/Modules/Catalog/StorageDiagnosticsSqlTests.cs`.
+- Current coverage: public image prefixes are served, internal prefixes are not served, diagnostics are staff-only/read-only, bounded, relative-path-only, and SQL has no mutation commands.
 
 **Resolved in Phase 1 - rate limiting для auth endpoints:**
 - Status: covered by `.planning/phases/01-release-safety-baseline/01-01-SUMMARY.md`.

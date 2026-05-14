@@ -51,11 +51,11 @@
 
 | Component | Responsibility | File |
 |-----------|----------------|------|
-| API composition root | Builds middleware pipeline, registers infrastructure and modules, maps controllers, serves local storage | `apps/api/Program.cs` |
+| API composition root | Builds middleware pipeline, registers infrastructure and modules, maps controllers, serves public local storage prefixes | `apps/api/Program.cs` |
 | Database infrastructure | Creates singleton `NpgsqlDataSource`, scoped `IDbConnectionFactory`, and local storage writer options | `apps/api/Infrastructure/Database/DatabaseServiceCollectionExtensions.cs` |
 | Auth module | Cookie authentication, registration/login/current session/logout, CSRF token claim and password hashing | `apps/api/Modules/Auth` |
 | Account module | Customer profile, organization card, password changes for authenticated users | `apps/api/Modules/Account` |
-| Catalog module | Public catalog queries, admin category/brand/attribute/product/image CRUD, homepage sections | `apps/api/Modules/Catalog` |
+| Catalog module | Public catalog queries, admin category/brand/attribute/product/image CRUD, homepage sections, read-only storage diagnostics | `apps/api/Modules/Catalog` |
 | Requests module | Customer request creation/history and admin request processing | `apps/api/Modules/Requests` |
 | Shared errors | Converts `ApiException` and unhandled exceptions into JSON API errors | `apps/api/Shared/Errors/ApiExceptionMiddleware.cs` |
 | Db migrator | Applies embedded SQL migrations through DbUp and journals to `public.schema_versions` | `apps/dbmigrator/Program.cs` |
@@ -118,7 +118,7 @@
 **API Application Services:**
 - Purpose: Authorization checks, input normalization, business validation, DTO mapping, transactional intent.
 - Location: `apps/api/Modules/*/Services`
-- Contains: `CustomerRequestService`, `AdminRequestService`, `AdminCatalogProductService`, auth/account services.
+- Contains: `CustomerRequestService`, `AdminRequestService`, `AdminCatalogProductService`, `StorageDiagnosticsService`, auth/account services.
 - Depends on: repositories/query services, reference data, current user service.
 - Used by: Controllers.
 
@@ -132,7 +132,7 @@
 **Infrastructure:**
 - Purpose: Cross-module technical services and production configuration guardrails.
 - Location: `apps/api/Infrastructure`
-- Contains: database connection factory, hosting/reverse proxy/HTTPS/logging policies, production configuration guard, local storage writer/static file serving.
+- Contains: database connection factory, hosting/reverse proxy/HTTPS/logging policies, production configuration guard, local storage writer/static file serving constrained to public catalog prefixes.
 - Depends on: ASP.NET Core hosting, Npgsql, filesystem.
 - Used by: `apps/api/Program.cs` and module services.
 
@@ -184,6 +184,13 @@
 4. Services such as `apps/api/Modules/Catalog/Services/AdminCatalogProductService.cs` call `IAdminCatalogStaffGuard`, normalize input, check duplicates/readiness, and delegate to repositories.
 5. Dapper repositories in `apps/api/Modules/Catalog/Repositories` execute parameterized SQL and transaction blocks for multi-table mutations.
 
+### Read-Only Admin Storage Diagnostics
+
+1. Authenticated staff call `GET /api/admin/storage/diagnostics` on `apps/api/Modules/Catalog/Controllers/AdminStorageDiagnosticsController.cs`.
+2. `StorageDiagnosticsService` enforces `IAdminCatalogStaffGuard`, scans the configured local storage root, and compares bounded results with repository rows.
+3. `DapperStorageDiagnosticsRepository` uses read-only SQL from `StorageDiagnosticsSql` to report active DB rows missing files, stale deleted rows and orphaned rows.
+4. The response exposes counts and relative storage keys only; it does not return absolute filesystem paths and does not mutate disk or database state.
+
 ### Customer Request Creation
 
 1. Frontend request draft is stored client-side by `apps/front/src/components/request/request-draft-provider.tsx` and `apps/front/src/lib/request-draft`.
@@ -227,8 +234,13 @@
 
 **Dapper Repository / Query Service:**
 - Purpose: Separate command-style repositories from read-heavy catalog query services.
-- Examples: `apps/api/Modules/Requests/Repositories/DapperCustomerRequestRepository.cs`, `apps/api/Modules/Catalog/Queries/DapperPublicProductQuery.cs`.
+- Examples: `apps/api/Modules/Requests/Repositories/DapperCustomerRequestRepository.cs`, `apps/api/Modules/Catalog/Queries/DapperPublicProductQuery.cs`, `apps/api/Modules/Catalog/Repositories/DapperStorageDiagnosticsRepository.cs`.
 - Pattern: SQL in `*Sql.cs` or builder files, parameters passed through Dapper `CommandDefinition`, response rows mapped explicitly.
+
+**Local Storage Public Path Policy:**
+- Purpose: Keep anonymous static file serving limited to current public catalog image paths.
+- Examples: `apps/api/Infrastructure/Hosting/LocalStoragePathPolicy.cs`, `apps/api/Infrastructure/Hosting/LocalStorageStaticFilesExtensions.cs`.
+- Pattern: map `/storage/products` and `/storage/brands` to physical subdirectories under `Storage:RootPath`; future non-public purposes require controller authorization or a separate access policy.
 
 **Reference Data Services:**
 - Purpose: Stable code/label mapping for statuses, sale units and availability.
@@ -265,7 +277,7 @@
 **Backend API:**
 - Location: `apps/api/Program.cs`
 - Triggers: `dotnet run --project apps/api/LineCom.Api.csproj`, IIS/Kestrel hosting, test host.
-- Responsibilities: Add local config, logging policy, controllers, Swagger, forwarded headers, database, auth/account/catalog/request modules, middleware and static storage.
+- Responsibilities: Add local config, logging policy, controllers, Swagger, forwarded headers, database, auth/account/catalog/request modules, middleware and public storage prefixes.
 
 **Frontend App:**
 - Location: `apps/front/src/app/layout.tsx`, `apps/front/src/app/page.tsx`
@@ -275,7 +287,7 @@
 **Next.js Rewrites:**
 - Location: `apps/front/next.config.ts`
 - Triggers: Browser requests to `/api/:path*` and `/storage/:path*`.
-- Responsibilities: Proxy frontend-relative backend and local storage paths to `LINECOM_API_ORIGIN`.
+- Responsibilities: Proxy frontend-relative backend and local storage image paths to `LINECOM_API_ORIGIN`; backend only serves current public image prefixes anonymously.
 
 **Db Migrator:**
 - Location: `apps/dbmigrator/Program.cs`
@@ -304,7 +316,7 @@
 - **Circular imports:** No known circular project references. `LineCom.sln` references API, tests, migrator, migrator core, import core and WinForms importer; `tests/LineCom.Api.Tests` references app projects. Keep app projects independent of tests.
 - **Data access:** Use Dapper/Npgsql with explicit parameterized SQL. Do not introduce Entity Framework, EF migrations, or generic repositories.
 - **Migrations:** Add schema changes as ordered SQL scripts in `apps/dbmigrator/Migrations`; do not mutate schema implicitly in API startup.
-- **Storage:** Local FileStorage is the target approach. API serves storage from `Storage:RootPath` or `apps/api/storage` through `/storage`; files must be coordinated with DB records.
+- **Storage:** Local FileStorage is the target approach. API serves anonymous static files only from the current public catalog image prefixes `/storage/products` and `/storage/brands`; files must be coordinated with DB records, and diagnostics are read-only.
 - **SEO/GEO:** Public catalog, product, landing, metadata, sitemap, robots and URL changes must preserve SEO/GEO requirements from `vault/Человекочитаемое/Сквозные требования.md`.
 - **Auth:** Cookie auth uses HttpOnly cookies. Unsafe authenticated methods require CSRF header and backend attribute coverage.
 - **Product model:** Product attributes stay normalized in relational tables; do not store core product attributes or SEO filter conditions in JSONB.
@@ -360,7 +372,7 @@
 
 **SEO/GEO:** Public routes use `indexablePageMetadata`, server-side data loading, sitemap and robots helpers. Admin/account/auth pages use noindex metadata and robots disallow internal paths.
 
-**Files:** API local storage is configured through `Storage:RootPath` and served at `/storage`; stored file records are modeled in migrations and manipulated by API/importer storage code.
+**Files:** API local storage is configured through `Storage:RootPath`; public catalog images are served at `/storage/products` and `/storage/brands`, while stored file records are modeled in migrations and inspected by read-only diagnostics.
 
 ---
 
