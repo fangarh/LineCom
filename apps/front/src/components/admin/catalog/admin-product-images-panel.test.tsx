@@ -107,7 +107,10 @@ describe("AdminProductImagesPanel", () => {
     await renderPanel();
 
     expect(adminCatalogApiMock.getAdminProductImages).toHaveBeenCalledWith("product-active");
-    expect(screen.getByRole("img", { name: "Кабель на белом фоне" })).toHaveAttribute("src", "/uploads/main.jpg");
+    const preview = screen.getByRole("img", { name: "Кабель на белом фоне" });
+    expect(preview).toHaveAttribute("src", "/uploads/main.jpg");
+    expect(preview).toHaveAttribute("width", "150");
+    expect(preview).toHaveAttribute("height", "118");
     expect(screen.getByText("main.jpg")).toBeInTheDocument();
     expect(screen.getByText("Основное")).toBeInTheDocument();
   });

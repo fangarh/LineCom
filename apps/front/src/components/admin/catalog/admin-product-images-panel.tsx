@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type ChangeEvent } from "react";
 import {
   deleteAdminProductImage,
@@ -273,7 +274,7 @@ export function AdminProductImagesPanel({ productId, csrfToken = null }: AdminPr
             return (
               <article className="admin-product-image-card" key={image.id} aria-label={image.originalFileName}>
                 <div className="admin-product-image-card__preview">
-                  <img alt={image.alt || image.originalFileName} src={image.url} />
+                  <Image alt={image.alt || image.originalFileName} height={118} src={image.url} unoptimized width={150} />
                 </div>
                 <div className="admin-product-image-card__body">
                   <div className="admin-product-image-card__head">

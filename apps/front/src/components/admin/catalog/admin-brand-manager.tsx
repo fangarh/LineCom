@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import {
   createAdminBrand,
@@ -410,7 +411,7 @@ export function AdminBrandManager({ csrfToken = null }: AdminBrandManagerProps) 
         <section className="admin-brand-manager__logo" aria-label="Логотип бренда">
           <div className="admin-brand-manager__logo-preview">
             {logoPreview ? (
-              <img alt={logoAlt} src={logoPreview.url} />
+              <Image alt={logoAlt} height={96} src={logoPreview.url} unoptimized width={240} />
             ) : (
               <p className="admin-catalog-status">
                 {selectedBrand?.logoFileId

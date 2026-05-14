@@ -255,6 +255,8 @@ describe("AdminBrandManager", () => {
     expect(adminCatalogApiMock.uploadAdminBrandLogo).toHaveBeenCalledWith("brand-inactive", file, "csrf-token");
     const preview = await screen.findByRole("img", { name: "Логотип ПромСвет" });
     expect(preview).toHaveAttribute("src", uploadedLogo.url);
+    expect(preview).toHaveAttribute("width", "240");
+    expect(preview).toHaveAttribute("height", "96");
   });
 
   it("игнорирует результат загрузки логотипа, если пользователь выбрал другой бренд до ответа", async () => {
