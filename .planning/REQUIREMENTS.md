@@ -13,9 +13,9 @@
 
 ### Production Configuration
 
-- [ ] **PROD-01**: Production startup or build checks fail clearly when public site origin or API origin configuration would generate localhost SEO URLs.
+- [x] **PROD-01**: Production startup or build checks fail clearly when public site origin or API origin configuration would generate localhost SEO URLs.
 - [ ] **PROD-02**: Deployment documentation and verification cover API, frontend, DbUp migrator, PostgreSQL and Local FileStorage paths.
-- [ ] **PROD-03**: Release checks validate that storage root, database connection and frontend/backend origins are environment-specific and not silently defaulting in production.
+- [x] **PROD-03**: Release checks validate that storage root, database connection and frontend/backend origins are environment-specific and not silently defaulting in production.
 
 ### API Error Handling
 
@@ -76,9 +76,9 @@
 | SEC-01 | Phase 1 | Complete |
 | SEC-02 | Phase 1 | Complete |
 | SEC-03 | Phase 6 | Pending |
-| PROD-01 | Phase 1 | Pending |
+| PROD-01 | Phase 1 | Complete |
 | PROD-02 | Phase 6 | Pending |
-| PROD-03 | Phase 1 | Pending |
+| PROD-03 | Phase 1 | Complete |
 | API-01 | Phase 1 | Complete |
 | API-02 | Phase 1 | Complete |
 | STOR-01 | Phase 2 | Pending |
