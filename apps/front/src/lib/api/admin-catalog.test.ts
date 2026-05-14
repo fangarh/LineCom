@@ -20,10 +20,10 @@ function noContentResponse() {
   return new Response(null, { status: 204 });
 }
 
-function errorResponse(payload: unknown) {
-  return new Response(JSON.stringify(payload), {
+function invalidResponse() {
+  return new Response("<html>bad gateway</html>", {
     status: 500,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/html" },
   });
 }
 
@@ -143,14 +143,15 @@ describe("admin catalog API client", () => {
     expectFormHeaders(init.headers as Headers, "csrf-token");
   });
 
-  it("uses the shared fallback message for multipart API errors", async () => {
-    const fetchMock = vi.fn().mockResolvedValue(errorResponse({ error: "unexpected" }));
+  it("uses the shared invalid-response message for multipart transport errors", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(invalidResponse());
     vi.stubGlobal("fetch", fetchMock);
     const logo = new File(["logo"], "logo.png", { type: "image/png" });
 
-    await expect(uploadAdminBrandLogo("brand-id", logo, "csrf-token")).rejects.toThrow(
-      "Внутренняя ошибка сервера.",
-    );
+    await expect(uploadAdminBrandLogo("brand-id", logo, "csrf-token")).rejects.toMatchObject({
+      code: "transport.invalid_response",
+      message: "Не удалось обработать ответ сервера. Попробуйте позже.",
+    });
   });
 
   it("deletes product image and brand logo with csrf token", async () => {

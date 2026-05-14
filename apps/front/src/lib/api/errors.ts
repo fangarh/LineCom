@@ -3,15 +3,29 @@ export type ApiErrorResponse = {
   message: string;
 };
 
+export type ApiClientErrorDiagnostics = {
+  readonly reason: "empty_body" | "malformed_json";
+  readonly status: number;
+  readonly body?: string;
+  readonly parseError?: string;
+};
+
+export const invalidApiResponseError: ApiErrorResponse = {
+  code: "transport.invalid_response",
+  message: "Не удалось обработать ответ сервера. Попробуйте позже.",
+};
+
 export class ApiClientError extends Error {
   readonly status: number;
   readonly code: string;
+  readonly diagnostics?: ApiClientErrorDiagnostics;
 
-  constructor(status: number, error: ApiErrorResponse) {
+  constructor(status: number, error: ApiErrorResponse, diagnostics?: ApiClientErrorDiagnostics) {
     super(error.message);
     this.name = "ApiClientError";
     this.status = status;
     this.code = error.code;
+    this.diagnostics = diagnostics;
   }
 }
 

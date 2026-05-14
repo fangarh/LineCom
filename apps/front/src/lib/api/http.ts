@@ -1,4 +1,10 @@
-import { ApiClientError, type ApiErrorResponse, isApiErrorResponse } from "./errors";
+import {
+  ApiClientError,
+  type ApiClientErrorDiagnostics,
+  type ApiErrorResponse,
+  invalidApiResponseError,
+  isApiErrorResponse,
+} from "./errors";
 
 type JsonRequestOptions = {
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -35,21 +41,7 @@ export async function apiJson<T>(path: string, options: JsonRequestOptions = {})
     next: options.next,
   });
 
-  if (response.status === 204) {
-    return undefined as T;
-  }
-
-  const text = await response.text();
-  const payload = text ? (JSON.parse(text) as unknown) : null;
-
-  if (!response.ok) {
-    const apiError: ApiErrorResponse = isApiErrorResponse(payload)
-      ? payload
-      : { code: "internal_error", message: "Внутренняя ошибка сервера." };
-    throw new ApiClientError(response.status, apiError);
-  }
-
-  return payload as T;
+  return parseApiResponse<T>(response);
 }
 
 export async function apiForm<T>(path: string, options: FormRequestOptions): Promise<T> {
@@ -67,12 +59,30 @@ export async function apiForm<T>(path: string, options: FormRequestOptions): Pro
     credentials: "include",
   });
 
+  return parseApiResponse<T>(response);
+}
+
+async function parseApiResponse<T>(response: Response): Promise<T> {
   if (response.status === 204) {
     return undefined as T;
   }
 
   const text = await response.text();
-  const payload = text ? (JSON.parse(text) as unknown) : null;
+  if (!text) {
+    throwInvalidApiResponse(response.status, { reason: "empty_body", status: response.status });
+  }
+
+  let payload: unknown;
+  try {
+    payload = JSON.parse(text) as unknown;
+  } catch (error) {
+    throwInvalidApiResponse(response.status, {
+      reason: "malformed_json",
+      status: response.status,
+      body: text,
+      parseError: error instanceof Error ? error.message : String(error),
+    });
+  }
 
   if (!response.ok) {
     const apiError: ApiErrorResponse = isApiErrorResponse(payload)
@@ -82,6 +92,10 @@ export async function apiForm<T>(path: string, options: FormRequestOptions): Pro
   }
 
   return payload as T;
+}
+
+function throwInvalidApiResponse(status: number, diagnostics: ApiClientErrorDiagnostics): never {
+  throw new ApiClientError(status, invalidApiResponseError, diagnostics);
 }
 
 function resolveApiPath(path: string): string {
