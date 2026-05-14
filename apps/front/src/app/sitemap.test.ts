@@ -73,4 +73,50 @@ describe("sitemap route", () => {
       "https://linecom.example.ru/delivery",
     ]);
   });
+
+  it("does not load product pages beyond the sitemap release page limit", async () => {
+    getProductsMock.mockImplementation(({ page = 1 }) =>
+      Promise.resolve({
+        items: [product({ id: `page-${page}`, slug: `page-${page}` })],
+        page,
+        pageSize: 60,
+        totalItems: 100,
+        totalPages: 100,
+      }),
+    );
+
+    const entries = await sitemap();
+
+    expect(getProductsMock).toHaveBeenCalledTimes(10);
+    expect(getProductsMock).toHaveBeenLastCalledWith({ page: 10, pageSize: 60, sort: "category" });
+    expect(entries.some((entry) => entry.url === "https://linecom.example.ru/products/page-10")).toBe(true);
+    expect(entries.some((entry) => entry.url === "https://linecom.example.ru/products/page-11")).toBe(false);
+  });
+
+  it("truncates product URLs at the sitemap release URL limit", async () => {
+    getProductsMock.mockImplementation(({ page = 1 }) =>
+      Promise.resolve({
+        items: Array.from({ length: 60 }, (_, index) =>
+          product({
+            id: `page-${page}-product-${index}`,
+            slug: `page-${page}-product-${index}`,
+          }),
+        ),
+        page,
+        pageSize: 60,
+        totalItems: 1200,
+        totalPages: 20,
+      }),
+    );
+
+    const entries = await sitemap();
+    const productUrls = entries
+      .map((entry) => entry.url)
+      .filter((url) => url.startsWith("https://linecom.example.ru/products/"));
+
+    expect(productUrls).toHaveLength(500);
+    expect(getProductsMock).toHaveBeenCalledTimes(9);
+    expect(productUrls).toContain("https://linecom.example.ru/products/page-9-product-19");
+    expect(productUrls).not.toContain("https://linecom.example.ru/products/page-9-product-20");
+  });
 });
