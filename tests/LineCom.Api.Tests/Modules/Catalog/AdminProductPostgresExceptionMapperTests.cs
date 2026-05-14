@@ -31,6 +31,45 @@ public sealed class AdminProductPostgresExceptionMapperTests
         Assert.Equal(string.Empty, field);
     }
 
+    [Theory]
+    [InlineData(PostgresErrorCodes.ForeignKeyViolation)]
+    [InlineData(PostgresErrorCodes.CheckViolation)]
+    [InlineData(PostgresErrorCodes.RaiseException)]
+    public void IsInvalidRequest_IncludesProductRequestConstraintViolations(string sqlState)
+    {
+        var exception = CreatePostgresException(sqlState, constraintName: null);
+
+        Assert.True(AdminProductPostgresExceptionMapper.IsInvalidRequest(exception));
+    }
+
+    [Fact]
+    public void IsInvalidRequest_IgnoresUniqueViolations()
+    {
+        var exception = CreatePostgresException(PostgresErrorCodes.UniqueViolation, "ux_products_sku");
+
+        Assert.False(AdminProductPostgresExceptionMapper.IsInvalidRequest(exception));
+    }
+
+    [Theory]
+    [InlineData(PostgresErrorCodes.ForeignKeyViolation)]
+    [InlineData(PostgresErrorCodes.CheckViolation)]
+    [InlineData(PostgresErrorCodes.RaiseException)]
+    [InlineData(PostgresErrorCodes.UniqueViolation)]
+    public void IsInvalidAttributeUpdate_IncludesProductAttributeConstraintViolations(string sqlState)
+    {
+        var exception = CreatePostgresException(sqlState, constraintName: null);
+
+        Assert.True(AdminProductPostgresExceptionMapper.IsInvalidAttributeUpdate(exception));
+    }
+
+    [Fact]
+    public void IsInvalidAttributeUpdate_IgnoresUnrelatedViolations()
+    {
+        var exception = CreatePostgresException(PostgresErrorCodes.NotNullViolation, constraintName: null);
+
+        Assert.False(AdminProductPostgresExceptionMapper.IsInvalidAttributeUpdate(exception));
+    }
+
     private static PostgresException CreatePostgresException(string sqlState, string? constraintName)
     {
         return new PostgresException(

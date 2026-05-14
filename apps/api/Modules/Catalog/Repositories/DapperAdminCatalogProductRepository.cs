@@ -141,7 +141,7 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
         {
             throw new AdminProductDuplicateIdentityException(field, exception);
         }
-        catch (PostgresException exception) when (IsInvalidRequest(exception))
+        catch (PostgresException exception) when (AdminProductPostgresExceptionMapper.IsInvalidRequest(exception))
         {
             throw new InvalidAdminProductException(exception);
         }
@@ -176,7 +176,7 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
             await transaction.RollbackAsync(CancellationToken.None);
             throw new AdminProductDuplicateIdentityException(field, exception);
         }
-        catch (PostgresException exception) when (IsInvalidRequest(exception))
+        catch (PostgresException exception) when (AdminProductPostgresExceptionMapper.IsInvalidRequest(exception))
         {
             await transaction.RollbackAsync(CancellationToken.None);
             throw new InvalidAdminProductException(exception);
@@ -246,7 +246,7 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
 
             await transaction.CommitAsync(cancellationToken);
         }
-        catch (PostgresException exception) when (IsInvalidAttributeUpdate(exception))
+        catch (PostgresException exception) when (AdminProductPostgresExceptionMapper.IsInvalidAttributeUpdate(exception))
         {
             await transaction.RollbackAsync(CancellationToken.None);
             throw new InvalidAdminProductException(exception);
@@ -336,19 +336,6 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
                 AdminCatalogProductSql.GetProduct,
                 new { Id = id },
                 cancellationToken: cancellationToken));
-    }
-
-    private static bool IsInvalidRequest(PostgresException exception)
-    {
-        return exception.SqlState is PostgresErrorCodes.ForeignKeyViolation
-            or PostgresErrorCodes.CheckViolation
-            or PostgresErrorCodes.RaiseException;
-    }
-
-    private static bool IsInvalidAttributeUpdate(PostgresException exception)
-    {
-        return IsInvalidRequest(exception)
-            || exception.SqlState == PostgresErrorCodes.UniqueViolation;
     }
 
     private sealed record CategoryReadinessRow(bool CategoryExists, bool CategoryIsActive);

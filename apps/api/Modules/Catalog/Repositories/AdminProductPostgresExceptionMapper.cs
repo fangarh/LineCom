@@ -20,4 +20,17 @@ internal static class AdminProductPostgresExceptionMapper
         };
         return true;
     }
+
+    public static bool IsInvalidRequest(PostgresException exception)
+    {
+        return exception.SqlState is PostgresErrorCodes.ForeignKeyViolation
+            or PostgresErrorCodes.CheckViolation
+            or PostgresErrorCodes.RaiseException;
+    }
+
+    public static bool IsInvalidAttributeUpdate(PostgresException exception)
+    {
+        return IsInvalidRequest(exception)
+            || exception.SqlState == PostgresErrorCodes.UniqueViolation;
+    }
 }
