@@ -21,8 +21,10 @@ public static class CatalogServiceCollectionExtensions
         services.AddScoped<IAdminCatalogAttributeService, AdminCatalogAttributeService>();
         services.AddScoped<IAdminCatalogProductRepository, DapperAdminCatalogProductRepository>();
         services.AddScoped<IAdminCatalogImageRepository, DapperAdminCatalogImageRepository>();
+        services.AddScoped<IStorageDiagnosticsRepository, DapperStorageDiagnosticsRepository>();
         services.AddScoped<IAdminCatalogProductService, AdminCatalogProductService>();
         services.AddScoped<IAdminCatalogImageService, AdminCatalogImageService>();
+        services.AddScoped<IStorageDiagnosticsService, StorageDiagnosticsService>();
         services.AddScoped<IAdminProductDuplicateQuery, DapperAdminProductDuplicateQuery>();
         services.AddScoped<IPublicCategoryQuery, DapperPublicCategoryQuery>();
         services.AddScoped<IPublicProductQuery, DapperPublicProductQuery>();
