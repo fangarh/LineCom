@@ -132,7 +132,7 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
             var id = await connection.QuerySingleAsync<Guid>(
                 new CommandDefinition(
                     AdminCatalogProductSql.InsertProduct,
-                    ToParameters(command),
+                    AdminProductDapperParameterMapper.ToUpsertParameters(command),
                     cancellationToken: cancellationToken));
 
             return await QueryRequiredProductAsync(connection, id, cancellationToken);
@@ -160,7 +160,7 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
             var updatedId = await connection.QuerySingleOrDefaultAsync<Guid?>(
                 new CommandDefinition(
                     AdminCatalogProductSql.UpdateProduct,
-                    ToParameters(command, id),
+                    AdminProductDapperParameterMapper.ToUpsertParameters(command, id),
                     transaction,
                     cancellationToken: cancellationToken));
             if (updatedId is null)
@@ -224,7 +224,7 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
                 var insertedId = await connection.QuerySingleOrDefaultAsync<Guid?>(
                     new CommandDefinition(
                         AdminCatalogProductSql.InsertProductAttributeValue,
-                        ToParameters(id, value),
+                        AdminProductDapperParameterMapper.ToAttributeValueParameters(id, value),
                         transaction,
                         cancellationToken: cancellationToken));
                 if (insertedId is null)
@@ -336,44 +336,6 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
                 AdminCatalogProductSql.GetProduct,
                 new { Id = id },
                 cancellationToken: cancellationToken));
-    }
-
-    private static object ToParameters(AdminProductUpsert command, Guid? id = null)
-    {
-        return new
-        {
-            Id = id,
-            command.CategoryId,
-            command.BrandId,
-            command.Name,
-            command.Slug,
-            command.Sku,
-            command.ExternalId,
-            command.Description,
-            command.ShortDescription,
-            command.AvailabilityStatus,
-            command.SaleUnit,
-            command.UnitQuantity,
-            command.PublishStatus,
-            command.IsActive,
-            command.SeoTitle,
-            command.SeoDescription,
-            command.H1,
-            command.SortOrder
-        };
-    }
-
-    private static object ToParameters(Guid productId, AdminProductAttributeValueUpsert command)
-    {
-        return new
-        {
-            ProductId = productId,
-            command.AttributeId,
-            command.ValueText,
-            command.ValueNumber,
-            command.ValueBoolean,
-            command.AttributeOptionId
-        };
     }
 
     private static bool IsInvalidRequest(PostgresException exception)
