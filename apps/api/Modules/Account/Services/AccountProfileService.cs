@@ -10,9 +10,6 @@ namespace LineCom.Api.Modules.Account.Services;
 
 public sealed class AccountProfileService : IAccountProfileService
 {
-    private const int MinimumPasswordLength = 8;
-    private const int MaximumPasswordLength = 128;
-
     private readonly IAuthCurrentUserService _currentUserService;
     private readonly IAccountProfileRepository _profileRepository;
     private readonly IPasswordHasher _passwordHasher;
@@ -109,9 +106,9 @@ public sealed class AccountProfileService : IAccountProfileService
     {
         var currentSession = await _currentUserService.GetCurrentSessionAsync(httpContext, cancellationToken);
         var currentPassword = request.CurrentPassword ?? string.Empty;
-        var newPassword = request.NewPassword ?? string.Empty;
+        var newPassword = request.NewPassword;
 
-        if (currentPassword.Length == 0 || newPassword.Length is < MinimumPasswordLength or > MaximumPasswordLength)
+        if (currentPassword.Length == 0 || !AuthPasswordPolicy.IsValidPassword(newPassword))
         {
             throw AuthErrors.InvalidPassword();
         }
@@ -125,7 +122,7 @@ public sealed class AccountProfileService : IAccountProfileService
             throw InvalidCurrentPassword();
         }
 
-        var newHash = _passwordHasher.HashPassword(newPassword);
+        var newHash = _passwordHasher.HashPassword(newPassword!);
         await _profileRepository.UpdatePasswordHashAsync(
             currentSession.User.Id,
             newHash,

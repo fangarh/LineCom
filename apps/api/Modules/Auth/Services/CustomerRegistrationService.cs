@@ -5,9 +5,6 @@ namespace LineCom.Api.Modules.Auth.Services;
 
 public sealed class CustomerRegistrationService : ICustomerRegistrationService
 {
-    private const int MinimumPasswordLength = 8;
-    private const int MaximumPasswordLength = 128;
-
     private readonly IUserRegistrationRepository _userRegistrationRepository;
     private readonly IPasswordHasher _passwordHasher;
 
@@ -26,7 +23,7 @@ public sealed class CustomerRegistrationService : ICustomerRegistrationService
         var name = AuthInputNormalizer.RequiredText(request.Name);
         var email = AuthInputNormalizer.Email(request.Email);
         var phone = AuthInputNormalizer.Phone(request.Phone);
-        var password = request.Password ?? string.Empty;
+        var password = request.Password;
 
         if (name is null)
         {
@@ -38,7 +35,7 @@ public sealed class CustomerRegistrationService : ICustomerRegistrationService
             throw AuthErrors.InvalidContact();
         }
 
-        if (password.Length is < MinimumPasswordLength or > MaximumPasswordLength)
+        if (!AuthPasswordPolicy.IsValidPassword(password))
         {
             throw AuthErrors.InvalidPassword();
         }
@@ -47,7 +44,7 @@ public sealed class CustomerRegistrationService : ICustomerRegistrationService
             name,
             email,
             phone,
-            _passwordHasher.HashPassword(password),
+            _passwordHasher.HashPassword(password!),
             "customer",
             IsActive: true);
 
