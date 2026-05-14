@@ -13,7 +13,7 @@ afterEach(() => {
 
 describe("robots route", () => {
   it("allows public pages and blocks internal authenticated surfaces", () => {
-    process.env.LINECOM_PUBLIC_SITE_ORIGIN = "https://linecom.example.ru";
+    process.env.LINECOM_PUBLIC_SITE_ORIGIN = "https://linecom.example.ru/catalog?x=1#top";
 
     expect(robots()).toEqual({
       rules: {
