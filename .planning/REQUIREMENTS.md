@@ -19,8 +19,8 @@
 
 ### API Error Handling
 
-- [ ] **API-01**: Frontend API transport normalizes non-JSON, empty and malformed error responses into controlled client errors.
-- [ ] **API-02**: API error handling tests cover proxy/upstream-style failures for JSON and multipart requests.
+- [x] **API-01**: Frontend API transport normalizes non-JSON, empty and malformed error responses into controlled client errors.
+- [x] **API-02**: API error handling tests cover proxy/upstream-style failures for JSON and multipart requests.
 
 ### Storage Lifecycle
 
@@ -79,8 +79,8 @@
 | PROD-01 | Phase 1 | Pending |
 | PROD-02 | Phase 6 | Pending |
 | PROD-03 | Phase 1 | Pending |
-| API-01 | Phase 1 | Pending |
-| API-02 | Phase 1 | Pending |
+| API-01 | Phase 1 | Complete |
+| API-02 | Phase 1 | Complete |
 | STOR-01 | Phase 2 | Pending |
 | STOR-02 | Phase 2 | Pending |
 | STOR-03 | Phase 2 | Pending |

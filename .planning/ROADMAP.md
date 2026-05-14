@@ -34,7 +34,7 @@ The first GSD milestone stabilizes the existing LineCom release before adding ne
 Plans:
 - [x] 01-01: Auth rate limiting and cookie production verification.
 - [ ] 01-02: Production origin and environment guardrails.
-- [ ] 01-03: Frontend API transport error normalization and tests.
+- [x] 01-03: Frontend API transport error normalization and tests.
 
 ### Phase 2: Storage Access And Diagnostics
 **Goal**: Local FileStorage has explicit public/private boundaries and diagnostics for DB/disk drift.
