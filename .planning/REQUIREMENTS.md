@@ -7,8 +7,8 @@
 
 ### Security
 
-- [ ] **SEC-01**: Public login and registration endpoints are protected by rate limiting or equivalent throttling with tested 429 behavior.
-- [ ] **SEC-02**: Cookie authentication settings are verified for production HTTPS, HttpOnly, Secure and SameSite behavior.
+- [x] **SEC-01**: Public login and registration endpoints are protected by rate limiting or equivalent throttling with tested 429 behavior.
+- [x] **SEC-02**: Cookie authentication settings are verified for production HTTPS, HttpOnly, Secure and SameSite behavior.
 - [ ] **SEC-03**: Release verification includes dependency vulnerability audit for .NET and npm packages when network access is available.
 
 ### Production Configuration
@@ -73,8 +73,8 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEC-01 | Phase 1 | Pending |
-| SEC-02 | Phase 1 | Pending |
+| SEC-01 | Phase 1 | Complete |
+| SEC-02 | Phase 1 | Complete |
 | SEC-03 | Phase 6 | Pending |
 | PROD-01 | Phase 1 | Pending |
 | PROD-02 | Phase 6 | Pending |

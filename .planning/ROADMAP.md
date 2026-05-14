@@ -32,7 +32,7 @@ The first GSD milestone stabilizes the existing LineCom release before adding ne
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Auth rate limiting and cookie production verification.
+- [x] 01-01: Auth rate limiting and cookie production verification.
 - [ ] 01-02: Production origin and environment guardrails.
 - [ ] 01-03: Frontend API transport error normalization and tests.
 
