@@ -83,7 +83,7 @@ public sealed class DapperPublicProductQueryDatabaseTests
         var response = await query.GetProductDetailAsync("u-utp-cat-5e");
 
         Assert.Equal("u-utp-cat-5e", response.Slug);
-        Assert.Equal("/catalog/products/u-utp-cat-5e", response.Seo.CanonicalPath);
+        Assert.Equal("/products/u-utp-cat-5e", response.Seo.CanonicalPath);
         Assert.Equal("/storage/products/cable.jpg", Assert.Single(response.Images).Url);
         Assert.Equal("conductor-material", Assert.Single(response.Attributes).Code);
         Assert.Equal("u-utp-cat-5e", response.Breadcrumbs[^1].Slug);

@@ -374,7 +374,7 @@ PublicImageDto
   "seo": {
     "title": "Кабель U/UTP Cat 5e 4 пары CU 305 м",
     "description": "Купить кабель U/UTP Cat 5e для СКС.",
-    "canonicalPath": "/catalog/products/u-utp-cat-5e-cu-305m"
+    "canonicalPath": "/products/u-utp-cat-5e-cu-305m"
   },
   "breadcrumbs": [
     {
@@ -492,6 +492,7 @@ PublicFilterOptionDto
 - `slug` категорий и товаров является публичным URL-ключом.
 - `seo.title`, `seo.description`, `h1` возвращаются в detail endpoints, чтобы frontend мог строить индексируемые страницы.
 - `canonicalPath` возвращается как относительный публичный путь сайта без домена.
+- Для карточек товаров `canonicalPath` соответствует публичному frontend route `/products/{slug}`; API endpoint при этом остается `/api/public/catalog/products/{slug}`.
 - В листинге товаров не возвращаются SEO-поля каждого товара, чтобы не раздувать ответ.
 - Публичный API не создает индексируемые страницы для произвольных сочетаний фильтров. Индексация фильтров управляется отдельным контуром посадочных страниц.
 

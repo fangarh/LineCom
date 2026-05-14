@@ -104,7 +104,7 @@ public sealed class PublicProductsEndpointTests
             new PublicSeoDto(
                 "Кабель U/UTP Cat 5e 4 пары CU 305 м",
                 "Купить кабель U/UTP Cat 5e для СКС.",
-                "/catalog/products/u-utp-cat-5e-cu-305m"),
+                "/products/u-utp-cat-5e-cu-305m"),
             [
                 new PublicBreadcrumbDto("Витая пара", "vitaya-para"),
                 new PublicBreadcrumbDto("Кабель U/UTP Cat 5e 4 пары CU 305 м", "u-utp-cat-5e-cu-305m")
@@ -131,7 +131,7 @@ public sealed class PublicProductsEndpointTests
         Assert.Equal("linecom", body.Brand?.Slug);
         Assert.Equal("in_stock", body.Availability.Code);
         Assert.Equal("coil", body.SaleUnit.Code);
-        Assert.Equal("/catalog/products/u-utp-cat-5e-cu-305m", body.Seo.CanonicalPath);
+        Assert.Equal("/products/u-utp-cat-5e-cu-305m", body.Seo.CanonicalPath);
         Assert.Equal("vitaya-para", body.Breadcrumbs[0].Slug);
         Assert.Equal("u-utp-cat-5e-cu-305m", body.Breadcrumbs[1].Slug);
     }

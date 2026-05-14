@@ -34,7 +34,7 @@ public sealed class PublicProductDetailResponseBuilderTests
         Assert.Equal("vitaya-para", detail.Category.Slug);
         Assert.Equal("В наличии", detail.Availability.Label);
         Assert.Equal("бухта", detail.SaleUnit.Label);
-        Assert.Equal("/catalog/products/u-utp-cat-5e-cu-305m", detail.Seo.CanonicalPath);
+        Assert.Equal("/products/u-utp-cat-5e-cu-305m", detail.Seo.CanonicalPath);
         Assert.Equal("/storage/products/u-utp-cat-5e-cu-305m.jpg", Assert.Single(detail.Images).Url);
         Assert.Equal(["vitaya-para", "u-utp-cat-5e-cu-305m"], detail.Breadcrumbs.Select(item => item.Slug).ToArray());
 

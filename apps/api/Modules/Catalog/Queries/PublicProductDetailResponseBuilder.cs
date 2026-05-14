@@ -45,7 +45,7 @@ internal static class PublicProductDetailResponseBuilder
             new PublicSeoDto(
                 product.SeoTitle,
                 product.SeoDescription,
-                $"/catalog/products/{product.Slug}"),
+                $"/products/{product.Slug}"),
             breadcrumbs);
     }
 
