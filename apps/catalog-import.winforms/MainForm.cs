@@ -236,14 +236,16 @@ public sealed class MainForm : Form
             _currentPlanSnapshot,
             _reportPath.Text,
             mode,
-            string.IsNullOrWhiteSpace(_connectionString.Text) ? null : "configured");
+            string.IsNullOrWhiteSpace(_connectionString.Text) ? null : "configured",
+            applyResult: null);
     }
 
     private void WriteReport(
         CatalogImportPlanSnapshot snapshot,
         string reportPath,
         string mode,
-        string? targetDatabase)
+        string? targetDatabase,
+        CatalogImportApplyResult? applyResult)
     {
         try
         {
@@ -254,7 +256,8 @@ public sealed class MainForm : Form
                     snapshot.SourcePath,
                     snapshot.ManifestPath,
                     mode,
-                    targetDatabase));
+                    targetDatabase,
+                    applyResult));
 
             Log($"Reports written: {result.MarkdownPath}");
         }
@@ -320,7 +323,9 @@ public sealed class MainForm : Form
                     + $"product images {result.ResetImpact.ProductImages}, stored files {result.ResetImpact.StoredProductImageFiles}.");
             }
 
-            WriteReport(snapshot, reportPath, resetCatalog ? "reset-apply" : "upsert-apply", targetDatabase);
+            LogStorageLifecycle(result);
+
+            WriteReport(snapshot, reportPath, resetCatalog ? "reset-apply" : "upsert-apply", targetDatabase, result);
         }
         catch (Exception exception)
         {
@@ -374,6 +379,26 @@ public sealed class MainForm : Form
         {
             var row = warning.SourceRow is null ? "n/a" : warning.SourceRow.Value.ToString();
             Log($"Warning {warning.Code} at row {row}: {warning.Message}");
+        }
+    }
+
+    private void LogStorageLifecycle(CatalogImportApplyResult result)
+    {
+        if (result.Storage is not null)
+        {
+            Log(
+                $"Storage run {result.Storage.RunId}: staged {result.Storage.StagedFiles}, "
+                + $"promoted {result.Storage.PromotedFiles}, promotion failures {result.Storage.PromotionFailures.Count}, "
+                + $"cleanup failures {result.Storage.CleanupFailures.Count}, old staging leftovers {result.Storage.OldStagingLeftovers.Count}.");
+        }
+
+        if (result.ResetStorageCleanup is not null)
+        {
+            Log(
+                "Reset storage cleanup: "
+                + $"selected {result.ResetStorageCleanup.SelectedFiles}, deleted {result.ResetStorageCleanup.DeletedFiles}, "
+                + $"failures {result.ResetStorageCleanup.Failures.Count}, "
+                + $"untracked leftovers {result.ResetStorageCleanup.UntrackedLeftovers.Count}.");
         }
     }
 

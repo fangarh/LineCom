@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
+using LineCom.CatalogImport.Core.Database;
 using LineCom.CatalogImport.Core.Planning;
 
 namespace LineCom.CatalogImport.Core.Reporting;
@@ -9,7 +10,8 @@ public sealed record CatalogImportReportContext(
     string SourcePath,
     string? ImageManifestPath,
     string Mode,
-    string? TargetDatabase);
+    string? TargetDatabase,
+    CatalogImportApplyResult? ApplyResult = null);
 
 public sealed record CatalogImportReportResult(string JsonPath, string MarkdownPath);
 
@@ -98,6 +100,7 @@ public static class CatalogImportReportWriter
         builder.AppendLine();
 
         AppendImageAssignments(builder, report.Products);
+        AppendStorageLifecycle(builder, report.Context.ApplyResult);
         AppendWarnings(builder, report.Warnings);
 
         return builder.ToString();
@@ -125,6 +128,97 @@ public static class CatalogImportReportWriter
                 string.Create(
                     CultureInfo.InvariantCulture,
                     $"| {product.SourceRow} | {FormatTableCell(product.ExternalId)} | {FormatTableCell(product.Name)} | {FormatTableCell(image.AssetKey)} | {FormatTableCell(image.File)} | {FormatTableCell(image.RightsStatus)} |"));
+        }
+
+        builder.AppendLine();
+    }
+
+    private static void AppendStorageLifecycle(StringBuilder builder, CatalogImportApplyResult? applyResult)
+    {
+        if (applyResult is null)
+        {
+            return;
+        }
+
+        builder.AppendLine("## Storage Lifecycle");
+        builder.AppendLine();
+
+        if (applyResult.Storage is not null)
+        {
+            builder.AppendLine("| Field | Value |");
+            builder.AppendLine("| --- | ---: |");
+            builder.AppendLine($"| Run ID | {FormatTableCell(applyResult.Storage.RunId)} |");
+            builder.AppendLine($"| Staged files | {applyResult.Storage.StagedFiles} |");
+            builder.AppendLine($"| Promoted files | {applyResult.Storage.PromotedFiles} |");
+            builder.AppendLine($"| Promotion failures | {applyResult.Storage.PromotionFailures.Count} |");
+            builder.AppendLine($"| Cleanup failures | {applyResult.Storage.CleanupFailures.Count} |");
+            builder.AppendLine($"| Old staging leftovers | {applyResult.Storage.OldStagingLeftovers.Count} |");
+            builder.AppendLine();
+
+            AppendFailures(builder, "Promotion Failures", applyResult.Storage.PromotionFailures);
+            AppendFailures(builder, "Apply Cleanup Failures", applyResult.Storage.CleanupFailures);
+            AppendKeys(builder, "Old Staging Leftovers", applyResult.Storage.OldStagingLeftovers);
+        }
+
+        if (applyResult.ResetStorageCleanup is not null)
+        {
+            builder.AppendLine("### Reset Storage Cleanup");
+            builder.AppendLine();
+            builder.AppendLine("| Field | Value |");
+            builder.AppendLine("| --- | ---: |");
+            builder.AppendLine($"| Selected files | {applyResult.ResetStorageCleanup.SelectedFiles} |");
+            builder.AppendLine($"| Deleted files | {applyResult.ResetStorageCleanup.DeletedFiles} |");
+            builder.AppendLine($"| Delete failures | {applyResult.ResetStorageCleanup.Failures.Count} |");
+            builder.AppendLine($"| Untracked leftovers | {applyResult.ResetStorageCleanup.UntrackedLeftovers.Count} |");
+            builder.AppendLine();
+
+            AppendFailures(builder, "Reset Delete Failures", applyResult.ResetStorageCleanup.Failures);
+            AppendKeys(builder, "Reset Untracked Leftovers", applyResult.ResetStorageCleanup.UntrackedLeftovers);
+        }
+    }
+
+    private static void AppendFailures(
+        StringBuilder builder,
+        string title,
+        IReadOnlyList<CatalogImportStorageOperationFailure> failures)
+    {
+        builder.AppendLine($"### {title}");
+        builder.AppendLine();
+
+        if (failures.Count == 0)
+        {
+            builder.AppendLine("None.");
+            builder.AppendLine();
+            return;
+        }
+
+        builder.AppendLine("| Key | Error |");
+        builder.AppendLine("| --- | --- |");
+        foreach (var failure in failures)
+        {
+            builder.AppendLine($"| {FormatTableCell(failure.Key)} | {FormatTableCell(failure.Error)} |");
+        }
+
+        builder.AppendLine();
+    }
+
+    private static void AppendKeys(StringBuilder builder, string title, IReadOnlyList<string> keys)
+    {
+        builder.AppendLine($"### {title}");
+        builder.AppendLine();
+
+        if (keys.Count == 0)
+        {
+            builder.AppendLine("None.");
+            builder.AppendLine();
+            return;
+        }
+
+        builder.AppendLine("| Key |");
+        builder.AppendLine("| --- |");
+        foreach (var key in keys)
+        {
+            builder.AppendLine($"| {FormatTableCell(key)} |");
         }
 
         builder.AppendLine();
