@@ -8,24 +8,20 @@ public static class LocalStorageStaticFilesExtensions
         this WebApplication app,
         IConfiguration configuration)
     {
-        var rootPath = configuration["Storage:RootPath"];
-        if (string.IsNullOrWhiteSpace(rootPath))
+        var rootPath = LocalStoragePathPolicy.ResolveRootPath(
+            configuration["Storage:RootPath"],
+            app.Environment.ContentRootPath);
+        foreach (var publicPrefix in LocalStoragePathPolicy.PublicPrefixes)
         {
-            rootPath = Path.Combine(app.Environment.ContentRootPath, "storage");
+            var physicalDirectory = Path.Combine(rootPath, publicPrefix.Directory);
+            Directory.CreateDirectory(physicalDirectory);
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(physicalDirectory),
+                RequestPath = publicPrefix.RequestPath,
+            });
         }
-
-        if (!Path.IsPathRooted(rootPath))
-        {
-            rootPath = Path.Combine(app.Environment.ContentRootPath, rootPath);
-        }
-
-        Directory.CreateDirectory(rootPath);
-
-        app.UseStaticFiles(new StaticFileOptions
-        {
-            FileProvider = new PhysicalFileProvider(rootPath),
-            RequestPath = "/storage",
-        });
 
         return app;
     }
