@@ -32,9 +32,9 @@
 
 ### SEO/GEO
 
-- [ ] **SEO-01**: Public catalog, product, robots and sitemap routes generate production-safe canonical URLs from validated site origin.
-- [ ] **SEO-02**: Sitemap generation is protected against unbounded per-request product enumeration or has a clear segmented/cached strategy.
-- [ ] **SEO-03**: SEO/GEO route tests cover metadata, canonical URLs, robots and sitemap behavior for representative catalog/product pages.
+- [x] **SEO-01**: Public catalog, product, robots and sitemap routes generate production-safe canonical URLs from validated site origin.
+- [x] **SEO-02**: Sitemap generation is protected against unbounded per-request product enumeration or has a clear segmented/cached strategy.
+- [x] **SEO-03**: SEO/GEO route tests cover metadata, canonical URLs, robots and sitemap behavior for representative catalog/product pages.
 
 ### Maintainability
 
@@ -86,9 +86,9 @@
 | STOR-03 | Phase 2 | Complete |
 | STOR-04 | Phase 3 | Complete |
 | STOR-05 | Phase 6 | Pending |
-| SEO-01 | Phase 4 | Pending |
-| SEO-02 | Phase 4 | Pending |
-| SEO-03 | Phase 4 | Pending |
+| SEO-01 | Phase 4 | Complete |
+| SEO-02 | Phase 4 | Complete |
+| SEO-03 | Phase 4 | Complete |
 | MAIN-01 | Phase 5 | Pending |
 | MAIN-02 | Phase 5 | Pending |
 | MAIN-03 | Phase 5 | Pending |
