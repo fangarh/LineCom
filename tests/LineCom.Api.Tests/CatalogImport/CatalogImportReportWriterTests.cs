@@ -1,4 +1,5 @@
 using System.Text.Json;
+using LineCom.CatalogImport.Core.Database;
 using LineCom.CatalogImport.Core.Planning;
 using LineCom.CatalogImport.Core.Reporting;
 
@@ -161,6 +162,59 @@ public sealed class CatalogImportReportWriterTests
         Assert.Contains("| Target database | not specified |", markdown);
         Assert.Contains("No image assignments.", markdown);
         Assert.Contains("No warnings.", markdown);
+    }
+
+    [Fact]
+    public void WriteReports_IncludesStorageLifecycleOutcomesWithoutAbsoluteStoragePaths()
+    {
+        var outputDirectory = Path.Combine(Path.GetTempPath(), "linecom-catalog-import-report-tests", Guid.NewGuid().ToString("N"));
+        var storageRootPath = Path.Combine(Path.GetTempPath(), "linecom-storage-root", Guid.NewGuid().ToString("N"));
+        var applyResult = new CatalogImportApplyResult(
+            CategoriesProcessed: 2,
+            ProductsProcessed: 3,
+            ImagesProcessed: 1,
+            Storage: new CatalogImportApplyStorageResult(
+                RunId: "run-1",
+                StagedFiles: 2,
+                PromotedFiles: 1,
+                PromotionFailures: [new CatalogImportStorageOperationFailure("storage/products/catalog-import/a.png", "locked")],
+                CleanupFailures: [new CatalogImportStorageOperationFailure(".staging/catalog-import/run-1/a.png", "cleanup failed")],
+                OldStagingLeftovers: [".staging/catalog-import/old-run"]),
+            ResetStorageCleanup: new CatalogImportResetStorageCleanupResult(
+                SelectedFiles: 3,
+                DeletedFiles: 2,
+                Failures: [new CatalogImportStorageOperationFailure("storage/products/catalog-import/b.png", "locked")],
+                UntrackedLeftovers: ["storage/products/catalog-import/untracked.png"]));
+        var context = new CatalogImportReportContext(
+            SourcePath: "source.xlsx",
+            ImageManifestPath: "images.json",
+            Mode: "reset-apply",
+            TargetDatabase: "configured",
+            ApplyResult: applyResult);
+
+        var result = CatalogImportReportWriter.WriteReports(CreatePlan(), outputDirectory, context);
+
+        using var document = JsonDocument.Parse(File.ReadAllText(result.JsonPath));
+        var root = document.RootElement;
+        var storage = root.GetProperty("context").GetProperty("applyResult").GetProperty("storage");
+        Assert.Equal("run-1", storage.GetProperty("runId").GetString());
+        Assert.Equal(2, storage.GetProperty("stagedFiles").GetInt32());
+        Assert.Equal(1, storage.GetProperty("promotedFiles").GetInt32());
+        Assert.Equal("storage/products/catalog-import/a.png", storage.GetProperty("promotionFailures")[0].GetProperty("key").GetString());
+
+        var markdown = File.ReadAllText(result.MarkdownPath);
+        Assert.Contains("## Storage Lifecycle", markdown);
+        Assert.Contains("| Run ID | run-1 |", markdown);
+        Assert.Contains("| Staged files | 2 |", markdown);
+        Assert.Contains("| Promoted files | 1 |", markdown);
+        Assert.Contains("| storage/products/catalog-import/a.png | locked |", markdown);
+        Assert.Contains("| .staging/catalog-import/old-run |", markdown);
+        Assert.Contains("### Reset Storage Cleanup", markdown);
+        Assert.Contains("| Selected files | 3 |", markdown);
+        Assert.Contains("| Deleted files | 2 |", markdown);
+        Assert.Contains("| storage/products/catalog-import/untracked.png |", markdown);
+        Assert.DoesNotContain(storageRootPath, markdown);
+        Assert.DoesNotContain(storageRootPath, File.ReadAllText(result.JsonPath));
     }
 
     private static CatalogImportReportContext CreateContext()

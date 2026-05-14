@@ -76,20 +76,43 @@ public sealed class CatalogImportDatabaseSqlTests
     }
 
     [Fact]
-    public void ApplyFlow_CopiesImagesOnlyAfterResetSafetyChecks()
+    public void ApplyFlow_StagesBeforeDbMutationAndPromotesAfterCommit()
     {
         var source = ReadCatalogImportDatabaseSource();
         var prepareImageImports = ExtractMethodBody(source, "PrepareImageImports");
         var applyAsync = ExtractMethodBody(source, "ApplyAsync");
 
         Assert.DoesNotContain("CopyProductImageToStorage", prepareImageImports);
-        Assert.Contains("CopyPreparedImagesToStorage", applyAsync);
+        Assert.Contains("EnsureNoStoredFileConflictsAsync", applyAsync);
+        Assert.Contains("StageProductImages", applyAsync);
+        Assert.Contains("transaction.CommitAsync", applyAsync);
+        Assert.Contains("PromoteStagedImages", applyAsync);
+        Assert.DoesNotContain("CopyProductImageToStorage", applyAsync);
         Assert.True(
-            applyAsync.IndexOf("ResetCatalogAsync", StringComparison.Ordinal)
-                < applyAsync.IndexOf("CopyPreparedImagesToStorage", StringComparison.Ordinal));
+            applyAsync.IndexOf("EnsureNoStoredFileConflictsAsync", StringComparison.Ordinal)
+                < applyAsync.IndexOf("StageProductImages", StringComparison.Ordinal));
         Assert.True(
-            applyAsync.IndexOf("CopyPreparedImagesToStorage", StringComparison.Ordinal)
+            applyAsync.IndexOf("StageProductImages", StringComparison.Ordinal)
+                < applyAsync.IndexOf("BeginTransactionAsync", StringComparison.Ordinal));
+        Assert.True(
+            applyAsync.IndexOf("StageProductImages", StringComparison.Ordinal)
                 < applyAsync.IndexOf("CatalogImportDatabaseSql.InsertStoredFile", StringComparison.Ordinal));
+        Assert.True(
+            applyAsync.IndexOf("transaction.CommitAsync", StringComparison.Ordinal)
+                < applyAsync.IndexOf("PromoteStagedImages", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ApplyFlow_CleansCurrentRunOnlyBeforeDatabaseCommitFailures()
+    {
+        var applyAsync = ExtractMethodBody(ReadCatalogImportDatabaseSource(), "ApplyAsync");
+
+        Assert.Contains("committed = true", applyAsync);
+        Assert.Contains("CleanupCurrentRun(storageRun.Manifest", applyAsync);
+        Assert.True(
+            applyAsync.IndexOf("if (!committed)", StringComparison.Ordinal)
+                < applyAsync.LastIndexOf("CleanupCurrentRun(storageRun.Manifest", StringComparison.Ordinal));
+        Assert.DoesNotContain("DELETE FROM storage", applyAsync, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -121,6 +144,7 @@ public sealed class CatalogImportDatabaseSqlTests
     {
         Assert.Equal("storage/products/catalog-import/", CatalogImportDatabaseStorage.ProductImageStorageKeyPrefix);
         Assert.Contains("storage_key LIKE 'storage/products/catalog-import/%'", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.Contains("storage_key LIKE 'storage/products/catalog-import/%'", CatalogImportDatabaseSql.SelectImportManagedStoredFileKeys);
         Assert.DoesNotContain("catalog-import/products/%", CatalogImportDatabaseSql.ResetCatalog);
     }
 
@@ -166,6 +190,9 @@ public sealed class CatalogImportDatabaseSqlTests
         Assert.Contains("DELETE FROM categories", CatalogImportDatabaseSql.ResetCatalog);
         Assert.Contains("purpose = 'product_image'", CatalogImportDatabaseSql.ResetCatalog);
         Assert.Contains("storage_key LIKE 'storage/products/catalog-import/%'", CatalogImportDatabaseSql.ResetCatalog);
+        Assert.Contains("SELECT storage_key", CatalogImportDatabaseSql.SelectImportManagedStoredFileKeys);
+        Assert.Contains("purpose = 'product_image'", CatalogImportDatabaseSql.SelectImportManagedStoredFileKeys);
+        Assert.Contains("storage_key LIKE 'storage/products/catalog-import/%'", CatalogImportDatabaseSql.SelectImportManagedStoredFileKeys);
         Assert.DoesNotContain("DELETE FROM request_items", CatalogImportDatabaseSql.ResetCatalog, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("DELETE FROM requests", CatalogImportDatabaseSql.ResetCatalog, StringComparison.OrdinalIgnoreCase);
     }
@@ -213,6 +240,34 @@ public sealed class CatalogImportDatabaseSqlTests
 
         Assert.Null(noResetResult.ResetImpact);
         Assert.Same(impact, resetResult.ResetImpact);
+    }
+
+    [Fact]
+    public void ApplyResult_CanCarryStorageLifecycleOutcomesSeparatelyFromResetImpact()
+    {
+        var storage = new CatalogImportApplyStorageResult(
+            RunId: "run-1",
+            StagedFiles: 2,
+            PromotedFiles: 1,
+            PromotionFailures: [new CatalogImportStorageOperationFailure("storage/products/catalog-import/a.png", "locked")],
+            CleanupFailures: [],
+            OldStagingLeftovers: [".staging/catalog-import/old"]);
+        var resetCleanup = new CatalogImportResetStorageCleanupResult(
+            SelectedFiles: 3,
+            DeletedFiles: 2,
+            Failures: [new CatalogImportStorageOperationFailure("storage/products/catalog-import/b.png", "locked")],
+            UntrackedLeftovers: ["storage/products/catalog-import/untracked.png"]);
+
+        var result = new CatalogImportApplyResult(
+            CategoriesProcessed: 1,
+            ProductsProcessed: 2,
+            ImagesProcessed: 3,
+            Storage: storage,
+            ResetStorageCleanup: resetCleanup);
+
+        Assert.Null(result.ResetImpact);
+        Assert.Same(storage, result.Storage);
+        Assert.Same(resetCleanup, result.ResetStorageCleanup);
     }
 
     [Fact]
