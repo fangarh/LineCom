@@ -24,9 +24,9 @@
 
 ### Storage Lifecycle
 
-- [ ] **STOR-01**: Public static storage serving is limited to intended public catalog image paths or enforced through an access-checking controller.
-- [ ] **STOR-02**: Non-public file purposes such as import source, export result and temp artifacts cannot be fetched anonymously through `/storage`.
-- [ ] **STOR-03**: Storage diagnostics report missing files, untracked files, stale deleted/orphaned rows and database/file drift.
+- [x] **STOR-01**: Public static storage serving is limited to intended public catalog image paths or enforced through an access-checking controller.
+- [x] **STOR-02**: Non-public file purposes such as import source, export result and temp artifacts cannot be fetched anonymously through `/storage`.
+- [x] **STOR-03**: Storage diagnostics report missing files, untracked files, stale deleted/orphaned rows and database/file drift.
 - [ ] **STOR-04**: Catalog import file writes use a documented staging/commit/cleanup model or equivalent compensation path.
 - [ ] **STOR-05**: Backup and restore expectations for Local FileStorage are documented and included in release verification.
 
@@ -81,9 +81,9 @@
 | PROD-03 | Phase 1 | Complete |
 | API-01 | Phase 1 | Complete |
 | API-02 | Phase 1 | Complete |
-| STOR-01 | Phase 2 | Pending |
-| STOR-02 | Phase 2 | Pending |
-| STOR-03 | Phase 2 | Pending |
+| STOR-01 | Phase 2 | Complete |
+| STOR-02 | Phase 2 | Complete |
+| STOR-03 | Phase 2 | Complete |
 | STOR-04 | Phase 3 | Pending |
 | STOR-05 | Phase 6 | Pending |
 | SEO-01 | Phase 4 | Pending |

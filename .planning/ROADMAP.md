@@ -49,9 +49,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Public/private storage serving policy.
-- [ ] 02-02: Storage integrity diagnostic model and report.
-- [ ] 02-03: Storage boundary and diagnostic tests.
+- [x] 02-01: Public/private storage serving policy.
+- [x] 02-02: Storage integrity diagnostic model and report.
+- [x] 02-03: Storage boundary and diagnostic tests.
 
 ### Phase 3: Import Storage Consistency
 **Goal**: Catalog import no longer leaves unmanaged DB/file inconsistencies after apply/reset failures.
