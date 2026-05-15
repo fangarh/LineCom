@@ -48,7 +48,7 @@ Plans:
 
 ### Phase 8: Quick Product Category Change
 
-**Goal**: Admin can safely change a single product category from the product list without opening the full product editor.
+**Goal**: As a catalog admin working in the product list, I want to change one product's category without opening the full editor, so that small catalog cleanup tasks are faster and less disruptive.
 **Status:** Implementation complete - ready for `$gsd-verify-work 8`.
 **Mode:** mvp
 **Depends on**: Phase 7
