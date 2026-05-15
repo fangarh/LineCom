@@ -155,6 +155,12 @@ async function openParentPicker(user: ReturnType<typeof userEvent.setup>, trigge
   return screen.getByRole("listbox", { name: pickerListboxName(triggerName) });
 }
 
+async function switchCategoryEditorTab(user: ReturnType<typeof userEvent.setup>, tabName: string) {
+  const dialog = screen.getByRole("dialog");
+  await user.click(within(dialog).getByRole("tab", { name: tabName }));
+  return within(dialog).getByRole("tabpanel", { name: tabName });
+}
+
 function pickerListboxName(triggerName: string) {
   return triggerName === "Выбрать нового родителя" ? "Новый родитель" : "Родительская категория";
 }
@@ -230,6 +236,7 @@ describe("AdminCategoryManager", () => {
     await user.click(getCategoryTreeItem(/Силовые кабели/));
     const editDialog = await screen.findByRole("dialog", { name: /Редактирование категории/ });
     expect(within(editDialog).getByLabelText("Название")).toHaveValue("Силовые кабели");
+    await switchCategoryEditorTab(user, "Позиция");
     expect(within(editDialog).getByLabelText("Новый порядок")).toHaveValue(20);
 
     await user.click(within(editDialog).getByRole("button", { name: "Закрыть редактор категории" }));
@@ -248,6 +255,7 @@ describe("AdminCategoryManager", () => {
 
     await user.click(getCategoryTreeItem(/Силовые кабели/));
     const dialog = await screen.findByRole("dialog", { name: /Редактирование категории/ });
+    await switchCategoryEditorTab(user, "Позиция");
     await user.clear(within(dialog).getByLabelText("Новый порядок"));
     await user.type(within(dialog).getByLabelText("Новый порядок"), "25");
 
@@ -273,6 +281,7 @@ describe("AdminCategoryManager", () => {
 
     await user.click(getCategoryTreeItem(/Силовые кабели/));
     const dialog = await screen.findByRole("dialog", { name: /Редактирование категории/ });
+    await switchCategoryEditorTab(user, "Действия");
     await user.click(within(dialog).getByRole("button", { name: "Сохранить" }));
 
     expect(within(dialog).getByRole("button", { name: "Закрыть редактор категории" })).toBeDisabled();
@@ -297,6 +306,7 @@ describe("AdminCategoryManager", () => {
 
     await user.click(getCategoryTreeItem(/Силовые кабели/));
     const dialog = await screen.findByRole("dialog", { name: /Редактирование категории/ });
+    await switchCategoryEditorTab(user, "Действия");
     await user.click(within(dialog).getByRole("button", { name: "Удалить" }));
 
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
@@ -395,6 +405,7 @@ describe("AdminCategoryManager", () => {
     await findCategoryTreeItem(/Разъемы/);
     await user.click(getCategoryTreeItem(/Силовые кабели/));
     await screen.findByDisplayValue("Силовые кабели");
+    await switchCategoryEditorTab(user, "Действия");
     await user.click(screen.getByRole("button", { name: "Сохранить" }));
     await user.selectOptions(screen.getByLabelText("Активность"), "false");
 
@@ -456,6 +467,7 @@ describe("AdminCategoryManager", () => {
     expect(within(parentListbox).getByRole("option", { name: "Кабели" })).toBeInTheDocument();
     expect(within(parentListbox).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Выбрать родителя" }));
+    await switchCategoryEditorTab(user, "Позиция");
     const moveListbox = await openParentPicker(user, "Выбрать нового родителя");
     expect(within(moveListbox).getByRole("option", { name: "Кабели" })).toBeInTheDocument();
     expect(within(moveListbox).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
@@ -498,11 +510,12 @@ describe("AdminCategoryManager", () => {
     const parentListbox = await openParentPicker(user, "Выбрать родителя");
     expect(within(parentListbox).getByRole("option", { name: "Категория со второй страницы" })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Выбрать родителя" }));
+    await switchCategoryEditorTab(user, "Позиция");
     const moveListbox = await openParentPicker(user, "Выбрать нового родителя");
     expect(within(moveListbox).getByRole("option", { name: "Категория со второй страницы" })).toBeInTheDocument();
   });
 
-  it("shows category modal sections for basic fields, SEO, position and actions", async () => {
+  it("shows category modal sections as tabs for basic fields, SEO, position and actions", async () => {
     const user = userEvent.setup();
     adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(childDetail);
     await renderManager();
@@ -510,10 +523,35 @@ describe("AdminCategoryManager", () => {
     await user.click(getCategoryTreeItem(/Силовые кабели/));
     const dialog = await screen.findByRole("dialog", { name: /Редактирование категории/ });
 
-    expect(within(dialog).getByRole("heading", { name: "Основное" })).toBeInTheDocument();
-    expect(within(dialog).getByRole("heading", { name: "SEO и меню" })).toBeInTheDocument();
-    expect(within(dialog).getByRole("heading", { name: "Позиция" })).toBeInTheDocument();
-    expect(within(dialog).getByRole("heading", { name: "Действия" })).toBeInTheDocument();
+    const tablist = within(dialog).getByRole("tablist", { name: "Разделы редактора категории" });
+    const mainTab = within(tablist).getByRole("tab", { name: "Основное" });
+    const seoTab = within(tablist).getByRole("tab", { name: "SEO и меню" });
+    const positionTab = within(tablist).getByRole("tab", { name: "Позиция" });
+    const actionsTab = within(tablist).getByRole("tab", { name: "Действия" });
+
+    expect(mainTab).toHaveAttribute("aria-selected", "true");
+    expect(within(dialog).getByRole("tabpanel", { name: "Основное" })).toContainElement(
+      within(dialog).getByLabelText("Название"),
+    );
+
+    await user.click(seoTab);
+    expect(seoTab).toHaveAttribute("aria-selected", "true");
+    const seoPanel = within(dialog).getByRole("tabpanel", { name: "SEO и меню" });
+    expect(within(seoPanel).getByLabelText("SEO title")).toBeInTheDocument();
+    expect(within(seoPanel).getByLabelText("SEO description")).toBeInTheDocument();
+    expect(positionTab).toHaveAttribute("aria-selected", "false");
+
+    await user.click(positionTab);
+    const positionPanel = within(dialog).getByRole("tabpanel", { name: "Позиция" });
+    expect(within(positionPanel).getByRole("button", { name: "Выбрать нового родителя" })).toBeInTheDocument();
+    expect(within(positionPanel).getByRole("button", { name: "Переместить" })).toBeInTheDocument();
+    expect(within(positionPanel).getByLabelText("Новый порядок")).toBeInTheDocument();
+    expect(within(positionPanel).getByRole("button", { name: "Обновить порядок" })).toBeInTheDocument();
+
+    await user.click(actionsTab);
+    const actionsPanel = within(dialog).getByRole("tabpanel", { name: "Действия" });
+    expect(within(actionsPanel).getByRole("button", { name: "Сохранить" })).toBeInTheDocument();
+    expect(within(actionsPanel).getByRole("button", { name: "Удалить" })).toBeInTheDocument();
   });
 
   it("keeps unfiltered parent options available while category rows are filtered", async () => {
@@ -541,6 +579,7 @@ describe("AdminCategoryManager", () => {
     expect(within(parentListbox).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
     expect(within(parentListbox).queryByRole("option", { name: "Силовые кабели" })).not.toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Выбрать родителя" }));
+    await switchCategoryEditorTab(user, "Позиция");
     const moveListbox = await openParentPicker(user, "Выбрать нового родителя");
     expect(within(moveListbox).getByRole("option", { name: "Кабели" })).toBeInTheDocument();
     expect(within(moveListbox).getByRole("option", { name: "Разъемы" })).toBeInTheDocument();
@@ -557,6 +596,7 @@ describe("AdminCategoryManager", () => {
     expect(await screen.findByDisplayValue("Силовые кабели")).toBeInTheDocument();
     expect(screen.getByDisplayValue("silovye-kabeli")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Описание силовых кабелей")).toBeInTheDocument();
+    await switchCategoryEditorTab(user, "SEO и меню");
     expect(screen.getByDisplayValue("Силовые кабели SEO")).toBeInTheDocument();
   });
 
@@ -569,6 +609,7 @@ describe("AdminCategoryManager", () => {
     await user.type(screen.getByLabelText("Slug"), "mufty");
     await chooseParentOption(user, "Выбрать родителя", "Кабели");
     await user.type(screen.getByLabelText("Описание"), "Описание муфт");
+    await switchCategoryEditorTab(user, "SEO и меню");
     await user.type(screen.getByLabelText("H1"), "Муфты для кабеля");
     await user.type(screen.getByLabelText("SEO title"), "Муфты SEO");
     await user.type(screen.getByLabelText("SEO description"), "SEO описание муфт");
@@ -576,6 +617,7 @@ describe("AdminCategoryManager", () => {
     await user.type(screen.getByLabelText("Сортировка"), "30");
     await user.click(screen.getByLabelText("Активна"));
     await user.click(screen.getByLabelText("Показывать в меню"));
+    await switchCategoryEditorTab(user, "Действия");
     await user.click(screen.getByRole("button", { name: "Создать" }));
 
     expect(adminCatalogApiMock.createAdminCategory).toHaveBeenCalledWith(
@@ -630,7 +672,9 @@ describe("AdminCategoryManager", () => {
     await user.clear(screen.getByLabelText("Название"));
     await user.type(screen.getByLabelText("Название"), "Кабели силовые обновленные");
     await chooseParentOption(user, "Выбрать родителя", "Без родителя");
+    await switchCategoryEditorTab(user, "SEO и меню");
     await user.click(screen.getByLabelText("Активна"));
+    await switchCategoryEditorTab(user, "Действия");
     await user.click(screen.getByRole("button", { name: "Сохранить" }));
 
     expect(adminCatalogApiMock.updateAdminCategory).toHaveBeenCalledWith(
@@ -658,6 +702,7 @@ describe("AdminCategoryManager", () => {
 
     await user.click(getCategoryTreeItem(/Силовые кабели/));
     await screen.findByDisplayValue("Силовые кабели");
+    await switchCategoryEditorTab(user, "Действия");
     await user.click(screen.getByRole("button", { name: "Удалить" }));
 
     expect(adminCatalogApiMock.deleteAdminCategory).toHaveBeenCalledWith("cat-child", "csrf-token");
@@ -673,6 +718,7 @@ describe("AdminCategoryManager", () => {
 
     await user.click(getCategoryTreeItem(/Силовые кабели/));
     await screen.findByDisplayValue("Силовые кабели");
+    await switchCategoryEditorTab(user, "Позиция");
     await chooseParentOption(user, "Выбрать нового родителя", "Без родителя");
     await user.click(screen.getByRole("button", { name: "Переместить" }));
     await user.clear(screen.getByLabelText("Новый порядок"));
@@ -699,6 +745,7 @@ describe("AdminCategoryManager", () => {
     await user.click(screen.getByRole("button", { name: "Новая категория" }));
     await user.type(screen.getByLabelText("Название"), "Кабели");
     await user.type(screen.getByLabelText("Slug"), "kabeli");
+    await switchCategoryEditorTab(user, "Действия");
     await user.click(screen.getByRole("button", { name: "Создать" }));
 
     const alerts = await screen.findAllByRole("alert");

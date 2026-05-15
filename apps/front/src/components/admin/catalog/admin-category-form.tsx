@@ -16,6 +16,7 @@ export type CategoryFormState = {
 };
 
 type AdminCategoryFormProps = {
+  activePanel?: AdminCategoryFormPanel | "all";
   form: CategoryFormState;
   selectedCategory: AdminCategoryDetail | null;
   isLoadingDetail: boolean;
@@ -31,7 +32,10 @@ type AdminCategoryFormProps = {
   showHeader?: boolean;
 };
 
+export type AdminCategoryFormPanel = "main" | "seo" | "actions";
+
 export function AdminCategoryForm({
+  activePanel = "all",
   form,
   selectedCategory,
   isLoadingDetail,
@@ -46,6 +50,8 @@ export function AdminCategoryForm({
   onDelete,
   showHeader = true,
 }: AdminCategoryFormProps) {
+  const isTabbed = activePanel !== "all";
+
   function updateForm(patch: Partial<CategoryFormState>) {
     onFormChange({ ...form, ...patch });
   }
@@ -64,7 +70,13 @@ export function AdminCategoryForm({
       ) : null}
 
       <form className="admin-category-form admin-category-editor__form" onSubmit={onSubmit}>
-        <section className="admin-category-editor__section" aria-labelledby="admin-category-section-main">
+        <section
+          aria-labelledby={isTabbed ? "admin-category-tab-main" : "admin-category-section-main"}
+          className="admin-category-editor__section"
+          hidden={isTabbed && activePanel !== "main"}
+          id={isTabbed ? "admin-category-tabpanel-main" : undefined}
+          role={isTabbed ? "tabpanel" : undefined}
+        >
           <div className="admin-category-editor__section-head">
             <h3 id="admin-category-section-main">Основное</h3>
             <p className="admin-catalog-status">Название, адрес и место категории в основной структуре.</p>
@@ -95,7 +107,13 @@ export function AdminCategoryForm({
           </label>
         </section>
 
-        <section className="admin-category-editor__section" aria-labelledby="admin-category-section-seo">
+        <section
+          aria-labelledby={isTabbed ? "admin-category-tab-seo" : "admin-category-section-seo"}
+          className="admin-category-editor__section"
+          hidden={isTabbed && activePanel !== "seo"}
+          id={isTabbed ? "admin-category-tabpanel-seo" : undefined}
+          role={isTabbed ? "tabpanel" : undefined}
+        >
           <div className="admin-category-editor__section-head">
             <h3 id="admin-category-section-seo">SEO и меню</h3>
             <p className="admin-catalog-status">Отображение в каталоге, меню и поисковых сниппетах.</p>
@@ -142,7 +160,13 @@ export function AdminCategoryForm({
           </div>
         </section>
 
-        <section className="admin-category-editor__section admin-category-editor__section--actions" aria-labelledby="admin-category-section-actions">
+        <section
+          aria-labelledby={isTabbed ? "admin-category-tab-actions" : "admin-category-section-actions"}
+          className="admin-category-editor__section admin-category-editor__section--actions"
+          hidden={isTabbed && activePanel !== "actions"}
+          id={isTabbed ? "admin-category-tabpanel-actions" : undefined}
+          role={isTabbed ? "tabpanel" : undefined}
+        >
           <div className="admin-category-editor__section-head">
             <h3 id="admin-category-section-actions">Действия</h3>
             <p className="admin-catalog-status">Сохранение изменений или удаление выбранной категории.</p>

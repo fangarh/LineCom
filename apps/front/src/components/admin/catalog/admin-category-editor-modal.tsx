@@ -1,9 +1,11 @@
 "use client";
 
-import type { ComponentProps } from "react";
+import { useState, type ComponentProps, type KeyboardEvent } from "react";
 import { AdminCatalogModal } from "./admin-catalog-modal";
-import { AdminCategoryForm } from "./admin-category-form";
+import { AdminCategoryForm, type AdminCategoryFormPanel } from "./admin-category-form";
 import { AdminCategoryParentPicker } from "./admin-category-parent-picker";
+
+type CategoryEditorTab = AdminCategoryFormPanel | "position";
 
 type AdminCategoryEditorModalProps = ComponentProps<typeof AdminCategoryForm> & {
   alertMessage: string | null;
@@ -18,6 +20,13 @@ type AdminCategoryEditorModalProps = ComponentProps<typeof AdminCategoryForm> & 
   onSortSelectedCategory: () => void;
   statusMessage: string | null;
 };
+
+const CATEGORY_EDITOR_TABS: { id: CategoryEditorTab; label: string }[] = [
+  { id: "main", label: "Основное" },
+  { id: "seo", label: "SEO и меню" },
+  { id: "position", label: "Позиция" },
+  { id: "actions", label: "Действия" },
+];
 
 export function AdminCategoryEditorModal({
   alertMessage,
@@ -41,10 +50,45 @@ export function AdminCategoryEditorModal({
   const title = selectedCategory ? "Редактирование категории" : "Новая категория";
   const subtitle = isLoadingDetail
     ? "Загружаем карточку..."
-    : selectedCategory
+      : selectedCategory
       ? selectedCategory.slug
       : "Заполните поля.";
+  const editorKey = `${isOpen ? "open" : "closed"}:${selectedCategory?.id ?? "new"}`;
+  const [activeTabState, setActiveTabState] = useState<{ editorKey: string; tab: CategoryEditorTab }>({
+    editorKey,
+    tab: "main",
+  });
+  const activeTab = activeTabState.editorKey === editorKey ? activeTabState.tab : "main";
   const isPositionDisabled = !selectedCategory || isMutating;
+
+  function focusTab(tabId: CategoryEditorTab) {
+    document.getElementById(`admin-category-tab-${tabId}`)?.focus();
+  }
+
+  function selectTab(tabId: CategoryEditorTab) {
+    setActiveTabState({ editorKey, tab: tabId });
+  }
+
+  function handleTabKeyDown(event: KeyboardEvent<HTMLButtonElement>, tabId: CategoryEditorTab) {
+    const currentIndex = CATEGORY_EDITOR_TABS.findIndex((tab) => tab.id === tabId);
+    if (currentIndex === -1) {
+      return;
+    }
+
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+      event.preventDefault();
+      const nextTab = CATEGORY_EDITOR_TABS[(currentIndex + 1) % CATEGORY_EDITOR_TABS.length].id;
+      selectTab(nextTab);
+      focusTab(nextTab);
+    }
+
+    if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const previousTab = CATEGORY_EDITOR_TABS[(currentIndex - 1 + CATEGORY_EDITOR_TABS.length) % CATEGORY_EDITOR_TABS.length].id;
+      selectTab(previousTab);
+      focusTab(previousTab);
+    }
+  }
 
   return (
     <AdminCatalogModal
@@ -64,17 +108,45 @@ export function AdminCategoryEditorModal({
         ) : null}
         {statusMessage ? <p className="form-success">{statusMessage}</p> : null}
 
-        <AdminCategoryForm
-          {...formProps}
-          blockedParentIds={blockedParentIds}
-          isLoadingDetail={isLoadingDetail}
-          isMutating={isMutating}
-          parentCategories={parentCategories}
-          selectedCategory={selectedCategory}
-          showHeader={false}
-        />
+        <div aria-label="Разделы редактора категории" className="admin-category-editor__tabs" role="tablist">
+          {CATEGORY_EDITOR_TABS.map((tab) => (
+            <button
+              aria-controls={`admin-category-tabpanel-${tab.id}`}
+              aria-selected={activeTab === tab.id}
+              className="admin-category-editor__tab"
+              id={`admin-category-tab-${tab.id}`}
+              key={tab.id}
+              onClick={() => selectTab(tab.id)}
+              onKeyDown={(event) => handleTabKeyDown(event, tab.id)}
+              role="tab"
+              tabIndex={activeTab === tab.id ? 0 : -1}
+              type="button"
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
 
-        <section className="admin-category-editor__section admin-category-editor__section--position" aria-labelledby="admin-category-section-position">
+        {activeTab !== "position" ? (
+          <AdminCategoryForm
+            {...formProps}
+            activePanel={activeTab}
+            blockedParentIds={blockedParentIds}
+            isLoadingDetail={isLoadingDetail}
+            isMutating={isMutating}
+            parentCategories={parentCategories}
+            selectedCategory={selectedCategory}
+            showHeader={false}
+          />
+        ) : null}
+
+        <section
+          aria-labelledby="admin-category-tab-position"
+          className="admin-category-editor__section admin-category-editor__section--position"
+          hidden={activeTab !== "position"}
+          id="admin-category-tabpanel-position"
+          role="tabpanel"
+        >
           <div className="admin-category-editor__section-head">
             <h3 id="admin-category-section-position">Позиция</h3>
             <p className="admin-catalog-status">Перемещение категории и порядок в дереве.</p>
