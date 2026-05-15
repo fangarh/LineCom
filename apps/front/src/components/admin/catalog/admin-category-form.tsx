@@ -63,81 +63,105 @@ export function AdminCategoryForm({
         </div>
       ) : null}
 
-      <form className="admin-category-form" onSubmit={onSubmit}>
-        <label className="form-field">
-          <span>Название</span>
-          <input onChange={(event) => onNameChange(event.target.value)} required value={form.name} />
-        </label>
-        <label className="form-field">
-          <span>Slug</span>
-          <input onChange={(event) => onSlugChange(event.target.value)} onFocus={(event) => event.currentTarget.select()} required value={form.slug} />
-        </label>
-        <button className="button button--ghost" onClick={onRegenerateSlug} type="button">
-          Сгенерировать заново
-        </button>
-        <AdminCategoryParentPicker
-          blockedParentIds={blockedParentIds}
-          buttonLabel="Выбрать родителя"
-          categories={parentCategories}
-          label="Родительская категория"
-          onChange={(parentId) => updateForm({ parentId })}
-          value={form.parentId}
-        />
-        <label className="form-field">
-          <span>Описание</span>
-          <textarea onChange={(event) => updateForm({ description: event.target.value })} rows={4} value={form.description} />
-        </label>
-        <label className="form-field">
-          <span>H1</span>
-          <input onChange={(event) => updateForm({ h1: event.target.value })} value={form.h1} />
-        </label>
-        <label className="form-field">
-          <span>SEO title</span>
-          <input onChange={(event) => updateForm({ seoTitle: event.target.value })} value={form.seoTitle} />
-        </label>
-        <label className="form-field">
-          <span>SEO description</span>
-          <textarea onChange={(event) => updateForm({ seoDescription: event.target.value })} rows={3} value={form.seoDescription} />
-        </label>
-        <label className="form-field">
-          <span>Сортировка</span>
-          <input
-            inputMode="numeric"
-            onChange={(event) => updateForm({ sortOrder: event.target.value })}
-            type="number"
-            value={form.sortOrder}
-          />
-        </label>
-        <label className="admin-category-manager__check">
-          <input
-            checked={form.isActive}
-            onChange={(event) => updateForm({ isActive: event.target.checked })}
-            type="checkbox"
-          />
-          <span>Активна</span>
-        </label>
-        <label className="admin-category-manager__check">
-          <input
-            checked={form.isVisibleInMenu}
-            onChange={(event) => updateForm({ isVisibleInMenu: event.target.checked })}
-            type="checkbox"
-          />
-          <span>Показывать в меню</span>
-        </label>
+      <form className="admin-category-form admin-category-editor__form" onSubmit={onSubmit}>
+        <section className="admin-category-editor__section" aria-labelledby="admin-category-section-main">
+          <div className="admin-category-editor__section-head">
+            <h3 id="admin-category-section-main">Основное</h3>
+            <p className="admin-catalog-status">Название, адрес и место категории в основной структуре.</p>
+          </div>
 
-        <div className="admin-category-manager__actions">
-          <button className="button button--primary" disabled={isMutating} type="submit">
-            {selectedCategory ? "Сохранить" : "Создать"}
+          <label className="form-field">
+            <span>Название</span>
+            <input onChange={(event) => onNameChange(event.target.value)} required value={form.name} />
+          </label>
+          <label className="form-field">
+            <span>Slug</span>
+            <input onChange={(event) => onSlugChange(event.target.value)} onFocus={(event) => event.currentTarget.select()} required value={form.slug} />
+          </label>
+          <button className="button button--ghost" onClick={onRegenerateSlug} type="button">
+            Сгенерировать заново
           </button>
-          <button
-            className="button button--ghost"
-            disabled={!selectedCategory || isMutating}
-            onClick={onDelete}
-            type="button"
-          >
-            Удалить
-          </button>
-        </div>
+          <AdminCategoryParentPicker
+            blockedParentIds={blockedParentIds}
+            buttonLabel="Выбрать родителя"
+            categories={parentCategories}
+            label="Родительская категория"
+            onChange={(parentId) => updateForm({ parentId })}
+            value={form.parentId}
+          />
+          <label className="form-field">
+            <span>Описание</span>
+            <textarea onChange={(event) => updateForm({ description: event.target.value })} rows={4} value={form.description} />
+          </label>
+        </section>
+
+        <section className="admin-category-editor__section" aria-labelledby="admin-category-section-seo">
+          <div className="admin-category-editor__section-head">
+            <h3 id="admin-category-section-seo">SEO и меню</h3>
+            <p className="admin-catalog-status">Отображение в каталоге, меню и поисковых сниппетах.</p>
+          </div>
+
+          <label className="form-field">
+            <span>H1</span>
+            <input onChange={(event) => updateForm({ h1: event.target.value })} value={form.h1} />
+          </label>
+          <label className="form-field">
+            <span>SEO title</span>
+            <input onChange={(event) => updateForm({ seoTitle: event.target.value })} value={form.seoTitle} />
+          </label>
+          <label className="form-field">
+            <span>SEO description</span>
+            <textarea onChange={(event) => updateForm({ seoDescription: event.target.value })} rows={3} value={form.seoDescription} />
+          </label>
+          <label className="form-field">
+            <span>Сортировка</span>
+            <input
+              inputMode="numeric"
+              onChange={(event) => updateForm({ sortOrder: event.target.value })}
+              type="number"
+              value={form.sortOrder}
+            />
+          </label>
+          <div className="admin-category-editor__checks">
+            <label className="admin-category-manager__check">
+              <input
+                checked={form.isActive}
+                onChange={(event) => updateForm({ isActive: event.target.checked })}
+                type="checkbox"
+              />
+              <span>Активна</span>
+            </label>
+            <label className="admin-category-manager__check">
+              <input
+                checked={form.isVisibleInMenu}
+                onChange={(event) => updateForm({ isVisibleInMenu: event.target.checked })}
+                type="checkbox"
+              />
+              <span>Показывать в меню</span>
+            </label>
+          </div>
+        </section>
+
+        <section className="admin-category-editor__section admin-category-editor__section--actions" aria-labelledby="admin-category-section-actions">
+          <div className="admin-category-editor__section-head">
+            <h3 id="admin-category-section-actions">Действия</h3>
+            <p className="admin-catalog-status">Сохранение изменений или удаление выбранной категории.</p>
+          </div>
+
+          <div className="admin-category-manager__actions">
+            <button className="button button--primary" disabled={isMutating} type="submit">
+              {selectedCategory ? "Сохранить" : "Создать"}
+            </button>
+            <button
+              className="button button--ghost"
+              disabled={!selectedCategory || isMutating}
+              onClick={onDelete}
+              type="button"
+            >
+              Удалить
+            </button>
+          </div>
+        </section>
       </form>
     </>
   );

@@ -56,64 +56,68 @@ export function AdminCategoryEditorModal({
       subtitle={subtitle}
       title={title}
     >
-      {alertMessage ? (
-        <p className="form-alert" role="alert">
-          {alertMessage}
-        </p>
-      ) : null}
-      {statusMessage ? <p className="form-success">{statusMessage}</p> : null}
+      <div className="admin-category-editor">
+        {alertMessage ? (
+          <p className="form-alert" role="alert">
+            {alertMessage}
+          </p>
+        ) : null}
+        {statusMessage ? <p className="form-success">{statusMessage}</p> : null}
 
-      <AdminCategoryForm
-        {...formProps}
-        blockedParentIds={blockedParentIds}
-        isLoadingDetail={isLoadingDetail}
-        isMutating={isMutating}
-        parentCategories={parentCategories}
-        selectedCategory={selectedCategory}
-        showHeader={false}
-      />
-
-      <section className="admin-category-manager__move" aria-label="Позиция">
-        <div>
-          <h3>Позиция</h3>
-          <p className="admin-catalog-status">Родительская категория и порядок в дереве.</p>
-        </div>
-        <AdminCategoryParentPicker
+        <AdminCategoryForm
+          {...formProps}
           blockedParentIds={blockedParentIds}
-          buttonLabel="Выбрать нового родителя"
-          categories={parentCategories}
-          disabled={isPositionDisabled}
-          label="Новый родитель"
-          onChange={onMoveParentChange}
-          value={moveParentId}
+          isLoadingDetail={isLoadingDetail}
+          isMutating={isMutating}
+          parentCategories={parentCategories}
+          selectedCategory={selectedCategory}
+          showHeader={false}
         />
-        <button
-          className="button button--secondary"
-          disabled={isPositionDisabled}
-          onClick={onMoveSelectedCategory}
-          type="button"
-        >
-          Переместить
-        </button>
-        <label className="form-field">
-          <span>Новый порядок</span>
-          <input
-            disabled={isPositionDisabled}
-            inputMode="numeric"
-            onChange={(event) => onSortOrderChange(event.target.value)}
-            type="number"
-            value={newSortOrder}
-          />
-        </label>
-        <button
-          className="button button--secondary"
-          disabled={isPositionDisabled}
-          onClick={onSortSelectedCategory}
-          type="button"
-        >
-          Обновить порядок
-        </button>
-      </section>
+
+        <section className="admin-category-editor__section admin-category-editor__section--position" aria-labelledby="admin-category-section-position">
+          <div className="admin-category-editor__section-head">
+            <h3 id="admin-category-section-position">Позиция</h3>
+            <p className="admin-catalog-status">Перемещение категории и порядок в дереве.</p>
+          </div>
+          <div className="admin-category-editor__position-grid">
+            <AdminCategoryParentPicker
+              blockedParentIds={blockedParentIds}
+              buttonLabel="Выбрать нового родителя"
+              categories={parentCategories}
+              disabled={isPositionDisabled}
+              label="Новый родитель"
+              onChange={onMoveParentChange}
+              value={moveParentId}
+            />
+            <button
+              className="button button--secondary"
+              disabled={isPositionDisabled}
+              onClick={onMoveSelectedCategory}
+              type="button"
+            >
+              Переместить
+            </button>
+            <label className="form-field">
+              <span>Новый порядок</span>
+              <input
+                disabled={isPositionDisabled}
+                inputMode="numeric"
+                onChange={(event) => onSortOrderChange(event.target.value)}
+                type="number"
+                value={newSortOrder}
+              />
+            </label>
+            <button
+              className="button button--secondary"
+              disabled={isPositionDisabled}
+              onClick={onSortSelectedCategory}
+              type="button"
+            >
+              Обновить порядок
+            </button>
+          </div>
+        </section>
+      </div>
     </AdminCatalogModal>
   );
 }

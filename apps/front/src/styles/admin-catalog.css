@@ -670,6 +670,52 @@
   margin-top: 14px;
 }
 
+.admin-category-editor {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-category-editor__form {
+  margin-top: 0;
+}
+
+.admin-category-editor__section {
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.admin-category-editor__section-head {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.admin-category-editor__section-head h3 {
+  margin: 0;
+  color: var(--color-graphite);
+  font-size: 16px;
+}
+
+.admin-category-editor__section-head p {
+  margin: 0;
+}
+
+.admin-category-editor__checks,
+.admin-category-editor__position-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-category-editor__section--actions .admin-category-manager__actions,
+.admin-category-editor__section--position .button {
+  align-self: start;
+}
+
 .admin-category-form .form-field select,
 .admin-category-manager__move .form-field select,
 .admin-brand-form .form-field select,

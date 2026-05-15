@@ -502,6 +502,20 @@ describe("AdminCategoryManager", () => {
     expect(within(moveListbox).getByRole("option", { name: "Категория со второй страницы" })).toBeInTheDocument();
   });
 
+  it("shows category modal sections for basic fields, SEO, position and actions", async () => {
+    const user = userEvent.setup();
+    adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(childDetail);
+    await renderManager();
+
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
+    const dialog = await screen.findByRole("dialog", { name: /Редактирование категории/ });
+
+    expect(within(dialog).getByRole("heading", { name: "Основное" })).toBeInTheDocument();
+    expect(within(dialog).getByRole("heading", { name: "SEO и меню" })).toBeInTheDocument();
+    expect(within(dialog).getByRole("heading", { name: "Позиция" })).toBeInTheDocument();
+    expect(within(dialog).getByRole("heading", { name: "Действия" })).toBeInTheDocument();
+  });
+
   it("keeps unfiltered parent options available while category rows are filtered", async () => {
     const user = userEvent.setup();
     adminCatalogApiMock.getAdminCategories.mockImplementation((params = {}) =>
