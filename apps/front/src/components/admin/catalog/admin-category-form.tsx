@@ -28,6 +28,7 @@ type AdminCategoryFormProps = {
   onSlugChange: (slug: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onDelete: () => void;
+  showHeader?: boolean;
 };
 
 export function AdminCategoryForm({
@@ -43,6 +44,7 @@ export function AdminCategoryForm({
   onSlugChange,
   onSubmit,
   onDelete,
+  showHeader = true,
 }: AdminCategoryFormProps) {
   function updateForm(patch: Partial<CategoryFormState>) {
     onFormChange({ ...form, ...patch });
@@ -50,14 +52,16 @@ export function AdminCategoryForm({
 
   return (
     <>
-      <div className="admin-category-manager__head">
-        <div>
-          <h2>{selectedCategory ? "Редактирование категории" : "Новая категория"}</h2>
-          <p className="admin-catalog-status">
-            {isLoadingDetail ? "Загружаем карточку..." : selectedCategory ? selectedCategory.slug : "Заполните поля."}
-          </p>
+      {showHeader ? (
+        <div className="admin-category-manager__head">
+          <div>
+            <h2>{selectedCategory ? "Редактирование категории" : "Новая категория"}</h2>
+            <p className="admin-catalog-status">
+              {isLoadingDetail ? "Загружаем карточку..." : selectedCategory ? selectedCategory.slug : "Заполните поля."}
+            </p>
+          </div>
         </div>
-      </div>
+      ) : null}
 
       <form className="admin-category-form" onSubmit={onSubmit}>
         <label className="form-field">

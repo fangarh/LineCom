@@ -220,6 +220,110 @@ describe("AdminCategoryManager", () => {
     });
   });
 
+  it("открывает редактор категории в диалоге из дерева и из кнопки новой категории", async () => {
+    const user = userEvent.setup();
+    adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(childDetail);
+    await renderManager();
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
+    const editDialog = await screen.findByRole("dialog", { name: /Редактирование категории/ });
+    expect(within(editDialog).getByLabelText("Название")).toHaveValue("Силовые кабели");
+    expect(within(editDialog).getByLabelText("Новый порядок")).toHaveValue(20);
+
+    await user.click(within(editDialog).getByRole("button", { name: "Закрыть редактор категории" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+
+    await user.click(screen.getByRole("button", { name: "Новая категория" }));
+    const createDialog = await screen.findByRole("dialog", { name: /Новая категория/ });
+    expect(within(createDialog).getByLabelText("Название")).toHaveValue("");
+  });
+
+  it("подтверждает закрытие категории при изменениях формы, родителя или порядка", async () => {
+    const user = userEvent.setup();
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValueOnce(false).mockReturnValueOnce(true);
+    adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(childDetail);
+    await renderManager();
+
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
+    const dialog = await screen.findByRole("dialog", { name: /Редактирование категории/ });
+    await user.clear(within(dialog).getByLabelText("Новый порядок"));
+    await user.type(within(dialog).getByLabelText("Новый порядок"), "25");
+
+    await user.click(within(dialog).getByRole("button", { name: "Закрыть редактор категории" }));
+    expect(confirmSpy).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("dialog", { name: /Редактирование категории/ })).toBeInTheDocument();
+
+    await chooseParentOption(user, "Выбрать нового родителя", "Без родителя");
+    await user.keyboard("{Escape}");
+    expect(confirmSpy).toHaveBeenCalledTimes(2);
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+
+    confirmSpy.mockRestore();
+  });
+
+  it("оставляет диалог категории открытым после сохранения и блокирует закрытие во время мутации", async () => {
+    const user = userEvent.setup();
+    const updateRequest = deferred<AdminCategoryDetail>();
+    const confirmSpy = vi.spyOn(window, "confirm");
+    adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(childDetail);
+    adminCatalogApiMock.updateAdminCategory.mockReturnValueOnce(updateRequest.promise);
+    await renderManager();
+
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
+    const dialog = await screen.findByRole("dialog", { name: /Редактирование категории/ });
+    await user.click(within(dialog).getByRole("button", { name: "Сохранить" }));
+
+    expect(within(dialog).getByRole("button", { name: "Закрыть редактор категории" })).toBeDisabled();
+    await user.keyboard("{Escape}");
+    expect(screen.getByRole("dialog", { name: /Редактирование категории/ })).toBeInTheDocument();
+    expect(confirmSpy).not.toHaveBeenCalled();
+
+    await act(async () => {
+      updateRequest.resolve(childDetail);
+    });
+
+    expect(await within(dialog).findByText("Категория сохранена.")).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: /Редактирование категории/ })).toBeInTheDocument();
+
+    confirmSpy.mockRestore();
+  });
+
+  it("закрывает диалог после удаления категории и обновляет списки", async () => {
+    const user = userEvent.setup();
+    adminCatalogApiMock.getAdminCategory.mockResolvedValueOnce(childDetail);
+    await renderManager();
+
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
+    const dialog = await screen.findByRole("dialog", { name: /Редактирование категории/ });
+    await user.click(within(dialog).getByRole("button", { name: "Удалить" }));
+
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(adminCatalogApiMock.deleteAdminCategory).toHaveBeenCalledWith("cat-child", "csrf-token");
+  });
+
+  it("не гидратирует закрытый диалог устаревшим ответом категории", async () => {
+    const user = userEvent.setup();
+    const detailRequest = deferred<AdminCategoryDetail>();
+    adminCatalogApiMock.getAdminCategory.mockReturnValueOnce(detailRequest.promise);
+    await renderManager();
+
+    await user.click(getCategoryTreeItem(/Силовые кабели/));
+    const dialog = await screen.findByRole("dialog", { name: /Редактирование категории|Новая категория/ });
+    await user.click(within(dialog).getByRole("button", { name: "Закрыть редактор категории" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+
+    await act(async () => {
+      detailRequest.resolve(childDetail);
+    });
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Новая категория" }));
+    const createDialog = await screen.findByRole("dialog", { name: /Новая категория/ });
+    expect(within(createDialog).getByLabelText("Название")).toHaveValue("");
+  });
+
   it("ignores stale category list responses", async () => {
     const user = userEvent.setup();
     const initialList = deferred<AdminCategoryListResponse>();

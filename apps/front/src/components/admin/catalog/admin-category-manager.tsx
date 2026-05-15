@@ -15,7 +15,7 @@ import {
 } from "@/lib/api/admin-catalog";
 import { normalizeApiError } from "@/lib/api/errors";
 import { generateSlug } from "@/lib/catalog/slug";
-import { AdminCategoryForm } from "./admin-category-form";
+import { AdminCategoryEditorModal } from "./admin-category-editor-modal";
 import { AdminCategoryListPanel } from "./admin-category-list-panel";
 import {
   buildCategoryCommand,
@@ -25,10 +25,10 @@ import {
   parseCategorySortOrder,
   type CategoryFormState,
 } from "./admin-category-manager-helpers";
-import { AdminCategoryParentPicker } from "./admin-category-parent-picker";
 import { buildCategoryTree, getBlockedParentIds } from "./admin-category-tree-helpers";
 
 const allCategoriesPageSize = 60;
+const missingCsrfMessage = "Сессия не подтверждена. Обновите страницу и войдите снова.";
 
 type AdminCategoryManagerProps = {
   csrfToken?: string | null;
@@ -39,6 +39,10 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
   const [allCategories, setAllCategories] = useState<AdminCategoryListItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<AdminCategoryDetail | null>(null);
   const [form, setForm] = useState<CategoryFormState>(emptyCategoryForm);
+  const [categoryEditorBaselineSignature, setCategoryEditorBaselineSignature] = useState(() =>
+    serializeCategoryEditorSnapshot(emptyCategoryForm, "", "0"),
+  );
+  const [isCategoryEditorOpen, setIsCategoryEditorOpen] = useState(false);
   const [isSlugManual, setIsSlugManual] = useState(false);
   const [search, setSearch] = useState("");
   const [parentFilter, setParentFilter] = useState("");
@@ -53,6 +57,8 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
   const listRequestSeqRef = useRef(0);
   const allCategoriesRequestSeqRef = useRef(0);
   const detailRequestSeqRef = useRef(0);
+  const categoryEditorSessionRef = useRef(0);
+  const selectedCategoryIdRef = useRef<string | null>(null);
   const latestListParamsRef = useRef<AdminCategoryListParams>({});
 
   const listParams = useMemo<AdminCategoryListParams>(
@@ -63,6 +69,20 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
   useEffect(() => {
     latestListParamsRef.current = listParams;
   }, [listParams]);
+
+  useEffect(() => {
+    selectedCategoryIdRef.current = selectedCategory?.id ?? null;
+  }, [selectedCategory?.id]);
+
+  const categoryEditorSignature = useMemo(
+    () => serializeCategoryEditorSnapshot(form, moveParentId, newSortOrder),
+    [form, moveParentId, newSortOrder],
+  );
+  const hasCategoryUnsavedChanges = categoryEditorSignature !== categoryEditorBaselineSignature;
+
+  function resetCategoryEditorBaseline(nextForm: CategoryFormState, nextMoveParentId: string, nextSortOrder: string) {
+    setCategoryEditorBaselineSignature(serializeCategoryEditorSnapshot(nextForm, nextMoveParentId, nextSortOrder));
+  }
 
   const loadCategoriesForParams = useCallback(async (params: AdminCategoryListParams) => {
     const requestSeq = listRequestSeqRef.current + 1;
@@ -152,6 +172,8 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
   async function selectCategory(categoryId: string) {
     const requestSeq = detailRequestSeqRef.current + 1;
     detailRequestSeqRef.current = requestSeq;
+    categoryEditorSessionRef.current += 1;
+    setIsCategoryEditorOpen(true);
     setIsLoadingDetail(true);
     setAlertMessage(null);
     setStatusMessage(null);
@@ -160,11 +182,15 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
       const detail = await getAdminCategory(categoryId);
       if (detailRequestSeqRef.current !== requestSeq) return;
 
+      const nextForm = categoryFormFromDetail(detail);
+      const nextMoveParentId = detail.parentId ?? "";
+      const nextSortOrder = String(detail.sortOrder);
       setSelectedCategory(detail);
-      setForm(categoryFormFromDetail(detail));
+      setForm(nextForm);
       setIsSlugManual(true);
-      setMoveParentId(detail.parentId ?? "");
-      setNewSortOrder(String(detail.sortOrder));
+      setMoveParentId(nextMoveParentId);
+      setNewSortOrder(nextSortOrder);
+      resetCategoryEditorBaseline(nextForm, nextMoveParentId, nextSortOrder);
     } catch (error) {
       if (detailRequestSeqRef.current !== requestSeq) return;
       setAlertMessage(normalizeApiError(error).message);
@@ -177,11 +203,14 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
 
   function startCreate() {
     detailRequestSeqRef.current += 1;
+    categoryEditorSessionRef.current += 1;
+    setIsCategoryEditorOpen(true);
     setSelectedCategory(null);
     setForm(emptyCategoryForm);
     setIsSlugManual(false);
     setMoveParentId("");
     setNewSortOrder("0");
+    resetCategoryEditorBaseline(emptyCategoryForm, "", "0");
     setAlertMessage(null);
     setStatusMessage(null);
   }
@@ -190,10 +219,12 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
     event.preventDefault();
 
     if (!csrfToken) {
-      setAlertMessage("Сессия не подтверждена. Обновите страницу и войдите снова.");
+      setAlertMessage(missingCsrfMessage);
       return;
     }
 
+    const capturedCategoryId = selectedCategory?.id ?? null;
+    const capturedEditorSession = categoryEditorSessionRef.current;
     setIsMutating(true);
     setAlertMessage(null);
     setStatusMessage(null);
@@ -204,14 +235,21 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
         ? await updateAdminCategory(selectedCategory.id, command, csrfToken)
         : await createAdminCategory(command, csrfToken);
 
+      if (!isCurrentCategoryMutation(capturedCategoryId, capturedEditorSession)) return;
+
+      const nextForm = categoryFormFromDetail(savedCategory);
+      const nextMoveParentId = savedCategory.parentId ?? "";
+      const nextSortOrder = String(savedCategory.sortOrder);
       setSelectedCategory(savedCategory);
-      setForm(categoryFormFromDetail(savedCategory));
+      setForm(nextForm);
       setIsSlugManual(true);
-      setMoveParentId(savedCategory.parentId ?? "");
-      setNewSortOrder(String(savedCategory.sortOrder));
+      setMoveParentId(nextMoveParentId);
+      setNewSortOrder(nextSortOrder);
+      resetCategoryEditorBaseline(nextForm, nextMoveParentId, nextSortOrder);
       setStatusMessage(selectedCategory ? "Категория сохранена." : "Категория создана.");
       await refreshCategoryLists();
     } catch (error) {
+      if (!isCurrentCategoryMutation(capturedCategoryId, capturedEditorSession)) return;
       setAlertMessage(normalizeApiError(error).message);
     } finally {
       setIsMutating(false);
@@ -222,22 +260,33 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
     if (!selectedCategory) return;
 
     if (!csrfToken) {
-      setAlertMessage("Сессия не подтверждена. Обновите страницу и войдите снова.");
+      setAlertMessage(missingCsrfMessage);
       return;
     }
 
+    const capturedCategoryId = selectedCategory.id;
+    const capturedEditorSession = categoryEditorSessionRef.current;
     setIsMutating(true);
     setAlertMessage(null);
     setStatusMessage(null);
 
     try {
       await deleteAdminCategory(selectedCategory.id, csrfToken);
+      if (!isCurrentCategoryMutation(capturedCategoryId, capturedEditorSession)) return;
+
+      detailRequestSeqRef.current += 1;
+      categoryEditorSessionRef.current += 1;
+      setIsCategoryEditorOpen(false);
       setSelectedCategory(null);
       setForm(emptyCategoryForm);
       setIsSlugManual(false);
+      setMoveParentId("");
+      setNewSortOrder("0");
+      resetCategoryEditorBaseline(emptyCategoryForm, "", "0");
       setStatusMessage("Категория удалена.");
       await refreshCategoryLists();
     } catch (error) {
+      if (!isCurrentCategoryMutation(capturedCategoryId, capturedEditorSession)) return;
       setAlertMessage(normalizeApiError(error).message);
     } finally {
       setIsMutating(false);
@@ -248,23 +297,33 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
     if (!selectedCategory) return;
 
     if (!csrfToken) {
-      setAlertMessage("Сессия не подтверждена. Обновите страницу и войдите снова.");
+      setAlertMessage(missingCsrfMessage);
       return;
     }
 
+    const capturedCategoryId = selectedCategory.id;
+    const capturedEditorSession = categoryEditorSessionRef.current;
     setIsMutating(true);
     setAlertMessage(null);
     setStatusMessage(null);
 
     try {
       const movedCategory = await moveAdminCategory(selectedCategory.id, moveParentId || null, csrfToken);
+      if (!isCurrentCategoryMutation(capturedCategoryId, capturedEditorSession)) return;
+
+      const nextForm = categoryFormFromDetail(movedCategory);
+      const nextMoveParentId = movedCategory.parentId ?? "";
+      const nextSortOrder = String(movedCategory.sortOrder);
       setSelectedCategory(movedCategory);
-      setForm(categoryFormFromDetail(movedCategory));
+      setForm(nextForm);
       setIsSlugManual(true);
-      setMoveParentId(movedCategory.parentId ?? "");
+      setMoveParentId(nextMoveParentId);
+      setNewSortOrder(nextSortOrder);
+      resetCategoryEditorBaseline(nextForm, nextMoveParentId, nextSortOrder);
       setStatusMessage("Родитель категории обновлен.");
       await refreshCategoryLists();
     } catch (error) {
+      if (!isCurrentCategoryMutation(capturedCategoryId, capturedEditorSession)) return;
       setAlertMessage(normalizeApiError(error).message);
     } finally {
       setIsMutating(false);
@@ -275,24 +334,33 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
     if (!selectedCategory) return;
 
     if (!csrfToken) {
-      setAlertMessage("Сессия не подтверждена. Обновите страницу и войдите снова.");
+      setAlertMessage(missingCsrfMessage);
       return;
     }
 
+    const capturedCategoryId = selectedCategory.id;
+    const capturedEditorSession = categoryEditorSessionRef.current;
     setIsMutating(true);
     setAlertMessage(null);
     setStatusMessage(null);
 
     try {
       const sortedCategory = await sortAdminCategory(selectedCategory.id, parseCategorySortOrder(newSortOrder), csrfToken);
+      if (!isCurrentCategoryMutation(capturedCategoryId, capturedEditorSession)) return;
+
+      const nextForm = categoryFormFromDetail(sortedCategory);
+      const nextMoveParentId = sortedCategory.parentId ?? "";
+      const nextSortOrder = String(sortedCategory.sortOrder);
       setSelectedCategory(sortedCategory);
-      setForm(categoryFormFromDetail(sortedCategory));
+      setForm(nextForm);
       setIsSlugManual(true);
-      setMoveParentId(sortedCategory.parentId ?? "");
-      setNewSortOrder(String(sortedCategory.sortOrder));
+      setMoveParentId(nextMoveParentId);
+      setNewSortOrder(nextSortOrder);
+      resetCategoryEditorBaseline(nextForm, nextMoveParentId, nextSortOrder);
       setStatusMessage("Порядок категории обновлен.");
       await refreshCategoryLists();
     } catch (error) {
+      if (!isCurrentCategoryMutation(capturedCategoryId, capturedEditorSession)) return;
       setAlertMessage(normalizeApiError(error).message);
     } finally {
       setIsMutating(false);
@@ -300,6 +368,23 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
   }
 
   const selectedId = selectedCategory?.id ?? null;
+
+  function isCurrentCategoryMutation(capturedCategoryId: string | null, capturedEditorSession: number) {
+    return categoryEditorSessionRef.current === capturedEditorSession && selectedCategoryIdRef.current === capturedCategoryId;
+  }
+
+  function confirmCategoryEditorClose() {
+    if (!hasCategoryUnsavedChanges) return true;
+    return window.confirm("Закрыть редактор без сохранения изменений?");
+  }
+
+  function closeCategoryEditor() {
+    if (isMutating) return;
+    detailRequestSeqRef.current += 1;
+    categoryEditorSessionRef.current += 1;
+    setIsLoadingDetail(false);
+    setIsCategoryEditorOpen(false);
+  }
 
   function changeCategoryName(name: string) {
     setForm((current) => ({
@@ -336,67 +421,41 @@ export function AdminCategoryManager({ csrfToken = null }: AdminCategoryManagerP
         treeCategories={treeCategories}
       />
 
-      <section className="admin-catalog-form admin-category-manager__editor" aria-label="Редактор категории">
-        {alertMessage ? (
-          <p className="form-alert" role="alert">
-            {alertMessage}
-          </p>
-        ) : null}
-        {statusMessage ? <p className="form-success">{statusMessage}</p> : null}
+      {alertMessage && !isCategoryEditorOpen ? (
+        <p className="form-alert" role="alert">
+          {alertMessage}
+        </p>
+      ) : null}
 
-        <AdminCategoryForm
-          blockedParentIds={blockedParentIds}
-          form={form}
-          isLoadingDetail={isLoadingDetail}
-          isMutating={isMutating}
-          onDelete={deleteSelectedCategory}
-          onFormChange={setForm}
-          onNameChange={changeCategoryName}
-          onRegenerateSlug={regenerateCategorySlug}
-          onSlugChange={changeCategorySlug}
-          onSubmit={submitCategory}
-          parentCategories={allCategories}
-          selectedCategory={selectedCategory}
-        />
-
-        <div className="admin-category-manager__move" aria-label="Перемещение и сортировка">
-          <AdminCategoryParentPicker
-            blockedParentIds={blockedParentIds}
-            buttonLabel="Выбрать нового родителя"
-            categories={allCategories}
-            disabled={!selectedCategory}
-            label="Новый родитель"
-            onChange={setMoveParentId}
-            value={moveParentId}
-          />
-          <button
-            className="button button--secondary"
-            disabled={!selectedCategory || isMutating}
-            onClick={moveSelectedCategory}
-            type="button"
-          >
-            Переместить
-          </button>
-          <label className="form-field">
-            <span>Новый порядок</span>
-            <input
-              disabled={!selectedCategory}
-              inputMode="numeric"
-              onChange={(event) => setNewSortOrder(event.target.value)}
-              type="number"
-              value={newSortOrder}
-            />
-          </label>
-          <button
-            className="button button--secondary"
-            disabled={!selectedCategory || isMutating}
-            onClick={sortSelectedCategory}
-            type="button"
-          >
-            Обновить порядок
-          </button>
-        </div>
-      </section>
+      <AdminCategoryEditorModal
+        alertMessage={alertMessage}
+        blockedParentIds={blockedParentIds}
+        confirmClose={confirmCategoryEditorClose}
+        form={form}
+        isLoadingDetail={isLoadingDetail}
+        isMutating={isMutating}
+        isOpen={isCategoryEditorOpen}
+        moveParentId={moveParentId}
+        newSortOrder={newSortOrder}
+        onDelete={deleteSelectedCategory}
+        onFormChange={setForm}
+        onMoveParentChange={setMoveParentId}
+        onMoveSelectedCategory={moveSelectedCategory}
+        onNameChange={changeCategoryName}
+        onRegenerateSlug={regenerateCategorySlug}
+        onRequestClose={closeCategoryEditor}
+        onSlugChange={changeCategorySlug}
+        onSortOrderChange={setNewSortOrder}
+        onSortSelectedCategory={sortSelectedCategory}
+        onSubmit={submitCategory}
+        parentCategories={allCategories}
+        selectedCategory={selectedCategory}
+        statusMessage={statusMessage}
+      />
     </div>
   );
+}
+
+function serializeCategoryEditorSnapshot(form: CategoryFormState, moveParentId: string, newSortOrder: string) {
+  return JSON.stringify({ form, moveParentId, newSortOrder });
 }
