@@ -3,7 +3,7 @@
 ## Milestones
 
 - [x] **v1.0 Release Stabilization** - Phases 1-6 shipped on 2026-05-15. Archives: `.planning/milestones/v1.0-ROADMAP.md`, `.planning/milestones/v1.0-REQUIREMENTS.md`, `.planning/milestones/v1.0-MILESTONE-AUDIT.md`, `.planning/milestones/v1.0-phases/`.
-- [ ] **v1.1 Admin Catalog UX** - Phases 7-8 in planning. Goal: modal catalog editing and safe quick product category reassignment.
+- [ ] **v1.1 Admin Catalog UX** - Phase 7 complete; Phase 8 next. Goal: modal catalog editing and safe quick product category reassignment.
 
 ## Completed Milestone Summary
 
@@ -28,6 +28,7 @@ Final gate evidence is archived in `.planning/milestones/v1.0-phases/06-producti
 ### Phase 7: Modal Catalog Editors
 
 **Goal**: Product and category editing no longer consumes a permanent side block; existing editor behavior is preserved inside accessible modal dialogs.
+**Status:** Complete - implementation, UAT, security and validation gates passed on 2026-05-15.
 **Mode:** mvp
 **Depends on**: v1.0 release stabilization
 **Requirements**: AUX-01, AUX-02, AUX-03, VER-01
@@ -48,6 +49,7 @@ Plans:
 ### Phase 8: Quick Product Category Change
 
 **Goal**: Admin can safely change a single product category from the product list without opening the full product editor.
+**Status:** Next - ready for `$gsd-plan-phase 8`.
 **Mode:** mvp
 **Depends on**: Phase 7
 **Requirements**: CATUX-01, CATUX-02, CATUX-03, VER-02
@@ -79,4 +81,4 @@ These items remain outside v1.1 and should be reconsidered during a later milest
 | Milestone | Phases | Plans | Status | Shipped |
 |-----------|--------|-------|--------|---------|
 | v1.0 Release Stabilization | 1-6 | 16/16 | Shipped | 2026-05-15 |
-| v1.1 Admin Catalog UX | 7-8 | 4/6 | In progress | - |
+| v1.1 Admin Catalog UX | 7-8 | 4/6 | Phase 7 complete; Phase 8 next | - |
