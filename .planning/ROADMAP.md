@@ -37,11 +37,12 @@ Final gate evidence is archived in `.planning/milestones/v1.0-phases/06-producti
   3. Product and category lists keep full working width without the always-visible side editor.
   4. Closing modals preserves list filters, pagination and stale-request safety.
   5. Focused frontend tests cover modal open/close, create/update/delete flows and stale detail responses.
-**Plans**: 2 plans
+**Plans**: 3 plans
 
 Plans:
 - [x] 07-01: Shared catalog modal shell and product editor modal migration.
 - [x] 07-02: Category editor modal migration and responsive list layout cleanup.
+- [ ] 07-03: Category modal sectioning for UAT gap closure.
 
 ### Phase 8: Quick Product Category Change
 
@@ -77,4 +78,4 @@ These items remain outside v1.1 and should be reconsidered during a later milest
 | Milestone | Phases | Plans | Status | Shipped |
 |-----------|--------|-------|--------|---------|
 | v1.0 Release Stabilization | 1-6 | 16/16 | Shipped | 2026-05-15 |
-| v1.1 Admin Catalog UX | 7-8 | 0/4 | Planning | - |
+| v1.1 Admin Catalog UX | 7-8 | 2/5 | In progress | - |
