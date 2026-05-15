@@ -14,8 +14,8 @@ The first GSD milestone stabilizes the existing LineCom release before adding ne
 - [x] **Phase 2: Storage Access And Diagnostics** - define public/private storage boundaries and integrity reporting. Completed: 2026-05-14.
 - [x] **Phase 3: Import Storage Consistency** - make catalog import DB/file behavior recoverable and testable. Completed: 2026-05-14.
 - [x] **Phase 4: Public SEO/GEO Reliability** - verify canonical, robots, sitemap and scalable public route behavior. Completed: 2026-05-14.
-- [ ] **Phase 5: Admin Maintainability And Contracts** - reduce frontend admin fragility and detect API contract drift.
-- [ ] **Phase 6: Production Readiness Gate** - run final release checks, audits, docs and GSD verification.
+- [x] **Phase 5: Admin Maintainability And Contracts** - reduce frontend admin fragility and detect API contract drift. Completed: 2026-05-15.
+- [x] **Phase 6: Production Readiness Gate** - run final release checks, audits, docs and GSD verification. Completed: 2026-05-15.
 
 ## Phase Details
 
@@ -117,7 +117,7 @@ Plans:
 
 Plans:
 - [x] 06-01: Dependency audit and deployment/storage documentation.
-- [ ] 06-02: Final release verification and milestone closure.
+- [x] 06-02: Final release verification and milestone closure.
 
 ## Deferred Product Phases
 
@@ -138,5 +138,5 @@ Phases execute in dependency order: 1 -> 2 -> 3 -> 4 -> 5 -> 6. Phases 4 and 5 c
 | 2. Storage Access And Diagnostics | 3/3 | Complete | 2026-05-14 |
 | 3. Import Storage Consistency | 2/2 | Complete | 2026-05-14 |
 | 4. Public SEO/GEO Reliability | 3/3 | Complete | 2026-05-14 |
-| 5. Admin Maintainability And Contracts | 0/3 | Not started | - |
-| 6. Production Readiness Gate | 1/2 | In Progress | - |
+| 5. Admin Maintainability And Contracts | 3/3 | Complete | 2026-05-15 |
+| 6. Production Readiness Gate | 2/2 | Complete | 2026-05-15 |
