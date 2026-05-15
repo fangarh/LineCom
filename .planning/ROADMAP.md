@@ -100,7 +100,7 @@ Plans:
 
 Plans:
 - [x] 05-01: Admin catalog/homepage decomposition targets.
-- [ ] 05-02: Helper extraction and frontend unit tests.
+- [x] 05-02: Helper extraction and frontend unit tests.
 - [ ] 05-03: Frontend/backend API contract drift checks.
 
 ### Phase 6: Production Readiness Gate
