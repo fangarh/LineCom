@@ -10,6 +10,14 @@ LineCom - B2B/B2C каталог-заявочная система для про
 
 Покупатель должен находить нужные кабельные товары через SEO/GEO-доступный каталог и надежно отправлять коммерческую заявку, которую продавец может обработать без потери данных.
 
+## Current State
+
+v1.0 Release Stabilization shipped on 2026-05-15. The milestone is archived in `.planning/milestones/` and the raw phase execution history is archived in `.planning/milestones/v1.0-phases/`.
+
+The release baseline is verified for auth throttling, production configuration guardrails, frontend API transport errors, Local FileStorage public/private boundaries, storage diagnostics, catalog import file lifecycle, SEO/GEO route behavior, admin maintainability/contract drift checks, dependency audits, production runbook coverage and final requirement traceability.
+
+Next milestone planning has not started. Use `$gsd-new-milestone` to define fresh requirements before adding product expansion scope.
+
 ## Requirements
 
 ### Validated
@@ -31,10 +39,7 @@ LineCom - B2B/B2C каталог-заявочная система для про
 
 ### Active
 
-- [x] Continue Local FileStorage release hardening: backup/restore posture and future maintenance/retention decisions.
-- [x] Preserve SEO/GEO correctness for public catalog routes, metadata, robots and sitemap behavior under production configuration.
-- [x] Reduce fragility of large admin catalog/homepage frontend containers before adding more behavior.
-- [x] Add verification gates for security, storage, SEO/GEO and frontend/backend contract drift.
+- No active v1 requirements remain. Define next milestone requirements with `$gsd-new-milestone`.
 
 ### Out of Scope
 
@@ -79,11 +84,11 @@ Important current concerns from the codebase map:
 | Use GSD for this brownfield project | Existing codebase is large enough to benefit from persistent planning, roadmap and verification artifacts. | Pending |
 | Start with `$gsd-map-codebase` | Brownfield initialization needs architecture/stack/risk map before project roadmap. | Good |
 | Roadmap focus: release stabilization first | Security, storage, SEO/GEO and production readiness risks block safe expansion of product scope. | Good - v1 release-stabilization work verified through Phase 6 on 2026-05-15 |
-| Granularity: Standard | 5-8 phases gives useful control without excessive planning overhead. | Pending |
-| Execution: Parallel where safe | Independent plans can run in parallel, while migrations/security/storage remain dependency-driven. | Pending |
-| Research: Full, but source-of-truth constrained | External/current docs inform best practices; `vault` and codebase map remain authoritative for project intent. | Pending |
-| Plan Check and Verifier enabled | Large release-critical work needs pre-execution plan validation and post-execution goal verification. | Pending |
-| Commit planning docs to git | GSD state should persist across sessions, but commits must avoid unrelated product changes. | Pending |
+| Granularity: Standard | 5-8 phases gives useful control without excessive planning overhead. | Good - v1 closed as 6 phases and 16 plans |
+| Execution: Parallel where safe | Independent plans can run in parallel, while migrations/security/storage remain dependency-driven. | Good - bounded parallelism worked where dependencies were disjoint |
+| Research: Full, but source-of-truth constrained | External/current docs inform best practices; `vault` and codebase map remain authoritative for project intent. | Good - phase research informed implementation without overriding project rules |
+| Plan Check and Verifier enabled | Large release-critical work needs pre-execution plan validation and post-execution goal verification. | Good - every phase has verification evidence |
+| Commit planning docs to git | GSD state should persist across sessions, but commits must avoid unrelated product changes. | Good - v1 planning artifacts were committed without staging user-owned dirty baseline |
 
 ## Evolution
 
@@ -103,4 +108,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-05-15 after Phase 6 verification*
+*Last updated: 2026-05-15 after v1.0 milestone archive*
