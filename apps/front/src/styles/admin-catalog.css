@@ -550,6 +550,17 @@
   background: color-mix(in srgb, var(--color-accent) 8%, transparent);
 }
 
+.admin-category-parent-picker__option:disabled,
+.admin-category-parent-picker__option[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+.admin-category-parent-picker__option:disabled:hover,
+.admin-category-parent-picker__option[aria-disabled="true"]:hover {
+  background: transparent;
+}
+
 .admin-category-parent-picker__option strong,
 .admin-category-parent-picker__option small,
 .admin-category-parent-picker__meta {

@@ -12,6 +12,8 @@ import { normalizeApiError } from "@/lib/api/errors";
 import { describeHomepageTargetVisibility } from "./admin-homepage-visibility";
 
 type AdminHomepageTargetSearchProps = {
+  addedCategoryIds: string[];
+  addedProductIds: string[];
   isMutating: boolean;
   sectionType: AdminHomepageSectionType;
   onAddCategory: (categoryId: string) => void;
@@ -40,6 +42,8 @@ const publishStatusLabels: Record<string, string> = {
 };
 
 export function AdminHomepageTargetSearch({
+  addedCategoryIds,
+  addedProductIds,
   isMutating,
   sectionType,
   onAddCategory,
@@ -135,6 +139,7 @@ export function AdminHomepageTargetSearch({
           ? products.map((product) => (
               <ProductSearchResult
                 isMutating={isMutating}
+                isSelected={addedProductIds.includes(product.id)}
                 key={product.id}
                 onAdd={() => onAddProduct(product.id)}
                 product={product}
@@ -144,6 +149,7 @@ export function AdminHomepageTargetSearch({
               <CategorySearchResult
                 category={category}
                 isMutating={isMutating}
+                isSelected={addedCategoryIds.includes(category.id)}
                 key={category.id}
                 onAdd={() => onAddCategory(category.id)}
               />
@@ -159,10 +165,12 @@ export function AdminHomepageTargetSearch({
 
 function ProductSearchResult({
   isMutating,
+  isSelected,
   product,
   onAdd,
 }: {
   isMutating: boolean;
+  isSelected: boolean;
   product: AdminProductListItem;
   onAdd: () => void;
 }) {
@@ -188,8 +196,14 @@ function ProductSearchResult({
           {product.isActive ? "Активен" : "Неактивен"} · {publishStatus} · {visibility}
         </p>
       </div>
-      <button className="button button--ghost" disabled={isMutating} onClick={onAdd} type="button">
-        Добавить {product.name}
+      <button
+        aria-label={isSelected ? `Уже добавлен ${product.name}` : `Добавить ${product.name}`}
+        className="button button--ghost"
+        disabled={isMutating || isSelected}
+        onClick={onAdd}
+        type="button"
+      >
+        {isSelected ? "Уже добавлен" : "Добавить"}
       </button>
     </article>
   );
@@ -198,10 +212,12 @@ function ProductSearchResult({
 function CategorySearchResult({
   category,
   isMutating,
+  isSelected,
   onAdd,
 }: {
   category: AdminCategoryListItem;
   isMutating: boolean;
+  isSelected: boolean;
   onAdd: () => void;
 }) {
   const visibility = describeHomepageTargetVisibility({
@@ -225,8 +241,14 @@ function CategorySearchResult({
           {category.isActive ? "Активна" : "Неактивна"} · {category.isVisibleInMenu ? "В меню" : "Не в меню"} · {visibility}
         </p>
       </div>
-      <button className="button button--ghost" disabled={isMutating} onClick={onAdd} type="button">
-        Добавить {category.name}
+      <button
+        aria-label={isSelected ? `Уже добавлена ${category.name}` : `Добавить ${category.name}`}
+        className="button button--ghost"
+        disabled={isMutating || isSelected}
+        onClick={onAdd}
+        type="button"
+      >
+        {isSelected ? "Уже добавлена" : "Добавить"}
       </button>
     </article>
   );

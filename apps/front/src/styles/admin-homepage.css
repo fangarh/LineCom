@@ -66,6 +66,15 @@
   border-radius: var(--radius-sm);
 }
 
+.admin-homepage-search-result > div {
+  min-width: 0;
+}
+
+.admin-homepage-search-result .button {
+  justify-self: end;
+  white-space: nowrap;
+}
+
 .admin-homepage-search-result strong,
 .admin-homepage-search-result__type {
   min-width: 0;
@@ -102,5 +111,9 @@
   .admin-homepage-search-result {
     grid-template-columns: 1fr;
     align-items: stretch;
+  }
+
+  .admin-homepage-search-result .button {
+    justify-self: stretch;
   }
 }

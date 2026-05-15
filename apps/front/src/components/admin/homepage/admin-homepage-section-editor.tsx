@@ -1,6 +1,7 @@
 import type { ChangeEvent, FormEvent } from "react";
 import type { AdminHomepageSection } from "@/lib/api/admin-homepage";
 import { AdminHomepageItemList } from "./admin-homepage-item-list";
+import { getAdminHomepageActiveTargetIds } from "./admin-homepage-section-editor-helpers";
 import { AdminHomepageTargetSearch } from "./admin-homepage-target-search";
 
 export type AdminHomepageSectionDraft = {
@@ -41,6 +42,8 @@ export function AdminHomepageSectionEditor({
   onSortOrderChange,
   onToggleActive,
 }: AdminHomepageSectionEditorProps) {
+  const activeTargetIds = activeSection ? getAdminHomepageActiveTargetIds(activeSection.items) : null;
+
   return (
     <section className="admin-catalog-form admin-homepage-section" aria-label="Редактор секции">
       {activeSection ? (
@@ -79,6 +82,8 @@ export function AdminHomepageSectionEditor({
           </form>
 
           <AdminHomepageTargetSearch
+            addedCategoryIds={activeTargetIds?.categoryIds ?? []}
+            addedProductIds={activeTargetIds?.productIds ?? []}
             isMutating={isMutating}
             onAddCategory={onAddCategory}
             onAddProduct={onAddProduct}

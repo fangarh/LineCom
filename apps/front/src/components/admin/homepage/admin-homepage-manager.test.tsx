@@ -196,23 +196,94 @@ describe("AdminHomepageManager", () => {
 
   it("adds product item with csrf token", async () => {
     const user = userEvent.setup();
+    adminCatalogApiMock.getAdminProducts.mockResolvedValue({
+      items: [
+        {
+          id: "product-2",
+          name: "Патч-корд LC",
+          slug: "patch-cord-lc",
+          sku: "LC-002",
+          externalId: null,
+          categoryName: "Кабели",
+          categorySlug: "kabeli",
+          brandName: null,
+          publishStatus: "published",
+          isActive: true,
+          availabilityStatus: "in_stock",
+          sortOrder: 20,
+          readiness: { canPublish: true, issues: [] },
+        },
+      ],
+      page: 1,
+      pageSize: 10,
+      totalItems: 1,
+      totalPages: 1,
+    });
     render(<AdminHomepageManager csrfToken="csrf" />);
 
     await user.type(await screen.findByLabelText("Поиск товара"), "кабель");
     await waitFor(() =>
       expect(adminCatalogApiMock.getAdminProducts).toHaveBeenCalledWith({ search: "кабель", page: 1, pageSize: 10 }),
     );
-    await user.click(await screen.findByRole("button", { name: /Добавить Кабель ВВГнг/ }));
+    await user.click(await screen.findByRole("button", { name: /Добавить Патч-корд LC/ }));
 
     await waitFor(() =>
       expect(adminHomepageApiMock.addAdminHomepageSectionItem).toHaveBeenCalledWith(
         "section-products",
-        { productId: "product-1", categoryId: null, sortOrder: null, isActive: true },
+        { productId: "product-2", categoryId: null, sortOrder: null, isActive: true },
         "csrf",
       ),
     );
     expect(adminHomepageApiMock.getAdminHomepageSections).toHaveBeenCalledTimes(2);
     expect(screen.queryByLabelText("UUID товара")).not.toBeInTheDocument();
+  });
+
+  it("does not post an item that is already present in the active section", async () => {
+    const user = userEvent.setup();
+    render(<AdminHomepageManager csrfToken="csrf" />);
+
+    await user.type(await screen.findByLabelText("Поиск товара"), "кабель");
+    const addButton = await screen.findByRole("button", { name: /Уже добавлен/ });
+
+    expect(addButton).toBeDisabled();
+    await user.click(addButton);
+
+    expect(adminHomepageApiMock.addAdminHomepageSectionItem).not.toHaveBeenCalled();
+  });
+
+  it("keeps long product names out of the add button text while preserving accessible context", async () => {
+    const user = userEvent.setup();
+    const longProductName = "Кабель силовой бронированный негорючий морозостойкий для сложных монтажных трасс";
+    adminCatalogApiMock.getAdminProducts.mockResolvedValue({
+      items: [
+        {
+          id: "product-long",
+          name: longProductName,
+          slug: "long-power-cable",
+          sku: "VERY-LONG-SKU-001",
+          externalId: "ERP-LONG-001",
+          categoryName: "Кабели для промышленных объектов",
+          categorySlug: "industrial-cables",
+          brandName: null,
+          publishStatus: "published",
+          isActive: true,
+          availabilityStatus: "in_stock",
+          sortOrder: 10,
+          readiness: { canPublish: true, issues: [] },
+        },
+      ],
+      page: 1,
+      pageSize: 10,
+      totalItems: 1,
+      totalPages: 1,
+    });
+    render(<AdminHomepageManager csrfToken="csrf" />);
+
+    fireEvent.change(await screen.findByLabelText("Поиск товара"), { target: { value: "бронированный" } });
+    const addButton = await screen.findByRole("button", { name: `Добавить ${longProductName}` });
+
+    expect(addButton).toHaveTextContent(/^Добавить$/);
+    expect(addButton).not.toHaveTextContent(longProductName);
   });
 
   it("adds category item from category search with csrf token", async () => {
@@ -257,10 +328,33 @@ describe("AdminHomepageManager", () => {
     const user = userEvent.setup();
     const addRequest = deferred<ReturnType<typeof homepageSectionsResponse>["sections"][number]["items"][number]>();
     adminHomepageApiMock.addAdminHomepageSectionItem.mockReturnValueOnce(addRequest.promise);
+    adminCatalogApiMock.getAdminProducts.mockResolvedValue({
+      items: [
+        {
+          id: "product-2",
+          name: "Патч-корд LC",
+          slug: "patch-cord-lc",
+          sku: "LC-002",
+          externalId: null,
+          categoryName: "Кабели",
+          categorySlug: "kabeli",
+          brandName: null,
+          publishStatus: "published",
+          isActive: true,
+          availabilityStatus: "in_stock",
+          sortOrder: 20,
+          readiness: { canPublish: true, issues: [] },
+        },
+      ],
+      page: 1,
+      pageSize: 10,
+      totalItems: 1,
+      totalPages: 1,
+    });
     render(<AdminHomepageManager csrfToken="csrf" />);
 
     await user.type(await screen.findByLabelText("Поиск товара"), "кабель");
-    const addButton = await screen.findByRole("button", { name: /Добавить Кабель ВВГнг/ });
+    const addButton = await screen.findByRole("button", { name: /Добавить Патч-корд LC/ });
 
     await user.click(addButton);
     await waitFor(() => expect(adminHomepageApiMock.addAdminHomepageSectionItem).toHaveBeenCalledTimes(1));

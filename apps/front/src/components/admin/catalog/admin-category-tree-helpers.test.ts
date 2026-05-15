@@ -57,10 +57,10 @@ describe("admin category tree helpers", () => {
   it("flattens category tree with depth information", () => {
     const tree = buildCategoryTree([rootCategory, childCategory, connectorCategory]);
 
-    expect(flattenCategoryTree(tree).map((node) => `${node.depth}:${node.category.name}`)).toEqual([
-      "0:Кабели",
-      "1:Силовые кабели",
-      "0:Разъемы",
+    expect(flattenCategoryTree(tree).map((node) => `${node.depth}:${node.hasChildren}:${node.category.id}`)).toEqual([
+      "0:true:cat-root",
+      "1:false:cat-child",
+      "0:false:cat-connector",
     ]);
   });
 

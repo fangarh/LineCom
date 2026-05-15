@@ -9,6 +9,7 @@ export type CategoryTreeNode = {
 export type FlatCategoryTreeNode = {
   category: AdminCategoryListItem;
   depth: number;
+  hasChildren: boolean;
 };
 
 export function buildCategoryTree(categories: AdminCategoryListItem[]): CategoryTreeNode[] {
@@ -37,7 +38,7 @@ export function flattenCategoryTree(tree: CategoryTreeNode[]): FlatCategoryTreeN
 
   function visit(nodes: CategoryTreeNode[], depth: number) {
     for (const node of nodes) {
-      flat.push({ category: node.category, depth });
+      flat.push({ category: node.category, depth, hasChildren: node.children.length > 0 });
       visit(node.children, depth + 1);
     }
   }

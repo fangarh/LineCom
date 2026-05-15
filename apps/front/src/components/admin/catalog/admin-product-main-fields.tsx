@@ -1,5 +1,6 @@
 import type { AdminBrandListItem, AdminCategoryListItem } from "@/lib/api/admin-catalog";
 import type { ProductFormState } from "./admin-product-editor-helpers";
+import { AdminCategoryTreePicker } from "./admin-category-parent-picker";
 
 type AdminProductMainFieldsProps = {
   brands: AdminBrandListItem[];
@@ -22,17 +23,20 @@ export function AdminProductMainFields({
 }: AdminProductMainFieldsProps) {
   return (
     <div className="admin-product-form__grid">
-      <label className="form-field">
-        <span>Категория</span>
-        <select onChange={(event) => setForm((current) => ({ ...current, categoryId: event.target.value }))} required value={form.categoryId}>
-          <option value="">Выберите категорию</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
-      </label>
+      <AdminCategoryTreePicker
+        buttonLabel="Выбрать категорию"
+        categories={categories}
+        emptySelection={{
+          ariaLabel: "Выбрать категорию",
+          title: "Выберите категорию",
+          description: "Только конечная категория без подкатегорий",
+        }}
+        getDisabledReason={() => "выберите подкатегорию"}
+        isCategoryDisabled={(node) => node.hasChildren || node.category.childrenCount > 0}
+        label="Категория"
+        onChange={(categoryId) => setForm((current) => ({ ...current, categoryId }))}
+        value={form.categoryId}
+      />
       <label className="form-field">
         <span>Бренд</span>
         <select onChange={(event) => setForm((current) => ({ ...current, brandId: event.target.value }))} value={form.brandId}>

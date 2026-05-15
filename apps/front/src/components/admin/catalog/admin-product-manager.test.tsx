@@ -84,6 +84,18 @@ const connectorsCategory: AdminCategoryListItem = {
   childrenCount: 0,
 };
 
+const powerCablesCategory: AdminCategoryListItem = {
+  id: "cat-power-cables",
+  parentId: "cat-cables",
+  name: "Силовые кабели",
+  slug: "silovye-kabeli",
+  sortOrder: 15,
+  isActive: true,
+  isVisibleInMenu: true,
+  productsCount: 4,
+  childrenCount: 0,
+};
+
 const cableBrand: AdminBrandListItem = {
   id: "brand-cable",
   name: "Кабельный завод",
@@ -357,10 +369,10 @@ function productListResponse(
 
 function categoryListResponse(): AdminCategoryListResponse {
   return {
-    items: [cablesCategory, connectorsCategory],
+    items: [cablesCategory, powerCablesCategory, connectorsCategory],
     page: 1,
     pageSize: 60,
-    totalItems: 2,
+    totalItems: 3,
     totalPages: 1,
   };
 }
@@ -574,7 +586,10 @@ describe("AdminProductManager", () => {
     await user.click(screen.getByRole("button", { name: "Новый товар" }));
     const editor = screen.getByLabelText("Редактор товара");
 
-    await user.selectOptions(within(editor).getByLabelText("Категория"), "cat-cables");
+    await user.click(within(editor).getByRole("button", { name: "Выбрать категорию" }));
+    const categoryListbox = within(editor).getByRole("listbox", { name: "Категория" });
+    expect(within(categoryListbox).getByRole("option", { name: "Кабели" })).toHaveAttribute("aria-disabled", "true");
+    await user.click(within(categoryListbox).getByRole("option", { name: "Силовые кабели" }));
     await user.selectOptions(within(editor).getByLabelText("Бренд"), "brand-cable");
     await user.type(within(editor).getByLabelText("Название"), "Муфта кабельная 1кВ");
     await user.type(within(editor).getByLabelText("Slug"), "mufta-kabelnaya-1kv");
@@ -593,7 +608,7 @@ describe("AdminProductManager", () => {
 
     expect(adminCatalogApiMock.createAdminProduct).toHaveBeenCalledWith(
       {
-        categoryId: "cat-cables",
+        categoryId: "cat-power-cables",
         brandId: "brand-cable",
         name: "Муфта кабельная 1кВ",
         slug: "mufta-kabelnaya-1kv",
