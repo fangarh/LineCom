@@ -9,7 +9,7 @@ export function buildProductCategoryChangeCommand(product: AdminProductDetail, t
 }
 
 export function isLeafCategory(category: AdminCategoryListItem | null | undefined, hasTreeChildren = false) {
-  return Boolean(category) && !hasTreeChildren && category.childrenCount <= 0;
+  return category !== null && category !== undefined && !hasTreeChildren && category.childrenCount <= 0;
 }
 
 export function findCategoryById(categories: AdminCategoryListItem[], categoryId: string) {

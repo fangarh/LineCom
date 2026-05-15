@@ -987,6 +987,18 @@
   .admin-catalog-modal__body {
     padding: 14px;
   }
+
+  .admin-product-category-change__summary {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-product-category-change__actions {
+    justify-content: stretch;
+  }
+
+  .admin-product-category-change__actions .button {
+    flex: 1 1 160px;
+  }
 }
 
 .admin-product-attributes,
