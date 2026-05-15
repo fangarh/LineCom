@@ -4,8 +4,9 @@ phase: 07-modal-catalog-editors
 source:
   - 07-01-SUMMARY.md
   - 07-02-SUMMARY.md
+  - 07-03-SUMMARY.md
 started: 2026-05-15T12:33:00+03:00
-updated: 2026-05-15T12:48:00+03:00
+updated: 2026-05-15T13:10:00+03:00
 ---
 
 ## Current Test
@@ -48,7 +49,9 @@ result: issue
 reported: "Надо разбить модалку на подкатегории."
 severity: major
 diagnosis: |
-  Модалка категории сейчас объединяет базовые поля, позицию/перемещение, сортировку и опасные действия в одном визуальном потоке. Функционально сценарий работает, но UX остается перегруженным для регулярного редактирования структуры.
+  Модалка категории объединяла базовые поля, позицию/перемещение, сортировку и опасные действия в одном визуальном потоке.
+resolution_attempt: |
+  07-03 split the modal into visible sections: "Основное", "SEO и меню", "Действия" and "Позиция".
 
 ### 6. Category Modal Save Delete And Close Guards
 expected: |
@@ -57,23 +60,46 @@ expected: |
   Изменение полей категории, родителя перемещения или порядка сортировки включает подтверждение закрытия; закрытие заблокировано во время сохранения, удаления, перемещения или сортировки.
 result: pass
 
+## Re-Verification
+
+### R1. Category Modal Sectioning Gap Recheck
+expected: |
+  Модальное окно категории разделено на понятные секции: "Основное", "SEO и меню", "Позиция" и "Действия".
+  Существующие элементы сохранены: родительская категория, новый родитель, "Переместить", "Новый порядок", "Обновить порядок", "Сохранить" и "Удалить".
+  Модалка остается удобной на desktop и узком viewport.
+source: 07-03-SUMMARY.md
+result: issue
+reported: "Готово, но я бы хотел видеть табы."
+severity: major
+diagnosis: |
+  Section headings improved scanability, but the desired UX is tabbed navigation inside the category modal rather than a single long scroll with visible sections.
+
 ## Summary
 
-total: 6
+total: 7
 passed: 5
-issues: 1
+issues: 2
 pending: 0
 skipped: 0
 blocked: 0
 
 ## Gaps
 
-- truth: "Модальное окно категории должно оставаться удобным для редактирования структуры и позиции категории."
-  status: failed
-  reason: "User reported: Надо разбить модалку на подкатегории."
+- truth: "Модальное окно категории должно быть разбито на подкатегории/секции для удобного редактирования."
+  status: addressed_but_rejected
+  reason: "07-03 added visible sections, but user clarified they want tabs."
   severity: major
   test: 5
-  diagnosis: "Модалка категории перегружена разнородными задачами и требует разбиения на подкатегории/секции внутри модального интерфейса."
+  artifacts:
+    - ".planning/phases/07-modal-catalog-editors/07-03-SUMMARY.md"
+  missing:
+    - "Tabbed navigation inside the category modal"
+
+- truth: "Модальное окно категории должно использовать табы для переключения между подкатегориями редактирования."
+  status: failed
+  reason: "User reported: Готово, но я бы хотел видеть табы."
+  severity: major
+  test: R1
   artifacts: []
   missing:
-    - "Внутренняя навигация/секции для модалки категории"
+    - "Tabs for Основное, SEO и меню, Позиция, Действия"
