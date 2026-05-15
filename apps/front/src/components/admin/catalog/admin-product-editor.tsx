@@ -43,6 +43,7 @@ type AdminProductEditorProps = {
   onSubmitProduct: (event: FormEvent<HTMLFormElement>) => void;
   selectedProduct: AdminProductDetail | null;
   setForm: (update: (current: ProductFormState) => ProductFormState) => void;
+  showHeader?: boolean;
   statusMessage: string | null;
 };
 
@@ -67,20 +68,23 @@ export function AdminProductEditor({
   onSubmitProduct,
   selectedProduct,
   setForm,
+  showHeader = true,
   statusMessage,
 }: AdminProductEditorProps) {
   const activeTab = productEditorTabs.find((tab) => tab.id === activeEditorTab) ?? productEditorTabs[0];
 
   return (
     <section className="admin-catalog-form admin-product-manager__editor" aria-label="Редактор товара">
-      <div className="admin-product-manager__head">
-        <div>
-          <h2>{selectedProduct ? "Редактирование товара" : "Новый товар"}</h2>
-          <p className="admin-catalog-status">
-            {isLoadingDetail ? "Загружаем карточку..." : selectedProduct ? selectedProduct.slug : "Заполните основные поля."}
-          </p>
+      {showHeader ? (
+        <div className="admin-product-manager__head">
+          <div>
+            <h2>{selectedProduct ? "Редактирование товара" : "Новый товар"}</h2>
+            <p className="admin-catalog-status">
+              {isLoadingDetail ? "Загружаем карточку..." : selectedProduct ? selectedProduct.slug : "Заполните основные поля."}
+            </p>
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {alertMessage ? (
         <p className="form-alert" role="alert">

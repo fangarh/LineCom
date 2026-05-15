@@ -111,6 +111,86 @@
   align-items: start;
 }
 
+.admin-category-manager,
+.admin-product-manager {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.admin-catalog-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(22 26 35 / 56%);
+}
+
+.admin-catalog-modal__dialog {
+  width: min(1120px, calc(100vw - 48px));
+  max-height: calc(100vh - 48px);
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 24px 80px rgb(22 26 35 / 28%);
+  outline: none;
+}
+
+.admin-catalog-modal__header {
+  min-width: 0;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-catalog-modal__header h2 {
+  margin: 0;
+  color: var(--color-graphite);
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.admin-catalog-modal__close {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  color: var(--color-graphite);
+  font-size: 28px;
+  line-height: 1;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.admin-catalog-modal__close:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.admin-catalog-modal__body {
+  min-height: 0;
+  overflow: auto;
+  padding: 20px;
+}
+
+.admin-catalog-modal__body .admin-catalog-form {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
 .admin-category-manager__head,
 .admin-brand-manager__head,
 .admin-attribute-manager__head,
@@ -726,6 +806,22 @@
   margin-top: 3px;
   color: var(--color-muted);
   font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .admin-catalog-modal {
+    padding: 14px;
+  }
+
+  .admin-catalog-modal__dialog {
+    width: calc(100vw - 28px);
+    max-height: calc(100vh - 28px);
+  }
+
+  .admin-catalog-modal__header,
+  .admin-catalog-modal__body {
+    padding: 14px;
+  }
 }
 
 .admin-product-attributes,

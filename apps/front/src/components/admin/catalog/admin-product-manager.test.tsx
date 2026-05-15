@@ -579,6 +579,104 @@ describe("AdminProductManager", () => {
     });
   });
 
+  it("открывает редактор товара в диалоге из строки и из кнопки нового товара", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /Кабель ВВГнг 3x2.5/ }));
+    const editDialog = await screen.findByRole("dialog", { name: /Редактирование товара/ });
+    expect(within(editDialog).getByLabelText("Название")).toHaveValue("Кабель ВВГнг 3x2.5");
+
+    await user.click(within(editDialog).getByRole("button", { name: "Закрыть редактор товара" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+
+    await user.click(screen.getByRole("button", { name: "Новый товар" }));
+    const createDialog = await screen.findByRole("dialog", { name: /Новый товар/ });
+    expect(within(createDialog).getByLabelText("Название")).toHaveValue("");
+  });
+
+  it("подтверждает закрытие диалога при несохраненных изменениях товара", async () => {
+    const user = userEvent.setup();
+    const confirmSpy = vi.spyOn(window, "confirm").mockReturnValueOnce(false).mockReturnValueOnce(true);
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: /Кабель ВВГнг 3x2.5/ }));
+    const dialog = await screen.findByRole("dialog", { name: /Редактирование товара/ });
+    await user.type(within(dialog).getByLabelText("Название"), " обновленный");
+
+    await user.click(within(dialog).getByRole("button", { name: "Закрыть редактор товара" }));
+    expect(confirmSpy).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("dialog", { name: /Редактирование товара/ })).toBeInTheDocument();
+
+    await user.keyboard("{Escape}");
+    expect(confirmSpy).toHaveBeenCalledTimes(2);
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+
+    confirmSpy.mockRestore();
+  });
+
+  it("оставляет диалог открытым после сохранения и блокирует закрытие во время мутации", async () => {
+    const user = userEvent.setup();
+    const saveRequest = deferred<AdminProductDetail>();
+    adminCatalogApiMock.updateAdminProduct.mockReturnValueOnce(saveRequest.promise);
+    const confirmSpy = vi.spyOn(window, "confirm");
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: /Кабель ВВГнг 3x2.5/ }));
+    const dialog = await screen.findByRole("dialog", { name: /Редактирование товара/ });
+    await user.click(within(dialog).getByRole("button", { name: "Сохранить" }));
+
+    expect(within(dialog).getByRole("button", { name: "Закрыть редактор товара" })).toBeDisabled();
+    await user.keyboard("{Escape}");
+    expect(screen.getByRole("dialog", { name: /Редактирование товара/ })).toBeInTheDocument();
+    expect(confirmSpy).not.toHaveBeenCalled();
+
+    await act(async () => {
+      saveRequest.resolve(savedProductDetail);
+    });
+
+    expect(await within(dialog).findByText("Товар сохранен.")).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: /Редактирование товара/ })).toBeInTheDocument();
+
+    confirmSpy.mockRestore();
+  });
+
+  it("закрывает диалог после удаления товара и обновляет список", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: /Кабель ВВГнг 3x2.5/ }));
+    const dialog = await screen.findByRole("dialog", { name: /Редактирование товара/ });
+    await user.click(within(dialog).getByRole("button", { name: "Удалить" }));
+
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(adminCatalogApiMock.deleteAdminProduct).toHaveBeenCalledWith("product-active", "csrf-token");
+    expect(adminCatalogApiMock.getAdminProducts).toHaveBeenLastCalledWith({ page: 1, pageSize: 60 });
+  });
+
+  it("не гидратирует закрытый диалог устаревшим ответом карточки товара", async () => {
+    const user = userEvent.setup();
+    const detailRequest = deferred<AdminProductDetail>();
+    adminCatalogApiMock.getAdminProduct.mockReturnValueOnce(detailRequest.promise);
+    await renderManager();
+
+    await user.click(screen.getByRole("button", { name: /Кабель ВВГнг 3x2.5/ }));
+    const dialog = await screen.findByRole("dialog", { name: /Редактирование товара|Новый товар/ });
+    await user.click(within(dialog).getByRole("button", { name: "Закрыть редактор товара" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+
+    await act(async () => {
+      detailRequest.resolve(activeProductDetail);
+    });
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Новый товар" }));
+    const createDialog = await screen.findByRole("dialog", { name: /Новый товар/ });
+    expect(within(createDialog).getByLabelText("Название")).toHaveValue("");
+  });
+
   it("создает товар с обязательными полями и CSRF-токеном", async () => {
     const user = userEvent.setup();
     await renderManager();

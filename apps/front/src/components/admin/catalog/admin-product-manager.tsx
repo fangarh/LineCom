@@ -19,7 +19,7 @@ import {
 } from "@/lib/api/admin-catalog";
 import { normalizeApiError } from "@/lib/api/errors";
 import { generateSlug } from "@/lib/catalog/slug";
-import { AdminProductEditor } from "./admin-product-editor";
+import { AdminProductEditorModal } from "./admin-product-editor-modal";
 import {
   buildAdminProductCommand,
   emptyProductForm,
@@ -40,6 +40,10 @@ const allCatalogOptionsPageSize = 60;
 const defaultProductPageSize = 60;
 const missingCsrfMessage = "Сессия не подтверждена. Обновите страницу и войдите снова.";
 
+function serializeProductForm(form: ProductFormState) {
+  return JSON.stringify(form);
+}
+
 type AdminProductManagerProps = {
   csrfToken?: string | null;
 };
@@ -50,6 +54,8 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
   const [brands, setBrands] = useState<AdminBrandListItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<AdminProductDetail | null>(null);
   const [form, setForm] = useState<ProductFormState>(emptyProductForm);
+  const [productFormBaselineSignature, setProductFormBaselineSignature] = useState(() => serializeProductForm(emptyProductForm));
+  const [isProductEditorOpen, setIsProductEditorOpen] = useState(false);
   const [isSlugManual, setIsSlugManual] = useState(false);
   const [activeEditorTab, setActiveEditorTab] = useState<ProductEditorTab>("main");
   const [duplicateCandidates, setDuplicateCandidates] = useState<AdminProductDuplicateCandidate[]>([]);
@@ -78,6 +84,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
   const detailRequestSeqRef = useRef(0);
   const duplicateRequestSeqRef = useRef(0);
   const editorSessionRef = useRef(0);
+  const productFormBaselineRef = useRef<ProductFormState>(emptyProductForm);
   const selectedProductIdRef = useRef<string | null>(null);
   const latestListParamsRef = useRef<AdminProductListParams>({});
 
@@ -102,6 +109,14 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
   useEffect(() => {
     latestListParamsRef.current = listParams;
   }, [listParams]);
+
+  const productFormSignature = useMemo(() => serializeProductForm(form), [form]);
+  const hasProductUnsavedChanges = productFormSignature !== productFormBaselineSignature;
+
+  function resetProductFormBaseline(nextForm: ProductFormState) {
+    productFormBaselineRef.current = nextForm;
+    setProductFormBaselineSignature(serializeProductForm(nextForm));
+  }
 
   const loadProductsForParams = useCallback(async (params: AdminProductListParams) => {
     const requestSeq = listRequestSeqRef.current + 1;
@@ -244,6 +259,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
     const requestSeq = detailRequestSeqRef.current + 1;
     detailRequestSeqRef.current = requestSeq;
     editorSessionRef.current += 1;
+    setIsProductEditorOpen(true);
     setIsLoadingDetail(true);
     setAlertMessage(null);
     setStatusMessage(null);
@@ -255,8 +271,10 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
       const detail = await getAdminProduct(productId);
       if (detailRequestSeqRef.current !== requestSeq) return;
 
+      const nextForm = formFromAdminProductDetail(detail);
       setSelectedProduct(detail);
-      setForm(formFromAdminProductDetail(detail));
+      resetProductFormBaseline(nextForm);
+      setForm(nextForm);
       setIsSlugManual(true);
     } catch (error) {
       if (detailRequestSeqRef.current !== requestSeq) return;
@@ -273,7 +291,9 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
     duplicateRequestSeqRef.current += 1;
     editorSessionRef.current += 1;
     setIsLoadingDetail(false);
+    setIsProductEditorOpen(true);
     setSelectedProduct(null);
+    resetProductFormBaseline(emptyProductForm);
     setForm(emptyProductForm);
     setIsSlugManual(false);
     setDuplicateCandidates([]);
@@ -306,8 +326,10 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
 
       if (!isCurrentProductMutation(capturedProductId, capturedEditorSession)) return;
 
+      const nextForm = formFromAdminProductDetail(savedProduct);
       setSelectedProduct(savedProduct);
-      setForm(formFromAdminProductDetail(savedProduct));
+      resetProductFormBaseline(nextForm);
+      setForm(nextForm);
       setIsSlugManual(true);
       setStatusMessage(selectedProduct ? "Товар сохранен." : "Товар создан.");
       await refreshProductList();
@@ -338,6 +360,11 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
       await deleteAdminProduct(selectedProduct.id, csrfToken);
       if (!isCurrentProductMutation(capturedProductId, capturedEditorSession)) return;
 
+      detailRequestSeqRef.current += 1;
+      duplicateRequestSeqRef.current += 1;
+      editorSessionRef.current += 1;
+      resetProductFormBaseline(emptyProductForm);
+      setIsProductEditorOpen(false);
       setSelectedProduct(null);
       setForm(emptyProductForm);
       setIsSlugManual(false);
@@ -375,6 +402,21 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
 
   function isCurrentProductMutation(capturedProductId: string | null, capturedEditorSession: number) {
     return editorSessionRef.current === capturedEditorSession && selectedProductIdRef.current === capturedProductId;
+  }
+
+  function confirmProductEditorClose() {
+    if (!hasProductUnsavedChanges) return true;
+    return window.confirm("Закрыть редактор без сохранения изменений?");
+  }
+
+  function closeProductEditor() {
+    if (isMutating) return;
+    detailRequestSeqRef.current += 1;
+    duplicateRequestSeqRef.current += 1;
+    editorSessionRef.current += 1;
+    setIsLoadingDetail(false);
+    setIsCheckingDuplicates(false);
+    setIsProductEditorOpen(false);
   }
 
   function changeProductName(name: string) {
@@ -421,16 +463,18 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
         selectedProductId={selectedProduct?.id ?? null}
       />
 
-      <AdminProductEditor
+      <AdminProductEditorModal
         activeEditorTab={activeEditorTab}
         alertMessage={alertMessage}
         brands={brands}
         categories={categories}
+        confirmClose={confirmProductEditorClose}
         csrfToken={csrfToken}
         duplicateCandidates={duplicateCandidates}
         form={form}
         isCheckingDuplicates={isCheckingDuplicates}
         isLoadingDetail={isLoadingDetail}
+        isOpen={isProductEditorOpen}
         isMutating={isMutating}
         onCheckDuplicateCandidates={checkDuplicateCandidates}
         onDeleteSelectedProduct={deleteSelectedProduct}
@@ -440,6 +484,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
           setIsSlugManual(true);
         }}
         onRegenerateSlug={regenerateProductSlug}
+        onRequestClose={closeProductEditor}
         onSetActiveEditorTab={setActiveEditorTab}
         onSlugChange={changeProductSlug}
         onSubmitProduct={submitProduct}
