@@ -16,7 +16,18 @@ v1.0 Release Stabilization shipped on 2026-05-15. The milestone is archived in `
 
 The release baseline is verified for auth throttling, production configuration guardrails, frontend API transport errors, Local FileStorage public/private boundaries, storage diagnostics, catalog import file lifecycle, SEO/GEO route behavior, admin maintainability/contract drift checks, dependency audits, production runbook coverage and final requirement traceability.
 
-Next milestone planning has not started. Use `$gsd-new-milestone` to define fresh requirements before adding product expansion scope.
+Milestone v1.1 Admin Catalog UX is in planning. It focuses on the existing admin catalog product/category editing workflow: modal editors replace the always-visible side editors, and product rows gain a focused quick category change action.
+
+## Current Milestone: v1.1 Admin Catalog UX
+
+**Goal:** Improve catalog admin usability by moving product/category editing into modal dialogs and adding a safe single-product quick category change flow.
+
+**Target features:**
+- Product editor opens in a modal from product row selection and `New product`.
+- Category editor opens in a modal from category selection and `New category`.
+- Product rows expose a quick category change action that preserves current product fields.
+- Quick category change warns before saving when category-specific attribute values may be cleared or invalidated.
+- Focused frontend tests and desktop/narrow viewport QA cover the new editing flows.
 
 ## Requirements
 
@@ -39,7 +50,10 @@ Next milestone planning has not started. Use `$gsd-new-milestone` to define fres
 
 ### Active
 
-- No active v1 requirements remain. Define next milestone requirements with `$gsd-new-milestone`.
+- Modal product editing for the existing admin catalog product manager.
+- Modal category editing for the existing admin catalog category manager.
+- Safe single-product quick category change from the product list.
+- Focused regression coverage for modal editing, quick category changes, stale request handling and responsive behavior.
 
 ### Out of Scope
 
@@ -89,6 +103,7 @@ Important current concerns from the codebase map:
 | Research: Full, but source-of-truth constrained | External/current docs inform best practices; `vault` and codebase map remain authoritative for project intent. | Good - phase research informed implementation without overriding project rules |
 | Plan Check and Verifier enabled | Large release-critical work needs pre-execution plan validation and post-execution goal verification. | Good - every phase has verification evidence |
 | Commit planning docs to git | GSD state should persist across sessions, but commits must avoid unrelated product changes. | Good - v1 planning artifacts were committed without staging user-owned dirty baseline |
+| v1.1 scope: modal admin catalog UX first | User identified side editor blocks as the immediate usability pain; quick category changes are useful, while bulk category changes would add extra state and risk. | Pending |
 
 ## Evolution
 
@@ -108,4 +123,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-05-15 after v1.0 milestone archive*
+*Last updated: 2026-05-15 for v1.1 milestone start*
