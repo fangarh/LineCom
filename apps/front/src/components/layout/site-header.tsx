@@ -105,7 +105,7 @@ export function SiteHeader() {
                   key={item.href}
                   className={`site-header__link${item.mobileOnly ? " site-header__link--mobile-only" : ""}`}
                   href={item.href}
-                  prefetch={item.href === routes.home() ? false : undefined}
+                  prefetch={item.href === routes.home() || item.href === routes.delivery() ? false : undefined}
                   onClick={closeMenu}
                 >
                   <span>{item.label}</span>

@@ -1,16 +1,36 @@
 import { describe, expect, it, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
 import type { PublicProductDetail } from "@/lib/api/catalog";
-import { getProduct } from "@/lib/api/catalog";
-import { generateMetadata } from "./page";
+import { getCategoryTree, getProduct } from "@/lib/api/catalog";
+import ProductPage, { generateMetadata } from "./page";
+
+vi.mock("@/components/catalog/product-detail", () => ({
+  ProductDetail: ({ product }: { product: PublicProductDetail }) => <article aria-label="Карточка товара">{product.name}</article>,
+}));
+
+vi.mock("@/components/catalog/category-nav", () => ({
+  CategoryNav: ({ activeSlug, items }: { activeSlug?: string; items: Array<{ name: string; slug: string }> }) => (
+    <nav aria-label="Категории каталога">
+      <span>active:{activeSlug}</span>
+      {items.map((item) => (
+        <a href={`/catalog/${item.slug}`} key={item.slug}>
+          {item.name}
+        </a>
+      ))}
+    </nav>
+  ),
+}));
 
 vi.mock("@/lib/api/catalog", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/lib/api/catalog")>();
   return {
     ...actual,
+    getCategoryTree: vi.fn(),
     getProduct: vi.fn(),
   };
 });
 
+const getCategoryTreeMock = vi.mocked(getCategoryTree);
 const getProductMock = vi.mocked(getProduct);
 
 function product(overrides: Partial<PublicProductDetail> = {}): PublicProductDetail {
@@ -62,5 +82,37 @@ describe("product route metadata", () => {
         follow: true,
       },
     });
+  });
+});
+
+describe("product route page", () => {
+  it("renders category navigation beside the product card", async () => {
+    getProductMock.mockResolvedValue(product());
+    getCategoryTreeMock.mockResolvedValue({
+      items: [
+        {
+          id: "cat-twisted-pair",
+          parentId: null,
+          name: "Витая пара",
+          slug: "vitaya-para",
+          h1: null,
+          description: null,
+          sortOrder: 10,
+          isVisibleInMenu: true,
+          children: [],
+        },
+      ],
+    });
+
+    render(
+      await ProductPage({
+        params: Promise.resolve({ slug: "u-utp-cat-5e-cu-305m" }),
+      }),
+    );
+
+    expect(getCategoryTreeMock).toHaveBeenCalled();
+    expect(screen.getByRole("heading", { name: "Категории" })).toBeInTheDocument();
+    expect(screen.getByRole("navigation", { name: "Категории каталога" })).toHaveTextContent("active:vitaya-para");
+    expect(screen.getByRole("article", { name: "Карточка товара" })).toBeInTheDocument();
   });
 });

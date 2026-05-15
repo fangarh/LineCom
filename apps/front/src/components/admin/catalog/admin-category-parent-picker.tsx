@@ -24,6 +24,7 @@ type AdminCategoryTreePickerProps = {
   buttonLabel: string;
   categories: AdminCategoryListItem[];
   value: string;
+  className?: string;
   emptyOption?: EmptyCategoryOption | null;
   emptySelection?: EmptyCategoryOption;
   unavailableSelection?: EmptyCategoryOption;
@@ -66,6 +67,7 @@ export function AdminCategoryTreePicker({
   buttonLabel,
   categories,
   value,
+  className,
   emptyOption = null,
   emptySelection = {
     ariaLabel: "Выбрать категорию",
@@ -100,7 +102,7 @@ export function AdminCategoryTreePicker({
   }
 
   return (
-    <div className="admin-category-parent-picker">
+    <div className={["admin-category-parent-picker", className].filter(Boolean).join(" ")}>
       <span className="admin-category-parent-picker__label">{label}</span>
       <button
         aria-expanded={isOpen}

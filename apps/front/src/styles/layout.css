@@ -210,6 +210,24 @@
   border-color: rgba(255, 208, 0, 0.5);
 }
 
+.site-header__logout.button--ghost {
+  color: var(--color-header-text);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.site-header__logout.button--ghost:hover,
+.site-header__logout.button--ghost:focus-visible {
+  color: var(--color-header-text);
+  background: var(--color-header-hover);
+  border-color: rgba(255, 208, 0, 0.6);
+}
+
+.site-header__logout.button--ghost:disabled {
+  color: rgba(255, 255, 255, 0.72);
+  cursor: progress;
+}
+
 .site-header__user {
   display: inline-flex;
   align-items: center;

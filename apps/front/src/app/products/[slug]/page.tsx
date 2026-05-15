@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { CategoryNav } from "@/components/catalog/category-nav";
 import { ProductDetail } from "@/components/catalog/product-detail";
 import { ApiClientError } from "@/lib/api/errors";
-import { getProduct } from "@/lib/api/catalog";
+import { getCategoryTree, getProduct } from "@/lib/api/catalog";
 import { indexablePageMetadata, noindexPageMetadata } from "@/lib/seo/metadata";
 
 type ProductPageProps = {
@@ -45,16 +46,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className="catalog-page">
-      <ProductDetail product={data.product} />
+      <div className="catalog-layout">
+        <aside className="catalog-sidebar" aria-labelledby="catalog-categories-title">
+          <h2 id="catalog-categories-title">Категории</h2>
+          <CategoryNav items={data.categories} activeSlug={data.product.category.slug} />
+        </aside>
+
+        <section className="catalog-content" aria-label="Карточка товара">
+          <ProductDetail product={data.product} />
+        </section>
+      </div>
     </div>
   );
 }
 
 async function loadProductPageData(slug: string) {
   try {
-    const product = await getProduct(slug);
+    const [product, categoriesResult] = await Promise.all([
+      getProduct(slug),
+      getCategoryTree().then((response) => response.items, () => []),
+    ]);
 
-    return { status: "ready" as const, product };
+    return { status: "ready" as const, categories: categoriesResult, product };
   } catch (error) {
     if (error instanceof ApiClientError && error.status === 404) {
       notFound();

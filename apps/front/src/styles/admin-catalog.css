@@ -141,6 +141,10 @@
   outline: none;
 }
 
+.admin-catalog-modal__dialog--category-change {
+  width: min(980px, calc(100vw - 48px));
+}
+
 .admin-catalog-modal__header {
   min-width: 0;
   display: flex;
@@ -509,18 +513,25 @@
 
 .admin-product-category-change {
   display: grid;
-  gap: 14px;
+  grid-template-columns: minmax(250px, 0.36fr) minmax(0, 1fr);
+  gap: 14px 18px;
+  align-items: start;
+}
+
+.admin-product-category-change .admin-catalog-alert,
+.admin-product-category-change .admin-catalog-status {
+  grid-column: 1 / -1;
 }
 
 .admin-product-category-change__summary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
 .admin-product-category-change__summary div {
   min-width: 0;
-  padding: 10px 12px;
+  padding: 9px 11px;
   background: var(--color-surface-muted);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -528,7 +539,7 @@
 
 .admin-product-category-change__summary span {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   color: var(--color-muted);
   font-size: 11px;
   font-weight: 800;
@@ -557,10 +568,13 @@
 }
 
 .admin-product-category-change__actions {
+  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   justify-content: flex-end;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
 }
 
 .admin-category-tree {
@@ -692,10 +706,17 @@
   box-shadow: var(--shadow-soft);
 }
 
+.admin-product-category-change__picker .admin-category-parent-picker__options {
+  position: static;
+  max-height: min(46vh, 440px);
+  margin-top: 6px;
+  box-shadow: none;
+}
+
 .admin-category-parent-picker__option {
   display: grid;
-  gap: 4px;
-  padding: 8px 9px;
+  gap: 3px;
+  padding: 7px 9px;
   padding-left: calc(9px + var(--category-depth, 0) * 18px);
   color: var(--color-text);
   text-align: left;
@@ -986,6 +1007,10 @@
   .admin-catalog-modal__header,
   .admin-catalog-modal__body {
     padding: 14px;
+  }
+
+  .admin-product-category-change {
+    grid-template-columns: 1fr;
   }
 
   .admin-product-category-change__summary {

@@ -6,6 +6,7 @@ type AdminCatalogModalProps = {
   children: ReactNode;
   closeLabel: string;
   confirmClose?: () => boolean;
+  dialogClassName?: string;
   isCloseDisabled?: boolean;
   isOpen: boolean;
   onRequestClose: () => void;
@@ -17,6 +18,7 @@ export function AdminCatalogModal({
   children,
   closeLabel,
   confirmClose,
+  dialogClassName,
   isCloseDisabled = false,
   isOpen,
   onRequestClose,
@@ -80,7 +82,7 @@ export function AdminCatalogModal({
         aria-describedby={subtitleId}
         aria-labelledby={titleId}
         aria-modal="true"
-        className="admin-catalog-modal__dialog"
+        className={["admin-catalog-modal__dialog", dialogClassName].filter(Boolean).join(" ")}
         ref={dialogRef}
         role="dialog"
         tabIndex={-1}

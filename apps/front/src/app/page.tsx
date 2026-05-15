@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import type { PublicProductListItem } from "@/lib/api/catalog";
-import { getCategoryTree, getProducts } from "@/lib/api/catalog";
+import { getCategoryTree, getProduct, getProducts } from "@/lib/api/catalog";
 import { getHomepageSections } from "@/lib/api/homepage";
 import { applyCuratedHomepageSections } from "@/lib/homepage/curated-homepage";
+import { resolveCuratedHomepageProducts } from "@/lib/homepage/curated-product-resolver";
 import { formatSku } from "@/lib/format";
 import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
 import { routes } from "@/lib/routes";
@@ -38,8 +39,13 @@ export default async function Home() {
   const categories = categoryResult.status === "fulfilled" ? categoryResult.value.items : [];
   const products = productResult.status === "fulfilled" ? productResult.value.items : [];
   const homepageSections = homepageResult.status === "fulfilled" ? homepageResult.value : null;
-  const { heroProducts, featuredProducts, highlights } = applyCuratedHomepageSections({
+  const resolvedProducts = await resolveCuratedHomepageProducts({
     products,
+    sections: homepageSections,
+    getProduct,
+  });
+  const { heroProducts, featuredProducts, highlights } = applyCuratedHomepageSections({
+    products: resolvedProducts,
     categories,
     sections: homepageSections,
   });

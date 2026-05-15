@@ -63,6 +63,12 @@
   }
 
   .home-hero,
+  .about-hero,
+  .about-company,
+  .about-bank-details,
+  .delivery-hero,
+  .delivery-showcase,
+  .delivery-process,
   .home-task,
   .home-why,
   .catalog-layout,
@@ -90,8 +96,21 @@
   .home-task__grid,
   .home-why__list,
   .featured-products,
-  .home-directions {
+  .home-directions,
+  .delivery-options__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .delivery-hero__content,
+  .about-hero__content,
+  .delivery-hero__visual,
+  .delivery-showcase__media {
+    min-height: 360px;
+  }
+
+  .delivery-final {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .catalog-sidebar {
@@ -163,6 +182,16 @@
 
   .home-hero__content,
   .home-hero__visual,
+  .about-hero__content,
+  .about-hero,
+  .about-company,
+  .about-company__facts,
+  .about-bank-details,
+  .delivery-hero__content,
+  .delivery-options,
+  .delivery-process,
+  .delivery-showcase__content,
+  .delivery-final,
   .home-task,
   .home-section,
   .home-why,
@@ -190,6 +219,7 @@
   .home-why__list,
   .featured-products,
   .home-directions,
+  .delivery-options__grid,
   .request-list-card__meta,
   .request-preview-drawer__item .summary-grid,
   .admin-catalog-tabs,
@@ -281,7 +311,14 @@
   }
 
   .home-hero h1,
+  .about-hero h1,
+  .delivery-hero h1,
   .content-hero h1,
+  .about-company h2,
+  .about-bank-details h2,
+  .delivery-showcase h2,
+  .delivery-process h2,
+  .delivery-final h2,
   .home-task h2,
   .home-section h2,
   .home-why h2,
@@ -302,6 +339,38 @@
   .home-hero__visual-head,
   .featured-product__actions {
     flex-direction: column;
+  }
+
+  .delivery-hero__visual,
+  .delivery-showcase__media {
+    min-height: 300px;
+  }
+
+  .about-hero__signal {
+    right: 20px;
+    bottom: 22px;
+    width: min(70%, 260px);
+  }
+
+  .delivery-route-card {
+    right: 14px;
+    bottom: 14px;
+    left: 14px;
+  }
+
+  .delivery-checklist div,
+  .delivery-steps li {
+    grid-template-columns: 1fr;
+  }
+
+  .delivery-steps span {
+    width: 48px;
+    height: 48px;
+  }
+
+  .about-bank-details__list,
+  .about-bank-details__list div {
+    grid-template-columns: 1fr;
   }
 
   .home-hero__visual-head strong {

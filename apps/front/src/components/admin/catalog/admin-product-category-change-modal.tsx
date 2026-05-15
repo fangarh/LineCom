@@ -39,6 +39,7 @@ export function AdminProductCategoryChangeModal({
   return (
     <AdminCatalogModal
       closeLabel="Закрыть смену категории"
+      dialogClassName="admin-catalog-modal__dialog--category-change"
       isCloseDisabled={isMutating}
       isOpen={isOpen}
       onRequestClose={onRequestClose}
@@ -67,6 +68,7 @@ export function AdminProductCategoryChangeModal({
         <AdminCategoryTreePicker
           buttonLabel="Выбрать новую категорию"
           categories={categories}
+          className="admin-product-category-change__picker"
           disabled={isLoadingDetail || isMutating || !product}
           getDisabledReason={() => "доступны только конечные категории"}
           isCategoryDisabled={({ category, hasChildren }) => !isLeafCategory(category, hasChildren)}
