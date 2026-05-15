@@ -99,7 +99,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05-01: Admin catalog/homepage decomposition targets.
+- [x] 05-01: Admin catalog/homepage decomposition targets.
 - [ ] 05-02: Helper extraction and frontend unit tests.
 - [ ] 05-03: Frontend/backend API contract drift checks.
 
