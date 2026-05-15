@@ -94,6 +94,241 @@ TLS:
 - `https://line-com.ru/storage/products/catalog-import/...png` -> `200 image/png`
 - Свежая загрузка главной страницы в браузере не показала ошибок по storage-файлам.
 
+## Release runbook
+
+Этот раздел является рабочим чеклистом production-релиза. Секреты в документ не вносить: здесь фиксируются только имена переменных, пути и команды.
+
+### 1. Предрелизная проверка
+
+Перед сборкой релиза:
+
+```powershell
+dotnet test LineCom.sln
+npm.cmd --prefix apps/front test
+$env:LINECOM_PUBLIC_SITE_ORIGIN='https://line-com.ru'; npm.cmd --prefix apps/front run build
+npm.cmd --prefix apps/front audit --json
+dotnet list LineCom.sln package --vulnerable --include-transitive
+```
+
+Проверить, что:
+
+- нет failed tests;
+- `npm audit` не содержит `critical` или `high` findings;
+- NuGet vulnerable audit не содержит `critical` или `high` findings;
+- production origin для frontend равен `https://line-com.ru`;
+- миграции DbUp не содержат ручных правок в production базе.
+
+### 2. Сборка артефактов
+
+API:
+
+```powershell
+dotnet publish apps/api/LineCom.Api.csproj -c Release -o artifacts/api
+```
+
+DbUp migrator:
+
+```powershell
+dotnet publish apps/dbmigrator/LineCom.DbMigrator.csproj -c Release -o artifacts/dbmigrator
+```
+
+Frontend:
+
+```powershell
+$env:LINECOM_PUBLIC_SITE_ORIGIN='https://line-com.ru'
+npm.cmd --prefix apps/front run build
+```
+
+Production frontend использует Next.js standalone output. В релизный каталог frontend переносить standalone output, `.next/static`, `public`, `package.json` и lockfile в составе выбранной схемы деплоя.
+
+### 3. Конфигурация production
+
+API env-файл: `/etc/linecom/api.env`.
+
+Обязательные значения проверить по именам, не раскрывая секреты:
+
+- `ASPNETCORE_ENVIRONMENT=Production`
+- `ASPNETCORE_URLS=http://127.0.0.1:8080`
+- `ConnectionStrings__Default`
+- `Storage__RootPath=/var/lib/linecom/storage`
+- production origin / CORS / cookie параметры, если они вынесены в env.
+
+Frontend env-файл: `/etc/linecom/front.env`.
+
+Обязательные значения проверить по именам:
+
+- `NODE_ENV=production`
+- `PORT=3000`
+- `HOSTNAME=127.0.0.1`
+- `LINECOM_API_ORIGIN=http://127.0.0.1:8080`
+- `LINECOM_PUBLIC_SITE_ORIGIN=https://line-com.ru`
+
+Local FileStorage остается целевым storage-подходом проекта. Production root: `/var/lib/linecom/storage`. Не заменять его на S3/MinIO в рамках v1 release gate.
+
+### 4. Миграции DbUp
+
+Миграции выполняются отдельным шагом до переключения runtime-сервисов на новый релиз.
+
+На сервере:
+
+```bash
+cd /opt/linecom/dbmigrator/current
+LINECOM_CONNECTION_STRING="$LINECOM_CONNECTION_STRING" ./LineCom.DbMigrator
+```
+
+Остановить релиз и не переключать сервисы, если:
+
+- migrator завершился с ненулевым кодом;
+- есть ошибка подключения к PostgreSQL;
+- есть ошибка применения SQL migration;
+- журнал `public.schema_versions` не отражает ожидаемые миграции.
+
+Откат SQL migration не выполнять вручную без отдельного решения: сначала сохранить логи migrator, дамп базы и текущий release id.
+
+### 5. Переключение сервисов
+
+После загрузки артефактов и успешных миграций:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart linecom-api.service
+sudo systemctl restart linecom-front.service
+sudo systemctl status linecom-api.service --no-pager
+sudo systemctl status linecom-front.service --no-pager
+```
+
+Проверить nginx:
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+## Coordinated backup and restore
+
+Backup должен фиксировать одну согласованную точку: PostgreSQL dump и архив Local FileStorage относятся к одному release/backup id.
+
+### 1. Создание backup point
+
+Выбрать идентификатор backup point:
+
+```bash
+BACKUP_ID="$(date -u +%Y%m%dT%H%M%SZ)-linecom"
+BACKUP_DIR="/var/backups/linecom/$BACKUP_ID"
+sudo mkdir -p "$BACKUP_DIR"
+```
+
+Зафиксировать metadata:
+
+```bash
+sudo sh -c "cat > '$BACKUP_DIR/metadata.txt'" <<'EOF'
+backup_id=
+created_utc=
+release_id=
+database=PostgreSQL
+storage_root=/var/lib/linecom/storage
+api_current=/opt/linecom/api/current
+front_current=/opt/linecom/front/current
+dbmigrator_current=/opt/linecom/dbmigrator/current
+EOF
+```
+
+Заполнить значения без секретов.
+
+### 2. PostgreSQL dump
+
+```bash
+pg_dump --format=custom --no-owner --no-acl --file "$BACKUP_DIR/linecom.pgcustom" "$LINECOM_CONNECTION_STRING"
+```
+
+Проверка dump:
+
+```bash
+pg_restore --list "$BACKUP_DIR/linecom.pgcustom" > "$BACKUP_DIR/linecom.pgcustom.list"
+test -s "$BACKUP_DIR/linecom.pgcustom.list"
+```
+
+### 3. Local FileStorage archive
+
+```bash
+sudo tar --xattrs --acls -C /var/lib/linecom -czf "$BACKUP_DIR/storage.tgz" storage
+sudo tar -tzf "$BACKUP_DIR/storage.tgz" > "$BACKUP_DIR/storage.tgz.list"
+test -s "$BACKUP_DIR/storage.tgz.list"
+```
+
+Backup считается пригодным только если есть оба файла:
+
+- `$BACKUP_DIR/linecom.pgcustom`
+- `$BACKUP_DIR/storage.tgz`
+
+Однослойный restore только базы или только файлов считать risk scenario: БД и storage могут разойтись по ссылкам `stored_files` и физическим файлам.
+
+### 4. Dry-run restore на отдельную цель
+
+Dry-run restore выполняется только на отдельном host/database/storage path. Production database и `/var/lib/linecom/storage` не использовать как цель dry-run.
+
+Пример целевых значений:
+
+- database: `linecom_restore_drill`
+- storage root: `/var/lib/linecom-restore-drill/storage`
+- API port: `18080`
+- frontend port: `13000`
+
+Восстановить базу:
+
+```bash
+createdb linecom_restore_drill
+pg_restore --clean --if-exists --no-owner --dbname "$RESTORE_CONNECTION_STRING" "$BACKUP_DIR/linecom.pgcustom"
+```
+
+Восстановить storage:
+
+```bash
+sudo mkdir -p /var/lib/linecom-restore-drill
+sudo tar -C /var/lib/linecom-restore-drill -xzf "$BACKUP_DIR/storage.tgz"
+sudo chown -R linecom:linecom /var/lib/linecom-restore-drill/storage
+```
+
+Запустить API dry-run с отдельной конфигурацией:
+
+```bash
+ASPNETCORE_ENVIRONMENT=Production \
+ASPNETCORE_URLS=http://127.0.0.1:18080 \
+ConnectionStrings__Default="$RESTORE_CONNECTION_STRING" \
+Storage__RootPath=/var/lib/linecom-restore-drill/storage \
+/opt/linecom/api/current/LineCom.Api
+```
+
+Frontend dry-run должен указывать на dry-run API:
+
+```bash
+LINECOM_API_ORIGIN=http://127.0.0.1:18080 \
+LINECOM_PUBLIC_SITE_ORIGIN=https://line-com.ru \
+PORT=13000 \
+HOSTNAME=127.0.0.1 \
+node /opt/linecom/front/current/server.js
+```
+
+### 5. Post-restore smoke checks
+
+Для dry-run API/frontend:
+
+```bash
+curl.exe -I http://127.0.0.1:18080/api/public/health
+curl.exe -I http://127.0.0.1:13000/
+curl.exe -I http://127.0.0.1:13000/robots.txt
+curl.exe -I http://127.0.0.1:13000/sitemap.xml
+curl.exe -I http://127.0.0.1:13000/storage/products/cable.jpg
+```
+
+Проверить вручную:
+
+- публичный каталог открывается;
+- карточка товара с изображением открывается;
+- `/storage/products/...` возвращает файл из restored Local FileStorage;
+- заявки не создаются в production базе;
+- dry-run сервисы остановлены после проверки.
+
 ## Быстрые проверки
 
 DNS сайта:
