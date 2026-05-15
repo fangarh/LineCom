@@ -8,9 +8,9 @@
 
 ### Modal Editing
 
-- [ ] **AUX-01**: Admin can open the product editor in a modal from an existing product row and from `New product`, with existing product editor tabs and save/delete behavior preserved.
-- [ ] **AUX-02**: Admin can open the category editor in a modal from an existing category selection and from `New category`, with existing category save/delete/move/sort behavior preserved.
-- [ ] **AUX-03**: Product and category lists remain usable at full working width after side editors are removed, with filters, pagination and current list context preserved when modals open or close.
+- [x] **AUX-01**: Admin can open the product editor in a modal from an existing product row and from `New product`, with existing product editor tabs and save/delete behavior preserved.
+- [x] **AUX-02**: Admin can open the category editor in a modal from an existing category selection and from `New category`, with existing category save/delete/move/sort behavior preserved.
+- [x] **AUX-03**: Product and category lists remain usable at full working width after side editors are removed, with filters, pagination and current list context preserved when modals open or close.
 
 ### Quick Product Category Change
 
@@ -20,7 +20,7 @@
 
 ### Verification
 
-- [ ] **VER-01**: Frontend tests cover modal open/close, create/update/delete flows, stale detail response handling and list context preservation for product and category editors.
+- [x] **VER-01**: Frontend tests cover modal open/close, create/update/delete flows, stale detail response handling and list context preservation for product and category editors.
 - [ ] **VER-02**: Frontend tests and manual QA cover quick category change, warning behavior, list refresh, desktop layout and narrow viewport behavior.
 
 ## Future Requirements
@@ -42,11 +42,11 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUX-01 | Phase 7 | Pending |
-| AUX-02 | Phase 7 | Pending |
-| AUX-03 | Phase 7 | Pending |
+| AUX-01 | Phase 7 | Complete |
+| AUX-02 | Phase 7 | Complete |
+| AUX-03 | Phase 7 | Complete |
 | CATUX-01 | Phase 8 | Pending |
 | CATUX-02 | Phase 8 | Pending |
 | CATUX-03 | Phase 8 | Pending |
-| VER-01 | Phase 7 | Pending |
+| VER-01 | Phase 7 | Complete |
 | VER-02 | Phase 8 | Pending |

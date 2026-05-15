@@ -41,7 +41,7 @@ Final gate evidence is archived in `.planning/milestones/v1.0-phases/06-producti
 
 Plans:
 - [x] 07-01: Shared catalog modal shell and product editor modal migration.
-- [ ] 07-02: Category editor modal migration and responsive list layout cleanup.
+- [x] 07-02: Category editor modal migration and responsive list layout cleanup.
 
 ### Phase 8: Quick Product Category Change
 
