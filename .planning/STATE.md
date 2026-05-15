@@ -6,9 +6,9 @@ status: planning
 last_updated: "2026-05-15T08:47:25.068Z"
 last_activity: 2026-05-15
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
-  total_plans: 0
+  total_plans: 4
   completed_plans: 0
   percent: 0
 ---
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-15)
 
 **Core value:** Покупатель должен находить нужные кабельные товары через SEO/GEO-доступный каталог и надежно отправлять коммерческую заявку, которую продавец может обработать без потери данных.
-**Current focus:** Planning next milestone
+**Current focus:** v1.1 Admin Catalog UX
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 7
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-15 — Milestone v1.1 started
+Status: Roadmap created
+Last activity: 2026-05-15 — Milestone v1.1 roadmap created
 
 ## Performance Metrics
 
@@ -47,6 +47,8 @@ Last activity: 2026-05-15 — Milestone v1.1 started
 | 04 | 3 | - | - |
 | 05 | 3 | - | - |
 | 06 | 2 | - | - |
+| 07 | 2 | - | - |
+| 08 | 2 | - | - |
 
 **Recent Trend:**
 
@@ -93,4 +95,4 @@ Resume file: None
 
 ## Operator Next Steps
 
-- Start the next milestone with `$gsd-new-milestone`.
+- Start Phase 7 with `$gsd-discuss-phase 7` or `$gsd-plan-phase 7`.

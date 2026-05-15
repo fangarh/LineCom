@@ -40,16 +40,13 @@
 
 ## Traceability
 
-Roadmap mapping is created after requirements approval.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUX-01 | TBD | Pending |
-| AUX-02 | TBD | Pending |
-| AUX-03 | TBD | Pending |
-| CATUX-01 | TBD | Pending |
-| CATUX-02 | TBD | Pending |
-| CATUX-03 | TBD | Pending |
-| VER-01 | TBD | Pending |
-| VER-02 | TBD | Pending |
-
+| AUX-01 | Phase 7 | Pending |
+| AUX-02 | Phase 7 | Pending |
+| AUX-03 | Phase 7 | Pending |
+| CATUX-01 | Phase 8 | Pending |
+| CATUX-02 | Phase 8 | Pending |
+| CATUX-03 | Phase 8 | Pending |
+| VER-01 | Phase 7 | Pending |
+| VER-02 | Phase 8 | Pending |
