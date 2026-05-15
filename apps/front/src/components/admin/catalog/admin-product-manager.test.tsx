@@ -597,6 +597,82 @@ describe("AdminProductManager", () => {
     expect(within(createDialog).getByLabelText("Название")).toHaveValue("");
   });
 
+  it("открывает быструю смену категории без полного редактора", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+
+    const list = screen.getByLabelText("Список товаров");
+    const productRow = within(list).getByRole("row", { name: /Кабель ВВГнг 3x2.5/ });
+    await user.click(within(productRow).getByRole("button", { name: "Сменить категорию" }));
+
+    const dialog = await screen.findByRole("dialog", { name: "Смена категории товара" });
+    expect(within(dialog).getAllByText("Кабель ВВГнг 3x2.5").length).toBeGreaterThan(0);
+    expect(within(dialog).getAllByText("Кабели").length).toBeGreaterThan(0);
+    expect(within(dialog).getByRole("button", { name: "Сохранить категорию" })).toBeDisabled();
+    expect(screen.queryByRole("dialog", { name: /Редактирование товара/ })).not.toBeInTheDocument();
+    expect(adminCatalogApiMock.getAdminProduct).toHaveBeenLastCalledWith("product-active");
+  });
+
+  it("сохраняет быструю смену категории полным payload и обновляет список", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+
+    const list = screen.getByLabelText("Список товаров");
+    const productRow = within(list).getByRole("row", { name: /Кабель ВВГнг 3x2.5/ });
+    await user.click(within(productRow).getByRole("button", { name: "Сменить категорию" }));
+    const dialog = await screen.findByRole("dialog", { name: "Смена категории товара" });
+
+    await user.click(within(dialog).getByRole("button", { name: "Выбрать новую категорию" }));
+    const categoryListbox = within(dialog).getByRole("listbox", { name: "Новая категория" });
+    expect(within(categoryListbox).getByRole("option", { name: "Кабели" })).toHaveAttribute("aria-disabled", "true");
+    await user.click(within(categoryListbox).getByRole("option", { name: "Разъемы" }));
+
+    expect(within(dialog).getByRole("alert")).toHaveTextContent("Характеристики товара будут очищены");
+    await user.click(within(dialog).getByRole("button", { name: "Сохранить категорию" }));
+
+    expect(adminCatalogApiMock.updateAdminProduct).toHaveBeenCalledWith(
+      "product-active",
+      {
+        categoryId: "cat-connectors",
+        brandId: "brand-cable",
+        name: "Кабель ВВГнг 3x2.5",
+        slug: "kabel-vvgng-3x25",
+        sku: "VVG-325",
+        externalId: "EXT-325",
+        description: "Силовой кабель для стационарной прокладки",
+        shortDescription: "Кабель ВВГнг 3x2.5",
+        availabilityStatus: "in_stock",
+        saleUnit: "м",
+        unitQuantity: "1",
+        publishStatus: "draft",
+        isActive: true,
+        seoTitle: "Кабель ВВГнг 3x2.5 купить",
+        seoDescription: "SEO описание кабеля",
+        h1: "Кабель ВВГнг 3x2.5",
+        sortOrder: 10,
+      },
+      "csrf-token",
+    );
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: "Смена категории товара" })).not.toBeInTheDocument());
+    expect(adminCatalogApiMock.getAdminProducts).toHaveBeenLastCalledWith({ page: 1, pageSize: 60 });
+  });
+
+  it("не дает сохранить родительскую категорию в быстрой смене", async () => {
+    const user = userEvent.setup();
+    await renderManager();
+
+    const list = screen.getByLabelText("Список товаров");
+    const productRow = within(list).getByRole("row", { name: /Кабель ВВГнг 3x2.5/ });
+    await user.click(within(productRow).getByRole("button", { name: "Сменить категорию" }));
+    const dialog = await screen.findByRole("dialog", { name: "Смена категории товара" });
+
+    await user.click(within(dialog).getByRole("button", { name: "Выбрать новую категорию" }));
+    const categoryListbox = within(dialog).getByRole("listbox", { name: "Новая категория" });
+    expect(within(categoryListbox).getByRole("option", { name: "Кабели" })).toBeDisabled();
+    expect(within(dialog).getByRole("button", { name: "Сохранить категорию" })).toBeDisabled();
+    expect(adminCatalogApiMock.updateAdminProduct).not.toHaveBeenCalled();
+  });
+
   it("подтверждает закрытие диалога при несохраненных изменениях товара", async () => {
     const user = userEvent.setup();
     const confirmSpy = vi.spyOn(window, "confirm").mockReturnValueOnce(false).mockReturnValueOnce(true);

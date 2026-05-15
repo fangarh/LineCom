@@ -19,6 +19,8 @@ import {
 } from "@/lib/api/admin-catalog";
 import { normalizeApiError } from "@/lib/api/errors";
 import { generateSlug } from "@/lib/catalog/slug";
+import { AdminProductCategoryChangeModal } from "./admin-product-category-change-modal";
+import { buildProductCategoryChangeCommand, findCategoryById, isLeafCategory } from "./admin-product-category-change-helpers";
 import { AdminProductEditorModal } from "./admin-product-editor-modal";
 import {
   buildAdminProductCommand,
@@ -76,6 +78,13 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [isMutating, setIsMutating] = useState(false);
   const [isCheckingDuplicates, setIsCheckingDuplicates] = useState(false);
+  const [isQuickCategoryOpen, setIsQuickCategoryOpen] = useState(false);
+  const [quickCategoryProduct, setQuickCategoryProduct] = useState<AdminProductDetail | null>(null);
+  const [quickCategoryTargetId, setQuickCategoryTargetId] = useState("");
+  const [isQuickCategoryLoading, setIsQuickCategoryLoading] = useState(false);
+  const [isQuickCategoryMutating, setIsQuickCategoryMutating] = useState(false);
+  const [quickCategoryAlertMessage, setQuickCategoryAlertMessage] = useState<string | null>(null);
+  const [quickCategoryStatusMessage, setQuickCategoryStatusMessage] = useState<string | null>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const listRequestSeqRef = useRef(0);
@@ -83,6 +92,10 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
   const brandsRequestSeqRef = useRef(0);
   const detailRequestSeqRef = useRef(0);
   const duplicateRequestSeqRef = useRef(0);
+  const quickCategoryDetailRequestSeqRef = useRef(0);
+  const quickCategorySessionRef = useRef(0);
+  const quickCategoryProductIdRef = useRef<string | null>(null);
+  const isQuickCategoryOpenRef = useRef(false);
   const editorSessionRef = useRef(0);
   const productFormBaselineRef = useRef<ProductFormState>(emptyProductForm);
   const selectedProductIdRef = useRef<string | null>(null);
@@ -105,6 +118,10 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
   useEffect(() => {
     selectedProductIdRef.current = selectedProduct?.id ?? null;
   }, [selectedProduct?.id]);
+
+  useEffect(() => {
+    isQuickCategoryOpenRef.current = isQuickCategoryOpen;
+  }, [isQuickCategoryOpen]);
 
   useEffect(() => {
     latestListParamsRef.current = listParams;
@@ -286,6 +303,36 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
     }
   }
 
+  async function startProductCategoryChange(productId: string) {
+    const requestSeq = quickCategoryDetailRequestSeqRef.current + 1;
+    const session = quickCategorySessionRef.current + 1;
+    quickCategoryDetailRequestSeqRef.current = requestSeq;
+    quickCategorySessionRef.current = session;
+    quickCategoryProductIdRef.current = productId;
+    isQuickCategoryOpenRef.current = true;
+    setIsQuickCategoryOpen(true);
+    setIsQuickCategoryLoading(true);
+    setIsQuickCategoryMutating(false);
+    setQuickCategoryProduct(null);
+    setQuickCategoryTargetId("");
+    setQuickCategoryAlertMessage(null);
+    setQuickCategoryStatusMessage(null);
+
+    try {
+      const detail = await getAdminProduct(productId);
+      if (quickCategoryDetailRequestSeqRef.current !== requestSeq || !isCurrentQuickCategorySession(productId, session)) return;
+      setQuickCategoryProduct(detail);
+      setQuickCategoryTargetId(detail.categoryId);
+    } catch (error) {
+      if (quickCategoryDetailRequestSeqRef.current !== requestSeq || !isCurrentQuickCategorySession(productId, session)) return;
+      setQuickCategoryAlertMessage(normalizeApiError(error).message);
+    } finally {
+      if (quickCategoryDetailRequestSeqRef.current === requestSeq && isCurrentQuickCategorySession(productId, session)) {
+        setIsQuickCategoryLoading(false);
+      }
+    }
+  }
+
   function startCreate() {
     detailRequestSeqRef.current += 1;
     duplicateRequestSeqRef.current += 1;
@@ -338,6 +385,45 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
       setAlertMessage(normalizeApiError(error).message);
     } finally {
       setIsMutating(false);
+    }
+  }
+
+  async function submitProductCategoryChange() {
+    if (isQuickCategoryLoading || isQuickCategoryMutating) return;
+    if (!quickCategoryProduct) return;
+
+    const targetCategory = findCategoryById(categories, quickCategoryTargetId);
+    if (!targetCategory || !isLeafCategory(targetCategory) || quickCategoryTargetId === quickCategoryProduct.categoryId) return;
+
+    if (!csrfToken) {
+      setQuickCategoryAlertMessage(missingCsrfMessage);
+      return;
+    }
+
+    const capturedProductId = quickCategoryProduct.id;
+    const capturedSession = quickCategorySessionRef.current;
+    const command = buildProductCategoryChangeCommand(quickCategoryProduct, quickCategoryTargetId);
+    setIsQuickCategoryMutating(true);
+    setQuickCategoryAlertMessage(null);
+    setQuickCategoryStatusMessage(null);
+
+    try {
+      await updateAdminProduct(capturedProductId, command, csrfToken);
+      if (!isCurrentQuickCategorySession(capturedProductId, capturedSession)) return;
+
+      isQuickCategoryOpenRef.current = false;
+      quickCategoryDetailRequestSeqRef.current += 1;
+      quickCategorySessionRef.current += 1;
+      quickCategoryProductIdRef.current = null;
+      setIsQuickCategoryOpen(false);
+      setQuickCategoryProduct(null);
+      setQuickCategoryTargetId("");
+      setIsQuickCategoryMutating(false);
+      await refreshProductList();
+    } catch (error) {
+      if (!isCurrentQuickCategorySession(capturedProductId, capturedSession)) return;
+      setQuickCategoryAlertMessage(normalizeApiError(error).message);
+      setIsQuickCategoryMutating(false);
     }
   }
 
@@ -404,6 +490,14 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
     return editorSessionRef.current === capturedEditorSession && selectedProductIdRef.current === capturedProductId;
   }
 
+  function isCurrentQuickCategorySession(capturedProductId: string, capturedSession: number) {
+    return (
+      isQuickCategoryOpenRef.current &&
+      quickCategorySessionRef.current === capturedSession &&
+      quickCategoryProductIdRef.current === capturedProductId
+    );
+  }
+
   function confirmProductEditorClose() {
     if (!hasProductUnsavedChanges) return true;
     return window.confirm("Закрыть редактор без сохранения изменений?");
@@ -417,6 +511,20 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
     setIsLoadingDetail(false);
     setIsCheckingDuplicates(false);
     setIsProductEditorOpen(false);
+  }
+
+  function closeProductCategoryChange() {
+    if (isQuickCategoryMutating) return;
+    quickCategoryDetailRequestSeqRef.current += 1;
+    quickCategorySessionRef.current += 1;
+    quickCategoryProductIdRef.current = null;
+    isQuickCategoryOpenRef.current = false;
+    setIsQuickCategoryOpen(false);
+    setIsQuickCategoryLoading(false);
+    setQuickCategoryProduct(null);
+    setQuickCategoryTargetId("");
+    setQuickCategoryAlertMessage(null);
+    setQuickCategoryStatusMessage(null);
   }
 
   function changeProductName(name: string) {
@@ -451,6 +559,7 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
         onCategoryFilterChange={changeCategoryFilter}
         onPageChange={setProductPage}
         onPageSizeChange={changeProductPageSize}
+        onProductCategoryChange={startProductCategoryChange}
         onProductSelect={selectProduct}
         onPublishStatusFilterChange={changePublishStatusFilter}
         onSearchChange={changeSearch}
@@ -461,6 +570,20 @@ export function AdminProductManager({ csrfToken = null }: AdminProductManagerPro
         publishStatusFilter={publishStatusFilter}
         search={search}
         selectedProductId={selectedProduct?.id ?? null}
+      />
+
+      <AdminProductCategoryChangeModal
+        alertMessage={quickCategoryAlertMessage}
+        categories={categories}
+        isLoadingDetail={isQuickCategoryLoading}
+        isMutating={isQuickCategoryMutating}
+        isOpen={isQuickCategoryOpen}
+        onRequestClose={closeProductCategoryChange}
+        onSubmit={submitProductCategoryChange}
+        onTargetCategoryChange={setQuickCategoryTargetId}
+        product={quickCategoryProduct}
+        statusMessage={quickCategoryStatusMessage}
+        targetCategoryId={quickCategoryTargetId}
       />
 
       <AdminProductEditorModal

@@ -18,6 +18,7 @@ type AdminProductListPanelProps = {
   onCategoryFilterChange: (value: string) => void;
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
+  onProductCategoryChange: (productId: string) => void;
   onProductSelect: (productId: string) => void;
   onPublishStatusFilterChange: (value: string) => void;
   onSearchChange: (value: string) => void;
@@ -42,6 +43,7 @@ export function AdminProductListPanel({
   onCategoryFilterChange,
   onPageChange,
   onPageSizeChange,
+  onProductCategoryChange,
   onProductSelect,
   onPublishStatusFilterChange,
   onSearchChange,
@@ -164,8 +166,18 @@ export function AdminProductListPanel({
                         <small>{product.externalId || "Без External ID"}</small>
                       </td>
                       <td data-label="Категория">
-                        <span>{product.categoryName || "Нет категории"}</span>
-                        <small>{product.categorySlug || "Нет slug категории"}</small>
+                        <div className="admin-product-table__category-cell">
+                          <span>{product.categoryName || "Нет категории"}</span>
+                          <small>{product.categorySlug || "Нет slug категории"}</small>
+                          <button
+                            aria-label="Сменить категорию"
+                            className="admin-product-table__category-action"
+                            onClick={() => onProductCategoryChange(product.id)}
+                            type="button"
+                          >
+                            Сменить
+                          </button>
+                        </div>
                       </td>
                       <td data-label="Бренд">{product.brandName ?? "Без бренда"}</td>
                       <td data-label="Статусы">
