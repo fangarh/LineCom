@@ -100,6 +100,42 @@ public sealed class AdminCatalogProductsEndpointTests
     }
 
     [Fact]
+    public async Task GetProduct_AsSeller_SerializesCriticalContractShape()
+    {
+        await using var factory = CreateFactory(new ReturningAdminCatalogProductService(), "seller");
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+        await LoginAsync(client);
+
+        using var response = await client.GetAsync($"/api/admin/catalog/products/{ProductId}");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var json = await response.Content.ReadAsStringAsync();
+        using var document = JsonDocument.Parse(json);
+        var root = document.RootElement;
+        AssertJsonHasProperties(
+            root,
+            "id",
+            "categoryId",
+            "name",
+            "slug",
+            "publishStatus",
+            "isActive",
+            "readiness",
+            "images",
+            "attributes");
+        Assert.Equal(ProductId, root.GetProperty("id").GetGuid());
+        Assert.Equal(CategoryId, root.GetProperty("categoryId").GetGuid());
+        Assert.Equal("Cable", root.GetProperty("name").GetString());
+        Assert.Equal("cable", root.GetProperty("slug").GetString());
+        Assert.Equal("draft", root.GetProperty("publishStatus").GetString());
+        Assert.True(root.GetProperty("isActive").GetBoolean());
+        AssertJsonHasProperties(root.GetProperty("readiness"), "canPublish", "issues");
+        AssertJsonHasProperties(root.GetProperty("images"), "imagesCount", "mainImageFileId");
+        Assert.Equal(JsonValueKind.Array, root.GetProperty("attributes").ValueKind);
+    }
+
+    [Fact]
     public async Task PostProduct_WithCsrfToken_ReturnsCreatedProduct()
     {
         var productService = new ReturningAdminCatalogProductService();
@@ -143,7 +179,22 @@ public sealed class AdminCatalogProductsEndpointTests
         Assert.NotNull(productService.LastAttributesCommand);
         Assert.Equal(AttributeOptionId, Assert.Single(productService.LastAttributesCommand.Values).AttributeOptionId);
 
-        var body = await ReadJsonAsync<AdminProductDetailDto>(response);
+        var json = await response.Content.ReadAsStringAsync();
+        using var document = JsonDocument.Parse(json);
+        var attribute = document.RootElement.GetProperty("attributes").EnumerateArray().Single();
+        AssertJsonHasProperties(
+            attribute,
+            "attributeId",
+            "code",
+            "name",
+            "type",
+            "unit",
+            "valueText",
+            "valueNumber",
+            "valueBoolean",
+            "attributeOptionId",
+            "optionValue");
+        var body = DeserializeJson<AdminProductDetailDto>(json);
         Assert.Equal(AttributeOptionId, Assert.Single(body.Attributes).AttributeOptionId);
     }
 
@@ -277,6 +328,23 @@ public sealed class AdminCatalogProductsEndpointTests
             new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
         return Assert.IsType<T>(body);
+    }
+
+    private static T DeserializeJson<T>(string json)
+    {
+        var body = JsonSerializer.Deserialize<T>(
+            json,
+            new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+        return Assert.IsType<T>(body);
+    }
+
+    private static void AssertJsonHasProperties(JsonElement element, params string[] names)
+    {
+        foreach (var name in names)
+        {
+            Assert.True(element.TryGetProperty(name, out _), $"Expected JSON property '{name}'.");
+        }
     }
 
     private static CurrentUserDto TestUser(string role)

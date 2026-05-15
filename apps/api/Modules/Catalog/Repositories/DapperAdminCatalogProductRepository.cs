@@ -157,6 +157,13 @@ public sealed class DapperAdminCatalogProductRepository : IAdminCatalogProductRe
 
         try
         {
+            await connection.ExecuteAsync(
+                new CommandDefinition(
+                    AdminCatalogProductSql.DeleteProductAttributesOnCategoryChange,
+                    AdminProductDapperParameterMapper.ToUpsertParameters(command, id),
+                    transaction,
+                    cancellationToken: cancellationToken));
+
             var updatedId = await connection.QuerySingleOrDefaultAsync<Guid?>(
                 new CommandDefinition(
                     AdminCatalogProductSql.UpdateProduct,

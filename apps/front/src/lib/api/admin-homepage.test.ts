@@ -2,8 +2,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { routes } from "../routes";
 import {
   addAdminHomepageSectionItem,
+  type AdminHomepageSection,
+  type AdminHomepageSectionsResponse,
   deleteAdminHomepageSectionItem,
   getAdminHomepageSections,
+  type UpdateAdminHomepageSectionCommand,
+  type UpdateAdminHomepageSectionItemCommand,
   updateAdminHomepageSection,
   updateAdminHomepageSectionItem,
   updateAdminHomepageSectionItemOrder,
@@ -43,10 +47,34 @@ describe("admin homepage API client", () => {
   });
 
   it("gets homepage sections with credentials", async () => {
-    const payload = { sections: [] };
+    const payload = { sections: [homepageSectionFixture()] } satisfies AdminHomepageSectionsResponse;
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(payload));
 
-    await expect(getAdminHomepageSections()).resolves.toEqual(payload);
+    await expect(getAdminHomepageSections()).resolves.toMatchObject({
+      sections: [
+        {
+          id: "section-1",
+          code: "featured_products",
+          title: "Featured products",
+          type: "product_list",
+          isActive: true,
+          sortOrder: 10,
+          items: [
+            {
+              id: "item-1",
+              productId: "product-1",
+              categoryId: null,
+              name: "Cable",
+              slug: "cable",
+              secondaryText: "SKU-1",
+              sortOrder: 20,
+              isActive: true,
+              visibilityStatus: "visible",
+            },
+          ],
+        },
+      ],
+    });
 
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/admin/homepage/sections",
@@ -59,11 +87,20 @@ describe("admin homepage API client", () => {
   });
 
   it("updates homepage section with csrf", async () => {
-    const payload = { id: "section-1" };
+    const payload = homepageSectionFixture({ title: "Main products", itemLimit: 6, sortOrder: 10 });
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(payload));
-    const command = { title: "Главные товары", itemLimit: 6, sortOrder: 10, isActive: true };
+    const command = { title: "Main products", itemLimit: 6, sortOrder: 10, isActive: true } satisfies UpdateAdminHomepageSectionCommand;
 
-    await expect(updateAdminHomepageSection("section-1", command, "csrf")).resolves.toEqual(payload);
+    await expect(updateAdminHomepageSection("section-1", command, "csrf")).resolves.toMatchObject({
+      id: "section-1",
+      code: "featured_products",
+      title: "Main products",
+      type: "product_list",
+      itemLimit: 6,
+      sortOrder: 10,
+      isActive: true,
+      items: expect.any(Array),
+    });
 
     const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(fetchMock).toHaveBeenCalledWith(
@@ -78,11 +115,21 @@ describe("admin homepage API client", () => {
   });
 
   it("adds homepage section item with csrf and payload", async () => {
-    const payload = { id: "item-1" };
+    const payload = homepageSectionFixture().items[0];
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(payload));
     const command = { productId: "product-1", categoryId: null, sortOrder: 20, isActive: true };
 
-    await expect(addAdminHomepageSectionItem("section-1", command, "csrf-token")).resolves.toEqual(payload);
+    await expect(addAdminHomepageSectionItem("section-1", command, "csrf-token")).resolves.toMatchObject({
+      id: "item-1",
+      productId: "product-1",
+      categoryId: null,
+      name: "Cable",
+      slug: "cable",
+      secondaryText: "SKU-1",
+      sortOrder: 20,
+      isActive: true,
+      visibilityStatus: "visible",
+    });
 
     const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(fetchMock.mock.calls[0][0]).toBe("/api/admin/homepage/sections/section-1/items");
@@ -93,7 +140,7 @@ describe("admin homepage API client", () => {
   });
 
   it("updates homepage section item order with csrf and item ids", async () => {
-    const payload = { sections: [] };
+    const payload = { sections: [homepageSectionFixture()] } satisfies AdminHomepageSectionsResponse;
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(payload));
 
     await expect(
@@ -109,11 +156,18 @@ describe("admin homepage API client", () => {
   });
 
   it("updates homepage section item with csrf and payload", async () => {
-    const payload = { id: "item-1", sortOrder: 30 };
+    const payload = { ...homepageSectionFixture().items[0], sortOrder: 30, isActive: false };
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(jsonResponse(payload));
-    const command = { sortOrder: 30, isActive: false };
+    const command = { sortOrder: 30, isActive: false } satisfies UpdateAdminHomepageSectionItemCommand;
 
-    await expect(updateAdminHomepageSectionItem("section-1", "item-1", command, "csrf-token")).resolves.toEqual(payload);
+    await expect(updateAdminHomepageSectionItem("section-1", "item-1", command, "csrf-token")).resolves.toMatchObject({
+      id: "item-1",
+      productId: "product-1",
+      name: "Cable",
+      sortOrder: 30,
+      isActive: false,
+      visibilityStatus: "visible",
+    });
 
     const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(fetchMock.mock.calls[0][0]).toBe("/api/admin/homepage/sections/section-1/items/item-1");
@@ -135,3 +189,29 @@ describe("admin homepage API client", () => {
     expectCsrfHeaders(init.headers as Headers, "csrf-token");
   });
 });
+
+function homepageSectionFixture(overrides: Partial<AdminHomepageSection> = {}): AdminHomepageSection {
+  return {
+    id: "section-1",
+    code: "featured_products",
+    title: "Featured products",
+    type: "product_list",
+    itemLimit: 8,
+    sortOrder: 10,
+    isActive: true,
+    items: [
+      {
+        id: "item-1",
+        productId: "product-1",
+        categoryId: null,
+        name: "Cable",
+        slug: "cable",
+        secondaryText: "SKU-1",
+        sortOrder: 20,
+        isActive: true,
+        visibilityStatus: "visible",
+      },
+    ],
+    ...overrides,
+  };
+}

@@ -29,7 +29,22 @@ internal static class AdminHomepageRepositorySql
         """;
 
     public const string InsertSectionItem = """
-        WITH inserted AS (
+        WITH existing AS (
+            SELECT
+                id,
+                section_id,
+                product_id,
+                category_id,
+                sort_order,
+                is_active
+            FROM homepage_section_items
+            WHERE section_id = @SectionId
+                AND (
+                    (@ProductId IS NOT NULL AND product_id = @ProductId)
+                    OR (@CategoryId IS NOT NULL AND category_id = @CategoryId)
+                )
+        ),
+        inserted AS (
             INSERT INTO homepage_section_items (
                 section_id,
                 product_id,
@@ -49,6 +64,7 @@ internal static class AdminHomepageRepositorySql
                 WHERE section.id = @SectionId
             )
                 AND num_nonnulls(@ProductId, @CategoryId) = 1
+                AND NOT EXISTS (SELECT 1 FROM existing)
             RETURNING
                 id,
                 section_id,
@@ -64,6 +80,15 @@ internal static class AdminHomepageRepositorySql
             sort_order AS "SortOrder",
             is_active AS "IsActive"
         FROM inserted
+        WHERE num_nonnulls(product_id, category_id) = 1
+        UNION ALL
+        SELECT
+            id AS "Id",
+            product_id AS "ProductId",
+            category_id AS "CategoryId",
+            sort_order AS "SortOrder",
+            is_active AS "IsActive"
+        FROM existing
         WHERE num_nonnulls(product_id, category_id) = 1;
         """;
 

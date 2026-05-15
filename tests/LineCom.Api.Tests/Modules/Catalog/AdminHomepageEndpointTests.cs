@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using LineCom.Api.Modules.Auth.DTOs;
 using LineCom.Api.Modules.Auth.Repositories;
 using LineCom.Api.Modules.Auth.Services;
@@ -43,6 +44,60 @@ public sealed class AdminHomepageEndpointTests
             new UpdateAdminHomepageSectionCommand("Главные товары", 6, 10, true));
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetSections_AsSeller_SerializesCriticalContractShape()
+    {
+        using var factory = new LineComWebApplicationFactory();
+        var client = factory.CreateAuthenticatedClient("seller");
+
+        using var response = await client.GetAsync("/api/admin/homepage/sections");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var json = await response.Content.ReadAsStringAsync();
+        using var document = JsonDocument.Parse(json);
+        var root = document.RootElement;
+        AssertJsonHasProperties(root, "sections");
+        var section = root.GetProperty("sections").EnumerateArray().Single();
+        AssertJsonHasProperties(
+            section,
+            "id",
+            "code",
+            "title",
+            "type",
+            "itemLimit",
+            "sortOrder",
+            "isActive",
+            "items");
+        Assert.Equal("featured_products", section.GetProperty("code").GetString());
+        Assert.Equal("product_list", section.GetProperty("type").GetString());
+        Assert.True(section.GetProperty("isActive").GetBoolean());
+
+        var item = section.GetProperty("items").EnumerateArray().Single();
+        AssertJsonHasProperties(
+            item,
+            "id",
+            "productId",
+            "categoryId",
+            "name",
+            "slug",
+            "secondaryText",
+            "sortOrder",
+            "isActive",
+            "visibilityStatus");
+        Assert.Equal("Cable", item.GetProperty("name").GetString());
+        Assert.Equal("cable", item.GetProperty("slug").GetString());
+        Assert.Equal("visible", item.GetProperty("visibilityStatus").GetString());
+    }
+
+    private static void AssertJsonHasProperties(JsonElement element, params string[] names)
+    {
+        foreach (var name in names)
+        {
+            Assert.True(element.TryGetProperty(name, out _), $"Expected JSON property '{name}'.");
+        }
     }
 }
 
@@ -145,12 +200,23 @@ internal static class AdminHomepageEndpointTestClientExtensions
                 new AdminHomepageSectionDto(
                     Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                     "featured_products",
-                    "Главные товары",
-                    "product",
+                    "Featured products",
+                    "product_list",
                     6,
                     10,
                     true,
-                    [])
+                    [
+                        new AdminHomepageSectionItemDto(
+                            Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                            Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+                            null,
+                            "Cable",
+                            "cable",
+                            "SKU-1",
+                            20,
+                            true,
+                            "visible")
+                    ])
             ]));
         }
     }

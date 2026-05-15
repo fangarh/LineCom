@@ -294,6 +294,17 @@ internal static class AdminCatalogProductSql
         RETURNING id;
         """;
 
+    public const string DeleteProductAttributesOnCategoryChange = """
+        DELETE FROM product_attribute_values
+        WHERE product_id = @Id
+            AND EXISTS (
+                SELECT 1
+                FROM products product
+                WHERE product.id = @Id
+                    AND product.primary_category_id <> @CategoryId
+            );
+        """;
+
     public const string LockProductForAttributeUpdate = """
         SELECT product.id
         FROM products product

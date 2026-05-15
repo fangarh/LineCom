@@ -48,6 +48,14 @@ public sealed class AdminHomepageRepositorySqlTests
     }
 
     [Fact]
+    public void InsertSectionItem_ReturnsExistingItemForDuplicateTarget()
+    {
+        Assert.Contains("existing AS", AdminHomepageRepositorySql.InsertSectionItem);
+        Assert.Contains("NOT EXISTS (SELECT 1 FROM existing)", AdminHomepageRepositorySql.InsertSectionItem);
+        Assert.Contains("UNION ALL", AdminHomepageRepositorySql.InsertSectionItem);
+    }
+
+    [Fact]
     public void UpdateSectionItem_ReturnsItemMutationResultShape()
     {
         Assert.Contains("UPDATE homepage_section_items", AdminHomepageRepositorySql.UpdateSectionItem);

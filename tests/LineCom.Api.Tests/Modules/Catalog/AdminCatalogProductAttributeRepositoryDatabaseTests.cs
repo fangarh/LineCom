@@ -140,6 +140,58 @@ public sealed class AdminCatalogProductAttributeRepositoryDatabaseTests
             && row.NormalizedValue == "aluminum");
     }
 
+    [Fact]
+    public async Task UpdateProductAsync_CategoryChangeClearsOldAttributeValues()
+    {
+        if (!_fixture.IsConfigured) return;
+
+        await using var dataSource = NpgsqlDataSource.Create(_fixture.ConnectionString);
+        await using var connection = await dataSource.OpenConnectionAsync();
+        var seed = await SeedProductWithTextAndSelectAttributesAsync(connection, publishStatus: "draft");
+        var targetCategoryId = Guid.NewGuid();
+        var repository = CreateRepository(dataSource);
+
+        await connection.ExecuteAsync(
+            """
+            INSERT INTO categories (id, name, slug)
+            VALUES (@TargetCategoryId, 'DB Product Attribute Target Category', @TargetCategorySlug);
+            """,
+            new
+            {
+                TargetCategoryId = targetCategoryId,
+                TargetCategorySlug = $"db-product-attribute-target-{targetCategoryId:N}"
+            });
+
+        var product = await repository.UpdateProductAsync(
+            seed.ProductId,
+            new AdminProductUpsert(
+                targetCategoryId,
+                null,
+                "DB Product Attribute Test",
+                $"db-product-attribute-test-{seed.ProductId:N}",
+                null,
+                null,
+                null,
+                null,
+                "in_stock",
+                "piece",
+                "1 item",
+                "draft",
+                true,
+                null,
+                null,
+                null,
+                0));
+
+        var valuesCount = await connection.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*)::int FROM product_attribute_values WHERE product_id = @ProductId;",
+            seed);
+
+        Assert.NotNull(product);
+        Assert.Equal(targetCategoryId, product.CategoryId);
+        Assert.Equal(0, valuesCount);
+    }
+
     private static async Task<ProductAttributeSeed> SeedProductWithTextAndSelectAttributesAsync(
         NpgsqlConnection connection,
         string publishStatus)

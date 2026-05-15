@@ -64,6 +64,14 @@ public sealed class AdminCatalogProductSqlTests
     }
 
     [Fact]
+    public void UpdateProduct_ClearsAttributeValuesOnlyWhenCategoryChanges()
+    {
+        Assert.Contains("DELETE FROM product_attribute_values", AdminCatalogProductSql.DeleteProductAttributesOnCategoryChange);
+        Assert.Contains("product_id = @Id", AdminCatalogProductSql.DeleteProductAttributesOnCategoryChange);
+        Assert.Contains("product.primary_category_id <> @CategoryId", AdminCatalogProductSql.DeleteProductAttributesOnCategoryChange);
+    }
+
+    [Fact]
     public void UpdateAttributes_ValidatesCategoryTypeAndActiveSelectOption()
     {
         Assert.Contains("attribute.category_id = product.primary_category_id", AdminCatalogProductSql.InsertProductAttributeValue);

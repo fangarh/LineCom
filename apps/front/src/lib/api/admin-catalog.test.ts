@@ -1,10 +1,17 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { routes } from "../routes";
 import {
+  type AdminProductDetail,
+  type AdminProductListResponse,
   createAdminProduct,
   deleteAdminBrandLogo,
   deleteAdminProductImage,
+  getAdminProduct,
   getAdminProducts,
+  type UpdateAdminProductAttributesCommand,
+  updateAdminProduct,
+  updateAdminProductAttributes,
+  type UpsertAdminProductCommand,
   uploadAdminBrandLogo,
   uploadAdminProductImages,
 } from "./admin-catalog";
@@ -56,7 +63,29 @@ describe("admin catalog API client", () => {
   });
 
   it("builds product list query params and disables cache", async () => {
-    const payload = { items: [], page: 2, pageSize: 20, totalItems: 0, totalPages: 0 };
+    const payload = {
+      items: [
+        {
+          id: "product-id",
+          name: "Cable",
+          slug: "cable",
+          sku: "SKU-1",
+          externalId: null,
+          categoryName: "Cables",
+          categorySlug: "cables",
+          brandName: "LineCom",
+          publishStatus: "draft",
+          isActive: false,
+          availabilityStatus: "in_stock",
+          sortOrder: 10,
+          readiness: { canPublish: false, issues: [{ code: "missing_image", message: "Image required" }] },
+        },
+      ],
+      page: 2,
+      pageSize: 20,
+      totalItems: 1,
+      totalPages: 1,
+    } satisfies AdminProductListResponse;
     const fetchMock = vi.fn().mockResolvedValue(jsonResponse(payload));
     vi.stubGlobal("fetch", fetchMock);
 
@@ -70,10 +99,20 @@ describe("admin catalog API client", () => {
         cache: "no-store",
       }),
     );
+    expect(payload.items[0]).toMatchObject({
+      id: "product-id",
+      name: "Cable",
+      slug: "cable",
+      categoryName: "Cables",
+      categorySlug: "cables",
+      publishStatus: "draft",
+      isActive: false,
+      readiness: { canPublish: false },
+    });
   });
 
   it("creates product as JSON with csrf token", async () => {
-    const payload = { id: "product-id", name: "Cable", slug: "cable" };
+    const payload = productDetailFixture();
     const fetchMock = vi.fn().mockResolvedValue(jsonResponse(payload));
     vi.stubGlobal("fetch", fetchMock);
 
@@ -95,7 +134,7 @@ describe("admin catalog API client", () => {
       seoDescription: "Cable description",
       h1: "Cable",
       sortOrder: 10,
-    };
+    } satisfies UpsertAdminProductCommand;
 
     await expect(createAdminProduct(command, "csrf-token")).resolves.toEqual(payload);
 
@@ -105,6 +144,93 @@ describe("admin catalog API client", () => {
     expect(init.credentials).toBe("include");
     expect(init.body).toBe(JSON.stringify(command));
     expectJsonHeaders(init.headers as Headers, "csrf-token");
+  });
+
+  it("gets product detail with critical response contract fields", async () => {
+    const payload = productDetailFixture();
+    const fetchMock = vi.fn().mockResolvedValue(jsonResponse(payload));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(getAdminProduct("product/id")).resolves.toMatchObject({
+      id: "product-id",
+      categoryId: "category-id",
+      name: "Cable",
+      slug: "cable",
+      publishStatus: "draft",
+      isActive: true,
+      readiness: { canPublish: false },
+      images: { imagesCount: 1, mainImageFileId: "file-id" },
+      attributes: [
+        {
+          attributeId: "attribute-id",
+          code: "jacket",
+          type: "select",
+          attributeOptionId: "option-id",
+        },
+      ],
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/admin/catalog/products/product%2Fid",
+      expect.objectContaining({
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+      }),
+    );
+  });
+
+  it("updates product and attribute values as csrf-protected JSON contracts", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse(productDetailFixture({ name: "Updated cable", slug: "updated-cable" })))
+      .mockResolvedValueOnce(jsonResponse(productDetailFixture()));
+    vi.stubGlobal("fetch", fetchMock);
+    const command = {
+      categoryId: "category-id",
+      brandId: null,
+      name: "Updated cable",
+      slug: "updated-cable",
+      availabilityStatus: "in_stock",
+      saleUnit: "pcs",
+      unitQuantity: "1",
+      publishStatus: "published",
+      isActive: true,
+      sortOrder: 20,
+    } satisfies UpsertAdminProductCommand;
+    const attributesCommand = {
+      values: [
+        {
+          attributeId: "attribute-id",
+          valueText: null,
+          valueNumber: null,
+          valueBoolean: null,
+          attributeOptionId: "option-id",
+        },
+      ],
+    } satisfies UpdateAdminProductAttributesCommand;
+
+    await expect(updateAdminProduct("product/id", command, "csrf-token")).resolves.toMatchObject({
+      name: "Updated cable",
+      slug: "updated-cable",
+    });
+    await expect(updateAdminProductAttributes("product/id", attributesCommand, "csrf-token")).resolves.toMatchObject({
+      attributes: [{ attributeId: "attribute-id", attributeOptionId: "option-id" }],
+    });
+
+    const [, updateInit] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(fetchMock.mock.calls[0][0]).toBe("/api/admin/catalog/products/product%2Fid");
+    expect(updateInit.method).toBe("PUT");
+    expect(updateInit.credentials).toBe("include");
+    expect(updateInit.body).toBe(JSON.stringify(command));
+    expectJsonHeaders(updateInit.headers as Headers, "csrf-token");
+
+    const [, attributesInit] = fetchMock.mock.calls[1] as [string, RequestInit];
+    expect(fetchMock.mock.calls[1][0]).toBe("/api/admin/catalog/products/product%2Fid/attributes");
+    expect(attributesInit.method).toBe("PUT");
+    expect(attributesInit.credentials).toBe("include");
+    expect(attributesInit.body).toBe(JSON.stringify(attributesCommand));
+    expectJsonHeaders(attributesInit.headers as Headers, "csrf-token");
   });
 
   it("uploads product images as multipart files with csrf token", async () => {
@@ -172,3 +298,51 @@ describe("admin catalog API client", () => {
     expectCsrfHeaders(deleteLogoInit.headers as Headers, "csrf-token");
   });
 });
+
+function productDetailFixture(overrides: Partial<AdminProductDetail> = {}): AdminProductDetail {
+  return {
+    id: "product-id",
+    categoryId: "category-id",
+    categoryName: "Cables",
+    brandId: "brand-id",
+    brandName: "LineCom",
+    name: "Cable",
+    slug: "cable",
+    sku: "SKU-1",
+    externalId: null,
+    description: "Long cable",
+    shortDescription: "Cable",
+    availabilityStatus: "in_stock",
+    saleUnit: "pcs",
+    unitQuantity: "1",
+    publishStatus: "draft",
+    isActive: true,
+    seoTitle: "Cable",
+    seoDescription: "Cable description",
+    h1: "Cable",
+    sortOrder: 10,
+    readiness: {
+      canPublish: false,
+      issues: [{ code: "missing_image", message: "Image required" }],
+    },
+    images: {
+      imagesCount: 1,
+      mainImageFileId: "file-id",
+    },
+    attributes: [
+      {
+        attributeId: "attribute-id",
+        code: "jacket",
+        name: "Jacket",
+        type: "select",
+        unit: null,
+        valueText: null,
+        valueNumber: null,
+        valueBoolean: null,
+        attributeOptionId: "option-id",
+        optionValue: "PVC",
+      },
+    ],
+    ...overrides,
+  };
+}
