@@ -5,8 +5,9 @@ source:
   - 07-01-SUMMARY.md
   - 07-02-SUMMARY.md
   - 07-03-SUMMARY.md
+  - 07-04-SUMMARY.md
 started: 2026-05-15T12:33:00+03:00
-updated: 2026-05-15T13:10:00+03:00
+updated: 2026-05-15T13:27:00+03:00
 ---
 
 ## Current Test
@@ -45,13 +46,15 @@ result: pass
 expected: |
   Модальное окно категории содержит компактный блок "Позиция" с выбором родителя для перемещения, "Переместить", "Новый порядок" и "Обновить порядок".
   Существующие правила выбора родителя все еще запрещают выбрать текущую категорию или ее потомков как родителя.
-result: issue
+result: pass
 reported: "Надо разбить модалку на подкатегории."
 severity: major
 diagnosis: |
   Модалка категории объединяла базовые поля, позицию/перемещение, сортировку и опасные действия в одном визуальном потоке.
 resolution_attempt: |
   07-03 split the modal into visible sections: "Основное", "SEO и меню", "Действия" and "Позиция".
+resolution: |
+  07-04 replaced the stacked sections with tabs and preserved the Position controls, blocked parent rules and move/sort behavior.
 
 ### 6. Category Modal Save Delete And Close Guards
 expected: |
@@ -68,17 +71,25 @@ expected: |
   Существующие элементы сохранены: родительская категория, новый родитель, "Переместить", "Новый порядок", "Обновить порядок", "Сохранить" и "Удалить".
   Модалка остается удобной на desktop и узком viewport.
 source: 07-03-SUMMARY.md
-result: issue
+result: pass
 reported: "Готово, но я бы хотел видеть табы."
 severity: major
 diagnosis: |
   Section headings improved scanability, but the desired UX is tabbed navigation inside the category modal rather than a single long scroll with visible sections.
 
+### R2. Category Modal Tabs Gap Recheck
+expected: |
+  Модальное окно категории использует вкладки "Основное", "SEO и меню", "Позиция" и "Действия".
+  При переключении вкладок видна только активная панель, а существующие поля, сохранение, удаление, перемещение и сортировка остаются рабочими.
+  Вкладки помещаются на desktop и узком viewport без наложения текста.
+source: 07-04-SUMMARY.md
+result: pass
+
 ## Summary
 
-total: 7
-passed: 5
-issues: 2
+total: 8
+passed: 8
+issues: 0
 pending: 0
 skipped: 0
 blocked: 0
@@ -86,20 +97,22 @@ blocked: 0
 ## Gaps
 
 - truth: "Модальное окно категории должно быть разбито на подкатегории/секции для удобного редактирования."
-  status: addressed_but_rejected
+  status: resolved
   reason: "07-03 added visible sections, but user clarified they want tabs."
   severity: major
   test: 5
   artifacts:
     - ".planning/phases/07-modal-catalog-editors/07-03-SUMMARY.md"
+    - ".planning/phases/07-modal-catalog-editors/07-04-SUMMARY.md"
   missing:
-    - "Tabbed navigation inside the category modal"
+    - "Resolved by tabbed navigation inside the category modal"
 
 - truth: "Модальное окно категории должно использовать табы для переключения между подкатегориями редактирования."
-  status: failed
+  status: resolved
   reason: "User reported: Готово, но я бы хотел видеть табы."
   severity: major
   test: R1
-  artifacts: []
+  artifacts:
+    - ".planning/phases/07-modal-catalog-editors/07-04-SUMMARY.md"
   missing:
-    - "Tabs for Основное, SEO и меню, Позиция, Действия"
+    - "Resolved by tabs for Основное, SEO и меню, Позиция, Действия"
