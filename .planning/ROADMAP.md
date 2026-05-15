@@ -43,7 +43,7 @@ Plans:
 - [x] 07-01: Shared catalog modal shell and product editor modal migration.
 - [x] 07-02: Category editor modal migration and responsive list layout cleanup.
 - [x] 07-03: Category modal sectioning for UAT gap closure.
-- [ ] 07-04: Category modal tabs for UAT gap closure.
+- [x] 07-04: Category modal tabs for UAT gap closure.
 
 ### Phase 8: Quick Product Category Change
 
@@ -79,4 +79,4 @@ These items remain outside v1.1 and should be reconsidered during a later milest
 | Milestone | Phases | Plans | Status | Shipped |
 |-----------|--------|-------|--------|---------|
 | v1.0 Release Stabilization | 1-6 | 16/16 | Shipped | 2026-05-15 |
-| v1.1 Admin Catalog UX | 7-8 | 3/6 | In progress | - |
+| v1.1 Admin Catalog UX | 7-8 | 4/6 | In progress | - |
