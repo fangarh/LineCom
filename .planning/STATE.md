@@ -2,9 +2,9 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Admin Catalog UX
-status: ready_to_secure
-stopped_at: Completed Phase 7 UAT; security gate required before advancing
-last_updated: "2026-05-15T13:28:00+03:00"
+status: ready_to_validate
+stopped_at: Completed Phase 7 security gate; validation gate is next
+last_updated: "2026-05-15T13:32:00+03:00"
 last_activity: 2026-05-15
 progress:
   total_phases: 2
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-05-15)
 
 Phase: 07 (Modal Catalog Editors) - VERIFYING
 Plan: 4 of 4
-Status: UAT recheck passed; security enforcement requires Phase 7 security review before advancing
+Status: UAT and security gates passed; validation gate is next before advancing
 Last activity: 2026-05-15
 
 ## Performance Metrics
@@ -94,10 +94,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-15T13:28:00+03:00
-Stopped at: Completed Phase 7 UAT; security gate required before advancing
+Last session: 2026-05-15T13:32:00+03:00
+Stopped at: Completed Phase 7 security gate; validation gate is next
 Resume file: None
 
 ## Operator Next Steps
 
-- Run `$gsd-secure-phase 7` for the required Phase 7 security review before advancing to Phase 8.
+- Run `$gsd-validate-phase 7` to validate Phase 7 test coverage before advancing to Phase 8.
