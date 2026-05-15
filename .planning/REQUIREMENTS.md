@@ -9,12 +9,12 @@
 
 - [x] **SEC-01**: Public login and registration endpoints are protected by rate limiting or equivalent throttling with tested 429 behavior.
 - [x] **SEC-02**: Cookie authentication settings are verified for production HTTPS, HttpOnly, Secure and SameSite behavior.
-- [ ] **SEC-03**: Release verification includes dependency vulnerability audit for .NET and npm packages when network access is available.
+- [x] **SEC-03**: Release verification includes dependency vulnerability audit for .NET and npm packages when network access is available.
 
 ### Production Configuration
 
 - [x] **PROD-01**: Production startup or build checks fail clearly when public site origin or API origin configuration would generate localhost SEO URLs.
-- [ ] **PROD-02**: Deployment documentation and verification cover API, frontend, DbUp migrator, PostgreSQL and Local FileStorage paths.
+- [x] **PROD-02**: Deployment documentation and verification cover API, frontend, DbUp migrator, PostgreSQL and Local FileStorage paths.
 - [x] **PROD-03**: Release checks validate that storage root, database connection and frontend/backend origins are environment-specific and not silently defaulting in production.
 
 ### API Error Handling
@@ -28,7 +28,7 @@
 - [x] **STOR-02**: Non-public file purposes such as import source, export result and temp artifacts cannot be fetched anonymously through `/storage`.
 - [x] **STOR-03**: Storage diagnostics report missing files, untracked files, stale deleted/orphaned rows and database/file drift.
 - [x] **STOR-04**: Catalog import file writes use a documented staging/commit/cleanup model or equivalent compensation path.
-- [ ] **STOR-05**: Backup and restore expectations for Local FileStorage are documented and included in release verification.
+- [x] **STOR-05**: Backup and restore expectations for Local FileStorage are documented and included in release verification.
 
 ### SEO/GEO
 
@@ -75,9 +75,9 @@
 |-------------|-------|--------|
 | SEC-01 | Phase 1 | Complete |
 | SEC-02 | Phase 1 | Complete |
-| SEC-03 | Phase 6 | Pending |
+| SEC-03 | Phase 6 | Complete |
 | PROD-01 | Phase 1 | Complete |
-| PROD-02 | Phase 6 | Pending |
+| PROD-02 | Phase 6 | Complete |
 | PROD-03 | Phase 1 | Complete |
 | API-01 | Phase 1 | Complete |
 | API-02 | Phase 1 | Complete |
@@ -85,7 +85,7 @@
 | STOR-02 | Phase 2 | Complete |
 | STOR-03 | Phase 2 | Complete |
 | STOR-04 | Phase 3 | Complete |
-| STOR-05 | Phase 6 | Pending |
+| STOR-05 | Phase 6 | Complete |
 | SEO-01 | Phase 4 | Complete |
 | SEO-02 | Phase 4 | Complete |
 | SEO-03 | Phase 4 | Complete |
