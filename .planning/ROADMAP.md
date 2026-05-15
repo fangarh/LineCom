@@ -3,7 +3,7 @@
 ## Milestones
 
 - [x] **v1.0 Release Stabilization** - Phases 1-6 shipped on 2026-05-15. Archives: `.planning/milestones/v1.0-ROADMAP.md`, `.planning/milestones/v1.0-REQUIREMENTS.md`, `.planning/milestones/v1.0-MILESTONE-AUDIT.md`, `.planning/milestones/v1.0-phases/`.
-- [ ] **v1.1 Admin Catalog UX** - Phase 7 complete; Phase 8 next. Goal: modal catalog editing and safe quick product category reassignment.
+- [ ] **v1.1 Admin Catalog UX** - Phase 7 complete; Phase 8 planned. Goal: modal catalog editing and safe quick product category reassignment.
 
 ## Completed Milestone Summary
 
@@ -49,7 +49,7 @@ Plans:
 ### Phase 8: Quick Product Category Change
 
 **Goal**: Admin can safely change a single product category from the product list without opening the full product editor.
-**Status:** Next - ready for `$gsd-plan-phase 8`.
+**Status:** Planned - ready for `$gsd-execute-phase 8`.
 **Mode:** mvp
 **Depends on**: Phase 7
 **Requirements**: CATUX-01, CATUX-02, CATUX-03, VER-02
@@ -63,8 +63,15 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
+**Wave 1**
 - [ ] 08-01: Product row quick category action and reassignment modal.
+
+**Wave 2 (blocked on Wave 1 completion)**
 - [ ] 08-02: Category-change safety tests, warning behavior and viewport QA.
+
+Cross-cutting constraints:
+- Keep quick category change single-product only; do not add bulk category changes, backend endpoint rewrites, generated OpenAPI or broad admin redesign.
+- Preserve the existing product update contract by building full product commands from latest product detail and changing only `categoryId`.
 
 ## Deferred Product Scope
 
@@ -81,4 +88,4 @@ These items remain outside v1.1 and should be reconsidered during a later milest
 | Milestone | Phases | Plans | Status | Shipped |
 |-----------|--------|-------|--------|---------|
 | v1.0 Release Stabilization | 1-6 | 16/16 | Shipped | 2026-05-15 |
-| v1.1 Admin Catalog UX | 7-8 | 4/6 | Phase 7 complete; Phase 8 next | - |
+| v1.1 Admin Catalog UX | 7-8 | 4/6 | Phase 7 complete; Phase 8 planned | - |
