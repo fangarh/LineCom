@@ -26,13 +26,15 @@ LineCom - B2B/B2C каталог-заявочная система для про
 - Phase 2 validated Local FileStorage public/private static boundaries and read-only DB/disk diagnostics: `.planning/phases/02-storage-access-and-diagnostics/02-VERIFICATION.md`.
 - Phase 3 validated catalog import Local FileStorage staging, post-commit promotion, scoped cleanup and reset physical-file regression coverage: `.planning/phases/03-import-storage-consistency/03-VERIFICATION.md`.
 - Phase 4 validated public SEO/GEO reliability for canonical metadata, robots, bounded sitemap generation and focused route/helper regression tests: `.planning/phases/04-public-seo-geo-reliability/04-VERIFICATION.md`.
+- Phase 5 validated admin maintainability and lightweight frontend/backend contract drift checks for current dirty admin catalog/homepage areas: `.planning/phases/05-admin-maintainability-and-contracts/05-VERIFICATION.md`.
+- Phase 6 validated dependency audits, production deployment documentation, coordinated PostgreSQL plus Local FileStorage backup/restore guidance, final release checks and v1 traceability: `.planning/phases/06-production-readiness-gate/06-VERIFICATION.md`.
 
 ### Active
 
-- [ ] Continue Local FileStorage release hardening: backup/restore posture and future maintenance/retention decisions.
+- [x] Continue Local FileStorage release hardening: backup/restore posture and future maintenance/retention decisions.
 - [x] Preserve SEO/GEO correctness for public catalog routes, metadata, robots and sitemap behavior under production configuration.
-- [ ] Reduce fragility of large admin catalog/homepage frontend containers before adding more behavior.
-- [ ] Add verification gates for security, storage, SEO/GEO and frontend/backend contract drift.
+- [x] Reduce fragility of large admin catalog/homepage frontend containers before adding more behavior.
+- [x] Add verification gates for security, storage, SEO/GEO and frontend/backend contract drift.
 
 ### Out of Scope
 
@@ -52,12 +54,12 @@ Important current concerns from the codebase map:
 
 - Phase 2 restricts anonymous static storage access to public product/brand image paths and adds read-only DB/disk diagnostics.
 - Phase 3 makes catalog import DB/file behavior recoverable through private staging, post-commit promotion, scoped cleanup and reset physical-file reporting.
-- Stored file status supports lifecycle concepts, but backup/restore posture and broader retention policy remain future work.
-- Auth endpoints do not yet have rate limiting or account/IP throttling.
+- Phase 6 documents coordinated PostgreSQL plus Local FileStorage backup/restore and dry-run restore checks; broader retention/cleanup automation remains future work.
+- Auth login/register endpoint throttling is validated by Phase 1.
 - Production SEO origin is validated by Phase 1 guardrails and Phase 4 build/test evidence.
 - Sitemap generation is bounded by Phase 4 release limits; segmented sitemap generation remains the future growth path when catalog size exceeds those limits.
-- Several admin frontend containers are large stateful components that mix loading, mutation guards, data mapping and rendering.
-- Frontend API contracts are handwritten and can drift from backend DTOs without explicit contract checks.
+- Phase 5 bounded current dirty admin catalog/homepage decomposition scope and added focused helper/contract checks.
+- Frontend API contracts are still handwritten, but Phase 5 added lightweight critical admin API drift tests for v1.
 
 ## Constraints
 
@@ -76,7 +78,7 @@ Important current concerns from the codebase map:
 |----------|-----------|---------|
 | Use GSD for this brownfield project | Existing codebase is large enough to benefit from persistent planning, roadmap and verification artifacts. | Pending |
 | Start with `$gsd-map-codebase` | Brownfield initialization needs architecture/stack/risk map before project roadmap. | Good |
-| Roadmap focus: release stabilization first | Security, storage, SEO/GEO and production readiness risks block safe expansion of product scope. | Good - Phase 1, Phase 2, Phase 3 and Phase 4 release-stabilization work verified 2026-05-14 |
+| Roadmap focus: release stabilization first | Security, storage, SEO/GEO and production readiness risks block safe expansion of product scope. | Good - v1 release-stabilization work verified through Phase 6 on 2026-05-15 |
 | Granularity: Standard | 5-8 phases gives useful control without excessive planning overhead. | Pending |
 | Execution: Parallel where safe | Independent plans can run in parallel, while migrations/security/storage remain dependency-driven. | Pending |
 | Research: Full, but source-of-truth constrained | External/current docs inform best practices; `vault` and codebase map remain authoritative for project intent. | Pending |
@@ -101,4 +103,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state.
 
 ---
-*Last updated: 2026-05-14 after Phase 4 verification*
+*Last updated: 2026-05-15 after Phase 6 verification*

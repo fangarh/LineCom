@@ -38,14 +38,14 @@
 
 ### Maintainability
 
-- [ ] **MAIN-01**: Large admin catalog/homepage frontend containers touched by release work are decomposed before new behavior is added.
-- [ ] **MAIN-02**: Pure mapping, payload building and normalization logic extracted from admin UI has focused unit tests.
-- [ ] **MAIN-03**: Critical frontend API clients have contract checks or tests that detect backend DTO/endpoint drift.
+- [x] **MAIN-01**: Large admin catalog/homepage frontend containers touched by release work are decomposed before new behavior is added.
+- [x] **MAIN-02**: Pure mapping, payload building and normalization logic extracted from admin UI has focused unit tests.
+- [x] **MAIN-03**: Critical frontend API clients have contract checks or tests that detect backend DTO/endpoint drift.
 
 ### Verification
 
-- [ ] **VER-01**: Each release-stabilization phase has explicit success criteria tied to tests or manual verification steps.
-- [ ] **VER-02**: Before a phase is marked complete, GSD verifier checks technical debt, security gaps, migration risks and maintainability risks.
+- [x] **VER-01**: Each release-stabilization phase has explicit success criteria tied to tests or manual verification steps.
+- [x] **VER-02**: Before a phase is marked complete, GSD verifier checks technical debt, security gaps, migration risks and maintainability risks.
 
 ## v2 Requirements
 
@@ -89,11 +89,11 @@
 | SEO-01 | Phase 4 | Complete |
 | SEO-02 | Phase 4 | Complete |
 | SEO-03 | Phase 4 | Complete |
-| MAIN-01 | Phase 5 | Pending |
-| MAIN-02 | Phase 5 | Pending |
-| MAIN-03 | Phase 5 | Pending |
-| VER-01 | Phase 6 | Pending |
-| VER-02 | Phase 6 | Pending |
+| MAIN-01 | Phase 5 | Complete |
+| MAIN-02 | Phase 5 | Complete |
+| MAIN-03 | Phase 5 | Complete |
+| VER-01 | Phase 6 | Complete |
+| VER-02 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 21 total
