@@ -1,14 +1,21 @@
 import argparse
+import hashlib
 import json
+import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from html import escape
+from io import BytesIO
 from pathlib import Path
 from typing import Callable
+from urllib.request import Request, urlopen
+
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
 MAX_SELECTED_PER_PRODUCT = 2
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome Safari"
 REJECT_URL_PARTS = (
     "logo",
     "sprite",
@@ -34,6 +41,35 @@ class CandidateProvider:
 
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def fetch(url: str, timeout: int = 25) -> tuple[bytes, str]:
+    request = Request(url, headers={"User-Agent": USER_AGENT, "Accept": "*/*"})
+    with urlopen(request, timeout=timeout) as response:
+        return response.read(), response.headers.get("content-type", "")
+
+
+def slug(value: str) -> str:
+    value = (value or "").lower().strip()
+    value = re.sub(r"[^a-z0-9._-]+", "-", value)
+    return re.sub(r"-+", "-", value).strip("-") or "image"
+
+
+def decode_image(body: bytes) -> Image.Image:
+    image = Image.open(BytesIO(body))
+    image.load()
+    if image.width <= 0 or image.height <= 0:
+        raise ValueError("image has empty dimensions")
+    if image.mode not in {"RGB", "RGBA"}:
+        image = image.convert("RGBA" if "A" in image.mode else "RGB")
+    return image
+
+
+def relative_to_root_or_parent(path: Path, root: Path) -> str:
+    try:
+        return str(path.relative_to(root)).replace("\\", "/")
+    except ValueError:
+        return str(path).replace("\\", "/")
 
 
 def normalize_selection(candidates: dict, operator: str) -> dict:
@@ -281,6 +317,51 @@ def render_review_html(candidates: dict) -> str:
 </html>"""
 
 
+def finalize_selection(selection: dict, output_dir: Path, manifest_path: Path) -> dict:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    root = manifest_path.parent
+    items = []
+    for product in selection.get("products", []):
+        for index, candidate in enumerate(product.get("selectedCandidates", [])[:MAX_SELECTED_PER_PRODUCT]):
+            body, content_type = fetch(candidate["sourceImageUrl"])
+            checksum = hashlib.sha256(body).hexdigest()
+            image = decode_image(body)
+            asset_key = slug(f"{product.get('externalId')}-{candidate.get('candidateId')}")
+            target = output_dir / f"{asset_key}.png"
+            image.convert("RGBA").save(target, "PNG", optimize=True)
+            items.append(
+                {
+                    "assetKey": asset_key,
+                    "productId": product.get("productId"),
+                    "externalId": product.get("externalId"),
+                    "sourceRows": product.get("sourceRows", []),
+                    "sourceSite": candidate.get("sourceSite"),
+                    "sourcePageUrl": candidate.get("sourcePageUrl"),
+                    "sourceImageUrl": candidate.get("sourceImageUrl"),
+                    "status": "downloaded_png",
+                    "file": relative_to_root_or_parent(target, root),
+                    "width": image.width,
+                    "height": image.height,
+                    "checksum": checksum,
+                    "contentType": "image/png",
+                    "originalContentType": content_type,
+                    "isMain": bool(candidate.get("isMain", index == 0)),
+                    "visualReviewStatus": "accepted_operator_review",
+                    "rightsStatus": candidate.get("rightsStatus", "requires-permission"),
+                    "selectedByOperator": selection.get("selectedByOperator"),
+                    "selectedAt": selection.get("selectedAt"),
+                }
+            )
+    manifest = {
+        "category": selection.get("category", {}),
+        "outputDir": relative_to_root_or_parent(output_dir, root),
+        "downloadedPng": len(items),
+        "items": items,
+    }
+    write_json(manifest_path, manifest)
+    return manifest
+
+
 def write_json(path: Path, data: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -305,6 +386,10 @@ def main() -> int:
     review = subparsers.add_parser("render-review")
     review.add_argument("--candidates", type=Path, required=True)
     review.add_argument("--output", type=Path, required=True)
+    finalize = subparsers.add_parser("finalize-selection")
+    finalize.add_argument("--selection", type=Path, required=True)
+    finalize.add_argument("--output-dir", type=Path, required=True)
+    finalize.add_argument("--manifest", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "build-candidates":
         products = json.loads(args.products.read_text(encoding="utf-8"))["products"]
@@ -333,6 +418,11 @@ def main() -> int:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(render_review_html(data), encoding="utf-8")
         print(args.output)
+        return 0
+    if args.command == "finalize-selection":
+        selection = json.loads(args.selection.read_text(encoding="utf-8"))
+        manifest = finalize_selection(selection, args.output_dir, args.manifest)
+        print(f"downloaded_png: {manifest['downloadedPng']}")
         return 0
     return 0
 

@@ -1,9 +1,19 @@
 import json
 import tempfile
 import unittest
+from io import BytesIO
 from pathlib import Path
+from unittest.mock import patch
+
+from PIL import Image
 
 from tools import product_image_review_workflow as workflow
+
+
+def make_png_bytes() -> bytes:
+    buffer = BytesIO()
+    Image.new("RGB", (32, 24), "white").save(buffer, "PNG")
+    return buffer.getvalue()
 
 
 class ProductImageReviewWorkflowTests(unittest.TestCase):
@@ -151,3 +161,40 @@ class ProductImageReviewWorkflowTests(unittest.TestCase):
         self.assertIn("https://www.tktdf.ru/a.png", html)
         self.assertIn('data-product-id="p1"', html)
         self.assertIn("downloadSelection", html)
+
+    def test_finalize_selection_downloads_selected_png_manifest(self) -> None:
+        selection = {
+            "category": {"slug": "cable", "name": "Кабель"},
+            "selectedByOperator": "codex",
+            "selectedAt": "2026-05-16T10:00:00Z",
+            "products": [
+                {
+                    "productId": "p1",
+                    "externalId": "101",
+                    "name": "Кабель UTP",
+                    "selectedCandidates": [
+                        {
+                            "candidateId": "a",
+                            "sourceSite": "tktdf.ru",
+                            "sourcePageUrl": "https://www.tktdf.ru/catalog/id/1/",
+                            "sourceImageUrl": "https://www.tktdf.ru/a.png",
+                            "isMain": True,
+                        }
+                    ],
+                }
+            ],
+        }
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            output_dir = root / "images"
+            manifest_path = root / "manifest.json"
+            with patch.object(workflow, "fetch", return_value=(make_png_bytes(), "image/png")):
+                manifest = workflow.finalize_selection(selection, output_dir, manifest_path)
+
+            item = manifest["items"][0]
+            self.assertEqual("downloaded_png", item["status"])
+            self.assertEqual("requires-permission", item["rightsStatus"])
+            self.assertTrue(item["isMain"])
+            self.assertTrue((root / item["file"]).exists())
+            self.assertEqual(64, len(item["checksum"]))
