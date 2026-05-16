@@ -44,7 +44,7 @@ export default function DeliveryPage() {
             до проектной партии кабеля, оптики, шкафов и монтажных расходников.
           </p>
           <div className="content-actions">
-            <Link className="button button--primary" href={routes.about()}>
+            <Link className="button button--primary" href={routes.contacts()}>
               Обратная связь
             </Link>
             <Link className="button button--secondary" href={routes.catalog()}>

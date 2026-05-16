@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Local"))
+{
+    builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+}
 
 if (DevelopmentLoggingPolicy.ShouldUseDevelopmentConsoleLogging(builder.Environment))
 {

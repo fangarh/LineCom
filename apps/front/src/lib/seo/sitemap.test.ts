@@ -50,7 +50,7 @@ describe("public sitemap builder", () => {
     expect(entries.map((entry) => entry.url)).toEqual([
       "https://linecom.example.ru/",
       "https://linecom.example.ru/catalog",
-      "https://linecom.example.ru/about",
+      "https://linecom.example.ru/contacts",
       "https://linecom.example.ru/delivery",
       "https://linecom.example.ru/catalog/kabel",
       "https://linecom.example.ru/catalog/vitaya-para",

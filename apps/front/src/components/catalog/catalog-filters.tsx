@@ -22,6 +22,7 @@ type CatalogFiltersProps = {
 
 export function CatalogFilters({ attributeFilters = [], basePath, state, scopeLabel, totalItems }: CatalogFiltersProps) {
   const activeCount = countActiveFilters(state);
+  const visibleAttributeFilters = attributeFilters.filter((filter) => filter.options.length > 1);
 
   return (
     <details className="catalog-filters">
@@ -38,7 +39,7 @@ export function CatalogFilters({ attributeFilters = [], basePath, state, scopeLa
       </summary>
 
       <div className="catalog-filters__body">
-        {attributeFilters.map((filter) => (
+        {visibleAttributeFilters.map((filter) => (
           <FilterGroup
             key={filter.code}
             title={filter.unit ? `${filter.name}, ${filter.unit}` : filter.name}

@@ -14,7 +14,7 @@ const MOBILE_MENU_QUERY = "(max-width: 860px)";
 const navItems = [
   { href: routes.home(), label: "Главная", mobileOnly: true },
   { href: routes.catalog(), label: "Каталог" },
-  { href: routes.about(), label: "О нас" },
+  { href: routes.contacts(), label: "Контакты" },
   { href: routes.delivery(), label: "Доставка" },
   { href: routes.request(), label: "Заявка" },
 ];

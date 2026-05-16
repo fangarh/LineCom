@@ -14,7 +14,7 @@
 
 - `/`
 - `/catalog`
-- `/about`
+- `/contacts`
 - `/delivery`
 - `/catalog/{categorySlug}`
 - `/products/{slug}`
@@ -36,14 +36,15 @@
 
 - Для статических публичных страниц canonical задается относительным путем и резолвится через root `metadataBase`.
 - Для страниц категорий `/catalog/{categorySlug}` canonical path берется из публичного API категории.
-- Для страниц товаров `/products/{slug}` canonical path берется из публичного API товара.
-- API-поля canonical path являются источником правды для category/product pages, чтобы frontend не дублировал правила построения публичных SEO URL для сущностей каталога.
+- Для страниц товаров `/products/{slug}` canonical path строится из активного route slug, чтобы stale API canonical не мог вернуть старый `/catalog/products/...`.
+- API-поля canonical path остаются источником правды для category pages.
+- Старый `/about` является legacy URL и должен постоянно перенаправлять на `/contacts`.
 
 ## Sitemap
 
 `sitemap.xml` строится из следующих источников:
 
-- статические публичные страницы: `/`, `/catalog`, `/about`, `/delivery`;
+- статические публичные страницы: `/`, `/catalog`, `/contacts`, `/delivery`;
 - видимое дерево категорий публичного каталога;
 - опубликованные публичные товары из public catalog API.
 

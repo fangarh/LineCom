@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { Metadata } from "next";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthProvider, useAuth } from "@/components/auth/auth-provider";
 import { RequestDraftProvider } from "@/components/request/request-draft-provider";
@@ -8,7 +9,7 @@ import { ApiClientError } from "@/lib/api/errors";
 import type { AuthSession } from "@/lib/api/auth";
 import type { CustomerRequestDetail } from "@/lib/api/requests";
 import type { RequestDraftState } from "@/lib/request-draft/types";
-import RequestPage from "./page";
+import RequestPage, * as pageModule from "./page";
 
 const routerMock = vi.hoisted(() => ({
   push: vi.fn(),
@@ -181,5 +182,21 @@ describe("RequestPage", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent("Товар временно недоступен.");
     expect(screen.getByText("Кабель U/UTP Cat 5e")).toBeInTheDocument();
     expect(routerMock.push).not.toHaveBeenCalled();
+  });
+});
+
+describe("request route metadata", () => {
+  it("marks the request draft page as noindex instead of inheriting the homepage canonical", () => {
+    const metadata = (pageModule as { metadata?: Metadata }).metadata;
+
+    expect(metadata).toMatchObject({
+      alternates: {
+        canonical: "/request",
+      },
+      robots: {
+        index: false,
+        follow: false,
+      },
+    });
   });
 });

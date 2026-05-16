@@ -39,4 +39,41 @@ describe("CatalogFilters", () => {
     );
     expect(screen.getByRole("link", { name: "Сбросить фильтры" })).toHaveAttribute("href", "/catalog/adapters");
   });
+
+  it("does not render attribute filters without multiple selectable options", () => {
+    render(
+      <CatalogFilters
+        attributeFilters={[
+          connectorFilter,
+          {
+            code: "series",
+            name: "Серия",
+            type: "select",
+            unit: null,
+            sortOrder: 15,
+            options: [{ value: "Кабель", slug: "kabel", sortOrder: 10 }],
+          },
+          {
+            code: "low_smoke",
+            name: "Низкое дымовыделение",
+            type: "boolean",
+            unit: null,
+            sortOrder: 20,
+            options: [],
+          },
+        ]}
+        basePath="/catalog/dlya-vneshnej-prokladki"
+        scopeLabel="Для внешней прокладки"
+        totalItems={18}
+        state={{
+          sort: "category",
+          attributes: {},
+        }}
+      />,
+    );
+
+    expect(screen.getByRole("heading", { name: "Коннектор" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Серия" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Низкое дымовыделение" })).not.toBeInTheDocument();
+  });
 });

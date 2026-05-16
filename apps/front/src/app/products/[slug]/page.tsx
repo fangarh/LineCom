@@ -4,6 +4,8 @@ import { CategoryNav } from "@/components/catalog/category-nav";
 import { ProductDetail } from "@/components/catalog/product-detail";
 import { ApiClientError } from "@/lib/api/errors";
 import { getCategoryTree, getProduct } from "@/lib/api/catalog";
+import { routes } from "@/lib/routes";
+import { buildBreadcrumbListJsonLd, buildProductJsonLd, JsonLdScript } from "@/lib/seo/json-ld";
 import { indexablePageMetadata, noindexPageMetadata } from "@/lib/seo/metadata";
 
 type ProductPageProps = {
@@ -19,7 +21,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     return indexablePageMetadata({
       title: product.seo.title ?? product.h1 ?? product.name,
       description: product.seo.description ?? product.shortDescription ?? product.description,
-      canonicalPath: product.seo.canonicalPath,
+      canonicalPath: routes.product(slug),
     });
   } catch {
     return noindexPageMetadata("Товар каталога LineCom");
@@ -44,8 +46,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
     );
   }
 
+  const breadcrumbItems = data.product.breadcrumbs.map((item, index) => ({
+    name: item.name,
+    path:
+      index === data.product.breadcrumbs.length - 1
+        ? routes.product(data.product.slug)
+        : routes.category(item.slug),
+  }));
+
   return (
     <div className="catalog-page">
+      <JsonLdScript data={buildProductJsonLd(data.product)} />
+      <JsonLdScript data={buildBreadcrumbListJsonLd(breadcrumbItems)} />
       <div className="catalog-layout">
         <aside className="catalog-sidebar" aria-labelledby="catalog-categories-title">
           <h2 id="catalog-categories-title">Категории</h2>

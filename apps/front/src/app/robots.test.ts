@@ -16,11 +16,29 @@ describe("robots route", () => {
     process.env.LINECOM_PUBLIC_SITE_ORIGIN = "https://linecom.example.ru/catalog?x=1#top";
 
     expect(robots()).toEqual({
-      rules: {
-        userAgent: "*",
-        allow: "/",
-        disallow: ["/admin/", "/account/", "/auth/"],
-      },
+      rules: [
+        {
+          userAgent: "*",
+          allow: "/",
+          disallow: ["/admin/", "/account/", "/auth/"],
+        },
+        {
+          userAgent: "OAI-SearchBot",
+          allow: "/",
+        },
+        {
+          userAgent: "PerplexityBot",
+          allow: "/",
+        },
+        {
+          userAgent: "bingbot",
+          allow: "/",
+        },
+        {
+          userAgent: "Googlebot",
+          allow: "/",
+        },
+      ],
       sitemap: "https://linecom.example.ru/sitemap.xml",
       host: "https://linecom.example.ru",
     });

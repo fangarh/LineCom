@@ -18,7 +18,7 @@
 - Canonical metadata для:
   - `/`
   - `/catalog`
-  - `/about`
+  - `/contacts`
   - `/delivery`
   - `/catalog/{categorySlug}`
   - `/products/{slug}`
@@ -76,8 +76,8 @@ QA server поднимался на `http://127.0.0.1:4182`.
   - title `Каталог кабеля и компонентов LineCom`;
   - canonical `http://127.0.0.1:4182/catalog`;
   - robots `index, follow`.
-- `/about`:
-  - canonical `http://127.0.0.1:4182/about`;
+- `/contacts`:
+  - canonical `http://127.0.0.1:4182/contacts`;
   - robots `index, follow`;
   - console errors отсутствовали.
 - `/auth/login`:
@@ -95,7 +95,7 @@ QA server поднимался на `http://127.0.0.1:4182`.
 - `/sitemap.xml` без API содержит fallback static entries:
   - `/`
   - `/catalog`
-  - `/about`
+  - `/contacts`
   - `/delivery`
 - `/catalog/test-category` и `/products/test-product` при недоступном API уходят в unavailable fallback с `noindex, nofollow`.
 

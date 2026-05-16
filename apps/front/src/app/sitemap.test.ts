@@ -69,7 +69,7 @@ describe("sitemap route", () => {
     expect(entries.map((entry) => entry.url)).toEqual([
       "https://linecom.example.ru/",
       "https://linecom.example.ru/catalog",
-      "https://linecom.example.ru/about",
+      "https://linecom.example.ru/contacts",
       "https://linecom.example.ru/delivery",
     ]);
   });

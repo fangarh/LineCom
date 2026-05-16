@@ -8,6 +8,7 @@ import { ApiClientError } from "@/lib/api/errors";
 import { getCategory, getCategoryFilters, getCategoryTree, getProducts } from "@/lib/api/catalog";
 import { parseCatalogFilters, toProductListParams, type CatalogSearchParams } from "@/lib/catalog/filtering";
 import { routes } from "@/lib/routes";
+import { buildBreadcrumbListJsonLd, JsonLdScript } from "@/lib/seo/json-ld";
 import { indexablePageMetadata, noindexPageMetadata } from "@/lib/seo/metadata";
 
 type CategoryPageProps = {
@@ -50,9 +51,14 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   }
 
   const { category, categoryFilters, categories, filterState, products } = data;
+  const breadcrumbItems = category.breadcrumbs.map((item) => ({
+    name: item.name,
+    path: routes.category(item.slug),
+  }));
 
   return (
     <div className="catalog-page">
+      <JsonLdScript data={buildBreadcrumbListJsonLd(breadcrumbItems)} />
       <section className="catalog-intro" aria-labelledby="category-title">
         <div>
           <nav className="breadcrumbs" aria-label="Хлебные крошки">

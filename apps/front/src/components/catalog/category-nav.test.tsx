@@ -27,6 +27,7 @@ describe("CategoryNav", () => {
             id: "fiber",
             name: "Оптические компоненты",
             slug: "fiber-optic-components",
+            description: "SEO описание категории",
             children: [
               category({ id: "adapters", name: "SC / LC адаптеры", slug: "sc-lc-adapters" }),
               category({ id: "pigtails", name: "Пигтейлы", slug: "pigtails" }),
@@ -44,5 +45,6 @@ describe("CategoryNav", () => {
     expect(screen.getByRole("link", { name: "SC / LC адаптеры" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("link", { name: "Пигтейлы" })).toHaveAttribute("href", "/catalog/pigtails");
     expect(screen.getByRole("link", { name: "Патч-корды" })).toHaveAttribute("href", "/catalog/patch-cords");
+    expect(screen.queryByText("SEO описание категории")).not.toBeInTheDocument();
   });
 });

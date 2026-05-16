@@ -1,0 +1,20 @@
+# LineCom
+
+LineCom / ООО «ЛАЙНКОМ» поставляет кабель, СКС, ВОЛС, оптические компоненты, телекоммуникационные шкафы, сетевые компоненты и монтажные расходники для организаций.
+
+Основные разделы:
+- Каталог: https://line-com.ru/catalog
+- Витая пара: https://line-com.ru/catalog/twisted-pair-cable
+- Оптический кабель: https://line-com.ru/catalog/fiber-optic-cable
+- Оптические компоненты: https://line-com.ru/catalog/fiber-optic-components
+- СКС и медные компоненты: https://line-com.ru/catalog/structured-cabling-components
+- Доставка: https://line-com.ru/delivery
+- Контакты и реквизиты: https://line-com.ru/contacts
+
+Компания:
+ООО «ЛАЙНКОМ»
+ИНН: 7801724840
+ОГРН: 1237800078845
+Город: Санкт-Петербург
+Сайт: https://line-com.ru
+Sitemap: https://line-com.ru/sitemap.xml

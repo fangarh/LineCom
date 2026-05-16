@@ -40,7 +40,6 @@ function CategoryList({ items, activeSlug, level = 0 }: CategoryListProps) {
             aria-current={item.slug === activeSlug ? "page" : undefined}
           >
             <span>{item.name}</span>
-            {item.description ? <small>{item.description}</small> : null}
           </Link>
           {item.children.length > 0 ? (
             <CategoryList items={item.children} activeSlug={activeSlug} level={level + 1} />

@@ -11,6 +11,7 @@ type ProductDetailProps = {
 
 export function ProductDetail({ product }: ProductDetailProps) {
   const leadImage = product.images[0] ?? null;
+  const summaryDescription = product.shortDescription ?? product.description;
 
   return (
     <article className="product-detail">
@@ -33,8 +34,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
           <p className="eyebrow">{product.category.name}</p>
           <h1>{product.h1 ?? product.name}</h1>
           <p className="product-detail__sku">{formatSku(product.sku)}</p>
-          {product.shortDescription ? <p className="lead-text">{product.shortDescription}</p> : null}
-          {product.description ? <p className="muted-text">{product.description}</p> : null}
+          {summaryDescription ? <p className="lead-text">{summaryDescription}</p> : null}
 
           <dl className="summary-grid">
             <div>

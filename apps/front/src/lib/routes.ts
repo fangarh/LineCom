@@ -1,6 +1,6 @@
 export const routes = {
   home: () => "/",
-  about: () => "/about",
+  contacts: () => "/contacts",
   delivery: () => "/delivery",
   catalog: () => "/catalog",
   category: (slug: string) => `/catalog/${encodeURIComponent(slug)}`,

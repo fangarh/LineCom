@@ -208,6 +208,43 @@ sudo systemctl reload nginx
 
 Backup должен фиксировать одну согласованную точку: PostgreSQL dump и архив Local FileStorage относятся к одному release/backup id.
 
+## Именованные backup points
+
+### release1
+
+- Alias для восстановления: `release1`.
+- Тип: coordinated backup point, PostgreSQL dump + Local FileStorage archive.
+- Создано UTC: `2026-05-15T15:13:47Z`.
+- Storage добавлен UTC: `2026-05-15T15:21:09Z`.
+- Сервер: `line-com.ru`.
+- Каталог на сервере: `/var/backups/linecom/release1`.
+- Dump: `/var/backups/linecom/release1/linecom.pgcustom`.
+- Формат dump: `pg_dump --format=custom --no-owner --no-acl`.
+- Restore list: `/var/backups/linecom/release1/linecom.pgcustom.list`.
+- SHA256 file: `/var/backups/linecom/release1/linecom.pgcustom.sha256`.
+- Размер dump: `85467` bytes.
+- `pg_restore --list`: `185` lines.
+- Storage archive: `/var/backups/linecom/release1/storage.tgz`.
+- Storage list: `/var/backups/linecom/release1/storage.tgz.list`.
+- Storage SHA256 file: `/var/backups/linecom/release1/storage.tgz.sha256`.
+- Storage archive size: `25621275` bytes.
+- Storage archive list: `84` lines.
+- Storage files in archive: `79`.
+- Frontend current на момент backup: `/opt/linecom/releases/front-20260515175433`.
+- API current на момент backup: `/opt/linecom/releases/api-20260514170348`.
+- DbMigrator current на момент backup: `/opt/linecom/releases/20260514130305/dbmigrator`.
+
+Если пользователь попросит восстановить `release1`, использовать dump и storage archive из этого каталога:
+
+```bash
+BACKUP_DIR="/var/backups/linecom/release1"
+pg_restore --clean --if-exists --no-owner --dbname "$LINECOM_CONNECTION_STRING" "$BACKUP_DIR/linecom.pgcustom"
+sudo tar -C /var/lib/linecom -xzf "$BACKUP_DIR/storage.tgz"
+sudo chown -R linecom:linecom /var/lib/linecom/storage
+```
+
+Перед restore production database и storage остановить runtime-сервисы, сохранить свежие логи и подтвердить, что требуется восстановить именно `release1`.
+
 ### 1. Создание backup point
 
 Выбрать идентификатор backup point:

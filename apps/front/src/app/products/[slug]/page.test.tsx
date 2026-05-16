@@ -83,6 +83,26 @@ describe("product route metadata", () => {
       },
     });
   });
+
+  it("builds product canonical from the active route slug even if API returns a stale path", async () => {
+    getProductMock.mockResolvedValue(
+      product({
+        seo: {
+          title: "Кабель U/UTP Cat 5e 4 пары CU 305 м",
+          description: "Купить кабель U/UTP Cat 5e для СКС.",
+          canonicalPath: "/catalog/products/u-utp-cat-5e-cu-305m",
+        },
+      }),
+    );
+
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: "u-utp-cat-5e-cu-305m" }),
+    });
+
+    expect(metadata.alternates).toMatchObject({
+      canonical: "/products/u-utp-cat-5e-cu-305m",
+    });
+  });
 });
 
 describe("product route page", () => {
@@ -114,5 +134,59 @@ describe("product route page", () => {
     expect(screen.getByRole("heading", { name: "Категории" })).toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: "Категории каталога" })).toHaveTextContent("active:vitaya-para");
     expect(screen.getByRole("article", { name: "Карточка товара" })).toBeInTheDocument();
+  });
+
+  it("renders Product and BreadcrumbList JSON-LD with absolute public URLs", async () => {
+    process.env.LINECOM_PUBLIC_SITE_ORIGIN = "https://linecom.example.ru/";
+    getProductMock.mockResolvedValue(
+      product({
+        images: [
+          {
+            url: "/storage/products/u-utp-cat-5e.png",
+            alt: "Кабель U/UTP Cat 5e",
+            title: null,
+          },
+        ],
+      }),
+    );
+    getCategoryTreeMock.mockResolvedValue({ items: [] });
+
+    const { container } = render(
+      await ProductPage({
+        params: Promise.resolve({ slug: "u-utp-cat-5e-cu-305m" }),
+      }),
+    );
+    const scripts = [...container.querySelectorAll('script[type="application/ld+json"]')].map((script) =>
+      JSON.parse(script.textContent ?? "{}"),
+    );
+
+    expect(scripts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: "Кабель U/UTP Cat 5e 4 пары CU 305 м",
+          sku: "LC-UTP5E-CU-305",
+          url: "https://linecom.example.ru/products/u-utp-cat-5e-cu-305m",
+          image: ["https://linecom.example.ru/storage/products/u-utp-cat-5e.png"],
+        }),
+        expect.objectContaining({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: expect.arrayContaining([
+            expect.objectContaining({
+              position: 1,
+              name: "Витая пара",
+              item: "https://linecom.example.ru/catalog/vitaya-para",
+            }),
+            expect.objectContaining({
+              position: 2,
+              name: "Кабель U/UTP Cat 5e 4 пары CU 305 м",
+              item: "https://linecom.example.ru/products/u-utp-cat-5e-cu-305m",
+            }),
+          ]),
+        }),
+      ]),
+    );
   });
 });

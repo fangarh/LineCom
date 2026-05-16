@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { SiteShell } from "@/components/layout/site-shell";
 import { RequestDraftProvider } from "@/components/request/request-draft-provider";
+import { buildOrganizationJsonLd, JsonLdScript } from "@/lib/seo/json-ld";
 import { indexablePageMetadata } from "@/lib/seo/metadata";
 import { siteMetadataBase } from "@/lib/seo/site";
 import "./globals.css";
@@ -55,6 +56,7 @@ export default function RootLayout({
     <html lang="ru" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <JsonLdScript data={buildOrganizationJsonLd()} />
       </head>
       <body>
         <AuthProvider>

@@ -73,6 +73,8 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
+          ) : productResult.status === "fulfilled" ? (
+            <p className="empty-state">В каталоге пока нет опубликованных товаров.</p>
           ) : (
             <p className="empty-state">
               Не удалось загрузить опубликованные товары. Проверьте доступность backend API.

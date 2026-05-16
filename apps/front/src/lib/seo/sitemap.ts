@@ -13,7 +13,7 @@ type SitemapChangeFrequency = MetadataRoute.Sitemap[number]["changeFrequency"];
 const staticEntries = [
   { path: routes.home(), changeFrequency: "weekly" as const, priority: 1 },
   { path: routes.catalog(), changeFrequency: "daily" as const, priority: 0.9 },
-  { path: routes.about(), changeFrequency: "monthly" as const, priority: 0.4 },
+  { path: routes.contacts(), changeFrequency: "monthly" as const, priority: 0.4 },
   { path: routes.delivery(), changeFrequency: "monthly" as const, priority: 0.4 },
 ];
 

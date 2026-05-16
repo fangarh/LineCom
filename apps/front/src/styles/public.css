@@ -468,12 +468,12 @@
   margin-top: 28px;
 }
 
-.about-page {
+.contacts-page {
   display: grid;
   gap: 20px;
 }
 
-.about-hero {
+.contacts-hero {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 0.78fr) minmax(280px, 0.42fr);
@@ -489,7 +489,7 @@
   box-shadow: var(--shadow-soft);
 }
 
-.about-hero__content {
+.contacts-hero__content {
   position: relative;
   z-index: 1;
   min-width: 0;
@@ -499,45 +499,45 @@
   justify-content: center;
 }
 
-.about-company {
+.contacts-company {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-soft);
 }
 
-.about-company h2 {
+.contacts-company h2 {
   margin: 0;
   color: var(--color-graphite);
   line-height: 1.08;
 }
 
-.about-hero h1 {
+.contacts-hero h1 {
   margin: 0;
   color: #ffffff;
   line-height: 1.08;
 }
 
-.about-hero h1 {
+.contacts-hero h1 {
   max-width: 720px;
   font-size: clamp(40px, 5vw, 62px);
   font-weight: 760;
 }
 
-.about-hero .lead-text {
+.contacts-hero .lead-text {
   color: rgba(255, 255, 255, 0.76);
 }
 
-.about-hero .button--secondary {
+.contacts-hero .button--secondary {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.18);
 }
 
-.about-hero .button--secondary:hover {
+.contacts-hero .button--secondary:hover {
   background: rgba(255, 255, 255, 0.14);
 }
 
-.about-hero__signal {
+.contacts-hero__signal {
   position: absolute;
   right: 46px;
   bottom: 48px;
@@ -548,7 +548,7 @@
   opacity: 0.92;
 }
 
-.about-hero__signal span {
+.contacts-hero__signal span {
   display: block;
   height: 8px;
   background: linear-gradient(90deg, rgba(255, 208, 0, 0), var(--color-accent));
@@ -556,19 +556,19 @@
   box-shadow: 0 0 22px rgba(255, 208, 0, 0.22);
 }
 
-.about-hero__signal span:nth-child(2) {
+.contacts-hero__signal span:nth-child(2) {
   margin-left: 12%;
 }
 
-.about-hero__signal span:nth-child(3) {
+.contacts-hero__signal span:nth-child(3) {
   margin-left: 24%;
 }
 
-.about-hero__signal span:nth-child(4) {
+.contacts-hero__signal span:nth-child(4) {
   margin-left: 36%;
 }
 
-.about-company {
+.contacts-company {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(330px, 0.68fr);
   gap: 28px;
@@ -576,12 +576,12 @@
   background: var(--color-surface);
 }
 
-.about-company h2 {
+.contacts-company h2 {
   max-width: 720px;
   font-size: 38px;
 }
 
-.about-company__story p {
+.contacts-company__story p {
   max-width: 760px;
   margin: 16px 0 0;
   color: var(--color-muted);
@@ -589,19 +589,19 @@
   line-height: 1.65;
 }
 
-.about-company__story,
-.about-company__facts {
+.contacts-company__story,
+.contacts-company__facts {
   min-width: 0;
 }
 
-.about-company__links {
+.contacts-company__links {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 26px;
 }
 
-.about-company__facts {
+.contacts-company__facts {
   align-self: stretch;
   padding: 24px;
   color: #ffffff;
@@ -612,29 +612,29 @@
   border-radius: var(--radius-md);
 }
 
-.about-company__facts dl {
+.contacts-company__facts dl {
   display: grid;
   gap: 0;
   margin: 0;
 }
 
-.about-company__facts div {
+.contacts-company__facts div {
   display: grid;
   gap: 8px;
   padding: 16px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-.about-company__facts div:first-child {
+.contacts-company__facts div:first-child {
   padding-top: 0;
 }
 
-.about-company__facts div:last-child {
+.contacts-company__facts div:last-child {
   padding-bottom: 0;
   border-bottom: 0;
 }
 
-.about-company__facts dt {
+.contacts-company__facts dt {
   color: var(--color-accent);
   font-size: 12px;
   font-weight: 800;
@@ -642,7 +642,7 @@
   text-transform: uppercase;
 }
 
-.about-company__facts dd {
+.contacts-company__facts dd {
   margin: 0;
   color: rgba(255, 255, 255, 0.88);
   font-size: 17px;
@@ -650,7 +650,7 @@
   line-height: 1.45;
 }
 
-.about-bank-details {
+.contacts-bank-details {
   display: grid;
   grid-template-columns: minmax(260px, 0.38fr) minmax(0, 1fr);
   gap: 28px;
@@ -661,14 +661,14 @@
   box-shadow: var(--shadow-soft);
 }
 
-.about-bank-details__intro {
+.contacts-bank-details__intro {
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-.about-bank-details h2 {
+.contacts-bank-details h2 {
   max-width: 560px;
   margin: 0;
   color: var(--color-graphite);
@@ -676,13 +676,13 @@
   line-height: 1.08;
 }
 
-.about-bank-details p {
+.contacts-bank-details p {
   margin: 16px 0 0;
   color: var(--color-muted);
   line-height: 1.62;
 }
 
-.about-bank-details__list {
+.contacts-bank-details__list {
   display: grid;
   grid-template-columns: minmax(180px, 0.34fr) minmax(0, 1fr);
   gap: 0;
@@ -693,7 +693,7 @@
   border-radius: var(--radius-sm);
 }
 
-.about-bank-details__list div {
+.contacts-bank-details__list div {
   min-width: 0;
   display: grid;
   grid-column: 1 / -1;
@@ -701,18 +701,18 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.about-bank-details__list div:last-child {
+.contacts-bank-details__list div:last-child {
   border-bottom: 0;
 }
 
-.about-bank-details__list dt,
-.about-bank-details__list dd {
+.contacts-bank-details__list dt,
+.contacts-bank-details__list dd {
   min-width: 0;
   margin: 0;
   padding: 13px 16px;
 }
 
-.about-bank-details__list dt {
+.contacts-bank-details__list dt {
   color: var(--color-muted);
   font-size: 12px;
   font-weight: 800;
@@ -721,7 +721,7 @@
   background: color-mix(in srgb, var(--color-surface-muted) 62%, transparent);
 }
 
-.about-bank-details__list dd {
+.contacts-bank-details__list dd {
   color: var(--color-graphite);
   font-size: 16px;
   font-weight: 720;
@@ -729,7 +729,7 @@
   overflow-wrap: anywhere;
 }
 
-.about-bank-details__list a {
+.contacts-bank-details__list a {
   color: inherit;
   text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
 }
