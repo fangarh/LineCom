@@ -77,3 +77,49 @@ class ProductImageReviewWorkflowTests(unittest.TestCase):
         result = workflow.build_product_candidates(product, candidates)
 
         self.assertEqual([True, True, False], [item["selected"] for item in result["candidates"]])
+
+    def test_collect_product_candidates_queries_all_sources_and_applies_limits(self) -> None:
+        product = {"productId": "p1", "externalId": "101", "name": "Кабель UTP"}
+        providers = [
+            workflow.CandidateProvider(
+                "tktdf.ru",
+                lambda current: [
+                    {"candidateId": "t1", "sourceSite": "tktdf.ru", "sourceImageUrl": "https://www.tktdf.ru/1.png", "score": 90},
+                    {"candidateId": "t2", "sourceSite": "tktdf.ru", "sourceImageUrl": "https://www.tktdf.ru/2.png", "score": 80},
+                    {"candidateId": "t3", "sourceSite": "tktdf.ru", "sourceImageUrl": "https://www.tktdf.ru/3.png", "score": 70},
+                ],
+            ),
+            workflow.CandidateProvider(
+                "redmrt.ru",
+                lambda current: [
+                    {"candidateId": "r1", "sourceSite": "redmrt.ru", "sourceImageUrl": "https://redmrt.ru/1.png", "score": 85}
+                ],
+            ),
+            workflow.CandidateProvider(
+                "google",
+                lambda current: [
+                    {"candidateId": "g1", "sourceSite": "google", "sourceImageUrl": "https://source.test/1.png", "score": 75}
+                ],
+            ),
+        ]
+
+        result = workflow.collect_product_candidates(product, providers)
+
+        self.assertEqual(["t1", "r1", "t2", "g1"], [item["candidateId"] for item in result])
+        self.assertLessEqual(sum(1 for item in result if item["sourceSite"] == "tktdf.ru"), 2)
+
+    def test_google_provider_requires_visual_acceptance_for_default_selection(self) -> None:
+        candidate = {
+            "candidateId": "g1",
+            "sourceSite": "google",
+            "sourceImageUrl": "https://source.test/1.png",
+            "score": 75,
+            "visionStatus": "rejected",
+        }
+
+        product = workflow.build_product_candidates(
+            {"productId": "p1", "externalId": "101", "name": "Кабель UTP"},
+            [candidate],
+        )
+
+        self.assertFalse(product["candidates"][0]["selected"])
