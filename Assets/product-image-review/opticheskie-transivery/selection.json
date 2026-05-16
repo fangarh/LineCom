@@ -1,0 +1,474 @@
+{
+  "category": {
+    "slug": "opticheskie-transivery",
+    "name": "Оптические трансиверы"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T15:40:23.130Z",
+  "products": [
+    {
+      "productId": "69dfa5c3-0883-4205-9cc1-9dfb43ed36b5",
+      "externalId": "sfp-modul-rj-45-1-25g-100-m-cat-5e-6325",
+      "name": "SFP модуль RJ-45, 1.25G, 100 м, cat 5E",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6325",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6325-500x500.jpg",
+          "score": 94,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "d9d0d233-436a-484b-b77d-0c90fff278a2",
+      "externalId": "sfp-plus-modul-rj45-10g-30m-cat-5e-6326",
+      "name": "SFP+ модуль RJ45, 10G, 30м, cat 5E",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6326",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6325-500x500.jpg",
+          "score": 95,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "2dd8b86f-622f-486a-9581-879e31cd6cac",
+      "externalId": "sfp-modul-wdm-1-25-g-3-km-tx-1310-nm-rx-1550-nm-sc-ddm-6327",
+      "name": "SFP модуль WDM, 1.25 G, 3 км, TX 1310 нм, RX 1550 нм, SC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6327",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6327-500x500.jpg",
+          "score": 96,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "c6e431da-0efe-4fd4-9e48-7bd10e1952dd",
+      "externalId": "sfp-modul-wdm-1-25-g-3-km-tx-1550-nm-rx-1310-nm-sc-ddm-6328",
+      "name": "SFP модуль WDM, 1.25 G, 3 км, TX 1550 нм, RX 1310 нм, SC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6328",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6328-500x500.jpg",
+          "score": 96,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "4760a566-3281-43d5-b62b-8f7106e35dfc",
+      "externalId": "sfp-modul-wdm-1-25g-20-km-tx-1310-nm-rx-1550-nm-sc-ddm-6329",
+      "name": "SFP модуль WDM, 1.25G, 20 км, TX 1310 нм, RX 1550 нм, SC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6329",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6329-500x500.jpg",
+          "score": 97,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "e4728051-2e0c-436f-8688-e30d4b0e0150",
+      "externalId": "sfp-modul-wdm-1-25g-20-km-tx-1550-nm-rx-1310-nm-sc-ddm-6330",
+      "name": "SFP модуль WDM, 1.25G, 20 км, TX 1550 нм, RX 1310 нм, SC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6330",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6330-500x500.jpg",
+          "score": 97,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "255f2a91-c450-43b2-a2d8-e3e2691bc6c1",
+      "externalId": "sfp-modul-1-25g-550-m-tx-850-nm-mm-lc-6331",
+      "name": "SFP модуль, 1.25G, 550 м, TX 850 нм, MM, LC",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6331",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6331-500x500.jpg",
+          "score": 95,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "d50aaf27-57b1-4c37-9cdc-b12f053de827",
+      "externalId": "sfp-modul-1-25g-20-km-tx-1310-nm-ddm-lc-6332",
+      "name": "SFP модуль, 1.25G, 20 км, TX 1310 нм, DDM, LC",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6332",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6332-500x500.jpg",
+          "score": 95,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "f5e18c08-cb5f-4b11-8020-5da015eab93d",
+      "externalId": "sfp-modul-1-25g-40-km-tx-1310-nm-ddm-lc-6333",
+      "name": "SFP модуль, 1.25G, 40 км, TX 1310 нм, DDM, LC",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6333",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6332-500x500.jpg",
+          "score": 95,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "271349c8-dc3e-43cc-8bcf-9aa52bcb1ef8",
+      "externalId": "sfp-plus-modul-wdm-10g-20-km-tx-1270-nm-rx-1330-nm-lc-ddm-6334",
+      "name": "SFP+ модуль -WDM, 10G, 20 км, TX 1270 нм, RX 1330 нм, LC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6334",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6332-500x500.jpg",
+          "score": 97,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "2b854d91-b377-4744-83b9-0f9e635b93e3",
+      "externalId": "sfp-plus-modul-wdm-10g-20-km-tx-1330-nm-rx-1270-nm-lc-ddm-6335",
+      "name": "SFP+ модуль -WDM, 10G, 20 км, TX 1330 нм, RX 1270 нм, LC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6335",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6332-500x500.jpg",
+          "score": 97,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "58794d30-493e-480e-a8d3-7e688b386365",
+      "externalId": "sfp-plus-modul-wdm-10g-40-km-tx-1270-nm-rx-1330-nm-lc-ddm-6336",
+      "name": "SFP+ модуль -WDM, 10G, 40 км, TX 1270 нм, RX 1330 нм, LC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6336",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6332-500x500.jpg",
+          "score": 97,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "0128d600-21f8-4dee-b97d-2dba30a01777",
+      "externalId": "sfp-plus-modul-wdm-10g-40-km-tx-1330-nm-rx-1270-nm-lc-ddm-6337",
+      "name": "SFP+ модуль -WDM, 10G, 40 км, TX 1330 нм, RX 1270 нм, LC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6337",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6332-500x500.jpg",
+          "score": 97,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "275ee58f-b2df-485a-8eda-ea81ed00263f",
+      "externalId": "sfp-plus-modul-10g-300-m-tx-rx-850-nm-lc-ddm-6338",
+      "name": "SFP+ модуль - 10G, 300 м, TX/RX 850 нм, LC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6338",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6332-500x500.jpg",
+          "score": 96,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "1796acc6-e019-4a0c-aa81-7faa801c85ef",
+      "externalId": "sfp-plus-modul-10g-2-km-tx-1310-nm-lc-ddm-6339",
+      "name": "SFP+ модуль, 10G, 2 км, TX 1310 нм, LC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6339",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6332-500x500.jpg",
+          "score": 95,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "d9d9df9b-a8d8-4069-aa81-5a42de476406",
+      "externalId": "sfp-plus-modul-10g-20-km-tx-1310-nm-lc-ddm-6340",
+      "name": "SFP+ модуль, 10G, 20 км, TX 1310 нм, LC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6340",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6332-500x500.jpg",
+          "score": 95,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "0bcc1634-540d-4cd3-ab98-1dd09af74be7",
+      "externalId": "sfp-plus-modul-10g-40-km-tx-1310-nm-lc-ddm-6341",
+      "name": "SFP+ модуль, 10G, 40 км, TX 1310 нм, LC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6341",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6332-500x500.jpg",
+          "score": 95,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "fa9e4dd1-c55c-411e-a8c1-c15e866d7e12",
+      "externalId": "sfp-modul-gepon-1-25g-1-25g-moschnost-izlucheniya-2-7-dbm-chuvstvitelnos-6342",
+      "name": "SFP модуль GEPON, 1.25G/1.25G,, мощность излучения 2-7 dBm, чувствительность приемника 30 dBm, 20км, Tx 1490 нм, Rx1310 нм, SC",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6342",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6343-500x500.jpg",
+          "score": 104,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "feaf7623-4fe6-4901-84b8-74faae9f663d",
+      "externalId": "sfp-modul-px20-plus-plus-gepon-1-25g-1-25g-moschnost-izlucheniya-5-8-dbm-6343",
+      "name": "SFP модуль PX20++ GEPON, 1.25G/1.25G,, мощность излучения 5-8 dBm, чувствительность приемника 33 dBm, 20км, Tx 1490 нм, Rx1310 нм, SC",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6343",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6343-500x500.jpg",
+          "score": 105,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "2ab67647-00fa-4064-b7eb-22b2f2240ee2",
+      "externalId": "sfp-c-plus-modul-gpon-2-5g-1-25g-moschnost-izlucheniya-3-7-dbm-chuvstvit-6344",
+      "name": "SFP C+ модуль GPON, 2.5G/1.25G, мощность излучения 3-7 dBm, чувствительность приемника 30 dBm, 20км, Tx 1490 нм, Rx1310 нм, SC",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6344",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6343-500x500.jpg",
+          "score": 103,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "9a1c6048-b888-45ef-925f-d9f75e69de1d",
+      "externalId": "sfp-modul-c-plus-plus-gpon-2-5g-1-25g-moschnost-izlucheniya-4-5-10-dbm-c-6345",
+      "name": "SFP модуль C++ GPON, 2.5G/1.25G, мощность излучения 4,5-10 dBm, чувствительность приемника 30 dBm, 20км, Tx 1490 нм, Rx1310 нм, SC",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6345",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6343-500x500.jpg",
+          "score": 103,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "37c9b7b5-b731-4b8a-932c-2305f921108d",
+      "externalId": "qsfp-plus-modul-40g-do-100-m-om3-i-150-m-om4-tx-850-nm-mpo-mtp-ddm-6346",
+      "name": "QSFP+ модуль, 40G, до 100 м OM3 и 150 м OM4, TX 850 нм, MPO/MTP, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6346",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6346-500x500.jpg",
+          "score": 101,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "1705f905-6776-4547-99cd-1568178eb3d7",
+      "externalId": "qsfp-plus-40gbase-lr4-razem-lc-dalnost-do-20-km-6347",
+      "name": "QSFP+ 40GBASE-LR4, разъем LC, дальность до 20 км",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6347",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6347-500x500.jpg",
+          "score": 95,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "d8efd663-c98a-45df-a61c-b65daff05cfe",
+      "externalId": "qsfp-plus-modul-40g-70-km-2xlc-ddm-6348",
+      "name": "QSFP+ модуль, 40G, 70 км, 2xLC, DDM",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6348",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6349-500x500.jpg",
+          "score": 95,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "76197006-025d-4a0e-9c66-66546bbc933d",
+      "externalId": "qsfp28-modul-100gbase-sr4-razem-mpo-dalnost-do-100m-6349",
+      "name": "QSFP28 модуль 100GBASE-SR4, разъем MPO, дальность до 100м",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6349",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6349-500x500.jpg",
+          "score": 98,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "63840350-145f-42f3-b4aa-d8ccb245fcc0",
+      "externalId": "qsfp28-modul-100gbase-lr1-wdm-1271-1331-lc-dalnost-do-10-km-6350",
+      "name": "QSFP28 модуль 100GBASE-LR1, WDM 1271/1331, LC, дальность до 10 км",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6350",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6350-500x500.jpg",
+          "score": 98,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "d5ae2317-8c81-4b34-896a-2acd5cfdcd7d",
+      "externalId": "qsfp28-modul-100gbase-lr1-wdm-1331-1271-lc-dalnost-do-10-km-6351",
+      "name": "QSFP28 модуль 100GBASE-LR1, WDM 1331/1271, LC, дальность до 10 км",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6351",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6351-500x500.jpg",
+          "score": 98,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "72ffd6cb-7b1e-44c9-a026-a209f779b48e",
+      "externalId": "qsfp28-modul-100gbase-er1-wdm-1304-1309-lc-dalnost-do-40-km-6352",
+      "name": "QSFP28 модуль 100GBASE-ER1, WDM 1304/1309, LC, дальность до 40 км",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6352",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6352-500x500.jpg",
+          "score": 98,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "31acab1f-cf49-4c97-8105-fa89fc973392",
+      "externalId": "qsfp28-modul-100gbase-er1-wdm-1309-1304-lc-dalnost-do-40-km-6353",
+      "name": "QSFP28 модуль 100GBASE-ER1, WDM 1309/1304, LC, дальность до 40 км",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6353",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6353-500x500.jpg",
+          "score": 98,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    }
+  ]
+}

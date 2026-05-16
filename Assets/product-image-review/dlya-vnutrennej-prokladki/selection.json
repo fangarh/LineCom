@@ -1,0 +1,135 @@
+{
+  "category": {
+    "slug": "dlya-vnutrennej-prokladki",
+    "name": "Для внутренней прокладки"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T13:59:40.179Z",
+  "products": [
+    {
+      "productId": "2a89f01a-5dea-49d2-9fad-977158938dc4",
+      "externalId": "kabel-vitaya-para-f-utp-cu-cat-5e-pvc-4pr-24awg-indoor-seryj-305m-linecom",
+      "name": "Кабель витая пара F/UTP,CU, CAT 5e, PVC, 4PR, 24AWG, INDOOR, серый, 305м LineCom",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/51109/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/467/vz3z1bgj7qlf9oaxoijw584fhp60uhi0.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6253&search=F+UTP+CAT+5e+Cu+305+indoor+%D1%81%D0%B5%D1%80%D1%8B%D0%B9",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/4-500x500.jpg",
+          "score": 79,
+          "selected": false,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "e68add3c-90e5-4ffe-8de6-ae632c65df5f",
+      "externalId": "kabel-vitaya-para-f-utp-ssa-cat-5e-4pr-24awg-indoor-seryj-305m-linecom",
+      "name": "Кабель витая пара F/UTP, ССА ,CAT 5e, 4PR, 24AWG, INDOOR, серый, 305м LineCom",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/67632/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/ae0/bv7m3ddkwn90fwe50selg5w4xwzmd5i1.jpg",
+          "score": 87,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/67632/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/6cf/v0a3gt9hn6n64rg6callvgd1ofeh9bjj.jpg",
+          "score": 87,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "e0e219d7-022c-437f-a2ed-a5343a18fa76",
+      "externalId": "kabel-vitaya-para-u-utp-median-cat-5e-pvc-4pr-24awg-indoor-seryj-305m",
+      "name": "Кабель витая пара U/UTP, MEDIAN ,CU,CAT 5e, PVC, 4PR, 24AWG, INDOOR, серый, 305м LineCom",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/66047/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/606/5wab4q6y564iihclb1p3diqcmvbg3e38.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/66047/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/b9c/4a5n9gxluo6uj3nlov71ve9j2gi4o4ve.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "761b58d1-5887-464a-9a07-7e77f8388c3a",
+      "externalId": "kabel-vitaya-para-u-utp-premium-cu-cat-5e-pvc-4pr-24awg-indoor-seryj-305m-linecom",
+      "name": "Кабель витая пара U/UTP, PREMIUM,CU,CAT 5e, PVC, 4PR, 24AWG, INDOOR, серый, 305м LineCom",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/66047/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/b9c/4a5n9gxluo6uj3nlov71ve9j2gi4o4ve.jpg",
+          "score": 87,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6253&search=U+UTP+CAT+5e+Cu+305+indoor+%D1%81%D0%B5%D1%80%D1%8B%D0%B9",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/4-500x500.jpg",
+          "score": 79,
+          "selected": false,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "ac788baf-425c-436e-ad98-1b5b3204cf3e",
+      "externalId": "kabel-vitaya-para-u-utp-ssa-cat-5e-4pr-24awg-indoor-seryj-305m-linecom",
+      "name": "Кабель витая пара U/UTP, ССА , CAT 5e, 4PR, 24AWG, INDOOR, серый, 305м , LineCom",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68259/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/7b0/kfnqp9qfrsg2shyo33o47yjlips0petk.jpg",
+          "score": 85,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68259/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/0cc/lfp5qd2a4wcbbefg2ou37yprsjbakzbv.jpg",
+          "score": 85,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    }
+  ]
+}

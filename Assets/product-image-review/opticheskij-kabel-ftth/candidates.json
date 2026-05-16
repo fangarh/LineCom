@@ -1,0 +1,161 @@
+{
+  "category": {
+    "slug": "opticheskij-kabel-ftth",
+    "name": "Оптический кабель FTTH"
+  },
+  "source": {
+    "productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=20&sort=category&categorySlug=opticheskij-kabel-ftth",
+    "totalItems": 7,
+    "page": 1,
+    "pageSize": 20
+  },
+  "products": [
+    {
+      "productId": "648868d3-8ac6-4bc7-ba77-b27114c6af66",
+      "externalId": "opticheskij-drop-kabel-1-volokno-g652-stalnaya-provoloka-tip-ftth1-6299",
+      "sourceRows": [],
+      "name": "Оптический дроп кабель, 1 волокно G652, стальная проволока, тип FTTH1",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель FTTH",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6299",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6299-500x500.jpg",
+          "score": 98,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "e30f2258-5d81-4360-b488-c3a9c82d3475",
+      "externalId": "opticheskij-drop-kabel-1-volokno-g657-dielektricheskij-frp-tip-ftth2-6300",
+      "sourceRows": [],
+      "name": "Оптический дроп кабель, 1 волокно G657, диэлектрический FRP, тип FTTH2",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель FTTH",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6300",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6300-500x500.jpg",
+          "score": 98,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "697b83e0-c1ba-4cfb-8d0e-d3f3de5559c9",
+      "externalId": "opticheskij-drop-kabel-2-volokna-g652-stalnaya-provoloka-tip-ftth1-2-6301",
+      "sourceRows": [],
+      "name": "Оптический дроп кабель, 2 волокна G652, стальная проволока, тип FTTH1-2",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель FTTH",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6301",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6301-500x500.jpg",
+          "score": 98,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "c0566050-bfbb-44ca-9788-087fbd2628f8",
+      "externalId": "opticheskij-drop-kabel-2-volokna-g657-dielektricheskij-frp-tip-ftth2-2-6302",
+      "sourceRows": [],
+      "name": "Оптический дроп кабель, 2 волокна G657, диэлектрический FRP, тип FTTH2-2",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель FTTH",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6302",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6302-500x500.jpg",
+          "score": 98,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "2e6ab21c-f103-4dc3-a5f6-3d10ce23a0f8",
+      "externalId": "opticheskij-drop-kabel-4-volokna-g652-stalnaya-provoloka-tip-ftth1-4-6303",
+      "sourceRows": [],
+      "name": "Оптический дроп кабель, 4 волокна G652, стальная проволока, тип FTTH1-4",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель FTTH",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6303",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6303-500x500.jpg",
+          "score": 98,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "d98d53d8-153d-4fc9-ad03-89520587eacb",
+      "externalId": "opticheskij-drop-kabel-2-volokna-g652-stalnaya-provoloka-tip-ftth1-4-plu-6304",
+      "sourceRows": [],
+      "name": "Оптический дроп кабель, 2 волокна G652, стальная проволока, тип FTTH1-4 + выносной элемент сталь 1.0мм",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель FTTH",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6304",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6304-500x500.jpg",
+          "score": 102,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "9ce2bf40-8b97-4135-a195-7cf3c86ea7c6",
+      "externalId": "opticheskij-drop-kabel-4-volokna-g652-stalnaya-provoloka-tip-ftth1-4-plu-6305",
+      "sourceRows": [],
+      "name": "Оптический дроп кабель, 4 волокна G652, стальная проволока, тип FTTH1-4 + выносной элемент сталь 1.0мм",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель FTTH",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6305",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6304-500x500.jpg",
+          "score": 102,
+          "selected": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "category": {
+    "slug": "abonentskaya-rozetka",
+    "name": "Абонентская розетка"
+  },
+  "source": {
+    "productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=20&sort=category&categorySlug=abonentskaya-rozetka",
+    "totalItems": 4,
+    "page": 1,
+    "pageSize": 20
+  },
+  "products": [
+    {
+      "productId": "e06b2ac6-efef-464a-a204-bf7a4dcd2052",
+      "externalId": "abonentskaya-rozetka-ftth-001-6316",
+      "sourceRows": [],
+      "name": "Абонентская розетка FTTH-001",
+      "sku": null,
+      "attributes": [
+        "Абонентская розетка",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6316",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6316-500x500.jpg",
+          "score": 94,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6316",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6316(2)-500x500.jpg",
+          "score": 94,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/1c8/1c8c5f87bde3c6d9c0019f051cc6ef06.jpg",
+          "score": 83,
+          "selected": false
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/fd3/fd345e1aaa0afc00113c88bee4fdaac9.jpeg",
+          "score": 83,
+          "selected": false
+        }
+      ]
+    },
+    {
+      "productId": "e740f092-38c9-4faf-aa31-193ce9a4419e",
+      "externalId": "abonentskaya-rozetka-ftth-001-s-klipsoj-6317",
+      "sourceRows": [],
+      "name": "Абонентская розетка FTTH-001 с клипсой",
+      "sku": null,
+      "attributes": [
+        "Абонентская розетка",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6317",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6316-500x500.jpg",
+          "score": 95,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/1c8/1c8c5f87bde3c6d9c0019f051cc6ef06.jpg",
+          "score": 83,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/fd3/fd345e1aaa0afc00113c88bee4fdaac9.jpeg",
+          "score": 83,
+          "selected": false
+        }
+      ]
+    },
+    {
+      "productId": "103830ad-3d38-402d-8fa4-8e7e977357f6",
+      "externalId": "abonentskaya-rozetka-sc-sc-sm-sc-upc-6318",
+      "sourceRows": [],
+      "name": "Абонентская розетка SC-SC/SM-SC/UPC",
+      "sku": null,
+      "attributes": [
+        "Абонентская розетка",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6318",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6318(2)-500x500.jpg",
+          "score": 93,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/a98/3eb90id6p2ks5w7ca2pj6p3svbo1p361.jpg",
+          "score": 81,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/ea1/y8l2xdulpgi3tbdysfrumcmmvcl8d9ec.jpg",
+          "score": 81,
+          "selected": false
+        }
+      ]
+    },
+    {
+      "productId": "8b594ab1-4191-461b-8f58-d6ad802c176a",
+      "externalId": "abonentskaya-rozetka-sc-sc-apc-sc-apc-6319",
+      "sourceRows": [],
+      "name": "Абонентская розетка SC-SC/APC-SC/APC",
+      "sku": null,
+      "attributes": [
+        "Абонентская розетка",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6319",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6318(2)-500x500.jpg",
+          "score": 94,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/a98/3eb90id6p2ks5w7ca2pj6p3svbo1p361.jpg",
+          "score": 83,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/ea1/y8l2xdulpgi3tbdysfrumcmmvcl8d9ec.jpg",
+          "score": 83,
+          "selected": false
+        }
+      ]
+    }
+  ]
+}

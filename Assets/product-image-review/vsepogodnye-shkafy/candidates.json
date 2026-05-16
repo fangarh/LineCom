@@ -1,0 +1,72 @@
+{
+  "category": {
+    "slug": "vsepogodnye-shkafy",
+    "name": "Всепогодные шкафы"
+  },
+  "source": {
+    "productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=50&sort=category&categorySlug=vsepogodnye-shkafy",
+    "totalItems": 2,
+    "page": 1,
+    "pageSize": 50
+  },
+  "products": [
+    {
+      "productId": "b1f677a0-bb87-4f7e-acc0-9396623f3752",
+      "externalId": "klimaticheskij-vsepogodnyj-shkaf-6u-sh-g-v-660-600-550mm-19-napravlyayus-6423",
+      "sourceRows": [],
+      "name": "Климатический всепогодный шкаф 6U, (Ш*Г*В 660*600*550мм) 19\" направляющие, оборудование в комплекте",
+      "sku": null,
+      "attributes": [
+        "Всепогодные шкафы",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6423",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6424-500x500.jpg",
+          "score": 99,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6423",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6424-1-500x500.jpg",
+          "score": 99,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "e91bc3d3-bf94-4b19-a626-73f9017f2e0f",
+      "externalId": "klimaticheskij-vsepogodnyj-shkaf-9u-sh-g-v-660-600-683mm-19-napravlyayus-6424",
+      "sourceRows": [],
+      "name": "Климатический всепогодный шкаф 9U, (Ш*Г*В 660*600*683мм) 19\" направляющие, оборудование в комплекте",
+      "sku": null,
+      "attributes": [
+        "Всепогодные шкафы",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6424",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6425-500x500.jpg",
+          "score": 99,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6424",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/64255-500x500.jpg",
+          "score": 99,
+          "selected": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "category": {
+    "slug": "opticheskie-mufty",
+    "name": "Оптические муфты"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T15:53:44.089Z",
+  "products": [
+    {
+      "productId": "226000d6-d202-48ed-9142-4592aef371f4",
+      "externalId": "opticheskaya-mufta-gjs-mini-01-6367",
+      "name": "Оптическая муфта GJS-MINI-01",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6367",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6367-500x500.jpg",
+          "score": 94,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Отбор изображений: ТВ-делители</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f7f7f4; color: #1f2933; }
+    header { position: sticky; top: 0; background: #f7f7f4; padding: 12px 0; border-bottom: 1px solid #d6d3ca; }
+    .product { margin: 18px 0; padding: 16px; background: #fff; border: 1px solid #dedbd2; border-radius: 8px; }
+    .candidates { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+    .candidate { display: grid; gap: 8px; border: 1px solid #d6d3ca; border-radius: 8px; padding: 10px; background: #fbfaf7; }
+    .candidate img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: white; border: 1px solid #ece8df; }
+    .candidate__meta { font-size: 13px; color: #4b5563; }
+    button { padding: 10px 14px; border-radius: 6px; border: 1px solid #374151; background: #263238; color: white; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ТВ-делители</h1>
+    <button type="button" onclick="downloadSelection()">Скачать selection.json</button>
+  </header>
+  <main>
+            <article class="product" data-product-id="52111482-b9f2-4d49-ac39-78db6430843d">
+              <h2>Делитель SAH 204F</h2>
+              <p>delitel-sah-204f-6407</p>
+              <div class="candidates">
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="52111482-b9f2-4d49-ac39-78db6430843d"
+                         data-candidate-id="redmrt-1" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/SAH204-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6407" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="52111482-b9f2-4d49-ac39-78db6430843d"
+                         data-candidate-id="redmrt-2" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/SAH204-1000x1000.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6407" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                </div>
+            </article>
+            
+            <article class="product" data-product-id="3dc1fb7b-0f59-40df-a3bc-dca829dc25a6">
+              <h2>Делитель SAH 306F</h2>
+              <p>delitel-sah-306f-6408</p>
+              <div class="candidates">
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="3dc1fb7b-0f59-40df-a3bc-dca829dc25a6"
+                         data-candidate-id="redmrt-1" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/6407-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6408" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                </div>
+            </article>
+            
+            <article class="product" data-product-id="d22554dd-5b73-4d6c-a2bf-76edeeff057a">
+              <h2>Делитель SAH 408F</h2>
+              <p>delitel-sah-408f-6409</p>
+              <div class="candidates">
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="d22554dd-5b73-4d6c-a2bf-76edeeff057a"
+                         data-candidate-id="redmrt-1" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/SAH408-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6409" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="d22554dd-5b73-4d6c-a2bf-76edeeff057a"
+                         data-candidate-id="redmrt-2" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/SAH408-1000x1000.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6409" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                </div>
+            </article>
+            </main>
+  <script>
+    const sourceData = {"category": {"slug": "tv-deliteli", "name": "ТВ-делители"}, "source": {"productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=50&sort=category&categorySlug=tv-deliteli", "totalItems": 3, "page": 1, "pageSize": 50}, "products": [{"productId": "52111482-b9f2-4d49-ac39-78db6430843d", "externalId": "delitel-sah-204f-6407", "sourceRows": [], "name": "Делитель SAH 204F", "sku": null, "attributes": ["ТВ-делители", "1 шт"], "candidates": [{"candidateId": "redmrt-1", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6407", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/SAH204-500x500.jpg", "score": 93, "selected": true}, {"candidateId": "redmrt-2", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6407", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/SAH204-1000x1000.jpg", "score": 93, "selected": true}]}, {"productId": "3dc1fb7b-0f59-40df-a3bc-dca829dc25a6", "externalId": "delitel-sah-306f-6408", "sourceRows": [], "name": "Делитель SAH 306F", "sku": null, "attributes": ["ТВ-делители", "1 шт"], "candidates": [{"candidateId": "redmrt-1", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6408", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6407-500x500.jpg", "score": 93, "selected": true}]}, {"productId": "d22554dd-5b73-4d6c-a2bf-76edeeff057a", "externalId": "delitel-sah-408f-6409", "sourceRows": [], "name": "Делитель SAH 408F", "sku": null, "attributes": ["ТВ-делители", "1 шт"], "candidates": [{"candidateId": "redmrt-1", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6409", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/SAH408-500x500.jpg", "score": 93, "selected": true}, {"candidateId": "redmrt-2", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6409", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/SAH408-1000x1000.jpg", "score": 93, "selected": true}]}]};
+    function downloadSelection() {
+      const selectedByProduct = new Map();
+      document.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+        if (!input.checked) return;
+        const list = selectedByProduct.get(input.dataset.productId) || [];
+        if (list.length < 2) list.push(input.dataset.candidateId);
+        selectedByProduct.set(input.dataset.productId, list);
+      });
+      const products = sourceData.products.map((product) => ({
+        productId: product.productId,
+        externalId: product.externalId,
+        name: product.name,
+        selectedCandidates: (selectedByProduct.get(product.productId) || []).map((candidateId, index) => {
+          const candidate = product.candidates.find((item) => item.candidateId === candidateId);
+          return { ...candidate, isMain: index === 0 };
+        })
+      }));
+      const blob = new Blob([JSON.stringify({
+        category: sourceData.category,
+        selectedByOperator: "browser",
+        selectedAt: new Date().toISOString(),
+        products
+      }, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "selection.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

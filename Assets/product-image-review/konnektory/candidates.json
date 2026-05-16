@@ -1,0 +1,130 @@
+{
+  "category": {
+    "slug": "konnektory",
+    "name": "Коннекторы"
+  },
+  "source": {
+    "productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=4&sort=category&categorySlug=konnektory",
+    "totalItems": 4,
+    "page": 1,
+    "pageSize": 4
+  },
+  "products": [
+    {
+      "productId": "d85c309b-6da7-47b9-82ee-7b87d4d626ec",
+      "externalId": "konnektor-rj45-8p8c-cat-5e-dlya-odnozhilnogo-i-mnogozhilnogo-kabelya-6289",
+      "sourceRows": [],
+      "name": "Коннектор RJ45 (8p8c) cat.5е, для одножильного и многожильного кабеля",
+      "sku": null,
+      "attributes": [
+        "Коннекторы",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/65308/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/622/rmpi4yggsz21c3alqyv5clj1pd31dasc.jpg",
+          "score": 87,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/65308/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/b69/c68ppjn7h3pxrziwv7yrcbcoi7bwxoj1.jpg",
+          "score": 87,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "797cb74a-bb6f-4bbe-b4bb-703f7160fca7",
+      "externalId": "konnektor-rj45-8p8c-cat-5e-so-skvoznym-otverstiem-skvoznoj-dlya-odnozhil-6290",
+      "sourceRows": [],
+      "name": "Коннектор RJ45 (8p8c) cat.5е, со сквозным отверстием (сквозной) , для одножильного и многожильного кабеля",
+      "sku": null,
+      "attributes": [
+        "Коннекторы",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/65308/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/622/rmpi4yggsz21c3alqyv5clj1pd31dasc.jpg",
+          "score": 87,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/65308/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/b69/c68ppjn7h3pxrziwv7yrcbcoi7bwxoj1.jpg",
+          "score": 87,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "df0fd7f9-bd52-44aa-b2f6-83f38237c036",
+      "externalId": "konnektor-rj45-8p8c-cat-6-dlya-odnozhilnogo-i-mnogozhilnogo-kabelya-6291",
+      "sourceRows": [],
+      "name": "Коннектор RJ45 (8p8c) cat.6, для одножильного и многожильного кабеля",
+      "sku": null,
+      "attributes": [
+        "Коннекторы",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/51861/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/e33/cjxcigflngmugxls8snry0fym5n808km.jpg",
+          "score": 87,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/51861/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8fa/wneun3f5tnrq41noph7503nvq1k2keso.jpg",
+          "score": 87,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "9a0639d3-1553-40a3-a9bb-2743fa8f89ef",
+      "externalId": "konnektor-rj45-8p8c-cat-5e-ekranirovannyj-dlya-odnozhilnogo-i-mnogozhiln-6292",
+      "sourceRows": [],
+      "name": "Коннектор RJ45 (8p8c) cat.5e, экранированный, для одножильного и многожильного кабеля",
+      "sku": null,
+      "attributes": [
+        "Коннекторы",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/65308/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/622/rmpi4yggsz21c3alqyv5clj1pd31dasc.jpg",
+          "score": 87,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/65308/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/b69/c68ppjn7h3pxrziwv7yrcbcoi7bwxoj1.jpg",
+          "score": 87,
+          "selected": true
+        }
+      ]
+    }
+  ]
+}

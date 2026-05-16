@@ -1,0 +1,93 @@
+{
+  "category": {
+    "slug": "tv-deliteli",
+    "name": "ТВ-делители"
+  },
+  "source": {
+    "productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=50&sort=category&categorySlug=tv-deliteli",
+    "totalItems": 3,
+    "page": 1,
+    "pageSize": 50
+  },
+  "products": [
+    {
+      "productId": "52111482-b9f2-4d49-ac39-78db6430843d",
+      "externalId": "delitel-sah-204f-6407",
+      "sourceRows": [],
+      "name": "Делитель SAH 204F",
+      "sku": null,
+      "attributes": [
+        "ТВ-делители",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6407",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/SAH204-500x500.jpg",
+          "score": 93,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6407",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/SAH204-1000x1000.jpg",
+          "score": 93,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "3dc1fb7b-0f59-40df-a3bc-dca829dc25a6",
+      "externalId": "delitel-sah-306f-6408",
+      "sourceRows": [],
+      "name": "Делитель SAH 306F",
+      "sku": null,
+      "attributes": [
+        "ТВ-делители",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6408",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6407-500x500.jpg",
+          "score": 93,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "d22554dd-5b73-4d6c-a2bf-76edeeff057a",
+      "externalId": "delitel-sah-408f-6409",
+      "sourceRows": [],
+      "name": "Делитель SAH 408F",
+      "sku": null,
+      "attributes": [
+        "ТВ-делители",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6409",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/SAH408-500x500.jpg",
+          "score": 93,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6409",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/SAH408-1000x1000.jpg",
+          "score": 93,
+          "selected": true
+        }
+      ]
+    }
+  ]
+}

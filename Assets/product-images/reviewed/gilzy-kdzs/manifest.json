@@ -1,0 +1,73 @@
+{
+  "category": {
+    "slug": "gilzy-kdzs",
+    "name": "Гильзы КДЗС"
+  },
+  "outputDir": ".",
+  "downloadedPng": 3,
+  "items": [
+    {
+      "assetKey": "komplekt-dlya-zaschity-svarnyh-soedinenij-60mm-gilza-kdzs-60-6322-redmrt-1",
+      "productId": "5d3da0fe-59f8-4424-beed-cf7c1d864f85",
+      "externalId": "komplekt-dlya-zaschity-svarnyh-soedinenij-60mm-gilza-kdzs-60-6322",
+      "sourceRows": [],
+      "sourceSite": "redmrt.ru",
+      "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6322",
+      "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6322-500x500.jpg",
+      "status": "downloaded_png",
+      "file": "komplekt-dlya-zaschity-svarnyh-soedinenij-60mm-gilza-kdzs-60-6322-redmrt-1.png",
+      "width": 500,
+      "height": 500,
+      "checksum": "732b418e976795b1bfc1891833d252c5a1af873ab147585b07b7067f8cfa4eed",
+      "contentType": "image/png",
+      "originalContentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "accepted_operator_review",
+      "rightsStatus": "requires-permission",
+      "selectedByOperator": "browser",
+      "selectedAt": "2026-05-16T15:33:20.847Z"
+    },
+    {
+      "assetKey": "komplekt-dlya-zaschity-svarnyh-soedinenij-40mm-gilza-kdzs-40-6323-redmrt-1",
+      "productId": "b1394c0d-59c4-4916-85b7-c1fc75bc476c",
+      "externalId": "komplekt-dlya-zaschity-svarnyh-soedinenij-40mm-gilza-kdzs-40-6323",
+      "sourceRows": [],
+      "sourceSite": "redmrt.ru",
+      "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6323",
+      "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6323-500x500.jpg",
+      "status": "downloaded_png",
+      "file": "komplekt-dlya-zaschity-svarnyh-soedinenij-40mm-gilza-kdzs-40-6323-redmrt-1.png",
+      "width": 500,
+      "height": 500,
+      "checksum": "732b418e976795b1bfc1891833d252c5a1af873ab147585b07b7067f8cfa4eed",
+      "contentType": "image/png",
+      "originalContentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "accepted_operator_review",
+      "rightsStatus": "requires-permission",
+      "selectedByOperator": "browser",
+      "selectedAt": "2026-05-16T15:33:20.847Z"
+    },
+    {
+      "assetKey": "komplekt-dlya-zaschity-svarnyh-soedinenij-kdzs-60-ftth-6324-redmrt-1",
+      "productId": "5be4d041-e1cf-4149-a247-8ba88cb64f33",
+      "externalId": "komplekt-dlya-zaschity-svarnyh-soedinenij-kdzs-60-ftth-6324",
+      "sourceRows": [],
+      "sourceSite": "redmrt.ru",
+      "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6324",
+      "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6324-500x500.jpg",
+      "status": "downloaded_png",
+      "file": "komplekt-dlya-zaschity-svarnyh-soedinenij-kdzs-60-ftth-6324-redmrt-1.png",
+      "width": 500,
+      "height": 500,
+      "checksum": "a11cab96b58876a6409da6b66f8f5a339fdc45ab7775d7e9cecf0e90061392b2",
+      "contentType": "image/png",
+      "originalContentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "accepted_operator_review",
+      "rightsStatus": "requires-permission",
+      "selectedByOperator": "browser",
+      "selectedAt": "2026-05-16T15:33:20.847Z"
+    }
+  ]
+}

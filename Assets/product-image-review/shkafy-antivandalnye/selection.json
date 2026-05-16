@@ -1,0 +1,101 @@
+{
+  "category": {
+    "slug": "shkafy-antivandalnye",
+    "name": "Шкафы антивандальные"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T16:24:56.398Z",
+  "products": [
+    {
+      "productId": "eb5d264b-5014-40af-ad06-fe6d5d418d09",
+      "externalId": "antivandalnyj-shkaf-9u-penalnogo-tipa-sh-g-v-520-400-410mm-19-napravlyay-6419",
+      "name": "Антивандальный Шкаф 9U пенального типа, (Ш*Г*В 520*400*410мм) 19\" направляющие, передняя дверь металл, замок, серый",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6419",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6419-500x500.jpg",
+          "score": 103,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "d6a9351e-8594-45f4-b083-7b047ce8dcbf",
+      "externalId": "antivandalnyj-shkaf-9u-raspashnogo-tipa-sh-g-v-600-450-470mm-19-napravly-6420",
+      "name": "Антивандальный Шкаф 9U распашного типа, (Ш*Г*В 600*450*470мм) 19\" направляющие, передняя дверь металл, замок, серый",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6420",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6420-500x500.jpg",
+          "score": 103,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6420",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6420-1-500x500.jpg",
+          "score": 103,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "bf51e920-6d19-4bce-9bb1-54b9813408ab",
+      "externalId": "antivandalnyj-shkaf-12u-raspashnogo-tipa-sh-g-v-600-450-600mm-19-napravl-6421",
+      "name": "Антивандальный Шкаф 12U распашного типа, (Ш*Г*В 600*450*600мм) 19\" направляющие, передняя дверь металл, замок, серый",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6421",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6422-500x500.jpg",
+          "score": 104,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6421",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6422-3-500x500.jpg",
+          "score": 104,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "adac79ec-f93b-4900-aac8-b403dbbb29e1",
+      "externalId": "shkaf-antivandalnyj-shta-pk-3b-6422",
+      "name": "Шкаф антивандальный ШТА ПК-3Б",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6422",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6423-500x500.jpg",
+          "score": 93,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6422",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6423-1-500x500.jpg",
+          "score": 93,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    }
+  ]
+}

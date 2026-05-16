@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Отбор изображений: Быстрые коннекторы, соединители</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f7f7f4; color: #1f2933; }
+    header { position: sticky; top: 0; background: #f7f7f4; padding: 12px 0; border-bottom: 1px solid #d6d3ca; }
+    .product { margin: 18px 0; padding: 16px; background: #fff; border: 1px solid #dedbd2; border-radius: 8px; }
+    .candidates { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+    .candidate { display: grid; gap: 8px; border: 1px solid #d6d3ca; border-radius: 8px; padding: 10px; background: #fbfaf7; }
+    .candidate img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: white; border: 1px solid #ece8df; }
+    .candidate__meta { font-size: 13px; color: #4b5563; }
+    button { padding: 10px 14px; border-radius: 6px; border: 1px solid #374151; background: #263238; color: white; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Быстрые коннекторы, соединители</h1>
+    <button type="button" onclick="downloadSelection()">Скачать selection.json</button>
+  </header>
+  <main>
+            <article class="product" data-product-id="fc8dbe71-50eb-42f9-bd0a-5b630bcfccb8">
+              <h2>Быстрый коннектор SC/UPC</h2>
+              <p>bystryj-konnektor-sc-upc-6320</p>
+              <div class="candidates">
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="fc8dbe71-50eb-42f9-bd0a-5b630bcfccb8"
+                         data-candidate-id="redmrt-1" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/6320-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6320" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="fc8dbe71-50eb-42f9-bd0a-5b630bcfccb8"
+                         data-candidate-id="redmrt-2" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/6320(2)-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6320" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                </div>
+            </article>
+            
+            <article class="product" data-product-id="1bd5298b-3837-48ca-a969-309dbb0d1d34">
+              <h2>Быстрый коннектор SC/APC</h2>
+              <p>bystryj-konnektor-sc-apc-6321</p>
+              <div class="candidates">
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="1bd5298b-3837-48ca-a969-309dbb0d1d34"
+                         data-candidate-id="redmrt-1" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/6321-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6321" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="1bd5298b-3837-48ca-a969-309dbb0d1d34"
+                         data-candidate-id="redmrt-2" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/6321(2)-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6321" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                </div>
+            </article>
+            </main>
+  <script>
+    const sourceData = {"category": {"slug": "bystrye-konnektory-soediniteli", "name": "Быстрые коннекторы, соединители"}, "source": {"productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=30&sort=category&categorySlug=bystrye-konnektory-soediniteli", "totalItems": 2, "page": 1, "pageSize": 30}, "products": [{"productId": "fc8dbe71-50eb-42f9-bd0a-5b630bcfccb8", "externalId": "bystryj-konnektor-sc-upc-6320", "sourceRows": [], "name": "Быстрый коннектор SC/UPC", "sku": null, "attributes": ["Быстрые коннекторы, соединители", "1 шт"], "candidates": [{"candidateId": "redmrt-1", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6320", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6320-500x500.jpg", "score": 93, "selected": true}, {"candidateId": "redmrt-2", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6320", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6320(2)-500x500.jpg", "score": 93, "selected": true}]}, {"productId": "1bd5298b-3837-48ca-a969-309dbb0d1d34", "externalId": "bystryj-konnektor-sc-apc-6321", "sourceRows": [], "name": "Быстрый коннектор SC/APC", "sku": null, "attributes": ["Быстрые коннекторы, соединители", "1 шт"], "candidates": [{"candidateId": "redmrt-1", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6321", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6321-500x500.jpg", "score": 93, "selected": true}, {"candidateId": "redmrt-2", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6321", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6321(2)-500x500.jpg", "score": 93, "selected": true}]}]};
+    function downloadSelection() {
+      const selectedByProduct = new Map();
+      document.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+        if (!input.checked) return;
+        const list = selectedByProduct.get(input.dataset.productId) || [];
+        if (list.length < 2) list.push(input.dataset.candidateId);
+        selectedByProduct.set(input.dataset.productId, list);
+      });
+      const products = sourceData.products.map((product) => ({
+        productId: product.productId,
+        externalId: product.externalId,
+        name: product.name,
+        selectedCandidates: (selectedByProduct.get(product.productId) || []).map((candidateId, index) => {
+          const candidate = product.candidates.find((item) => item.candidateId === candidateId);
+          return { ...candidate, isMain: index === 0 };
+        })
+      }));
+      const blob = new Blob([JSON.stringify({
+        category: sourceData.category,
+        selectedByOperator: "browser",
+        selectedAt: new Date().toISOString(),
+        products
+      }, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "selection.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

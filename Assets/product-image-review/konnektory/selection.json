@@ -1,0 +1,74 @@
+{
+  "category": {
+    "slug": "konnektory",
+    "name": "Коннекторы"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T14:32:47.086Z",
+  "products": [
+    {
+      "productId": "d85c309b-6da7-47b9-82ee-7b87d4d626ec",
+      "externalId": "konnektor-rj45-8p8c-cat-5e-dlya-odnozhilnogo-i-mnogozhilnogo-kabelya-6289",
+      "name": "Коннектор RJ45 (8p8c) cat.5е, для одножильного и многожильного кабеля",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/65308/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/b69/c68ppjn7h3pxrziwv7yrcbcoi7bwxoj1.jpg",
+          "score": 87,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "797cb74a-bb6f-4bbe-b4bb-703f7160fca7",
+      "externalId": "konnektor-rj45-8p8c-cat-5e-so-skvoznym-otverstiem-skvoznoj-dlya-odnozhil-6290",
+      "name": "Коннектор RJ45 (8p8c) cat.5е, со сквозным отверстием (сквозной) , для одножильного и многожильного кабеля",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/65308/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/b69/c68ppjn7h3pxrziwv7yrcbcoi7bwxoj1.jpg",
+          "score": 87,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "df0fd7f9-bd52-44aa-b2f6-83f38237c036",
+      "externalId": "konnektor-rj45-8p8c-cat-6-dlya-odnozhilnogo-i-mnogozhilnogo-kabelya-6291",
+      "name": "Коннектор RJ45 (8p8c) cat.6, для одножильного и многожильного кабеля",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/51861/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/e33/cjxcigflngmugxls8snry0fym5n808km.jpg",
+          "score": 87,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "9a0639d3-1553-40a3-a9bb-2743fa8f89ef",
+      "externalId": "konnektor-rj45-8p8c-cat-5e-ekranirovannyj-dlya-odnozhilnogo-i-mnogozhiln-6292",
+      "name": "Коннектор RJ45 (8p8c) cat.5e, экранированный, для одножильного и многожильного кабеля",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/65308/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/b69/c68ppjn7h3pxrziwv7yrcbcoi7bwxoj1.jpg",
+          "score": 87,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    }
+  ]
+}

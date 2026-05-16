@@ -1,0 +1,73 @@
+{
+  "category": {
+    "slug": "tv-deliteli",
+    "name": "ТВ-делители"
+  },
+  "outputDir": ".",
+  "downloadedPng": 3,
+  "items": [
+    {
+      "assetKey": "delitel-sah-204f-6407-redmrt-1",
+      "productId": "52111482-b9f2-4d49-ac39-78db6430843d",
+      "externalId": "delitel-sah-204f-6407",
+      "sourceRows": [],
+      "sourceSite": "redmrt.ru",
+      "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6407",
+      "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/SAH204-500x500.jpg",
+      "status": "downloaded_png",
+      "file": "delitel-sah-204f-6407-redmrt-1.png",
+      "width": 500,
+      "height": 500,
+      "checksum": "10f08af49b9de66b57f72db6e7f30249224b5bb21bde7f232b942cb28c423ad7",
+      "contentType": "image/png",
+      "originalContentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "accepted_operator_review",
+      "rightsStatus": "requires-permission",
+      "selectedByOperator": "browser",
+      "selectedAt": "2026-05-16T16:18:04.277Z"
+    },
+    {
+      "assetKey": "delitel-sah-306f-6408-redmrt-1",
+      "productId": "3dc1fb7b-0f59-40df-a3bc-dca829dc25a6",
+      "externalId": "delitel-sah-306f-6408",
+      "sourceRows": [],
+      "sourceSite": "redmrt.ru",
+      "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6408",
+      "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6407-500x500.jpg",
+      "status": "downloaded_png",
+      "file": "delitel-sah-306f-6408-redmrt-1.png",
+      "width": 500,
+      "height": 500,
+      "checksum": "8cc91b4ebc3ca9bfb1522b181a843a97a85fe825cbe54ec854ad85e4c20e8c01",
+      "contentType": "image/png",
+      "originalContentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "accepted_operator_review",
+      "rightsStatus": "requires-permission",
+      "selectedByOperator": "browser",
+      "selectedAt": "2026-05-16T16:18:04.277Z"
+    },
+    {
+      "assetKey": "delitel-sah-408f-6409-redmrt-1",
+      "productId": "d22554dd-5b73-4d6c-a2bf-76edeeff057a",
+      "externalId": "delitel-sah-408f-6409",
+      "sourceRows": [],
+      "sourceSite": "redmrt.ru",
+      "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6409",
+      "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/SAH408-500x500.jpg",
+      "status": "downloaded_png",
+      "file": "delitel-sah-408f-6409-redmrt-1.png",
+      "width": 500,
+      "height": 500,
+      "checksum": "e9adb124dc70a469a1eae22290a99d59ec43cbadad2d302a534055f411ff75bd",
+      "contentType": "image/png",
+      "originalContentType": "image/jpeg",
+      "isMain": true,
+      "visualReviewStatus": "accepted_operator_review",
+      "rightsStatus": "requires-permission",
+      "selectedByOperator": "browser",
+      "selectedAt": "2026-05-16T16:18:04.277Z"
+    }
+  ]
+}

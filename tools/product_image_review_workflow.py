@@ -2,6 +2,7 @@ import argparse
 import hashlib
 import json
 import re
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from html import escape
@@ -44,9 +45,18 @@ def utc_now_iso() -> str:
 
 
 def fetch(url: str, timeout: int = 25) -> tuple[bytes, str]:
-    request = Request(url, headers={"User-Agent": USER_AGENT, "Accept": "*/*"})
-    with urlopen(request, timeout=timeout) as response:
-        return response.read(), response.headers.get("content-type", "")
+    last_error: Exception | None = None
+    for attempt in range(3):
+        try:
+            request = Request(url, headers={"User-Agent": USER_AGENT, "Accept": "*/*"})
+            with urlopen(request, timeout=timeout) as response:
+                return response.read(), response.headers.get("content-type", "")
+        except Exception as exc:
+            last_error = exc
+            if attempt < 2:
+                time.sleep(1.5 * (attempt + 1))
+    assert last_error is not None
+    raise last_error
 
 
 def slug(value: str) -> str:

@@ -1,0 +1,135 @@
+{
+  "category": {
+    "slug": "koaksialnye-kabeli",
+    "name": "Коаксиальные кабели"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T14:12:00.776Z",
+  "products": [
+    {
+      "productId": "fa2a19c7-dfe2-427d-a3df-e7467f9ec8d4",
+      "externalId": "kabel-koaksialnyj-rg-11u-75-om-ccs-al-tros-vneshnij-chernyj-305m",
+      "name": "Кабель коаксиальный RG-11U, 75 Ом CCS, AL, трос, внешний, черный, 305м",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/52042/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/d58/8dvxciixk2h661gszr0voioq0ylya4gq.png",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/52042/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8fa/wneun3f5tnrq41noph7503nvq1k2keso.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "47931920-c6af-4172-a165-5ce9bdeca57e",
+      "externalId": "kabel-koaksialnyj-rg-6u-75-om-ccs-48-al-belyj-100m-6392",
+      "name": "Кабель коаксиальный RG-6U, 75 Ом, CCS, 48% AL, белый, 100м.",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/51157/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/824/szcr460ni7cntk9pdxvzpplf4kzfonil.jpg",
+          "score": 84,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/51157/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/413/6f1tny3mwycn8lja29mkwxha5vzrvzv8.jpg",
+          "score": 84,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "b31199cb-e514-454a-b05a-4385fa4e7a97",
+      "externalId": "kabel-koaksialnyj-rg-6u-75-om-ccs-64-al-belyj-100m-6393",
+      "name": "Кабель коаксиальный RG-6U, 75 Ом, CCS, 64% AL, белый, 100м.",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/51157/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/413/6f1tny3mwycn8lja29mkwxha5vzrvzv8.jpg",
+          "score": 84,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6392&search=RG+6U+75+%D0%9E%D0%BC+CCS+AL+100%D0%BC+%D0%B1%D0%B5%D0%BB%D1%8B%D0%B9",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6392-500x500.jpg",
+          "score": 74,
+          "selected": false,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "cacf73ab-4106-4e81-a6e4-2dfc3a209fb5",
+      "externalId": "kabel-koaksialnyj-rg-6u-75-om-ccs-48-al-chernyj-vneshnij-100m-6394",
+      "name": "Кабель коаксиальный RG-6U, 75 Ом, CCS, 48% AL, черный, внешний, 100м.",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/58030/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/4db/cn0407d79paxuykbc0bqh66d0wx7zqrg.jpg",
+          "score": 84,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/58030/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8fa/wneun3f5tnrq41noph7503nvq1k2keso.jpg",
+          "score": 84,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "e96fb591-785a-4e45-a5db-125781333cc7",
+      "externalId": "kabel-koaksialnyj-rg-11u-75-om-ccs-al-vneshnij-chernyj-305m-6395",
+      "name": "Кабель коаксиальный RG-11U, 75 Ом CCS, AL, внешний, черный, 305м",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/52042/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/d58/8dvxciixk2h661gszr0voioq0ylya4gq.png",
+          "score": 85,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/52042/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/8fa/wneun3f5tnrq41noph7503nvq1k2keso.jpg",
+          "score": 85,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    }
+  ]
+}

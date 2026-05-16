@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Отбор изображений: Абонентская розетка</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f7f7f4; color: #1f2933; }
+    header { position: sticky; top: 0; background: #f7f7f4; padding: 12px 0; border-bottom: 1px solid #d6d3ca; }
+    .product { margin: 18px 0; padding: 16px; background: #fff; border: 1px solid #dedbd2; border-radius: 8px; }
+    .candidates { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+    .candidate { display: grid; gap: 8px; border: 1px solid #d6d3ca; border-radius: 8px; padding: 10px; background: #fbfaf7; }
+    .candidate img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: white; border: 1px solid #ece8df; }
+    .candidate__meta { font-size: 13px; color: #4b5563; }
+    button { padding: 10px 14px; border-radius: 6px; border: 1px solid #374151; background: #263238; color: white; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Абонентская розетка</h1>
+    <button type="button" onclick="downloadSelection()">Скачать selection.json</button>
+  </header>
+  <main>
+            <article class="product" data-product-id="e06b2ac6-efef-464a-a204-bf7a4dcd2052">
+              <h2>Абонентская розетка FTTH-001</h2>
+              <p>abonentskaya-rozetka-ftth-001-6316</p>
+              <div class="candidates">
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="e06b2ac6-efef-464a-a204-bf7a4dcd2052"
+                         data-candidate-id="redmrt-1" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/6316-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6316" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="e06b2ac6-efef-464a-a204-bf7a4dcd2052"
+                         data-candidate-id="redmrt-2" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/6316(2)-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6316" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="e06b2ac6-efef-464a-a204-bf7a4dcd2052"
+                         data-candidate-id="tktdf-1">
+                  <img src="https://www.tktdf.ru/upload/iblock/1c8/1c8c5f87bde3c6d9c0019f051cc6ef06.jpg" alt="">
+                  <span class="candidate__meta">tktdf.ru</span>
+                  <a href="https://www.tktdf.ru/catalog/id/68213/" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="e06b2ac6-efef-464a-a204-bf7a4dcd2052"
+                         data-candidate-id="tktdf-2">
+                  <img src="https://www.tktdf.ru/upload/iblock/fd3/fd345e1aaa0afc00113c88bee4fdaac9.jpeg" alt="">
+                  <span class="candidate__meta">tktdf.ru</span>
+                  <a href="https://www.tktdf.ru/catalog/id/68213/" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                </div>
+            </article>
+            
+            <article class="product" data-product-id="e740f092-38c9-4faf-aa31-193ce9a4419e">
+              <h2>Абонентская розетка FTTH-001 с клипсой</h2>
+              <p>abonentskaya-rozetka-ftth-001-s-klipsoj-6317</p>
+              <div class="candidates">
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="e740f092-38c9-4faf-aa31-193ce9a4419e"
+                         data-candidate-id="redmrt-1" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/6316-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6317" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="e740f092-38c9-4faf-aa31-193ce9a4419e"
+                         data-candidate-id="tktdf-1" checked>
+                  <img src="https://www.tktdf.ru/upload/iblock/1c8/1c8c5f87bde3c6d9c0019f051cc6ef06.jpg" alt="">
+                  <span class="candidate__meta">tktdf.ru</span>
+                  <a href="https://www.tktdf.ru/catalog/id/68213/" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="e740f092-38c9-4faf-aa31-193ce9a4419e"
+                         data-candidate-id="tktdf-2">
+                  <img src="https://www.tktdf.ru/upload/iblock/fd3/fd345e1aaa0afc00113c88bee4fdaac9.jpeg" alt="">
+                  <span class="candidate__meta">tktdf.ru</span>
+                  <a href="https://www.tktdf.ru/catalog/id/68213/" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                </div>
+            </article>
+            
+            <article class="product" data-product-id="103830ad-3d38-402d-8fa4-8e7e977357f6">
+              <h2>Абонентская розетка SC-SC/SM-SC/UPC</h2>
+              <p>abonentskaya-rozetka-sc-sc-sm-sc-upc-6318</p>
+              <div class="candidates">
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="103830ad-3d38-402d-8fa4-8e7e977357f6"
+                         data-candidate-id="redmrt-1" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/6318(2)-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6318" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="103830ad-3d38-402d-8fa4-8e7e977357f6"
+                         data-candidate-id="tktdf-1" checked>
+                  <img src="https://www.tktdf.ru/upload/iblock/a98/3eb90id6p2ks5w7ca2pj6p3svbo1p361.jpg" alt="">
+                  <span class="candidate__meta">tktdf.ru</span>
+                  <a href="https://www.tktdf.ru/catalog/id/68213/" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="103830ad-3d38-402d-8fa4-8e7e977357f6"
+                         data-candidate-id="tktdf-2">
+                  <img src="https://www.tktdf.ru/upload/iblock/ea1/y8l2xdulpgi3tbdysfrumcmmvcl8d9ec.jpg" alt="">
+                  <span class="candidate__meta">tktdf.ru</span>
+                  <a href="https://www.tktdf.ru/catalog/id/68213/" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                </div>
+            </article>
+            
+            <article class="product" data-product-id="8b594ab1-4191-461b-8f58-d6ad802c176a">
+              <h2>Абонентская розетка SC-SC/APC-SC/APC</h2>
+              <p>abonentskaya-rozetka-sc-sc-apc-sc-apc-6319</p>
+              <div class="candidates">
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="8b594ab1-4191-461b-8f58-d6ad802c176a"
+                         data-candidate-id="redmrt-1" checked>
+                  <img src="https://redmrt.ru/image/cache/catalog/6318(2)-500x500.jpg" alt="">
+                  <span class="candidate__meta">redmrt.ru</span>
+                  <a href="https://redmrt.ru/index.php?route=product/product&amp;product_id=6319" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="8b594ab1-4191-461b-8f58-d6ad802c176a"
+                         data-candidate-id="tktdf-1" checked>
+                  <img src="https://www.tktdf.ru/upload/iblock/a98/3eb90id6p2ks5w7ca2pj6p3svbo1p361.jpg" alt="">
+                  <span class="candidate__meta">tktdf.ru</span>
+                  <a href="https://www.tktdf.ru/catalog/id/68213/" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="8b594ab1-4191-461b-8f58-d6ad802c176a"
+                         data-candidate-id="tktdf-2">
+                  <img src="https://www.tktdf.ru/upload/iblock/ea1/y8l2xdulpgi3tbdysfrumcmmvcl8d9ec.jpg" alt="">
+                  <span class="candidate__meta">tktdf.ru</span>
+                  <a href="https://www.tktdf.ru/catalog/id/68213/" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                </div>
+            </article>
+            </main>
+  <script>
+    const sourceData = {"category": {"slug": "abonentskaya-rozetka", "name": "Абонентская розетка"}, "source": {"productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=20&sort=category&categorySlug=abonentskaya-rozetka", "totalItems": 4, "page": 1, "pageSize": 20}, "products": [{"productId": "e06b2ac6-efef-464a-a204-bf7a4dcd2052", "externalId": "abonentskaya-rozetka-ftth-001-6316", "sourceRows": [], "name": "Абонентская розетка FTTH-001", "sku": null, "attributes": ["Абонентская розетка", "1 шт"], "candidates": [{"candidateId": "redmrt-1", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6316", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6316-500x500.jpg", "score": 94, "selected": true}, {"candidateId": "redmrt-2", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6316", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6316(2)-500x500.jpg", "score": 94, "selected": true}, {"candidateId": "tktdf-1", "sourceSite": "tktdf.ru", "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/", "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/1c8/1c8c5f87bde3c6d9c0019f051cc6ef06.jpg", "score": 83, "selected": false}, {"candidateId": "tktdf-2", "sourceSite": "tktdf.ru", "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/", "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/fd3/fd345e1aaa0afc00113c88bee4fdaac9.jpeg", "score": 83, "selected": false}]}, {"productId": "e740f092-38c9-4faf-aa31-193ce9a4419e", "externalId": "abonentskaya-rozetka-ftth-001-s-klipsoj-6317", "sourceRows": [], "name": "Абонентская розетка FTTH-001 с клипсой", "sku": null, "attributes": ["Абонентская розетка", "1 шт"], "candidates": [{"candidateId": "redmrt-1", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6317", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6316-500x500.jpg", "score": 95, "selected": true}, {"candidateId": "tktdf-1", "sourceSite": "tktdf.ru", "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/", "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/1c8/1c8c5f87bde3c6d9c0019f051cc6ef06.jpg", "score": 83, "selected": true}, {"candidateId": "tktdf-2", "sourceSite": "tktdf.ru", "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/", "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/fd3/fd345e1aaa0afc00113c88bee4fdaac9.jpeg", "score": 83, "selected": false}]}, {"productId": "103830ad-3d38-402d-8fa4-8e7e977357f6", "externalId": "abonentskaya-rozetka-sc-sc-sm-sc-upc-6318", "sourceRows": [], "name": "Абонентская розетка SC-SC/SM-SC/UPC", "sku": null, "attributes": ["Абонентская розетка", "1 шт"], "candidates": [{"candidateId": "redmrt-1", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6318", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6318(2)-500x500.jpg", "score": 93, "selected": true}, {"candidateId": "tktdf-1", "sourceSite": "tktdf.ru", "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/", "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/a98/3eb90id6p2ks5w7ca2pj6p3svbo1p361.jpg", "score": 81, "selected": true}, {"candidateId": "tktdf-2", "sourceSite": "tktdf.ru", "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/", "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/ea1/y8l2xdulpgi3tbdysfrumcmmvcl8d9ec.jpg", "score": 81, "selected": false}]}, {"productId": "8b594ab1-4191-461b-8f58-d6ad802c176a", "externalId": "abonentskaya-rozetka-sc-sc-apc-sc-apc-6319", "sourceRows": [], "name": "Абонентская розетка SC-SC/APC-SC/APC", "sku": null, "attributes": ["Абонентская розетка", "1 шт"], "candidates": [{"candidateId": "redmrt-1", "sourceSite": "redmrt.ru", "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6319", "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6318(2)-500x500.jpg", "score": 94, "selected": true}, {"candidateId": "tktdf-1", "sourceSite": "tktdf.ru", "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/", "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/a98/3eb90id6p2ks5w7ca2pj6p3svbo1p361.jpg", "score": 83, "selected": true}, {"candidateId": "tktdf-2", "sourceSite": "tktdf.ru", "sourcePageUrl": "https://www.tktdf.ru/catalog/id/68213/", "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/ea1/y8l2xdulpgi3tbdysfrumcmmvcl8d9ec.jpg", "score": 83, "selected": false}]}]};
+    function downloadSelection() {
+      const selectedByProduct = new Map();
+      document.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+        if (!input.checked) return;
+        const list = selectedByProduct.get(input.dataset.productId) || [];
+        if (list.length < 2) list.push(input.dataset.candidateId);
+        selectedByProduct.set(input.dataset.productId, list);
+      });
+      const products = sourceData.products.map((product) => ({
+        productId: product.productId,
+        externalId: product.externalId,
+        name: product.name,
+        selectedCandidates: (selectedByProduct.get(product.productId) || []).map((candidateId, index) => {
+          const candidate = product.candidates.find((item) => item.candidateId === candidateId);
+          return { ...candidate, isMain: index === 0 };
+        })
+      }));
+      const blob = new Blob([JSON.stringify({
+        category: sourceData.category,
+        selectedByOperator: "browser",
+        selectedAt: new Date().toISOString(),
+        products
+      }, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "selection.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

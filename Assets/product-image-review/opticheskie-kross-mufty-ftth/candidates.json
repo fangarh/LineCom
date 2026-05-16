@@ -1,0 +1,253 @@
+{
+  "category": {
+    "slug": "opticheskie-kross-mufty-ftth",
+    "name": "Оптические кросс-муфты FTTH"
+  },
+  "source": {
+    "productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=50&sort=category&categorySlug=opticheskie-kross-mufty-ftth",
+    "totalItems": 11,
+    "page": 1,
+    "pageSize": 50
+  },
+  "products": [
+    {
+      "productId": "e11b44fa-6f7a-4c2d-83bd-50a56a9f1230",
+      "externalId": "opticheskaya-kross-mufta-gjs-x04-6363",
+      "sourceRows": [],
+      "name": "Оптическая кросс-муфта GJS-X04",
+      "sku": null,
+      "attributes": [
+        "Оптические кросс-муфты FTTH",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6363",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6363-500x500.jpg",
+          "score": 95,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "50aea2e7-a620-4ba6-983e-610fc7491898",
+      "externalId": "opticheskaya-kross-mufta-gjs-x30-vvod-pod-rezinku-6364",
+      "sourceRows": [],
+      "name": "Оптическая кросс-муфта GJS-X30, ввод под резинку.",
+      "sku": null,
+      "attributes": [
+        "Оптические кросс-муфты FTTH",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6364",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6364-500x500.jpg",
+          "score": 98,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "87d3ac10-45ff-4ec5-8413-20f5d04a58cb",
+      "externalId": "opticheskaya-kross-mufta-gjs-x30-vvod-pod-gajku-6365",
+      "sourceRows": [],
+      "name": "Оптическая кросс-муфта GJS-X30, ввод под гайку.",
+      "sku": null,
+      "attributes": [
+        "Оптические кросс-муфты FTTH",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6365",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6365-500x500.jpg",
+          "score": 98,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "7f75ca9a-dea5-4fd0-9e94-095a53a917e7",
+      "externalId": "opticheskaya-kross-mufta-gjs-x20-6366",
+      "sourceRows": [],
+      "name": "Оптическая кросс-муфта GJS-X20",
+      "sku": null,
+      "attributes": [
+        "Оптические кросс-муфты FTTH",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6366",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6366-500x500.jpg",
+          "score": 95,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "b79003d9-f9aa-4beb-9597-4d4c698f6d1f",
+      "externalId": "opticheskaya-kross-mufta-gp-d-mini-6368",
+      "sourceRows": [],
+      "name": "Оптическая кросс-муфта GP-D mini",
+      "sku": null,
+      "attributes": [
+        "Оптические кросс-муфты FTTH",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6368",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6368-500x500.jpg",
+          "score": 94,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "12d96704-d98c-4c37-8d6b-48900e5ac38c",
+      "externalId": "opticheskaya-kross-mufta-gp-d-6369",
+      "sourceRows": [],
+      "name": "Оптическая кросс-муфта GP-D",
+      "sku": null,
+      "attributes": [
+        "Оптические кросс-муфты FTTH",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6369",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6368-500x500.jpg",
+          "score": 93,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "3f470ff1-b73d-48f8-b72b-295abb8d18cc",
+      "externalId": "opticheskaya-mufta-gjs-2-d-6370",
+      "sourceRows": [],
+      "name": "Оптическая муфта GJS-2-D",
+      "sku": null,
+      "attributes": [
+        "Оптические кросс-муфты FTTH",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6370",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6370-500x500.jpg",
+          "score": 93,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "dac2c49a-c64c-490b-ba90-3e5b458f8d5b",
+      "externalId": "opticheskaya-mufta-gjs-1-d-6371",
+      "sourceRows": [],
+      "name": "Оптическая муфта GJS-1-D",
+      "sku": null,
+      "attributes": [
+        "Оптические кросс-муфты FTTH",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6371",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6371-500x500.jpg",
+          "score": 93,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "c6b2bed6-455c-41a3-88d0-b338c4c1b993",
+      "externalId": "opticheskaya-mufta-gjs-7002-6372",
+      "sourceRows": [],
+      "name": "Оптическая муфта GJS-7002",
+      "sku": null,
+      "attributes": [
+        "Оптические кросс-муфты FTTH",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6372",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6372-500x500.jpg",
+          "score": 94,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6372",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6371-500x500.jpg",
+          "score": 94,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "ff1d9fcc-ec1c-418a-b842-150a9b1d4426",
+      "externalId": "opticheskaya-mufta-gjs-6007-6373",
+      "sourceRows": [],
+      "name": "Оптическая муфта GJS-6007",
+      "sku": null,
+      "attributes": [
+        "Оптические кросс-муфты FTTH",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6373",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6374-500x500.jpg",
+          "score": 94,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "6b4408cf-4da9-4db5-bf90-5e4fb94d8eb7",
+      "externalId": "opticheskaya-mufta-gjs-mo-44-6374",
+      "sourceRows": [],
+      "name": "Оптическая муфта GJS-MO-44",
+      "sku": null,
+      "attributes": [
+        "Оптические кросс-муфты FTTH",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6374",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6374-500x500.jpg",
+          "score": 93,
+          "selected": true
+        }
+      ]
+    }
+  ]
+}

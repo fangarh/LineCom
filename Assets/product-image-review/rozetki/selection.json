@@ -1,0 +1,58 @@
+{
+  "category": {
+    "slug": "rozetki",
+    "name": "Розетки"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T14:39:21.344Z",
+  "products": [
+    {
+      "productId": "405f0128-0b49-4b9f-8db6-c23424f214de",
+      "externalId": "rozetka-kompyuternaya-vneshnyaya-ekranirovannaya-1h-rj45-ekran-cat-5e-6293",
+      "name": "Розетка компьютерная внешняя экранированная 1х RJ45, экран, cat.5е",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/54399/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/124/124675b3a7a16c6782ef2959ff003b41.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "9c654186-612e-42ed-8db6-ae94541f52d3",
+      "externalId": "rozetka-kompyuternaya-vneshnyaya-na-plate-1xrj45-neekran-cat-5e-6294",
+      "name": "Розетка компьютерная внешняя на плате 1xRJ45, неэкран, cat.5e",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/54399/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/124/124675b3a7a16c6782ef2959ff003b41.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "3d08d5cd-eeab-4b65-b78a-59157f3a59e7",
+      "externalId": "rozetka-kompyuternaya-vneshnyaya-na-plate-2xrj45-neekran-cat-5e-6295",
+      "name": "Розетка компьютерная внешняя на плате 2xRJ45, неэкран, cat.5e",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/54400/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/52f/j03uscmf76do6n86bmv7s9qof75cue3s.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    }
+  ]
+}

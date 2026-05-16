@@ -1,0 +1,85 @@
+{
+  "category": {
+    "slug": "skotchloki-soedinitelnye-moduli",
+    "name": "Скотчлоки/соединительные модули"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T14:47:23.024Z",
+  "products": [
+    {
+      "productId": "87ee110b-166c-44a4-b14d-c71a771f1133",
+      "externalId": "soedinitelnyj-modul-rj45-8p8c-na-rj45-8p8c-belyj-6296",
+      "name": "Соединительный модуль RJ45(8p8c) на RJ45(8p8c) / белый",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/59926/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/0a3/50y3346y4o2yl4xt1fgkozi0qf30k2aw.jpg",
+          "score": 87,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/59926/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/413/osx3ly9t58ypb9keezp384y0oyneedva.jpg",
+          "score": 87,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "656c4997-8e0f-4c50-bc19-b6121140b708",
+      "externalId": "soedinitel-kabelnyj-tip-skotchlok-2-dlya-zhil-0-4-0-9-mm-6297",
+      "name": "Соединитель кабельный тип Скотчлок-2 для жил 0,4-0,9 мм",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/52161/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/90f/8kd2ifol0sx22ix2wi6q4zv5yo8j5t8u.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6297&search=%D1%81%D0%BA%D0%BE%D1%82%D1%87%D0%BB%D0%BE%D0%BA+2+0%2C4-0%2C9",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6297-500x500.jpg",
+          "score": 76,
+          "selected": false,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "468c354e-8bd8-42e7-952e-bfb82e1b43b8",
+      "externalId": "soedinitelnyj-modul-krone-idc-cat-5e-neekranirovannyj-belyj-6298",
+      "name": "Соединительный модуль Krone / IDC / cat.5e/ неэкранированный / белый",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/51970/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/034/cgmw2okdgcen1ot0dcpzxlcfhjnatvo1.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/51970/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/257/25709938e0dfc7ce3c02f95d0a531b28.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    }
+  ]
+}

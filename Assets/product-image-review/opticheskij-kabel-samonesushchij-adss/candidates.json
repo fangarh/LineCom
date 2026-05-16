@@ -1,0 +1,304 @@
+{
+  "category": {
+    "slug": "opticheskij-kabel-samonesushchij-adss",
+    "name": "Оптический кабель самонесущий ADSS"
+  },
+  "source": {
+    "productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=30&sort=category&categorySlug=opticheskij-kabel-samonesushchij-adss",
+    "totalItems": 10,
+    "page": 1,
+    "pageSize": 30
+  },
+  "products": [
+    {
+      "productId": "f5cc5f04-ee35-476b-b748-0a88413c3bc2",
+      "externalId": "opticheskij-samonesuschij-kabel-1-volokno-1-5kn-dielektricheskij-adss-6306",
+      "sourceRows": [],
+      "name": "Оптический самонесущий кабель, 1 волокно,1,5кН, диэлектрический, ADSS",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель самонесущий ADSS",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6306",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306-500x500.jpg",
+          "score": 96,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6306",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306(2)-500x500.jpg",
+          "score": 96,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "a9fcf865-ea1e-4513-a972-d31e2f65e103",
+      "externalId": "opticheskij-samonesuschij-kabel-2-volokna-1-5kn-dielektricheskij-adss-6307",
+      "sourceRows": [],
+      "name": "Оптический самонесущий кабель, 2 волокнa,1,5кН, диэлектрический, ADSS",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель самонесущий ADSS",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6307",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306-500x500.jpg",
+          "score": 96,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6307",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306(2)-500x500.jpg",
+          "score": 96,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "6094c64e-a599-4555-a159-2a7e20c5f40f",
+      "externalId": "opticheskij-samonesuschij-kabel-4-volokna-1-5kn-dielektricheskij-adss-6308",
+      "sourceRows": [],
+      "name": "Оптический самонесущий кабель, 4 волокнa,1,5кН, диэлектрический, ADSS",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель самонесущий ADSS",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6308",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306-500x500.jpg",
+          "score": 96,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6308",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306(2)-500x500.jpg",
+          "score": 96,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "680fb9b9-a78c-4733-903d-0eec334510bc",
+      "externalId": "opticheskij-samonesuschij-kabel-8-volokon-1-5kn-dielektricheskij-adss-6309",
+      "sourceRows": [],
+      "name": "Оптический самонесущий кабель, 8 волокон,1,5кН, диэлектрический, ADSS",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель самонесущий ADSS",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6309",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306-500x500.jpg",
+          "score": 96,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6309",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306(2)-500x500.jpg",
+          "score": 96,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "869ae61b-0792-47ff-88d4-97f8fdac0e80",
+      "externalId": "opticheskij-samonesuschij-kabel-12-volokon-1-5kn-dielektricheskij-adss-6310",
+      "sourceRows": [],
+      "name": "Оптический самонесущий кабель, 12 волокон,1,5кН, диэлектрический, ADSS",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель самонесущий ADSS",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6310",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306-500x500.jpg",
+          "score": 96,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6310",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306(2)-500x500.jpg",
+          "score": 96,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "47535971-c525-424b-9d4d-aac111cb2d25",
+      "externalId": "opticheskij-samonesuschij-kabel-16-volokon-1-5kn-dielektricheskij-adss-6311",
+      "sourceRows": [],
+      "name": "Оптический самонесущий кабель, 16 волокон,1,5кН, диэлектрический, ADSS",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель самонесущий ADSS",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6311",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306-500x500.jpg",
+          "score": 96,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6311",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306(2)-500x500.jpg",
+          "score": 96,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "90f12e31-1889-4c61-a1f6-961afc39dda4",
+      "externalId": "opticheskij-samonesuschij-kabel-1-volokno-3kn-dielektricheskij-adss-6312",
+      "sourceRows": [],
+      "name": "Оптический самонесущий кабель, 1 волокно,3кН, диэлектрический, ADSS",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель самонесущий ADSS",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6312",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306-500x500.jpg",
+          "score": 96,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6312",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306(2)-500x500.jpg",
+          "score": 96,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "1b36ca8d-ca1e-492b-bf0d-c37e2ec5e947",
+      "externalId": "opticheskij-samonesuschij-kabel-2-volokna-3kn-dielektricheskij-adss-6313",
+      "sourceRows": [],
+      "name": "Оптический самонесущий кабель, 2 волокнa,3кН, диэлектрический, ADSS",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель самонесущий ADSS",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6313",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306-500x500.jpg",
+          "score": 96,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6313",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306(2)-500x500.jpg",
+          "score": 96,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "1ca88ec4-ea44-449a-a8dd-f103f680e048",
+      "externalId": "opticheskij-samonesuschij-kabel-4-volokna-3kn-dielektricheskij-adss-6314",
+      "sourceRows": [],
+      "name": "Оптический самонесущий кабель, 4 волокнa,3кН, диэлектрический, ADSS",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель самонесущий ADSS",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6314",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306-500x500.jpg",
+          "score": 96,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6314",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306(2)-500x500.jpg",
+          "score": 96,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "64b70bd4-9b1b-4905-8ce9-b89bdf6dff31",
+      "externalId": "opticheskij-samonesuschij-kabel-8-volokna-3kn-dielektricheskij-adss-6315",
+      "sourceRows": [],
+      "name": "Оптический самонесущий кабель, 8 волокнa,3кН, диэлектрический, ADSS",
+      "sku": null,
+      "attributes": [
+        "Оптический кабель самонесущий ADSS",
+        "1 км"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6315",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306-500x500.jpg",
+          "score": 96,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6315",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6306(2)-500x500.jpg",
+          "score": 96,
+          "selected": true
+        }
+      ]
+    }
+  ]
+}

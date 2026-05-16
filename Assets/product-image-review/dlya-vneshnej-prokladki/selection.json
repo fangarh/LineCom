@@ -1,0 +1,126 @@
+{
+  "category": {
+    "slug": "dlya-vneshnej-prokladki",
+    "name": "Для внешней прокладки"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T14:05:53.325Z",
+  "products": [
+    {
+      "productId": "587a32a2-f952-420f-9be7-bd50c3defe94",
+      "externalId": "kabel-vitaya-para-f-utp-ssa-cat-5e-4pr-24awg-outdoor-chernyj-305m-LineCom",
+      "name": "Кабель витая пара F/UTP, ССА ,CAT 5e, 4PR, 24AWG, OUTDOOR, черный, 305м LineCom",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/67632/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/6cf/v0a3gt9hn6n64rg6callvgd1ofeh9bjj.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "8497ff1c-ec31-4e11-9ff0-e50eb2ef8dfd",
+      "externalId": "kabel-vitaya-para-u-utp-ssa-cat-5e-4pr-24awg-outdoor-chernyj-305m-linecom",
+      "name": "Кабель витая пара U/UTP, ССА ,CAT 5e, 4PR, 24AWG, OUTDOOR, черный, 305м ,LineCom",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/67484/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/b7d/hih2o6j1fh51cfzs1m9cj2ael4kugm2t.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/67484/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/66e/jwyeiuupkfh0vp1wtizyk85x6dy5kb25.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "039bfeef-7a39-40b2-a8cf-8afaa267cf4a",
+      "externalId": "kabel-vitaya-para-u-utp-cu-cat-5e-pe-4pr-24awg-outdoor-chernyj-305m-linecom-6238",
+      "name": "Кабель витая пара U/UTP,CU, CAT 5e, PE, 4PR, 24AWG, OUTDOOR, черный, 305м LineCom",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/67484/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/66e/jwyeiuupkfh0vp1wtizyk85x6dy5kb25.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6261&search=U+UTP+CAT+5e+Cu+305+outdoor+%D1%87%D0%B5%D1%80%D0%BD%D1%8B%D0%B9",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6260(1)(1)-500x500.jpg",
+          "score": 77,
+          "selected": false,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "e33327e5-4d71-4449-b2ba-c8adaabbb631",
+      "externalId": "kabel-vitaya-para-f-utp-cu-cat-5e-pe-4pr-24awg-outdoor-chernyj-305m-linecom-6239",
+      "name": "Кабель витая пара F/UTP,CU,CAT 5e, PE, 4PR, 24AWG, OUTDOOR, черный, 305м LineCom",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/65689/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/56e/rscey48ne4rpk3oqsx3gsz2a2g58hpyf.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6261&search=F+UTP+CAT+5e+Cu+305+outdoor+%D1%87%D0%B5%D1%80%D0%BD%D1%8B%D0%B9",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/28-500x500.jpg",
+          "score": 77,
+          "selected": false,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "7890ea7b-f8bb-4b99-8f7a-740452bc213f",
+      "externalId": "kabel-vitaya-para-u-utp-cu-cat-5e-pe-4pr-24awg-outdoor-chernyj-305m-skyn-6245",
+      "name": "Кабель витая пара U/UTP,CU,CAT 5e, PE, 4PR, 24AWG, OUTDOOR, черный, 305м SkyNet",
+      "selectedCandidates": [
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/67484/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/66e/jwyeiuupkfh0vp1wtizyk85x6dy5kb25.jpg",
+          "score": 86,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6261&search=U+UTP+CAT+5e+Cu+305+outdoor+%D1%87%D0%B5%D1%80%D0%BD%D1%8B%D0%B9",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6260(1)(1)-500x500.jpg",
+          "score": 77,
+          "selected": false,
+          "isMain": false
+        }
+      ]
+    }
+  ]
+}

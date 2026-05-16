@@ -1,0 +1,58 @@
+{
+  "category": {
+    "slug": "gilzy-kdzs",
+    "name": "Гильзы КДЗС"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T15:33:20.847Z",
+  "products": [
+    {
+      "productId": "5d3da0fe-59f8-4424-beed-cf7c1d864f85",
+      "externalId": "komplekt-dlya-zaschity-svarnyh-soedinenij-60mm-gilza-kdzs-60-6322",
+      "name": "Комплект для защиты сварных соединений 60мм (гильза КДЗС-60)",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6322",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6322-500x500.jpg",
+          "score": 98,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "b1394c0d-59c4-4916-85b7-c1fc75bc476c",
+      "externalId": "komplekt-dlya-zaschity-svarnyh-soedinenij-40mm-gilza-kdzs-40-6323",
+      "name": "Комплект для защиты сварных соединений 40мм (гильза КДЗС-40)",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6323",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6323-500x500.jpg",
+          "score": 98,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "5be4d041-e1cf-4149-a247-8ba88cb64f33",
+      "externalId": "komplekt-dlya-zaschity-svarnyh-soedinenij-kdzs-60-ftth-6324",
+      "name": "Комплект для защиты сварных соединений КДЗС-60 (FTTH)",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6324",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6324-500x500.jpg",
+          "score": 97,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    }
+  ]
+}

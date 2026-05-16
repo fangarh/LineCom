@@ -1,0 +1,76 @@
+{
+  "category": {
+    "slug": "shkafy-napolnye-telekommunikacionnye",
+    "name": "Шкафы напольные телекоммуникационные"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T16:23:34.564Z",
+  "products": [
+    {
+      "productId": "526b31fc-0787-49df-b148-18e633fe390e",
+      "externalId": "shkaf-napolnyj-19-22u-600h600h1132-perednyaya-dver-steklo-seryj-razobran-6416",
+      "name": "Шкаф напольный 19\" 22U(600х600х1132), передняя дверь стекло, серый, разобранный",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6416",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6416-2-500x500.jpg",
+          "score": 99,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6416",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/64165-500x500.jpg",
+          "score": 99,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    },
+    {
+      "productId": "5497bd5f-87bd-44b3-be43-779b186a3a6d",
+      "externalId": "shkaf-napolnyj-19-36u-600h600h1762-perednyaya-dver-steklo-seryj-razobran-6417",
+      "name": "Шкаф напольный 19\" 36U(600х600х1762), передняя дверь стекло, серый, разобранный",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6417",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6417-500x500.jpg",
+          "score": 99,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "69f129cc-9b99-4835-9c5e-4e6e869a1c19",
+      "externalId": "shkaf-napolnyj-19-42u-600h800h2022-perednyaya-dver-steklo-seryj-razobran-6418",
+      "name": "Шкаф напольный 19\" 42U (600х800х2022), передняя дверь стекло, серый, разобранный",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6418",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6416-500x500.jpg",
+          "score": 99,
+          "selected": true,
+          "isMain": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6418",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/64164-500x500.jpg",
+          "score": 99,
+          "selected": true,
+          "isMain": false
+        }
+      ]
+    }
+  ]
+}

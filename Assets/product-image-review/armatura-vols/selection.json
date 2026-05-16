@@ -1,0 +1,272 @@
+{
+  "category": {
+    "slug": "armatura-vols",
+    "name": "Арматура ВОЛС"
+  },
+  "selectedByOperator": "browser",
+  "selectedAt": "2026-05-16T16:08:03.882Z",
+  "products": [
+    {
+      "productId": "da28a029-1471-4642-bd1d-e7736fbec586",
+      "externalId": "natyazhnoj-zazhim-odwac-pg25-plastik-6375",
+      "name": "Натяжной зажим ODWAC-PG25 пластик",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6375",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6375-500x500.jpg",
+          "score": 95,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "ffb46022-e5b6-41c1-a9bc-234b261611e4",
+      "externalId": "natyazhnoj-zazhim-odwac-22-6376",
+      "name": "Натяжной зажим ODWAC-22",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6376",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6376-500x500.jpg",
+          "score": 93,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "8588eec2-a23e-4330-9fce-b1992829d97b",
+      "externalId": "natyazhnoj-zazhim-odwac-15-6377",
+      "name": "Натяжной зажим ODWAC-15",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6377",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6377-500x500.jpg",
+          "score": 93,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "1064a870-12a2-405f-b698-6efa2097ffd1",
+      "externalId": "ankernyj-natyazhnoj-zazhim-n-15-6378",
+      "name": "Анкерный натяжной зажим Н-15",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6378",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6378-500x500.jpg",
+          "score": 93,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "1c935b3c-ed1c-4fd2-b22a-e72c8d295118",
+      "externalId": "ankernyj-natyazhnoj-zazhim-n-69-6379",
+      "name": "Анкерный натяжной зажим Н-69",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6379",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6379-500x500.jpg",
+          "score": 93,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "57fb156b-79c3-4f81-a80f-e80099df8a6b",
+      "externalId": "ankernyj-natyazhnoj-zazhim-pa-57-6380",
+      "name": "Анкерный натяжной зажим PA-57",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6380",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6380-500x500.jpg",
+          "score": 93,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "b81a704a-3b5f-405a-9ce7-84d3c5c755d2",
+      "externalId": "ankernyj-natyazhnoj-zazhim-ra-07-250-6381",
+      "name": "Анкерный натяжной зажим РА-07-250",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6381",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6381-500x500.jpg",
+          "score": 94,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "8216ce52-d797-4130-98e3-65201c9da926",
+      "externalId": "ankernyj-natyazhnoj-zazhim-ra-07-520-6382",
+      "name": "Анкерный натяжной зажим РА-07-520",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6382",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6382-500x500.jpg",
+          "score": 94,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "94b1acb3-b7d7-4d52-b0e7-3bf12a9dbe86",
+      "externalId": "uzel-krepleniya-uk-ok-01-6383",
+      "name": "Узел крепления УК-ОК-01",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6383",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6383-500x500.png",
+          "score": 92,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "8f541909-6261-4b17-bc5e-3768ac6b4163",
+      "externalId": "uzel-krepleniya-natyazhnoj-uk-n-01-6384",
+      "name": "Узел крепления натяжной УК-Н-01",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6384",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6383-500x500.png",
+          "score": 93,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "9f208616-5154-4e05-9db9-8a4388fbcd29",
+      "externalId": "uzel-krepleniya-podderzhivayuschij-uk-p-01-boltovoe-soedinenie-6385",
+      "name": "Узел крепления поддерживающий УК-П-01, болтовое соединение",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6385",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/uzelkrepleni-500x500.jpg",
+          "score": 95,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "0b643a20-72f4-4083-bc75-84bcff709eff",
+      "externalId": "uzel-krepleniya-podderzhivayuschij-uk-p-02-6386",
+      "name": "Узел крепления поддерживающий УК-П-02",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6386",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6386-500x500.gif",
+          "score": 93,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "ff1b37b3-c7f5-4909-9ea4-b5ae98127e29",
+      "externalId": "lenta-montazhnaya-c-201-6387",
+      "name": "Лента монтажная C-201",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6387",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6387-500x500.jpg",
+          "score": 93,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "0df02d96-8679-44c8-ace8-4a6323ef6907",
+      "externalId": "lenta-montazhnaya-s-202-6388",
+      "name": "Лента монтажная С-202",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6388",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6388-500x500.jpg",
+          "score": 93,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "6e7e1e44-02fb-49ca-954c-f71e1cb35b7d",
+      "externalId": "skrepa-dlya-montazhnoj-lenty-ns-20-t-s-zubyami-c304-6389",
+      "name": "Скрепа для монтажной ленты НС-20-Т с зубьями, C304",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6389",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6389-500x500.jpg",
+          "score": 96,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    },
+    {
+      "productId": "8b2d9ae4-d0c3-4f6a-8fa1-d3638bdaf68c",
+      "externalId": "instrument-dlya-natyazheniya-lenty-mvt-003-6390",
+      "name": "Инструмент для натяжения ленты МВТ-003",
+      "selectedCandidates": []
+    },
+    {
+      "productId": "d75cbcd4-b28d-498d-9d04-26efde9ee3b2",
+      "externalId": "ustrojstvo-dlya-podvesa-mufty-i-zapasa-kabelya-upmk-6391",
+      "name": "Устройство для подвеса муфты и запаса кабеля УПМК",
+      "selectedCandidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6391",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6391-500x500.jpg",
+          "score": 97,
+          "selected": true,
+          "isMain": true
+        }
+      ]
+    }
+  ]
+}

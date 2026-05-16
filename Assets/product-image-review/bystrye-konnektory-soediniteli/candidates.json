@@ -1,0 +1,72 @@
+{
+  "category": {
+    "slug": "bystrye-konnektory-soediniteli",
+    "name": "Быстрые коннекторы, соединители"
+  },
+  "source": {
+    "productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=30&sort=category&categorySlug=bystrye-konnektory-soediniteli",
+    "totalItems": 2,
+    "page": 1,
+    "pageSize": 30
+  },
+  "products": [
+    {
+      "productId": "fc8dbe71-50eb-42f9-bd0a-5b630bcfccb8",
+      "externalId": "bystryj-konnektor-sc-upc-6320",
+      "sourceRows": [],
+      "name": "Быстрый коннектор SC/UPC",
+      "sku": null,
+      "attributes": [
+        "Быстрые коннекторы, соединители",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6320",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6320-500x500.jpg",
+          "score": 93,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6320",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6320(2)-500x500.jpg",
+          "score": 93,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "1bd5298b-3837-48ca-a969-309dbb0d1d34",
+      "externalId": "bystryj-konnektor-sc-apc-6321",
+      "sourceRows": [],
+      "name": "Быстрый коннектор SC/APC",
+      "sku": null,
+      "attributes": [
+        "Быстрые коннекторы, соединители",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "redmrt-1",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6321",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6321-500x500.jpg",
+          "score": 93,
+          "selected": true
+        },
+        {
+          "candidateId": "redmrt-2",
+          "sourceSite": "redmrt.ru",
+          "sourcePageUrl": "https://redmrt.ru/index.php?route=product/product&product_id=6321",
+          "sourceImageUrl": "https://redmrt.ru/image/cache/catalog/6321(2)-500x500.jpg",
+          "score": 93,
+          "selected": true
+        }
+      ]
+    }
+  ]
+}

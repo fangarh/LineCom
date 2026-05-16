@@ -1,0 +1,101 @@
+{
+  "category": {
+    "slug": "rozetki",
+    "name": "Розетки"
+  },
+  "source": {
+    "productsUrl": "https://line-com.ru/api/public/catalog/products?page=1&pageSize=3&sort=category&categorySlug=rozetki",
+    "totalItems": 3,
+    "page": 1,
+    "pageSize": 3
+  },
+  "products": [
+    {
+      "productId": "405f0128-0b49-4b9f-8db6-c23424f214de",
+      "externalId": "rozetka-kompyuternaya-vneshnyaya-ekranirovannaya-1h-rj45-ekran-cat-5e-6293",
+      "sourceRows": [],
+      "name": "Розетка компьютерная внешняя экранированная 1х RJ45, экран, cat.5е",
+      "sku": null,
+      "attributes": [
+        "Розетки",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/54399/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/959/exscfmvpbwsislii4if6adxpeh1ggoyj.jpg",
+          "score": 86,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/54399/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/124/124675b3a7a16c6782ef2959ff003b41.jpg",
+          "score": 86,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "9c654186-612e-42ed-8db6-ae94541f52d3",
+      "externalId": "rozetka-kompyuternaya-vneshnyaya-na-plate-1xrj45-neekran-cat-5e-6294",
+      "sourceRows": [],
+      "name": "Розетка компьютерная внешняя на плате 1xRJ45, неэкран, cat.5e",
+      "sku": null,
+      "attributes": [
+        "Розетки",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/54399/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/959/exscfmvpbwsislii4if6adxpeh1ggoyj.jpg",
+          "score": 86,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/54399/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/124/124675b3a7a16c6782ef2959ff003b41.jpg",
+          "score": 86,
+          "selected": true
+        }
+      ]
+    },
+    {
+      "productId": "3d08d5cd-eeab-4b65-b78a-59157f3a59e7",
+      "externalId": "rozetka-kompyuternaya-vneshnyaya-na-plate-2xrj45-neekran-cat-5e-6295",
+      "sourceRows": [],
+      "name": "Розетка компьютерная внешняя на плате 2xRJ45, неэкран, cat.5e",
+      "sku": null,
+      "attributes": [
+        "Розетки",
+        "1 шт"
+      ],
+      "candidates": [
+        {
+          "candidateId": "tktdf-1",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/54400/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/409/04842yuac8lj8344p209jnbao8g1l7h9.jpg",
+          "score": 86,
+          "selected": true
+        },
+        {
+          "candidateId": "tktdf-2",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/54400/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/52f/j03uscmf76do6n86bmv7s9qof75cue3s.jpg",
+          "score": 86,
+          "selected": true
+        }
+      ]
+    }
+  ]
+}
