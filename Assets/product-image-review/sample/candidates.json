@@ -1,0 +1,23 @@
+{
+  "category": { "slug": "sample", "name": "Тестовая категория" },
+  "products": [
+    {
+      "productId": "sample-product",
+      "externalId": "sample-101",
+      "sourceRows": [101],
+      "name": "Тестовый кабель UTP",
+      "sku": "UTP-SAMPLE",
+      "attributes": ["cat.5e", "305 м"],
+      "candidates": [
+        {
+          "candidateId": "sample-a",
+          "sourceSite": "tktdf.ru",
+          "sourcePageUrl": "https://www.tktdf.ru/catalog/id/51108/",
+          "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/sample/product.png",
+          "score": 90,
+          "selected": true
+        }
+      ]
+    }
+  ]
+}

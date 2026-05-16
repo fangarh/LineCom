@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Отбор изображений: Тестовая категория</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f7f7f4; color: #1f2933; }
+    header { position: sticky; top: 0; background: #f7f7f4; padding: 12px 0; border-bottom: 1px solid #d6d3ca; }
+    .product { margin: 18px 0; padding: 16px; background: #fff; border: 1px solid #dedbd2; border-radius: 8px; }
+    .candidates { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+    .candidate { display: grid; gap: 8px; border: 1px solid #d6d3ca; border-radius: 8px; padding: 10px; background: #fbfaf7; }
+    .candidate img { width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: white; border: 1px solid #ece8df; }
+    .candidate__meta { font-size: 13px; color: #4b5563; }
+    button { padding: 10px 14px; border-radius: 6px; border: 1px solid #374151; background: #263238; color: white; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Тестовая категория</h1>
+    <button type="button" onclick="downloadSelection()">Скачать selection.json</button>
+  </header>
+  <main>
+            <article class="product" data-product-id="sample-product">
+              <h2>Тестовый кабель UTP</h2>
+              <p>sample-101</p>
+              <div class="candidates">
+                <label class="candidate">
+                  <input type="checkbox"
+                         data-product-id="sample-product"
+                         data-candidate-id="sample-a" checked>
+                  <img src="https://www.tktdf.ru/upload/iblock/sample/product.png" alt="">
+                  <span class="candidate__meta">tktdf.ru</span>
+                  <a href="https://www.tktdf.ru/catalog/id/51108/" target="_blank" rel="noreferrer">Источник</a>
+                </label>
+                </div>
+            </article>
+            </main>
+  <script>
+    const sourceData = {"category": {"slug": "sample", "name": "Тестовая категория"}, "products": [{"productId": "sample-product", "externalId": "sample-101", "sourceRows": [101], "name": "Тестовый кабель UTP", "sku": "UTP-SAMPLE", "attributes": ["cat.5e", "305 м"], "candidates": [{"candidateId": "sample-a", "sourceSite": "tktdf.ru", "sourcePageUrl": "https://www.tktdf.ru/catalog/id/51108/", "sourceImageUrl": "https://www.tktdf.ru/upload/iblock/sample/product.png", "score": 90, "selected": true}]}]};
+    function downloadSelection() {
+      const selectedByProduct = new Map();
+      document.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+        if (!input.checked) return;
+        const list = selectedByProduct.get(input.dataset.productId) || [];
+        if (list.length < 2) list.push(input.dataset.candidateId);
+        selectedByProduct.set(input.dataset.productId, list);
+      });
+      const products = sourceData.products.map((product) => ({
+        productId: product.productId,
+        externalId: product.externalId,
+        name: product.name,
+        selectedCandidates: (selectedByProduct.get(product.productId) || []).map((candidateId, index) => {
+          const candidate = product.candidates.find((item) => item.candidateId === candidateId);
+          return { ...candidate, isMain: index === 0 };
+        })
+      }));
+      const blob = new Blob([JSON.stringify({
+        category: sourceData.category,
+        selectedByOperator: "browser",
+        selectedAt: new Date().toISOString(),
+        products
+      }, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "selection.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>

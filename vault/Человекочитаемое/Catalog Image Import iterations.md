@@ -264,3 +264,29 @@ Let's Encrypt:
 - `npm.cmd test` from `apps/front`: exit code `0`, `21` test files passed, `51` tests passed;
 - `npm.cmd run build` from `apps/front`: exit code `0`, Next.js production build completed;
 - scope-search по importer/WinForms/docs/vault/assets не выявил незакрытые `TODO`/`TBD`/`FIXME` в реализации; найденные commerce/payment/order совпадения относятся к явным skip/filter правилам scraper и историческим документационным формулировкам, а не к импортируемой реализации.
+
+## 2026-05-16. Product image review workflow
+
+Цель: подготовить управляемый процесс отбора изображений по категориям перед загрузкой в Local FileStorage.
+
+Решения:
+
+- поиск кандидатов разделен от применения к БД;
+- операторский выбор хранится в `selection.json`;
+- финальные PNG и manifest хранятся в `Assets/product-images/reviewed/<category-slug>/`;
+- внешние изображения сохраняют `rightsStatus = requires-permission`;
+- товары с существующими изображениями по умолчанию не перезаписываются.
+
+Артефакты:
+
+- workflow CLI: `tools/product_image_review_workflow.py`;
+- sample candidates: `Assets/product-image-review/sample/candidates.json`;
+- sample review page: `Assets/product-image-review/sample/review.html`;
+- reviewed manifest reader: `apps/catalog-import.core/Images/ReviewedProductImageManifestReader.cs`;
+- reviewed image apply service: `apps/catalog-import.core/Images/ReviewedProductImageApplyService.cs`.
+
+Проверки:
+
+- `python -m unittest tests.tools.test_product_image_review_workflow`;
+- `dotnet test tests\LineCom.Api.Tests\LineCom.Api.Tests.csproj --filter ReviewedProductImage`;
+- ручная проверка `Assets/product-image-review/sample/review.html` в браузере.
