@@ -52,3 +52,28 @@ class ProductImageReviewWorkflowTests(unittest.TestCase):
 
         self.assertEqual("cable", data["category"]["slug"])
         self.assertEqual("codex", data["selectedByOperator"])
+
+    def test_filter_candidates_limits_to_two_per_source_and_rejects_documents(self) -> None:
+        raw = [
+            {"candidateId": "t1", "sourceSite": "tktdf.ru", "sourceImageUrl": "https://www.tktdf.ru/a.png", "score": 90},
+            {"candidateId": "t2", "sourceSite": "tktdf.ru", "sourceImageUrl": "https://www.tktdf.ru/b.png", "score": 80},
+            {"candidateId": "t3", "sourceSite": "tktdf.ru", "sourceImageUrl": "https://www.tktdf.ru/c.png", "score": 70},
+            {"candidateId": "g1", "sourceSite": "google", "sourceImageUrl": "https://site.test/cert.pdf", "score": 95},
+            {"candidateId": "r1", "sourceSite": "redmrt.ru", "sourceImageUrl": "https://redmrt.ru/product.webp", "score": 60},
+        ]
+
+        filtered = workflow.filter_candidates(raw)
+
+        self.assertEqual(["t1", "t2", "r1"], [item["candidateId"] for item in filtered])
+
+    def test_build_product_candidates_marks_first_two_as_selected(self) -> None:
+        product = {"productId": "p1", "externalId": "101", "name": "Кабель UTP"}
+        candidates = [
+            {"candidateId": "a", "sourceSite": "tktdf.ru", "sourceImageUrl": "https://x/a.png", "score": 90},
+            {"candidateId": "b", "sourceSite": "redmrt.ru", "sourceImageUrl": "https://x/b.png", "score": 80},
+            {"candidateId": "c", "sourceSite": "google", "sourceImageUrl": "https://x/c.png", "score": 70},
+        ]
+
+        result = workflow.build_product_candidates(product, candidates)
+
+        self.assertEqual([True, True, False], [item["selected"] for item in result["candidates"]])

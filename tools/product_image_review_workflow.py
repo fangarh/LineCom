@@ -6,6 +6,21 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MAX_SELECTED_PER_PRODUCT = 2
+REJECT_URL_PARTS = (
+    "logo",
+    "sprite",
+    "icon",
+    "favicon",
+    "banner",
+    "placeholder",
+    "certificate",
+    "certificates",
+    "sert",
+    "diplom",
+    ".pdf",
+    "/pdf/",
+    "captcha",
+)
 
 
 def utc_now_iso() -> str:
@@ -45,6 +60,45 @@ def normalize_selection(candidates: dict, operator: str) -> dict:
         "selectedByOperator": operator,
         "selectedAt": selected_at,
         "products": products,
+    }
+
+
+def is_rejected_candidate_url(url: str) -> bool:
+    lower = (url or "").lower()
+    return any(part in lower for part in REJECT_URL_PARTS)
+
+
+def filter_candidates(candidates: list[dict], max_per_source: int = 2, max_total: int = 6) -> list[dict]:
+    by_source: dict[str, int] = {}
+    accepted = []
+    for candidate in sorted(candidates, key=lambda item: item.get("score", 0), reverse=True):
+        if is_rejected_candidate_url(candidate.get("sourceImageUrl", "")):
+            continue
+        source = candidate.get("sourceSite", "")
+        if by_source.get(source, 0) >= max_per_source:
+            continue
+        accepted.append(candidate)
+        by_source[source] = by_source.get(source, 0) + 1
+        if len(accepted) >= max_total:
+            break
+    return accepted
+
+
+def build_product_candidates(product: dict, candidates: list[dict]) -> dict:
+    filtered = filter_candidates(candidates)
+    normalized = []
+    for index, candidate in enumerate(filtered):
+        item = dict(candidate)
+        item["selected"] = index < MAX_SELECTED_PER_PRODUCT
+        normalized.append(item)
+    return {
+        "productId": product.get("productId"),
+        "externalId": product.get("externalId"),
+        "sourceRows": product.get("sourceRows", []),
+        "name": product.get("name"),
+        "sku": product.get("sku"),
+        "attributes": product.get("attributes", []),
+        "candidates": normalized,
     }
 
 
