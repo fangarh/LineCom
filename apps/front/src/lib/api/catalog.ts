@@ -1,5 +1,9 @@
 import { apiJson } from "./http";
 
+const publicCatalogFetchOptions = {
+  cache: "no-store" as const,
+};
+
 export type PublicSeo = {
   title: string | null;
   description: string | null;
@@ -144,30 +148,25 @@ export type ProductListParams = {
 };
 
 export function getCategoryTree() {
-  return apiJson<PublicCategoryTreeResponse>("/api/public/catalog/categories", {
-    next: { revalidate: 60 },
-  });
+  return apiJson<PublicCategoryTreeResponse>("/api/public/catalog/categories", publicCatalogFetchOptions);
 }
 
 export function getCategory(slug: string) {
-  return apiJson<PublicCategoryDetail>(`/api/public/catalog/categories/${encodeURIComponent(slug)}`, {
-    next: { revalidate: 60 },
-  });
+  return apiJson<PublicCategoryDetail>(
+    `/api/public/catalog/categories/${encodeURIComponent(slug)}`,
+    publicCatalogFetchOptions,
+  );
 }
 
 export function getCategoryFilters(slug: string) {
   return apiJson<PublicCategoryFiltersResponse>(
     `/api/public/catalog/categories/${encodeURIComponent(slug)}/filters`,
-    {
-      next: { revalidate: 60 },
-    },
+    publicCatalogFetchOptions,
   );
 }
 
 export function getCatalogFilters() {
-  return apiJson<PublicCatalogFiltersResponse>("/api/public/catalog/filters", {
-    next: { revalidate: 60 },
-  });
+  return apiJson<PublicCatalogFiltersResponse>("/api/public/catalog/filters", publicCatalogFetchOptions);
 }
 
 export function getProducts(params: ProductListParams = {}) {
@@ -185,13 +184,15 @@ export function getProducts(params: ProductListParams = {}) {
   }
 
   const suffix = search.toString();
-  return apiJson<PublicProductListResponse>(`/api/public/catalog/products${suffix ? `?${suffix}` : ""}`, {
-    next: { revalidate: 60 },
-  });
+  return apiJson<PublicProductListResponse>(
+    `/api/public/catalog/products${suffix ? `?${suffix}` : ""}`,
+    publicCatalogFetchOptions,
+  );
 }
 
 export function getProduct(slug: string) {
-  return apiJson<PublicProductDetail>(`/api/public/catalog/products/${encodeURIComponent(slug)}`, {
-    next: { revalidate: 60 },
-  });
+  return apiJson<PublicProductDetail>(
+    `/api/public/catalog/products/${encodeURIComponent(slug)}`,
+    publicCatalogFetchOptions,
+  );
 }
