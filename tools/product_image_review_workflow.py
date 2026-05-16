@@ -314,7 +314,8 @@ def render_review_html(candidates: dict) -> str:
     }}
   </script>
 </body>
-</html>"""
+</html>
+"""
 
 
 def finalize_selection(selection: dict, output_dir: Path, manifest_path: Path) -> dict:
