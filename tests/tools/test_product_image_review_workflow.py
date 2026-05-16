@@ -123,3 +123,31 @@ class ProductImageReviewWorkflowTests(unittest.TestCase):
         )
 
         self.assertFalse(product["candidates"][0]["selected"])
+
+    def test_render_review_html_contains_products_images_and_selection_script(self) -> None:
+        candidates = {
+            "category": {"slug": "cable", "name": "Кабель"},
+            "products": [
+                {
+                    "productId": "p1",
+                    "externalId": "101",
+                    "name": "Кабель UTP",
+                    "candidates": [
+                        {
+                            "candidateId": "a",
+                            "sourceSite": "tktdf.ru",
+                            "sourcePageUrl": "https://www.tktdf.ru/catalog/id/1/",
+                            "sourceImageUrl": "https://www.tktdf.ru/a.png",
+                            "selected": True,
+                        }
+                    ],
+                }
+            ],
+        }
+
+        html = workflow.render_review_html(candidates)
+
+        self.assertIn("Кабель UTP", html)
+        self.assertIn("https://www.tktdf.ru/a.png", html)
+        self.assertIn('data-product-id="p1"', html)
+        self.assertIn("downloadSelection", html)
