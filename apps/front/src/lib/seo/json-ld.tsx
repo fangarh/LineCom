@@ -1,4 +1,5 @@
 import type { PublicProductDetail } from "@/lib/api/catalog";
+import { lineComContact } from "@/lib/contact-info";
 import { routes } from "@/lib/routes";
 import { absoluteSiteUrl } from "./site";
 
@@ -53,8 +54,8 @@ export function buildOrganizationJsonLd(): JsonLdValue {
         value: "780101001",
       },
     ],
-    email: "Linecom.sup@gmail.com",
-    telephone: "+79313064350",
+    email: lineComContact.email,
+    telephone: lineComContact.phoneHref.replace("tel:", ""),
     address: {
       "@type": "PostalAddress",
       postalCode: "199406",

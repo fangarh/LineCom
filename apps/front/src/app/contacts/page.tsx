@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { lineComContact } from "@/lib/contact-info";
 import { routes } from "@/lib/routes";
 import { indexablePageMetadata } from "@/lib/seo/metadata";
 
@@ -25,7 +26,7 @@ export default function ContactsPage() {
             <Link className="button button--primary" href={routes.catalog()}>
               Перейти в каталог
             </Link>
-            <Link className="button button--secondary" href="mailto:Linecom.sup@gmail.com">
+            <Link className="button button--secondary" href={lineComContact.emailHref}>
               Написать на почту
             </Link>
           </div>
@@ -134,14 +135,14 @@ export default function ContactsPage() {
           <div>
             <dt>Контакты</dt>
             <dd>
-              <a href="tel:+79313064350">+7 931 306-43-50</a>
+              <a href={lineComContact.phoneHref}>{lineComContact.phone}</a>
               <br />
-              <a href="mailto:Linecom.sup@gmail.com">Linecom.sup@gmail.com</a>
+              <a href={lineComContact.emailHref}>{lineComContact.email}</a>
             </dd>
           </div>
           <div>
             <dt>Генеральный директор</dt>
-            <dd>Лопатин А.В.</dd>
+            <dd>{lineComContact.name}</dd>
           </div>
         </dl>
       </section>

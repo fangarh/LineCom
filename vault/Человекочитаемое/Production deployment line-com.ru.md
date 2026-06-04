@@ -89,17 +89,17 @@ TLS:
 
 3 июня 2026 production перенесён на сервер `188.130.138.146`.
 
-4 июня 2026 опубликован текущий dirty-релиз с исправлением контраста названий товаров в темной теме и текущими frontend-изменениями.
+4 июня 2026 опубликован текущий dirty-релиз с обновленными контактами: `al@line-com.ru`, `Лопатин Александр Владимирович`.
 
 - Hostname сервера: `line-com.ru`.
-- Release id: `20260604-061124-a07976f-dirty`.
-- API current: `/opt/linecom/releases/api-20260604-061124-a07976f-dirty`.
-- Frontend current: `/opt/linecom/releases/front-20260604-061124-a07976f-dirty`.
-- DbMigrator current: `/opt/linecom/releases/dbmigrator-20260604-061124-a07976f-dirty`.
+- Release id: `20260604-110037-5758bb6-dirty`.
+- API current: `/opt/linecom/releases/api-20260604-110037-5758bb6-dirty`.
+- Frontend current: `/opt/linecom/releases/front-20260604-110037-5758bb6-dirty`.
+- DbMigrator current: `/opt/linecom/releases/dbmigrator-20260604-110037-5758bb6-dirty`.
 - PostgreSQL и Local FileStorage восстановлены из согласованного backup point старой площадки: `/var/backups/linecom/20260603T170001Z-prepublish-20260603-a07976f-dirty`.
 - Storage после восстановления: `325` файлов.
 - DbMigrator на новом production: новых SQL-скриптов не было, журнал миграций актуален.
-- Smoke после публикации `20260604-061124-a07976f-dirty`: `https://line-com.ru/` -> `200`, `https://line-com.ru/cookies` -> `200`, `GET https://line-com.ru/api/public/system/health` -> `200`; CSS главной содержит `.home-hero-product.is-active strong{color:#20262b}` и `.home-hero-product.is-active small{color:#62686f}`.
+- Smoke после публикации `20260604-110037-5758bb6-dirty`: `https://line-com.ru/` -> `200`, `https://line-com.ru/contacts` -> `200`, `GET https://line-com.ru/api/public/system/health` -> `200`; HTML `/contacts` содержит `mailto:al@line-com.ru`, `al@line-com.ru` и `Лопатин Александр Владимирович`.
 - HTTPS включён через Let's Encrypt для `line-com.ru` и `www.line-com.ru`.
 - Сертификат на момент выпуска действителен до `2026-09-01`.
 - Старая площадка `109.248.226.178` после переноса оставлена только как временный nginx proxy на `188.130.138.146` для защиты от остаточного DNS-cache; старые `linecom-api.service` и `linecom-front.service` остановлены.

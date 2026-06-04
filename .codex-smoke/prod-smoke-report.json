@@ -1,0 +1,152 @@
+{
+  "origin": "https://line-com.ru",
+  "startedAt": "2026-06-04T18:14:49.008Z",
+  "checks": [
+    {
+      "name": "health",
+      "status": 200
+    },
+    {
+      "name": "home",
+      "status": "pass",
+      "url": "https://line-com.ru/",
+      "title": "LineCom - кабель и сетевые компоненты для B2B-поставок"
+    },
+    {
+      "name": "home storage images",
+      "status": "pass",
+      "count": 14
+    },
+    {
+      "name": "catalog",
+      "status": "pass",
+      "url": "https://line-com.ru/catalog"
+    },
+    {
+      "name": "catalog product links",
+      "status": "pass",
+      "count": 48,
+      "firstHref": "/products/kabel-koaksialnyj-rg-11u-75-om-ccs-al-tros-vneshnij-chernyj-305m"
+    },
+    {
+      "name": "category",
+      "status": "pass",
+      "url": "https://line-com.ru/catalog/vitaya-para",
+      "firstHref": "/catalog/vitaya-para"
+    },
+    {
+      "name": "product",
+      "status": "pass",
+      "url": "https://line-com.ru/products/kabel-koaksialnyj-rg-11u-75-om-ccs-al-tros-vneshnij-chernyj-305m",
+      "storageImageCount": 1
+    },
+    {
+      "name": "contacts",
+      "status": "pass",
+      "url": "https://line-com.ru/contacts"
+    },
+    {
+      "name": "storage fetch",
+      "status": 200,
+      "url": "https://line-com.ru/storage/products/reviewed/konnektor-rj45-8p8c-cat-5e-dlya-odnozhilnogo-i-mnogozhilnogo-kabelya-6289-tktdf-2-052e5bd056f8.png",
+      "contentType": "image/png"
+    },
+    {
+      "name": "storage fetch",
+      "status": 200,
+      "url": "https://line-com.ru/storage/products/reviewed/opticheskij-samonesuschij-kabel-2-volokna-1-5kn-dielektricheskij-adss-6307-redmrt-1-1b22faffa580.png",
+      "contentType": "image/png"
+    },
+    {
+      "name": "storage fetch",
+      "status": 200,
+      "url": "https://line-com.ru/storage/products/reviewed/kabel-vitaya-para-u-utp-cu-cat-5e-pe-4pr-24awg-outdoor-chernyj-305m-linecom-6238-tktdf-2-0688a8bced8b.png",
+      "contentType": "image/png"
+    },
+    {
+      "name": "storage fetch",
+      "status": 200,
+      "url": "https://line-com.ru/storage/products/reviewed/kabel-vitaya-para-u-utp-ssa-cat-5e-4pr-24awg-outdoor-chernyj-305m-linecom-tktdf-2-0688a8bced8b.png",
+      "contentType": "image/png"
+    },
+    {
+      "name": "storage fetch",
+      "status": 200,
+      "url": "https://line-com.ru/storage/products/reviewed/bystryj-konnektor-sc-apc-6321-redmrt-1-9d5c141ccefd.png",
+      "contentType": "image/png"
+    },
+    {
+      "name": "storage fetch",
+      "status": 200,
+      "url": "https://line-com.ru/storage/products/reviewed/kabel-vitaya-para-u-utp-cu-cat-5e-pe-4pr-24awg-outdoor-chernyj-305m-skyn-6245-tktdf-2-0688a8bced8b.png",
+      "contentType": "image/png"
+    },
+    {
+      "name": "storage fetch",
+      "status": 200,
+      "url": "https://line-com.ru/storage/products/reviewed/opticheskij-samonesuschij-kabel-2-volokna-3kn-dielektricheskij-adss-6313-redmrt-1-1b22faffa580.png",
+      "contentType": "image/png"
+    },
+    {
+      "name": "storage fetch",
+      "status": 200,
+      "url": "https://line-com.ru/storage/products/reviewed/sfp-modul-rj-45-1-25g-100-m-cat-5e-6325-redmrt-1-51cb08260bf5.png",
+      "contentType": "image/png"
+    },
+    {
+      "name": "browser errors",
+      "status": "pass",
+      "expectedGuest401": 5,
+      "consoleErrors": 0,
+      "pageErrors": 0
+    }
+  ],
+  "storageUrls": [
+    "https://line-com.ru/storage/products/reviewed/konnektor-rj45-8p8c-cat-5e-dlya-odnozhilnogo-i-mnogozhilnogo-kabelya-6289-tktdf-2-052e5bd056f8.png",
+    "https://line-com.ru/storage/products/reviewed/opticheskij-samonesuschij-kabel-2-volokna-1-5kn-dielektricheskij-adss-6307-redmrt-1-1b22faffa580.png",
+    "https://line-com.ru/storage/products/reviewed/kabel-vitaya-para-u-utp-cu-cat-5e-pe-4pr-24awg-outdoor-chernyj-305m-linecom-6238-tktdf-2-0688a8bced8b.png",
+    "https://line-com.ru/storage/products/reviewed/konnektor-rj45-8p8c-cat-5e-dlya-odnozhilnogo-i-mnogozhilnogo-kabelya-6289-tktdf-2-052e5bd056f8.png",
+    "https://line-com.ru/storage/products/reviewed/opticheskij-samonesuschij-kabel-2-volokna-1-5kn-dielektricheskij-adss-6307-redmrt-1-1b22faffa580.png",
+    "https://line-com.ru/storage/products/reviewed/kabel-vitaya-para-u-utp-cu-cat-5e-pe-4pr-24awg-outdoor-chernyj-305m-linecom-6238-tktdf-2-0688a8bced8b.png",
+    "https://line-com.ru/storage/products/reviewed/kabel-vitaya-para-u-utp-ssa-cat-5e-4pr-24awg-outdoor-chernyj-305m-linecom-tktdf-2-0688a8bced8b.png",
+    "https://line-com.ru/storage/products/reviewed/bystryj-konnektor-sc-apc-6321-redmrt-1-9d5c141ccefd.png",
+    "https://line-com.ru/storage/products/reviewed/kabel-vitaya-para-u-utp-cu-cat-5e-pe-4pr-24awg-outdoor-chernyj-305m-skyn-6245-tktdf-2-0688a8bced8b.png",
+    "https://line-com.ru/storage/products/reviewed/opticheskij-samonesuschij-kabel-2-volokna-3kn-dielektricheskij-adss-6313-redmrt-1-1b22faffa580.png",
+    "https://line-com.ru/storage/products/reviewed/sfp-modul-rj-45-1-25g-100-m-cat-5e-6325-redmrt-1-51cb08260bf5.png",
+    "https://line-com.ru/storage/products/reviewed/opticheskij-samonesuschij-kabel-2-volokna-1-5kn-dielektricheskij-adss-6307-redmrt-1-1b22faffa580.png",
+    "https://line-com.ru/storage/products/reviewed/konnektor-rj45-8p8c-cat-5e-so-skvoznym-otverstiem-skvoznoj-dlya-odnozhil-6290-tktdf-2-052e5bd056f8.png",
+    "https://line-com.ru/storage/products/admin/9c4b9a4f37194022b3e056723eb6780f/0d13bf7beb5b432eb860f3e8e02a945d.jpg",
+    "https://line-com.ru/storage/products/reviewed/kabel-koaksialnyj-rg-11u-75-om-ccs-al-tros-vneshnij-chernyj-305m-tktdf-1-2a0b9f8e5781.png"
+  ],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+  ],
+  "pageErrors": [],
+  "httpErrors": [
+    {
+      "status": 401,
+      "url": "https://line-com.ru/api/auth/me"
+    },
+    {
+      "status": 401,
+      "url": "https://line-com.ru/api/auth/me"
+    },
+    {
+      "status": 401,
+      "url": "https://line-com.ru/api/auth/me"
+    },
+    {
+      "status": 401,
+      "url": "https://line-com.ru/api/auth/me"
+    },
+    {
+      "status": 401,
+      "url": "https://line-com.ru/api/auth/me"
+    }
+  ],
+  "finishedAt": "2026-06-04T18:15:39.371Z"
+}

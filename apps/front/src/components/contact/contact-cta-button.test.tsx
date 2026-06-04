@@ -11,7 +11,7 @@ describe("ContactCtaButton", () => {
     await user.click(screen.getByRole("button", { name: "Связаться с нами" }));
 
     expect(screen.getByRole("dialog", { name: "Связаться с нами" })).toBeInTheDocument();
-    expect(screen.getByText("Лопатин А.В.")).toBeInTheDocument();
+    expect(screen.getByText("Лопатин Александр Владимирович")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "+7 931 306-43-50" })).toHaveAttribute("href", "tel:+79313064350");
 
     await user.click(screen.getByRole("button", { name: "Закрыть" }));

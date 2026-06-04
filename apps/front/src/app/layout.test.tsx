@@ -47,7 +47,7 @@ describe("root layout JSON-LD", () => {
           legalName: "ООО «ЛАЙНКОМ»",
           url: "https://linecom.example.ru/",
           taxID: "7801724840",
-          email: "Linecom.sup@gmail.com",
+          email: "al@line-com.ru",
           telephone: "+79313064350",
           address: expect.objectContaining({
             "@type": "PostalAddress",
