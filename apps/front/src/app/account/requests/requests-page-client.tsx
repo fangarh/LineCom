@@ -122,7 +122,7 @@ export function RequestsPageClient() {
       <section className="account-intro" aria-labelledby="requests-title">
         <div>
           <p className="eyebrow">Личный кабинет</p>
-          <h1 id="requests-title">Мои заявки</h1>
+          <h1 id="requests-title">История заказов</h1>
           <p className="lead-text">Отслеживайте отправленные обращения и открывайте карточки по публичному номеру.</p>
         </div>
       </section>

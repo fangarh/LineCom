@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 import type { PublicProductDetail } from "@/lib/api/catalog";
 import { ProductDetail } from "./product-detail";
 
-vi.mock("@/components/request/add-to-request-button", () => ({
-  AddToRequestButton: () => <button type="button">Добавить в заявку</button>,
+vi.mock("@/components/contact/contact-cta-button", () => ({
+  ContactCtaButton: () => <button type="button">Связаться с нами</button>,
 }));
 
 function product(overrides: Partial<PublicProductDetail> = {}): PublicProductDetail {
@@ -45,5 +45,12 @@ describe("ProductDetail", () => {
     render(<ProductDetail product={product({ shortDescription: null })} />);
 
     expect(screen.getByText("Полное описание товара для карточки.")).toBeInTheDocument();
+  });
+
+  it("shows the contact action instead of a request action", () => {
+    render(<ProductDetail product={product()} />);
+
+    expect(screen.getByRole("button", { name: "Связаться с нами" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Добавить в заявку" })).not.toBeInTheDocument();
   });
 });

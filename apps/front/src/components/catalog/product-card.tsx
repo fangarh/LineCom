@@ -3,7 +3,7 @@ import type { PublicProductListItem } from "@/lib/api/catalog";
 import { formatSku } from "@/lib/format";
 import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
 import { routes } from "@/lib/routes";
-import { AddToRequestButton } from "@/components/request/add-to-request-button";
+import { ContactCtaButton } from "@/components/contact/contact-cta-button";
 
 type ProductCardProps = {
   product: PublicProductListItem;
@@ -47,17 +47,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <div className="product-card__footer">
         <strong>Цена по запросу</strong>
-        <AddToRequestButton
-          className="button button--primary product-card__button"
-          product={{
-            productId: product.id,
-            slug: product.slug,
-            productName: product.name,
-            productSku: product.sku,
-            saleUnit: product.saleUnit,
-            unitQuantity: product.unitQuantity,
-          }}
-        />
+        <ContactCtaButton className="button button--primary product-card__button" />
       </div>
     </article>
   );

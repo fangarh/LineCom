@@ -44,7 +44,7 @@ describe("SiteHeader", () => {
     vi.unstubAllGlobals();
   });
 
-  it("renders request-oriented navigation", () => {
+  it("renders public navigation without the request section", () => {
     renderHeader();
 
     expect(screen.getByRole("link", { name: "LineCom" })).toHaveAttribute("href", "/");
@@ -53,14 +53,14 @@ describe("SiteHeader", () => {
     expect(screen.getByRole("link", { name: "Каталог" })).toHaveAttribute("href", "/catalog");
     expect(screen.getByRole("link", { name: "Контакты" })).toHaveAttribute("href", "/contacts");
     expect(screen.getByRole("link", { name: "Доставка" })).toHaveAttribute("href", "/delivery");
-    expect(screen.getByRole("link", { name: "Заявка" })).toHaveAttribute("href", "/request");
+    expect(screen.queryByRole("link", { name: "Заявка" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Мои заявки" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Профиль" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Администрирование" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Главная админки" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Каталог админки" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Включить темную тему" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Войти" })).toHaveAttribute("href", "/auth/login");
+    expect(screen.queryByRole("link", { name: "Войти" })).not.toBeInTheDocument();
   });
 
   it("toggles the mobile menu from the logo", async () => {
@@ -89,7 +89,7 @@ describe("SiteHeader", () => {
     expect(brand).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("shows the request draft items count", async () => {
+  it("does not show the request draft items count while customer requests are disabled", async () => {
     localStorage.setItem(
       "linecom.requestDraft.v1",
       JSON.stringify({
@@ -111,16 +111,18 @@ describe("SiteHeader", () => {
 
     renderHeader();
 
-    expect(await screen.findByRole("link", { name: /2/ })).toHaveAttribute("href", "/request");
+    expect(screen.queryByRole("link", { name: /2/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Заявка" })).not.toBeInTheDocument();
   });
 
   it("shows account links without admin links for customers", () => {
     renderHeader({ user: buildUser("customer"), csrfToken: "csrf" });
 
-    expect(screen.getByRole("link", { name: "Профиль" })).toHaveAttribute("href", "/account/profile");
-    expect(screen.getByRole("link", { name: "Мои заявки" })).toHaveAttribute("href", "/account/requests");
-    expect(screen.getByText("customer user")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Выйти" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "customer user" })).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("link", { name: "Профиль" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "История заказов" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Мои заявки" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Выйти" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Администрирование" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Заявки клиентов" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Каталог админки" })).not.toBeInTheDocument();
@@ -128,16 +130,31 @@ describe("SiteHeader", () => {
     expect(screen.queryByRole("link", { name: "Войти" })).not.toBeInTheDocument();
   });
 
+  it("opens account actions from the user menu", async () => {
+    const user = userEvent.setup();
+    renderHeader({ user: buildUser("customer"), csrfToken: "csrf" });
+
+    const accountMenu = screen.getByRole("button", { name: "customer user" });
+    await user.click(accountMenu);
+
+    expect(accountMenu).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("link", { name: "Профиль" })).toHaveAttribute("href", "/account/profile");
+    expect(screen.queryByRole("link", { name: "История заказов" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Мои заявки" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Выйти" })).toBeInTheDocument();
+  });
+
   it("logs out from the header and returns to anonymous actions", async () => {
     logoutMock.mockResolvedValue(undefined);
     const user = userEvent.setup();
     renderHeader({ user: buildUser("customer"), csrfToken: "csrf" });
 
+    await user.click(screen.getByRole("button", { name: "customer user" }));
     await user.click(screen.getByRole("button", { name: "Выйти" }));
 
     expect(logoutMock).toHaveBeenCalledWith("csrf");
-    expect(screen.queryByText("customer user")).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Войти" })).toHaveAttribute("href", "/auth/login");
+    expect(screen.queryByRole("button", { name: "customer user" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Войти" })).not.toBeInTheDocument();
   });
 
   it.each(["seller", "admin"])("shows one admin navigation group for %s users", async (role) => {
@@ -152,7 +169,10 @@ describe("SiteHeader", () => {
     expect(screen.getByRole("link", { name: "Заявки клиентов" })).toHaveAttribute("href", "/admin/requests");
     expect(screen.getByRole("link", { name: "Каталог админки" })).toHaveAttribute("href", "/admin/catalog");
     expect(screen.getByRole("link", { name: "Главная админки" })).toHaveAttribute("href", "/admin/homepage");
+
+    await user.click(screen.getByRole("button", { name: `${role} user` }));
+
     expect(screen.getByRole("link", { name: "Профиль" })).toHaveAttribute("href", "/account/profile");
-    expect(screen.getByRole("link", { name: "Мои заявки" })).toHaveAttribute("href", "/account/requests");
+    expect(screen.queryByRole("link", { name: "История заказов" })).not.toBeInTheDocument();
   });
 });

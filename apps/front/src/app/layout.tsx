@@ -9,6 +9,7 @@ import "./globals.css";
 import "../styles/layout.css";
 import "../styles/public.css";
 import "../styles/account.css";
+import "../styles/contact-modal.css";
 import "../styles/admin-requests.css";
 import "../styles/admin-catalog.css";
 import "../styles/admin-homepage.css";
@@ -32,7 +33,7 @@ const themeScript = `
 export const metadata: Metadata = {
   ...indexablePageMetadata({
     title: "LineCom - каталог кабеля и компонентов",
-    description: "Каталог кабеля, СКС, ВОЛС и сопутствующих компонентов с заявками по запросу.",
+    description: "Каталог кабеля, СКС, ВОЛС и сопутствующих компонентов для B2B-поставок по запросу.",
     canonicalPath: "/",
   }),
   applicationName: "LineCom",

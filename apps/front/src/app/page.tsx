@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import type { PublicProductListItem } from "@/lib/api/catalog";
 import { getCategoryTree, getProduct, getProducts } from "@/lib/api/catalog";
 import { getHomepageSections } from "@/lib/api/homepage";
 import { applyCuratedHomepageSections } from "@/lib/homepage/curated-homepage";
@@ -9,25 +8,14 @@ import { formatSku } from "@/lib/format";
 import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
 import { routes } from "@/lib/routes";
 import { indexablePageMetadata } from "@/lib/seo/metadata";
+import { ContactCtaButton } from "@/components/contact/contact-cta-button";
 import { HomeHeroProducts } from "@/components/home/home-hero-products";
-import { AddToRequestButton } from "@/components/request/add-to-request-button";
 
 export const metadata: Metadata = indexablePageMetadata({
-  title: "LineCom - кабель и сетевые компоненты по заявке",
-  description: "Подбор кабеля, СКС, ВОЛС и сетевых компонентов для заявок без публичных цен и онлайн-оплаты.",
+  title: "LineCom - кабель и сетевые компоненты для B2B-поставок",
+  description: "Подбор кабеля, СКС, ВОЛС и сетевых компонентов для B2B-поставок без публичных цен и онлайн-оплаты.",
   canonicalPath: "/",
 });
-
-function requestProduct(product: PublicProductListItem) {
-  return {
-    productId: product.id,
-    slug: product.slug,
-    productName: product.name,
-    productSku: product.sku,
-    saleUnit: product.saleUnit,
-    unitQuantity: product.unitQuantity,
-  };
-}
 
 export default async function Home() {
   const [categoryResult, productResult, homepageResult] = await Promise.allSettled([
@@ -56,15 +44,15 @@ export default async function Home() {
         <div className="home-hero__content">
           <h1 id="home-title">Подберем кабель и сетевые компоненты под вашу задачу</h1>
           <p>
-            Соберите заявку из каталога или опишите монтажную задачу: СКС, ВОЛС, шкаф, патчинг,
+            Выберите позиции из каталога или опишите монтажную задачу: СКС, ВОЛС, шкаф, патчинг,
             расходники. LineCom поможет уточнить комплектность и собрать практичный набор позиций.
           </p>
           <div className="home-hero__actions">
             <Link className="button button--primary" href={routes.catalog()}>
               Перейти в каталог
             </Link>
-            <Link className="button button--secondary" href={routes.request()}>
-              Собрать заявку
+            <Link className="button button--secondary" href={routes.contacts()}>
+              Связаться с нами
             </Link>
           </div>
         </div>
@@ -92,7 +80,7 @@ export default async function Home() {
           <article>
             <span>02</span>
             <h3>Добавьте известные позиции</h3>
-            <p>Выберите товары из каталога, укажите количество и комментарии прямо в заявке.</p>
+            <p>Откройте товары в каталоге и передайте менеджеру нужные позиции удобным способом.</p>
           </article>
           <article>
             <span>03</span>
@@ -135,17 +123,14 @@ export default async function Home() {
                   <Link className="text-link" href={routes.product(product.slug)}>
                     Подробнее
                   </Link>
-                  <AddToRequestButton
-                    className="button button--primary"
-                    product={requestProduct(product)}
-                  />
+                  <ContactCtaButton className="button button--primary" />
                 </div>
               </article>
             ))}
           </div>
         ) : (
           <p className="empty-state">
-            Популярные позиции временно недоступны. Откройте каталог или опишите задачу в заявке.
+            Популярные позиции временно недоступны. Откройте каталог или свяжитесь с менеджером.
           </p>
         )}
       </section>
@@ -162,11 +147,11 @@ export default async function Home() {
           </article>
           <article>
             <h3>Подходит для организаций</h3>
-            <p>Заявка хранит позиции, количество и комментарии, чтобы быстро вернуться к закупке.</p>
+            <p>Каталог помогает зафиксировать нужные позиции перед обсуждением поставки с менеджером.</p>
           </article>
           <article>
             <h3>Без лишних шагов</h3>
-            <p>Публичная страница ведет к рабочему B2B-согласованию и не отвлекает от состава заявки.</p>
+            <p>Публичная часть ведет к рабочему B2B-согласованию без корзины, оплаты и лишних сценариев.</p>
           </article>
         </div>
       </section>
@@ -183,7 +168,7 @@ export default async function Home() {
             {highlights.map((category) => (
               <Link key={category.id} className="home-direction" href={routes.category(category.slug)}>
                 <strong>{category.h1 ?? category.name}</strong>
-                <span>{category.description ?? "Откройте раздел и добавьте подходящие позиции в заявку."}</span>
+                <span>{category.description ?? "Откройте раздел и выберите подходящие позиции для обсуждения."}</span>
               </Link>
             ))}
           </div>

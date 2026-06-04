@@ -4,23 +4,24 @@
 
 ## Доступ
 
-- Хост: `109.248.226.178`
+- Хост: `188.130.138.146`
 - SSH-пользователь для временных работ: `croot`
 - Пароль не хранить в git и Obsidian.
 - Локальный файл для пароля SSH: `.codex-local/linecom-ssh.env`
-- Переменные для автоматизации: `LC_SSH_HOST`, `LC_SSH_USER`, `LC_SSH_PASSWORD`
+- Переменные для автоматизации production: `PROD_SSH_HOST`, `PROD_SSH_USER`, `PROD_SSH_PASSWORD`
+- Переменные старой площадки/миграционных работ: `LC_SSH_HOST`, `LC_SSH_USER`, `LC_SSH_PASSWORD`
 
-Локальный файл `.codex-local/linecom-ssh.env` добавлен в `.gitignore`. Перед SSH-операциями пароль нужно вписать в `LC_SSH_PASSWORD`.
+Локальный файл `.codex-local/linecom-ssh.env` добавлен в `.gitignore`. Перед production SSH-операциями пароль нужно вписать в `PROD_SSH_PASSWORD`.
 
 ## Домен и DNS
 
 - Основной домен: `line-com.ru`
 - WWW-домен: `www.line-com.ru`
-- Публичный IP сайта: `109.248.226.178`
+- Публичный IP сайта: `188.130.138.146`
 - DNS управляется через RU-CENTER DNS-master.
 - A-записи:
-  - `@ A 109.248.226.178`
-  - `www A 109.248.226.178`
+  - `@ A 188.130.138.146`
+  - `www A 188.130.138.146`
 
 ## Почта
 
@@ -83,6 +84,26 @@ TLS:
 - Сертификат выпущен для `line-com.ru` и `www.line-com.ru`.
 - Путь сертификата: `/etc/letsencrypt/live/line-com.ru/fullchain.pem`
 - Certbot auto-renew включен.
+
+## Актуальная production-публикация
+
+3 июня 2026 production перенесён на сервер `188.130.138.146`.
+
+4 июня 2026 опубликован текущий dirty-релиз с исправлением контраста названий товаров в темной теме и текущими frontend-изменениями.
+
+- Hostname сервера: `line-com.ru`.
+- Release id: `20260604-061124-a07976f-dirty`.
+- API current: `/opt/linecom/releases/api-20260604-061124-a07976f-dirty`.
+- Frontend current: `/opt/linecom/releases/front-20260604-061124-a07976f-dirty`.
+- DbMigrator current: `/opt/linecom/releases/dbmigrator-20260604-061124-a07976f-dirty`.
+- PostgreSQL и Local FileStorage восстановлены из согласованного backup point старой площадки: `/var/backups/linecom/20260603T170001Z-prepublish-20260603-a07976f-dirty`.
+- Storage после восстановления: `325` файлов.
+- DbMigrator на новом production: новых SQL-скриптов не было, журнал миграций актуален.
+- Smoke после публикации `20260604-061124-a07976f-dirty`: `https://line-com.ru/` -> `200`, `https://line-com.ru/cookies` -> `200`, `GET https://line-com.ru/api/public/system/health` -> `200`; CSS главной содержит `.home-hero-product.is-active strong{color:#20262b}` и `.home-hero-product.is-active small{color:#62686f}`.
+- HTTPS включён через Let's Encrypt для `line-com.ru` и `www.line-com.ru`.
+- Сертификат на момент выпуска действителен до `2026-09-01`.
+- Старая площадка `109.248.226.178` после переноса оставлена только как временный nginx proxy на `188.130.138.146` для защиты от остаточного DNS-cache; старые `linecom-api.service` и `linecom-front.service` остановлены.
+- Контрольная сверка старой и новой площадок после переноса: counts всех public-таблиц совпадают, `schema_versions` = `7`, latest = `LineCom.DbMigrator.Migrations.007_admin_catalog_foundation.sql`, storage = `325` файлов, storage manifest SHA256 = `ceb000c191c304c89eb289f822206f1564753fb4c9a00d05d9f8c7b233c083b9`.
 
 ## Storage картинок
 

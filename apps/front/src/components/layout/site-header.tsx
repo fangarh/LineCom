@@ -7,6 +7,7 @@ import { useAuth } from "@/components/auth/auth-provider";
 import { useRequestDraft } from "@/components/request/request-draft-provider";
 import { getDraftItemsCount } from "@/lib/request-draft/selectors";
 import { routes } from "@/lib/routes";
+import { siteFeatures } from "@/lib/site-features";
 import { ThemeToggle } from "./theme-toggle";
 
 const MOBILE_MENU_QUERY = "(max-width: 860px)";
@@ -16,12 +17,12 @@ const navItems = [
   { href: routes.catalog(), label: "Каталог" },
   { href: routes.contacts(), label: "Контакты" },
   { href: routes.delivery(), label: "Доставка" },
-  { href: routes.request(), label: "Заявка" },
+  ...(siteFeatures.customerRequests ? [{ href: routes.request(), label: "Заявка" }] : []),
 ];
 
 const accountItems = [
   { href: routes.accountProfile(), label: "Профиль" },
-  { href: routes.accountRequests(), label: "Мои заявки" },
+  ...(siteFeatures.customerRequests ? [{ href: routes.accountRequests(), label: "История заказов" }] : []),
 ];
 
 const adminItems = [
@@ -33,10 +34,11 @@ const adminItems = [
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { user, logoutSession } = useAuth();
   const { state } = useRequestDraft();
-  const draftItemsCount = getDraftItemsCount(state);
+  const draftItemsCount = siteFeatures.customerRequests ? getDraftItemsCount(state) : 0;
   const isStaff = user?.role === "seller" || user?.role === "admin";
 
   const handleBrandClick = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -51,10 +53,17 @@ export function SiteHeader() {
   const closeMenu = () => {
     setIsMenuOpen(false);
     setIsAdminMenuOpen(false);
+    setIsAccountMenuOpen(false);
   };
 
   const toggleAdminMenu = () => {
+    setIsAccountMenuOpen(false);
     setIsAdminMenuOpen((isOpen) => !isOpen);
+  };
+
+  const toggleAccountMenu = () => {
+    setIsAdminMenuOpen(false);
+    setIsAccountMenuOpen((isOpen) => !isOpen);
   };
 
   const handleLogout = async () => {
@@ -115,13 +124,6 @@ export function SiteHeader() {
                 </Link>
               );
             })}
-            {user
-              ? accountItems.map((item) => (
-                  <Link key={item.href} className="site-header__link" href={item.href} onClick={closeMenu}>
-                    <span>{item.label}</span>
-                  </Link>
-                ))
-              : null}
             {isStaff ? (
               <div className="site-header__dropdown">
                 <button
@@ -149,22 +151,35 @@ export function SiteHeader() {
           <div className="site-header__actions">
             <ThemeToggle />
             {user ? (
-              <div className="site-header__user">
-                <span className="site-header__user-name">{user.name}</span>
+              <div className="site-header__dropdown site-header__user">
                 <button
-                  className="button button--ghost site-header__logout"
-                  disabled={isLoggingOut}
+                  className="site-header__user-button"
                   type="button"
-                  onClick={handleLogout}
+                  aria-expanded={isAccountMenuOpen}
+                  aria-controls="site-header-account-menu"
+                  onClick={toggleAccountMenu}
                 >
-                  Выйти
+                  <span className="site-header__user-name">{user.name}</span>
                 </button>
+                {isAccountMenuOpen ? (
+                  <div id="site-header-account-menu" className="site-header__dropdown-menu site-header__dropdown-menu--account">
+                    {accountItems.map((item) => (
+                      <Link key={item.href} className="site-header__dropdown-link" href={item.href} onClick={closeMenu}>
+                        {item.label}
+                      </Link>
+                    ))}
+                    <button
+                      className="site-header__dropdown-link site-header__dropdown-action"
+                      disabled={isLoggingOut}
+                      type="button"
+                      onClick={handleLogout}
+                    >
+                      Выйти
+                    </button>
+                  </div>
+                ) : null}
               </div>
-            ) : (
-              <Link className="button button--ghost site-header__login" href={routes.login()} onClick={closeMenu}>
-                Войти
-              </Link>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

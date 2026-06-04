@@ -9,7 +9,7 @@ import { indexablePageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = indexablePageMetadata({
   title: "Каталог кабеля и компонентов LineCom",
-  description: "Каталог кабеля, СКС, ВОЛС и компонентов LineCom для заявок по запросу.",
+  description: "Каталог кабеля, СКС, ВОЛС и компонентов LineCom для B2B-поставок по запросу.",
   canonicalPath: "/catalog",
 });
 
@@ -36,7 +36,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
         <div>
           <h1 id="catalog-title">Кабель и компоненты LineCom</h1>
           <p className="lead-text">
-            Категории, характеристики и единицы продажи для подготовки заявки. Стоимость
+            Категории, характеристики и единицы продажи для подбора позиций. Стоимость
             рассчитывается после проверки наличия и подбора.
           </p>
         </div>

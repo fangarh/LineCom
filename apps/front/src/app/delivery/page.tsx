@@ -6,7 +6,7 @@ import { indexablePageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = indexablePageMetadata({
   title: "Доставка LineCom",
   description:
-    "LineCom организует доставку кабеля, оптических и сетевых компонентов по России и всему миру после согласования заявки.",
+    "LineCom организует доставку кабеля, оптических и сетевых компонентов по России и всему миру после согласования поставки.",
   canonicalPath: "/delivery",
 });
 
@@ -26,7 +26,7 @@ const deliveryOptions = [
 ];
 
 const deliverySteps = [
-  "Вы отправляете заявку с позициями, количеством и адресом получения.",
+  "Вы передаете позиции, количество и адрес получения.",
   "Мы проверяем комплектность, габариты, доступность и возможные ограничения по перевозке.",
   "Согласуем маршрут, срок, стоимость доставки и формат документов.",
   "Передаем груз выбранным способом и остаемся на связи до получения.",
@@ -118,7 +118,7 @@ export default function DeliveryPage() {
       <section className="delivery-process" aria-labelledby="delivery-process-title">
         <div className="delivery-process__intro">
           <p className="eyebrow">Как это работает</p>
-          <h2 id="delivery-process-title">Сначала заявка, затем точная логистика</h2>
+          <h2 id="delivery-process-title">Сначала состав поставки, затем точная логистика</h2>
           <p>
             Мы не прячем доставку в типовой тариф: для B2B-поставок точнее сначала понять состав,
             объем, адрес и срочность.
@@ -139,11 +139,11 @@ export default function DeliveryPage() {
           <h2 id="delivery-final-title">Нужно отправить комплект в другой город или страну?</h2>
           <p>
             Соберите позиции из каталога или опишите задачу свободным текстом. Мы вернемся с вариантом
-            поставки и доставки после проверки состава заявки.
+            поставки и доставки после проверки состава.
           </p>
         </div>
-        <Link className="button button--primary" href={routes.request()}>
-          Открыть заявку
+        <Link className="button button--primary" href={routes.contacts()}>
+          Связаться с менеджером
         </Link>
       </section>
     </div>

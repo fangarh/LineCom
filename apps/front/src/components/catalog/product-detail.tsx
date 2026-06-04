@@ -3,7 +3,7 @@ import type { PublicProductAttribute, PublicProductDetail as PublicProductDetail
 import { formatSku } from "@/lib/format";
 import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
 import { routes } from "@/lib/routes";
-import { AddToRequestButton } from "@/components/request/add-to-request-button";
+import { ContactCtaButton } from "@/components/contact/contact-cta-button";
 
 type ProductDetailProps = {
   product: PublicProductDetailType;
@@ -55,16 +55,9 @@ export function ProductDetail({ product }: ProductDetailProps) {
             </div>
           </dl>
 
-          <AddToRequestButton
-            product={{
-              productId: product.id,
-              slug: product.slug,
-              productName: product.name,
-              productSku: product.sku,
-              saleUnit: product.saleUnit,
-              unitQuantity: product.unitQuantity,
-            }}
-          />
+          <div className="product-detail__cta">
+            <ContactCtaButton className="button button--primary product-detail__button" />
+          </div>
         </div>
       </div>
 

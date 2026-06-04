@@ -18,15 +18,15 @@ export default function ContactsPage() {
           <p className="eyebrow">ООО «Лайнком»</p>
           <h1 id="contacts-title">Кабель, оптика и телеком-компоненты для рабочих задач</h1>
           <p className="lead-text">
-            LineCom помогает организациям собрать понятную заявку: подобрать кабель, СКС, оптические
+            LineCom помогает организациям подобрать кабель, СКС, оптические
             компоненты, шкафы и монтажные расходники под объект, поставку или сервисную задачу.
           </p>
           <div className="content-actions">
             <Link className="button button--primary" href={routes.catalog()}>
               Перейти в каталог
             </Link>
-            <Link className="button button--secondary" href={routes.request()}>
-              Собрать заявку
+            <Link className="button button--secondary" href="mailto:Linecom.sup@gmail.com">
+              Написать на почту
             </Link>
           </div>
         </div>
@@ -45,7 +45,7 @@ export default function ContactsPage() {
           <p>
             Компания зарегистрирована в Санкт-Петербурге и работает в направлении ОКВЭД 46.52:
             оптовая торговля электронным и телекоммуникационным оборудованием и его запасными частями.
-            На сайте мы делаем процесс проще: каталог помогает начать подбор, а заявка фиксирует
+            На сайте мы делаем процесс проще: каталог помогает начать подбор, а менеджер фиксирует
             позиции, количество и комментарии для дальнейшего согласования.
           </p>
           <div className="contacts-company__links">

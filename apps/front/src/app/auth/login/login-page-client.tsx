@@ -8,6 +8,7 @@ import { useAuth } from "@/components/auth/auth-provider";
 import { login, type LoginPayload } from "@/lib/api/auth";
 import { normalizeApiError } from "@/lib/api/errors";
 import { routes } from "@/lib/routes";
+import { siteFeatures } from "@/lib/site-features";
 
 export function LoginPageClient() {
   const router = useRouter();
@@ -35,15 +36,17 @@ export function LoginPageClient() {
           <p className="eyebrow">Аккаунт клиента</p>
           <h1 id="login-title">Вход в LineCom</h1>
           <p className="lead-text">
-            Войдите, чтобы отправить подготовленную заявку, заполнить профиль и видеть обращения в личном кабинете.
+            Войдите, чтобы заполнить профиль и работать с доступными разделами личного кабинета.
           </p>
         </div>
 
         <div>
           <LoginForm onSubmit={handleSubmit} errorMessage={errorMessage} />
-          <p className="auth-switch">
-            Нет аккаунта? <Link className="text-link" href={routes.register(returnTo)}>Зарегистрироваться</Link>
-          </p>
+          {siteFeatures.customerRegistration ? (
+            <p className="auth-switch">
+              Нет аккаунта? <Link className="text-link" href={routes.register(returnTo)}>Зарегистрироваться</Link>
+            </p>
+          ) : null}
         </div>
       </section>
     </div>
@@ -55,5 +58,5 @@ function safeReturnTo(value: string | null): string {
     return value;
   }
 
-  return routes.request();
+  return routes.home();
 }

@@ -29,6 +29,7 @@ apps/api/storage/
 .playwright-mcp/
 .codex-tmp/
 .superpowers/
+artifacts/
 artifacts-*
 *.metaproj
 *.metaproj.tmp

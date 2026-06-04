@@ -23,6 +23,13 @@ const authApiMock = vi.hoisted(() => ({
   getMe: vi.fn(),
 }));
 
+vi.mock("@/lib/site-features", () => ({
+  siteFeatures: {
+    customerRequests: true,
+    customerRegistration: false,
+  },
+}));
+
 vi.mock("next/navigation", () => ({
   useRouter: () => routerMock,
 }));

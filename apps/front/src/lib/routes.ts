@@ -2,6 +2,7 @@ export const routes = {
   home: () => "/",
   contacts: () => "/contacts",
   delivery: () => "/delivery",
+  cookiePolicy: () => "/cookies",
   catalog: () => "/catalog",
   category: (slug: string) => `/catalog/${encodeURIComponent(slug)}`,
   product: (slug: string) => `/products/${encodeURIComponent(slug)}`,
