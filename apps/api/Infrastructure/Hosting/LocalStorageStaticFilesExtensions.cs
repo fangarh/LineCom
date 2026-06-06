@@ -20,6 +20,10 @@ public static class LocalStorageStaticFilesExtensions
             {
                 FileProvider = new PhysicalFileProvider(physicalDirectory),
                 RequestPath = publicPrefix.RequestPath,
+                OnPrepareResponse = context =>
+                {
+                    context.Context.Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+                },
             });
         }
 

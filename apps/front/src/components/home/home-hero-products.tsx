@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import type { PublicProductListItem } from "@/lib/api/catalog";
 import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
@@ -36,15 +37,16 @@ export function HomeHeroProducts({ products }: HomeHeroProductsProps) {
   return (
     <div className="home-hero-products" aria-live="polite">
       <div className="home-hero-products__stage" aria-hidden="true">
-        {products.map((product, index) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            key={product.id}
-            className={index === visibleIndex ? "is-active" : undefined}
-            src={product.mainImage?.url ?? PRODUCT_IMAGE_FALLBACK}
-            alt=""
-          />
-        ))}
+        <Image
+          key={products[visibleIndex].id}
+          className="is-active"
+          src={products[visibleIndex].mainImage?.url ?? PRODUCT_IMAGE_FALLBACK}
+          alt=""
+          width={600}
+          height={380}
+          sizes="(max-width: 720px) 76vw, 300px"
+          loading="eager"
+        />
       </div>
 
       <div className="home-hero__product-stack">
@@ -57,10 +59,13 @@ export function HomeHeroProducts({ products }: HomeHeroProductsProps) {
             onMouseEnter={() => setActiveIndex(index)}
           >
             <span className="home-hero-product__image">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={product.mainImage?.url ?? PRODUCT_IMAGE_FALLBACK}
                 alt={product.mainImage?.alt ?? PRODUCT_IMAGE_FALLBACK_ALT}
+                width={192}
+                height={156}
+                sizes="96px"
+                fetchPriority="low"
               />
             </span>
             <span>

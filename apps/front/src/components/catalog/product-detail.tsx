@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { PublicProductAttribute, PublicProductDetail as PublicProductDetailType } from "@/lib/api/catalog";
 import { formatSku } from "@/lib/format";
 import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
@@ -26,8 +27,14 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
       <div className="product-detail__grid">
         <div className="product-detail__media">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={leadImage?.url ?? PRODUCT_IMAGE_FALLBACK} alt={leadImage?.alt ?? PRODUCT_IMAGE_FALLBACK_ALT} />
+          <Image
+            src={leadImage?.url ?? PRODUCT_IMAGE_FALLBACK}
+            alt={leadImage?.alt ?? PRODUCT_IMAGE_FALLBACK_ALT}
+            width={720}
+            height={520}
+            sizes="(max-width: 900px) 100vw, 50vw"
+            loading="eager"
+          />
         </div>
 
         <div className="product-detail__summary">

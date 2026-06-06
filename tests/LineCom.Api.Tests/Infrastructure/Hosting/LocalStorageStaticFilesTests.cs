@@ -25,6 +25,7 @@ public sealed class LocalStorageStaticFilesTests
         using var response = await client.GetAsync(requestPath);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("public, max-age=31536000, immutable", response.Headers.CacheControl?.ToString());
         Assert.Equal("public-image", await response.Content.ReadAsStringAsync());
     }
 

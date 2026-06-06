@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { PublicProductListItem } from "@/lib/api/catalog";
 import { formatSku } from "@/lib/format";
 import { PRODUCT_IMAGE_FALLBACK, PRODUCT_IMAGE_FALLBACK_ALT } from "@/lib/product-images";
@@ -13,8 +14,14 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <article className="product-card">
       <Link className="product-card__media" href={routes.product(product.slug)} aria-label={product.name}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={product.mainImage?.url ?? PRODUCT_IMAGE_FALLBACK} alt={product.mainImage?.alt ?? PRODUCT_IMAGE_FALLBACK_ALT} />
+        <Image
+          src={product.mainImage?.url ?? PRODUCT_IMAGE_FALLBACK}
+          alt={product.mainImage?.alt ?? PRODUCT_IMAGE_FALLBACK_ALT}
+          width={360}
+          height={220}
+          sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 360px"
+          fetchPriority="low"
+        />
       </Link>
 
       <div className="product-card__body">

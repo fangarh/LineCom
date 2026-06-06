@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { getCategoryTree, getProduct, getProducts } from "@/lib/api/catalog";
 import { getHomepageSections } from "@/lib/api/homepage";
@@ -106,8 +107,14 @@ export default async function Home() {
             {featuredProducts.map((product) => (
               <article key={product.id} className="featured-product">
                 <Link className="featured-product__image" href={routes.product(product.slug)} aria-label={product.name}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={product.mainImage?.url ?? PRODUCT_IMAGE_FALLBACK} alt={product.mainImage?.alt ?? PRODUCT_IMAGE_FALLBACK_ALT} />
+                  <Image
+                    src={product.mainImage?.url ?? PRODUCT_IMAGE_FALLBACK}
+                    alt={product.mainImage?.alt ?? PRODUCT_IMAGE_FALLBACK_ALT}
+                    width={360}
+                    height={220}
+                    sizes="(max-width: 720px) 100vw, (max-width: 1100px) 33vw, 360px"
+                    fetchPriority="low"
+                  />
                 </Link>
                 <div className="featured-product__body">
                   <div className="product-card__meta">
